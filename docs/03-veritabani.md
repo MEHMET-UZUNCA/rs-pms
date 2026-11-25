@@ -1433,7 +1433,14 @@ Kurallar:
   (ör. `RESERVATIONSTATUS` 0/1/3, `CALCULATEDSTATUS` 0–13, `PROFILE_INTERNALCATEGORY` 1–6, `CDT` 1/5, `SEX` 1/2/3).
   Dönüşüm tabloları: [fidelio/README.md](fidelio/README.md). Kolon karşılıkları: [fidelio/kolon-kolon.md](fidelio/kolon-kolon.md).
 - Fidelio kimlikleri (`*_ID`) aktarılan kayıtlarda `legacy_id`'den, RS PMS'te açılan yeni kayıtlarda RS PMS `id`'sinden gelir.
-- View'lar ayrı bir MySQL veritabanında (`proisv`) durur; yalnız okuma yetkili kullanıcı verilir.
-  Ad uyumu için MySQL `lower_case_table_names = 1` ile kurulur (Oracle'daki gibi büyük/küçük harf duyarsız).
+- **Uygulama:** View'lar ana veritabanında `pro_isv_*` adlarıyla migration ile oluşturulur
+  (`app/Support/Database/ProisvViews.php`). Her test çalışmasında 13 view'ın kolonlarının Fidelio'daki 391 kolonla
+  ad ve sıra olarak birebir aynı olduğu doğrulanır (`tests/Fixtures/proisv_columns.php`).
+- **Sunucu:** `database/sql/proisv-schema.sql` bir kez çalıştırılarak Fidelio'daki gibi ayrı bir `proisv` şeması
+  (büyük harfli `PRO_ISV_*` adlarıyla) ve yalnız okuma yetkili `proisv_okuma` kullanıcısı açılır.
+- **Kişisel veri:** Kimlik numarası şifreli saklandığı için `TCKIMLIKNO`, `TCIDNO`, `PERSONAL_DOC_NUMBER` kolonları view'da boş döner;
+  kimlik bildirimi gibi işler bu numarayı uygulama üzerinden (yetki kontrolüyle) alır.
+- **Doğrulanacak kodlar:** `POSTING_LEDGERSTATUS` (aktarılan kayıtlarda Fidelio'nun ham değeri döner), `KIMLIKBELGESITURU`, `RATECODE_BOARDTYPE`
+  değer listeleri Fidelio'daki gerçek değerlerle paralel çalışmada karşılaştırılacak.
 - Ek gereken raporlar için V8LIVE'daki diğer view'ların (`PRO_YEARVIEW_NEW`, `PRO_EXCHANGERATES`, `PRO_DAILYROOMRATETOTAL` vb.)
   karşılığı da aynı yöntemle eklenebilir.

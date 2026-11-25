@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Fidelio uyumlu PROISV view'ları: 13 view, 391 kolon — Fidelio ile aynı ad, kolon adı, sıra ve kod değerleri (durum 0–13, profil kategorisi 1–6, CDT 1/5, ödeme tipi, cinsiyet…). Kolonların Fidelio ile birebir aynı olduğunu ve kod değerlerini doğrulayan testler; sunucu için ayrı proisv şeması ve yalnız okuma kullanıcısı betiği. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - 8. aşama: dış kimlikler, RS ONE olay kuyruğu, kimlik bildirimi, Fidelio aktarım partileri ve hataları, kanal yöneticisi (bağlantı, eşleme, gönderim kuyruğu), kayıtlı raporlar, bildirimler, webhook — 13 tablo. Tasarım belgesindeki her tablonun veritabanında bulunduğunu doğrulayan test eklendi. Veritabanı tamamlandı: 211 tablo, 604 bağlantı, 10 tetikleyici. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - 7. aşama: Simphony (outlet'ler, arayüz, gelir ve ödeme eşlemeleri, ham mesajlar, oda hesabı kayıtları, günlük satış) ve konferans/toplantı/banket (salonlar, oturma düzeni ve kapasite, salon fiyatı, özellikler, etkinlik tipi ve durumu, rakipler, menüler, ekipman, toplantı paketleri, etkinlik rezervasyonu, teklif, ödeme planı, açık konular, etkinlikler, menü/kalem/görevler) — 32 tablo ve testleri. Tetikleyici kuralları tek sınıfta toplandı (FinancialRecordGuard). Testler SQLite ve MySQL'de geçti. (M.U)
