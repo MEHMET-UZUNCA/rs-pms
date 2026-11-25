@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
  *  - Kod numaraları ve adlar aynen alınır; "Code" kısaltması (ROO, DIS, REB, PEN, IND …) kategori olarak saklanır.
  *  - Grup numaraları (10, 11, 15 …) işlem kodu grubu olur; grup adları ayrıca "Department Code Groups" listesinden güncellenebilir.
  *  - TAX grubundaki vergi departmanları (TX0–TX5) işlem kodu olmaz; açıklaması eşleşen vergiye departman numarası olarak yazılır.
- *  - İndirim (DIS) ve rebate (REB) kodları, adlarındaki önek atılınca adı eşleşen asıl koda bağlanır; bulunamazsa
- *    numarası kendisinden küçük en yakın indirim olmayan koda bağlanır.
+ *  - İndirim/rebate kodları kategoriden (DIS, REB) ya da addan ("DISC …", "… Disc.", "… Reb.") tanınır ve asıl koda bağlanır
+ *    (bkz. linkDiscounts).
  *  - Var olan kodun tipi, ödeme türü ve outlet bağlantısı korunur (yalnız ad, kategori, grup, elle girilebilirlik güncellenir).
  *  - 900 ve üstü kodlar yeni açılıyorsa ödeme kodu sayılır (Fidelio'daki numaralandırma).
  */
@@ -40,7 +40,7 @@ class FidelioDepartmentCodeImporter
                 $category = strtoupper(trim($row['code']));
                 $values = [
                     'name' => trim($row['description']), 'category' => $category, 'group_id' => $groupId,
-                    'manual_post_allowed' => $row['manual'], 'is_discount' => in_array($category, ['DIS', 'REB'], true), 'updated_at' => now(),
+                    'manual_post_allowed' => $row['manual'], 'is_discount' => self::isDiscount($category, $row['description']), 'updated_at' => now(),
                 ];
                 if ($existing) {
                     DB::table('pms_transaction_codes')->where('id', $existing->id)->update($values);
@@ -80,29 +80,80 @@ class FidelioDepartmentCodeImporter
         $d = strtolower($description);
 
         return match (true) {
-            str_contains($d, 'breakfast') => 'breakfast',
+            str_contains($d, 'breakfast') || str_contains($d, 'break.') => 'breakfast',
             str_contains($d, 'lunch') => 'lunch',
             str_contains($d, 'dinner') => 'dinner',
-            in_array($category, ['ROO'], true) || str_contains($d, 'room') => 'room',
-            str_contains($d, 'beverage') || str_contains($d, 'bvrg') => 'beverage',
-            str_contains($d, 'food') => 'food',
             str_contains($d, 'minibar') => 'minibar',
+            (bool) preg_match('/\b(beverage|bvrg|bvr|bev|bevrage)\b/', $d) => 'beverage',
+            str_contains($d, 'food') => 'food',
             str_contains($d, 'laundry') => 'laundry',
+            (bool) preg_match('/\b(telephone|fax)\b/', $d) => 'telephone',
+            (bool) preg_match('/sauna|massage|fitness|spa\b/', $d) => 'spa',
+            $category === 'ROO' || (bool) preg_match('/^(\S+\s+)?room\b(?!\s+serv)/', $d) => 'room',
             default => 'other',
         };
     }
 
+    /** İndirim / rebate kodu mu: kategori DIS/REB ya da adı "DISC …", "REB. …", "… Disc.", "… Rebate" biçiminde. */
+    public static function isDiscount(string $category, string $description): bool
+    {
+        return in_array(strtoupper(trim($category)), ['DIS', 'REB'], true) || self::baseName($description) !== self::clean($description);
+    }
+
+    /** İndirim/rebate önek ve sonekleri atılmış ad (ör. "DISC.Others La Habenera" → "Others La Habenera"). */
+    public static function baseName(string $description): string
+    {
+        $s = self::clean($description);
+        $s = preg_replace('/^(DISCOUNT|DISC|DIS|D\.\s?COUNT|REBATE|REBETA|REB)(\.\s*|\s+)/i', '', $s);
+        $s = preg_replace('/\s+(DISCOUNT|DISC|DIS|REBATE|REB)\.?$/i', '', $s);
+
+        return trim($s);
+    }
+
+    private static function clean(string $s): string
+    {
+        return trim(preg_replace('/\s+/', ' ', $s));
+    }
+
+    /** Karşılaştırma için sırasız kelime kümesi; yazım farkları (BVR/BEVRAGE → BVRG, Ind.Pension → IND PENSION) giderilir. */
+    private static function tokens(string $s): string
+    {
+        $words = preg_split('/[\s.\-]+/', mb_strtoupper($s), -1, PREG_SPLIT_NO_EMPTY);
+        $words = array_map(fn ($w) => match ($w) {
+            'BVR', 'BEVERAGE', 'BEVRAGE', 'BEV' => 'BVRG', 'OTHERS' => 'OTHER', 'BREAK' => 'BREAKFAST', 'SER', 'SERVIS' => 'SERVICE', default => $w,
+        }, $words);
+        sort($words);
+
+        return implode(' ', $words);
+    }
+
+    /**
+     * İndirim/rebate kodunu asıl koda bağlar. Sırasıyla: önek/sonek atılmış adın kelime kümesi eşleşen kod; aynı gruptaki en
+     * benzer adlı kod (benzerlik %60 ve üstü); numarası kendisinden küçük en yakın indirim olmayan kod.
+     */
     private function linkDiscounts(int $propertyId): int
     {
-        $codes = DB::table('pms_transaction_codes')->where('property_id', $propertyId)->get(['id', 'code', 'name', 'is_discount', 'discount_of_transaction_code_id']);
-        $normalize = fn (string $s) => preg_replace('/\s+/', ' ', strtoupper(trim($s)));
-        $byName = $codes->where('is_discount', false)->keyBy(fn ($c) => $normalize($c->name));
+        $codes = DB::table('pms_transaction_codes')->where('property_id', $propertyId)
+            ->get(['id', 'code', 'name', 'group_id', 'is_discount', 'discount_of_transaction_code_id']);
+        $bases = $codes->where('is_discount', false)->filter(fn ($c) => is_numeric($c->code));
+        $byTokens = $bases->keyBy(fn ($c) => self::tokens($c->name));
         $linked = 0;
 
         foreach ($codes->where('is_discount', true)->whereNull('discount_of_transaction_code_id') as $code) {
-            $base = preg_replace('/^(DISC\.?|DIS\.?|REBATE|REB\.?)\s+/i', '', trim($code->name));
-            $target = $byName->get($normalize($base))
-                ?? $codes->where('is_discount', false)->filter(fn ($c) => is_numeric($c->code) && (int) $c->code < (int) $code->code)->sortByDesc(fn ($c) => (int) $c->code)->first();
+            $base = self::baseName($code->name);
+            $target = $byTokens->get(self::tokens($base));
+            if (! $target) {
+                $best = null;
+                $bestScore = 0.0;
+                foreach ($bases->where('group_id', $code->group_id) as $candidate) {
+                    similar_text(self::tokens($base), self::tokens($candidate->name), $score);
+                    if ($score > $bestScore) {
+                        [$best, $bestScore] = [$candidate, $score];
+                    }
+                }
+                $target = $bestScore >= 60 ? $best : null;
+            }
+            $target ??= $bases->filter(fn ($c) => (int) $c->code < (int) $code->code)->sortByDesc(fn ($c) => (int) $c->code)->first();
             if ($target) {
                 DB::table('pms_transaction_codes')->where('id', $code->id)->update(['discount_of_transaction_code_id' => $target->id]);
                 $linked++;

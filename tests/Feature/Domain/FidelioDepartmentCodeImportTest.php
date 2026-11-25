@@ -34,4 +34,35 @@ class FidelioDepartmentCodeImportTest extends DomainTestCase
         $this->assertSame($code('210')->id, $code('211')->discount_of_transaction_code_id);  // ad eşleşmezse en yakın küçük kod
         $this->assertSame('cash', $code('900')->payment_kind);                                // var olan kodun ödeme türü korunur
     }
+
+    public function test_full_rocks_department_code_list_is_imported_and_discounts_link_to_the_right_codes(): void
+    {
+        $rows = FidelioDepartmentCodeImporter::parse(file_get_contents(database_path('data/fidelio/department-codes.tsv')));
+        $this->assertCount(277, $rows);
+
+        $result = (new FidelioDepartmentCodeImporter)->import($this->property, $rows);
+        $this->assertSame(6, $result['tax_departments']);
+
+        $code = fn (string $no) => DB::table('pms_transaction_codes')->where('property_id', $this->property)->where('code', $no)->first();
+        $linksTo = fn (string $discount, string $base) => $this->assertSame($code($base)->id, $code($discount)->discount_of_transaction_code_id, "$discount → $base");
+
+        $linksTo('387', '385');   // "DISC L HIRONDELLE FOOD" → "FOOD L HIRONDELLE" (sırasız kelime eşleşmesi)
+        $linksTo('388', '386');   // "… BEVRAGE" yazım farkı
+        $linksTo('399', '398');   // "DISC.Others La Habenera" (boşluksuz önek)
+        $linksTo('411', '410');   // "D.COUNT DRAGON REST"
+        $linksTo('441', '440');   // "… Disc." soneki
+        $linksTo('543', '386');   // "REB BVRG Hirondella" → aynı grupta en benzer ad
+        $linksTo('528', '526');   // "REBETA" yazım hatası
+        $linksTo('672', '670');   // "Casino Food Rebate"
+        $linksTo('119', '117');   // "Lyra Event Disc."
+        $linksTo('325', '321');   // "REBATE BVRG  Cafe"
+
+        $this->assertFalse((bool) $code('560')->is_discount);            // "VAT Discount %3" indirim kodu değil
+        $this->assertSame('other', $code('346')->revenue_bucket);        // "Other Room Service" oda geliri değil
+        $this->assertSame('beverage', $code('500')->revenue_bucket);     // "Banquet Bev. La Habenera"
+        $this->assertSame('telephone', $code('405')->revenue_bucket);
+        $this->assertSame('payment', $code('966')->type);
+        $this->assertSame('95', DB::table('pms_transaction_code_groups')->where('id', $code('966')->group_id)->value('code'));
+        $this->assertFalse((bool) $code('957')->manual_post_allowed);
+    }
 }

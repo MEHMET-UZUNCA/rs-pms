@@ -1,0 +1,280 @@
+# Rocks Hotel — Fidelio Suite8 "Department Codes" listesi (Show Inactive kapalı; ekran görüntülerinden aktarıldı).
+# Sütunlar: No <TAB> Code <TAB> Description <TAB> Manual (x = işaretli) <TAB> Group
+No	Code	Description	Manual	Group
+0	TX0	VAT 0 %		TAX
+1	TX1	VAT 5 %		TAX
+2	TX2	VAT 10 %		TAX
+3	TX3	VAT 16 %		TAX
+4	TX4	VAT 1 %		TAX
+5	TX5	VAT 20 %		TAX
+100	ROO	Room	x	10
+102	DIS	DISC Room	x	10
+103	REB	REBATE Room	x	10
+105	ROO	Room No-Show	x	10
+106	DIS	DISC Room No-Show	x	10
+107	ROO	Room Supplement	x	11
+108	DIS	DISC Room Supplement	x	11
+109	REB	REBATE Room Supplement	x	11
+110	PEN	Pension Breakfast	x	15
+111	DIS	DISC Pension Breakfast	x	15
+112	REB	REBATE Pension Breakfast	x	15
+115	ROO	Casino Room No-Show	x	10
+116	DIS	DIS. Casino Room No-Show	x	10
+117	LEV	Lyra Event	x	50
+118	LEV	Lyra Event Reb.	x	50
+119	LEV	Lyra Event Disc.	x	50
+120	PEN	Pension Lunch	x	15
+121	DIS	DISC Pension Lunch	x	15
+122	REB	REBATE Pension Lunch	x	15
+130	PEN	Pension Dinner	x	15
+131	DIS	DISC Pension Dinner	x	15
+132	REB	REBATE Pension Dinner	x	15
+140	PEN	Pension Beverage	x	15
+141	DIS	DISC Pension Beverage	x	15
+142	REB	REBATE Pension Beverage	x	15
+200	ROO	Room Individual	x	11
+201	DIS	DISC Room Individual	x	11
+202	REB	REBATE Room Individual	x	11
+210	IND	Ind. Pension Breakfast	x	16
+211	DIS	DISC Ind. Pension Break.	x	16
+212	REB	REBATE Ind.Pension Break.	x	16
+220	IND	Ind. Pension Lunch	x	16
+221	DIS	DISC Ind. Pension Lunch	x	16
+222	REB	REBATE Ind. Pension Lunch	x	16
+230	IND	Ind. Pension Dinner	x	16
+231	DIS	DISC Ind. Pension Dinner	x	16
+232	REB	REBATE Ind.Pension Dinner	x	16
+320	FOO	FOOD  Cafe Rocks	x	20
+321	BVR	BVRG Cafe Rocks	x	30
+322	DIS	DISC FOOD Cafe Rocks	x	20
+323	REB	REBATE FOOD Cafe Rocks	x	20
+324	DIS	DISC BVRG Cafe Rocks	x	30
+325	REB	REBATE BVRG  Cafe	x	30
+326	CRO	Other Cafe Rocks	x	50
+327	DIS	Discount Other Cafe Rocks	x	50
+328	REB	REBATE Cafe Rocks	x	50
+330	FOO	FOOD  Pool Bar	x	20
+331	BVR	BVRG  Pool Bar	x	30
+332	DIS	DISC FOOD Pool Bar	x	20
+333	REB	REBATE FOOD Pool Bar	x	20
+334	DIS	DISC BVRG Pool Bar	x	30
+335	REB	REBATE BVRG  Pool Bar	x	30
+336	PB	Other Pool Bar	x	50
+337	PB	DISC Other Pool Bar	x	50
+338	PB	REBATE Other Pool Bar	x	50
+340	FOO	FOOD Room Service	x	20
+341	BVR	BVRG Room Service	x	30
+342	DIS	DISC FOOD Room Service	x	20
+343	REB	REBATE FOOD Room Service	x	20
+344	DIS	DISC BVRG Room Service	x	30
+345	REB	REBATE BVRG Room Service	x	30
+346	RS	Other Room Service	x	50
+347	DIS	DISC Other Room Ser	x	50
+348	REB	REBATE Other Room Servis	x	50
+350	FOO	FOOD Minibar	x	20
+351	BVR	BVRG Minibar	x	30
+352	DIS	DISC FOOD Minibar	x	20
+353	REB	REBATE FOOD Minibar	x	20
+354	DIS	DISC BVRG Minibar	x	30
+355	REB	REBATE BVRG Minibar	x	30
+356	MB	Other Minibar	x	50
+357	DIS	DISC Other Minibar	x	50
+358	REB	REBATE Other Minibar	x	50
+370	FOO	FOOD Banquet	x	20
+371	BVR	BVRG Banquet	x	30
+372	DIS	DISC FOOD Banquet	x	20
+373	REB	REBATE FOOD Banquet	x	20
+374	DIS	DISC BVRG Banquet	x	30
+375	REB	REBATE BVRG Banquet	x	30
+376	BNQ	Banquet Other	x	50
+377	DIS	DISC Banquet Other	x	50
+378	REB	REBATE Banquet Other	x	50
+385	FOO	FOOD L HIRONDELLE	x	20
+386	BVR	BVRG L HIRONDELLE	x	30
+387	DIS	DISC L HIRONDELLE FOOD	x	20
+388	DIS	DISC L HIRONDELLE BEVRAGE	x	30
+395	FOO	FOOD LA HABENERA	x	20
+397	DIS	DISC LA HABENERA Food	x	20
+398	OTH	Others La Habenera	x	50
+399	DIS	DISC.Others La Habenera	x	50
+400	TEL	Telephone	x	40
+401	DIS	DISC Telephone	x	40
+402	REB	REBATE Telephone	x	40
+405	FAX	Fax	x	40
+406	DIS	DISC Fax	x	40
+407	REB	REBATE Fax	x	40
+410	DRA	DRAGON REST	x	12
+411	D.C	D.COUNT DRAGON REST	x	12
+430	WIR	Wireless Internet	x	40
+431	DIS	DISC Wireless Internet	x	40
+432	REB	REBATE Wireless Internet	x	40
+435	WIR	Wireless Comp	x	40
+436	DIS	DISC Wireless Comp	x	40
+437	REB	REBATE Wireless Comp	x	40
+440	BNQ	Banquet Food La Habenera	x	50
+441	BNQ	Banquet Food La Habenera Disc.	x	50
+442	BNQ	Banquet Food La Habenera Reb.	x	50
+450	HIR	Hirondelle Other	x	50
+451	DIS	DISC.Hirondelle Other	x	50
+452	HIR	REBATE Hirondelle Other	x	50
+470	TAB	Tobacco	x	50
+471	TAB	DISC Tobacco	x	50
+472	TAB	REBATE Tobacco	x	50
+480	ONY	FOOD Onyx	x	20
+481	ONY	DISC. FOOD Onyx	x	20
+482	ONY	REBATE FOOD Onyx	x	20
+483	BVR	BVRG Onyx	x	30
+484	BVR	DISC. BVRG Onyx	x	30
+485	BVR	REBATE BVRG Onyx	x	30
+486	OTH	OTHER Onyx	x	50
+487	OTH	DISC. OTHER Onyx	x	50
+488	OTH	REBATE OTHER Onyx	x	50
+490	SIR	FOOD Sirali Et	x	20
+491	SIR	Disc. FOOD Sirali Et	x	20
+492	SIR	REB. FOOD Sirali Et	x	20
+493	SIR	BVRG Sirali Et	x	30
+494	SIR	DISC. BVRG Sirali Et	x	30
+495	SIR	REB. BVRG Sirali Et	x	30
+500	BNQ	Banquet Bev. La Habenera	x	50
+501	BNQ	Banquet Bev. La Habenera Dis.	x	50
+502	BNQ	Banquet Bev. La Habenera Reb.	x	50
+510	LAU	Laundry	x	60
+511	DIS	DISC Laundry	x	60
+512	REB	REBATE Laundry	x	60
+513	SAU	SAUNA-MASSAGE	x	50
+514	DIS	DISC. SAUNA-MASSAGE	x	50
+515	REB	REBATE SAUNA -MASSAGE	x	50
+516	MIN	MINI MARKET	x	50
+517	DIS	DISC. MINI MARKET	x	50
+518	HAV	HAVUZ BAR GIRIS	x	50
+519	D.C	D.COUNT HAVUZ GIRIS	x	50
+520	TRA	Transfer	x	50
+521	DIS	DISC Transfer	x	50
+522	REB	REBATE Transfer	x	50
+526	FIT	Fitness Center Other	x	50
+527	FIT	DISC Fitness Center Other	x	50
+528	FIT	REBETA Fitness Center Other	x	50
+530	OTH	Others %5	x	50
+531	DIS	DISC Others %5	x	50
+532	REB	REBATE Others %5	x	50
+533	ROO	ROOM RENTAL	x	50
+534	DIS	DISC ROOM RENTAL	x	50
+543	REB	REB BVRG Hirondella	x	30
+544	BVR	BVRG La Habenera	x	30
+545	DIS	DISC BVR La Habenera	x	30
+546	REB	REB BVRG La Habenera	x	30
+547	FIT	Fitness Center Üyelik	x	50
+548	DIS	DISC Fitness Center Üyelik	x	50
+549	REB	REBATE Fitness Center Üyelik	x	50
+550	KUR	Kur Farki	x	50
+551	DEP	Depozit Kur Farki	x	50
+552	OTH	Others %16	x	50
+553	DIS	DISC Others %16	x	50
+554	REB	REBATE Others %16	x	50
+555	OTH	Others %20	x	50
+556	DIS	DISC Others %20	x	50
+557	REB	REBATE Others %20	x	50
+560	VAT	VAT Discount %3	x	55
+561	VAT	VAT Discount %13	x	55
+562	CGA	Casino Gazete	x	50
+580	OTH	Others %0	x	50
+581	DIS	DISC Others %0	x	50
+582	REB	REBATE Others %0	x	50
+610	BNQ	Banquet Other La Habenera	x	50
+611	BNQ	Banquet Other La Habenera Dis.	x	50
+612	BNQ	Banquet Other La Habenera Reb.	x	50
+620	BNQ	Banquet Tobac La Habenera	x	50
+621	BNQ	Banquet Tobac La Habenera Dis.	x	50
+622	BNQ	Banquet Tobac La Habenera Reb.	x	50
+630	OTO	Otopark	x	50
+631	OTO	Disc. Otopark	x	50
+632	OTO	Reb. Otopark	x	50
+640	KUA	Kuafor	x	50
+641	KUA	Disc. Kuafor	x	50
+642	KUA	Reb. Kuafor	x	50
+650	CAT	Catch Seafood Food	x	20
+651	CAT	Catch Seafood Food Disc.	x	20
+652	CAT	Catch Seafood Food Reb.	x	20
+660	CAT	Catch Seafood Beverage	x	30
+661	CAT	Catch Seafood Beverage Disc.	x	30
+670	CAS	Casino Food	x	20
+671	CAS	Casino Food Disc.	x	20
+672	CAS	Casino Food Rebate	x	20
+680	CAS	Casino Beverage	x	30
+681	CAS	Casino Beverage Disc.	x	30
+682	CAS	Casino Beverage Reb.	x	30
+690	CAS	Casino Vip Setup	x	20
+691	CAS	Casino Vip Setup Discount	x	20
+692	CAS	Casino Vip Setup Rebate	x	20
+700	BYB	Byblos  Food	x	20
+701	BYB	Byblos Food Disc.	x	20
+702	BYB	Byblos  Food Reb.	x	20
+710	BYB	Byblos Beverage	x	30
+711	BYB	Byblos Beverage Disc.	x	30
+712	BYB	Byblos Beverage Reb.	x	30
+720	BYB	Byblos Tobacco	x	50
+721	BYB	Byblos Tobacco Disc.	x	50
+722	BYB	Byblos Tobacco Reb.	x	50
+780	PAC	Package Overage	x	75
+781	PAC	Package Profit	x	75
+782	PAC	Package Loss	x	75
+798	DEP	Deposit Retain		50
+800	PAI	Paid-out	x	80
+810	LYR	FOOD Lyra	x	20
+811	LYR	Disc. FOOD Lyra	x	20
+812	LYR	Reb. FOOD Lyra	x	20
+813	LYR	BVRG  Lyra	x	30
+814	LYR	Disc. BVRG  Lyra	x	30
+815	LYR	Reb. BVRG  Lyra	x	30
+816	LYR	OTHER Lyra	x	50
+817	LYR	Disc. OTHER Lyra	x	50
+818	LYR	Reb. OTHER Lyra	x	50
+820	FOO	Rocks Pattiserie Food	x	20
+821	FOO	Rocks Pattiserie Food Disc.	x	20
+822	FOO	Rocks Pattiserie Food Reb.	x	20
+830	FOO	Rocks Pattiserie Bvrg	x	30
+831	FOO	Rocks Pattiserie Bvrg Disc.	x	30
+832	FOO	Rocks Pattiserie Bvrg Reb.	x	20
+879	TRA	Transfer Balance		
+880	EXC	Exchange Rate Difference		
+900	CAS	Cash	x	90
+901	CHE	Cheque	x	90
+902	MCA	Room Service Cash	x	90
+903	CIT	City Ledger	x	90
+904	DEP	Deposit transfer		
+910	VIS	Visa Card	x	90
+911	MAS	MasterCard	x	90
+912	AME	American Express	x	90
+913	DIN	Diners Club	x	90
+914	JCB	JCB	x	90
+915	MAO	Mail Order	x	90
+920	BAN	Bank Payment	x	90
+921	BAN	Bank Payment Euro	x	90
+922	BAN	Bank Payment USD	x	90
+923	BAN	Bank Payment GBP	x	90
+950	PAY	Pay US Dollar	x	95
+951	PAY	Pay Euro	x	95
+952	SWI	Swiss Franc	x	95
+953	SWE	Swedish Kron	x	95
+954	CAN	Canadian Dollar	x	95
+955	NOR	Norvegian Kron	x	95
+956	JAP	Japaneese Yen	x	95
+957	SAU	Saudi Arabian Riyal		95
+958	KUW	Kuwait Dinar	x	95
+959	AUS	Australian Dollar	x	95
+960	DAN	Danish Kron	x	95
+961	PAY	Pay British Pound	x	95
+963	USD	USD Travel Agency Curr.	x	95
+964	PAY	Pay Kıbrıs Lirası	x	95
+965	US	US Dollar	x	95
+966	EUR	Euro	x	95
+967	BRI	British Pound	x	95
+968	KIB	Kibris Lirasi	x	95
+980	HOC	Hotel account (internal)		90
+990	DIF	Difference		
+991	HOT	Hotel Cashier		
+992	DEP	Deposit payments		
+993	CIT	City Ledger Payments		
+994	CCE	Credit Card Euro	x	90
+995	CCE	Credit Card Dollar	x	90
+996	CCE	Credit Card British Pound	x	90
