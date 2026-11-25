@@ -20,8 +20,10 @@ class TaxCalculator
         $day = ($date ?? now())->toDateString();
         $taxes = $code->taxes()
             ->where('calc_type', 'percent')
-            ->where(fn ($q) => $q->whereNull('valid_from')->orWhere('valid_from', '<=', $day))
-            ->where(fn ($q) => $q->whereNull('valid_to')->orWhere('valid_to', '>=', $day))
+            ->where(fn ($q) => $q->whereNull('pms_taxes.valid_from')->orWhere('pms_taxes.valid_from', '<=', $day))
+            ->where(fn ($q) => $q->whereNull('pms_taxes.valid_to')->orWhere('pms_taxes.valid_to', '>=', $day))
+            ->where(fn ($q) => $q->whereNull('pms_transaction_code_taxes.valid_from')->orWhere('pms_transaction_code_taxes.valid_from', '<=', $day))
+            ->where(fn ($q) => $q->whereNull('pms_transaction_code_taxes.valid_to')->orWhere('pms_transaction_code_taxes.valid_to', '>=', $day))
             ->orderBy('pms_transaction_code_taxes.sequence')
             ->get();
 

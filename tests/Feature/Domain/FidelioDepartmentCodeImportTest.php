@@ -75,6 +75,9 @@ class FidelioDepartmentCodeImportTest extends DomainTestCase
         $this->assertSame(['VAT5'], $taxOf('107'));     // Fidelio: 107 Room Supplement → VAT 5 %
         $this->assertSame(['VAT5'], $taxOf('320'));
         $this->assertSame(['VAT5'], $taxOf('513'));     // spa — teyit edilecek
+        $this->assertSame(['VAT16'], $taxOf('510'));    // P4556: 510 Laundry → VAT 16 %
+        $this->assertSame(['VAT16'], $taxOf('520'));    // P4556: 520 Transfer → VAT 16 %
+        $this->assertSame(['VAT16'], $taxOf('511'));
         $this->assertSame(['VAT0'], $taxOf('580'));     // "Others %0"
         $this->assertSame(['VAT16'], $taxOf('553'));    // "DISC Others %16"
         $this->assertSame(['VAT20'], $taxOf('555'));    // "Others %20"

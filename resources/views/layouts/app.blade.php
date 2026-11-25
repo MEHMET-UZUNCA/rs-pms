@@ -10,7 +10,7 @@
         'Müşteri' => [['Profil Navigatörü', null]],
         'Toplantı/Banket' => [['Konferans Günlüğü', null], ['Etkinlikler', null]],
         'Çeşitli' => [['Gece Kapanışı', null], ['Vardiya Defteri', null], ['Raporlar', null]],
-        'Ayarlar' => [['Outlet\'ler', Gate::allows('permission', 'setup.outlets') ? route('setup.outlets.index') : null], ['Departman Kodları', null], ['Vergiler', null], ['Kullanıcılar', null]],
+        'Ayarlar' => [['Outlet\'ler', Gate::allows('permission', 'setup.outlets') ? route('setup.outlets.index') : null], ['Departman Kodları', Gate::allows('permission', 'setup.transaction_codes') ? route('setup.transaction-codes.index') : null], ['Vergiler', null], ['Kullanıcılar', null]],
     ];
 @endphp
 <!DOCTYPE html>

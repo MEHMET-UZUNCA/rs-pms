@@ -305,9 +305,15 @@ departmanlarını (TX0–TX5) listeler, kod bağlantısı yoktur. Veritabanı so
 | 552–554 "Others %16" | VAT16 | Addan |
 | 555–557 "Others %20" | VAT20 | Addan |
 | 580–582 "Others %0" | VAT0 | Addan |
-| Spa (513–515, 526–528, 547–549), Kuaför (640–642), Çamaşırhane (510–512) | VAT5 | **Teyit edilecek** — farklı olabilir |
+| Çamaşırhane 510–512, Transfer 520–522 | VAT16 (%16) | Fidelio raporu P4556 (25.11.2026): 510 Laundry, 520 Transfer "VAT 16 %" grubunda |
+| Spa (513–515, 526–528, 547–549), Kuaför (640–642) | VAT5 | **Teyit edilecek** — farklı olabilir |
 | 560–561 "VAT Discount %3 / %13", 780–782 paket farkları, 798 Deposit Retain | VAT5 | **Teyit edilecek** |
 | 550–551 kur farkı, 880 Exchange Rate Difference, ödeme / paid-out / iç / depozito kodları | Vergisiz | — |
+
+P4556'nın VAT 5 % sayfasında görülenler: 100 Room, 102 DISC Room, 110 Pension Breakfast, 130 Pension Dinner, 386 BVRG L HIRONDELLE.
+
+Teyit için en iyi kaynak Fidelio raporu **P4556 Department code totals by not yet printed invoices (daily) with tax group**:
+her vergi grubunun altında o gün kullanılan departman kodlarını listeler.
 
 Departman kodu penceresindeki diğer alanlar (RS PMS'e taşınacak): Folio Text, Type (Debit/Credit), Group (ör. "10 Room Revenue (3)"),
 Arrangement (ör. ACC Accommodation Expense), Government Code, Allow Manual Post, Return Dep., Unit Description, Default Price(s),

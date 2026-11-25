@@ -25,7 +25,7 @@ class FidelioDepartmentCodeImporter
         return DB::transaction(function () use ($propertyId, $rows) {
             $stats = ['created' => 0, 'updated' => 0, 'tax_departments' => 0, 'discount_links' => 0];
 
-            foreach ($rows as $row) {
+            foreach ($rows as $index => $row) {
                 if (strtoupper($row['group']) === 'TAX' || str_starts_with(strtoupper($row['code']), 'TX')) {
                     $updated = DB::table('pms_taxes')->where('property_id', $propertyId)
                         ->whereRaw('UPPER(REPLACE(legacy_department, \' \', \'\')) = ?', [strtoupper(str_replace(' ', '', $row['description']))])
@@ -40,7 +40,8 @@ class FidelioDepartmentCodeImporter
                 $category = strtoupper(trim($row['code']));
                 $values = [
                     'name' => trim($row['description']), 'category' => $category, 'group_id' => $groupId,
-                    'manual_post_allowed' => $row['manual'], 'is_discount' => self::isDiscount($category, $row['description']), 'updated_at' => now(),
+                    'manual_post_allowed' => $row['manual'], 'is_discount' => self::isDiscount($category, $row['description']),
+                    'sort' => $index + 1, 'updated_at' => now(),   // Fidelio listesindeki sıra (Up/Down ile verilen)
                 ];
                 if ($existing) {
                     DB::table('pms_transaction_codes')->where('id', $existing->id)->update($values);

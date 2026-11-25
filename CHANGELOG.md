@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Ayarlar → Departman Kodları ekranı (Fidelio "Department Codes"): liste Fidelio sırasıyla (No, Kısa, Açıklama, Elle, Grup, Birim, KDV, Outlet), grup süzgeci, yeni/düzenle/kopyala/sil, yukarı/aşağı; düzenleme penceresi Fidelio alanlarıyla (Folio Text, Arrangement, Government Code, Return Dep., Unit, Physical Origin, Disabled kutuları, Payment Type, Foreign Currency, Direct Debit, Non-Hotel Revenue, CC Commission, Statistic type, Credit Limit, Folio Subfunction, Adjustment Dept, Open Cash Drawer, Hostess, Post Tax Only). Departman kodu vergileri artık tarihli (Fidelio gibi): bir kodun vergisi bir tarihten itibaren değiştirilebilir, geçmiş bozulmaz. Kullanımdaki kod silinemez. Fidelio P4556 raporuna göre 510 Laundry ve 520 Transfer %16. Fidelio liste sırası, Adjustment Dept bağlantıları (100 → 102, 107 → 108) ve 10/11 grup adları (Room Revenue) yüklenir. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Departman kodlarına vergi bağlandı (otel kararı): bütün gelir kodları %5; "Others %0/%16/%20" kodları adındaki oranla; kur farkı ve gelir dışı kodlar vergisiz. Spa, kuaför, çamaşırhane ve birkaç özel kod teyit listesinde (docs/fidelio/eslesme.md §16). Ekrandan değiştirilen bağlantıya seeder dokunmaz. Test eklendi. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Simphony: Oracle'ın Simphony 18.2 PMS arayüzü belgeleri incelendi (Standart ve Enhanced protokol, mesaj biçimleri, ping, tekrar gönderim, EMC ayarı); satış aktarımı yöntemleri karşılaştırıldı (önerilen: Reporting & Analytics BI API) ve docs/04-simphony.md güncellendi. Outlet'ler Simphony EMC RVC listesine göre düzenlendi: RVC numaraları girildi, Spa Center, Laundry ve Kuaför eklendi (18 outlet), Dragon Rest elle kayıt. Testler SQLite ve MySQL'de geçti. (M.U)

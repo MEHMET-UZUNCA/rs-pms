@@ -36,7 +36,7 @@ class RocksHotelReferenceSeeder extends Seeder
         // Fidelio departman kodu grupları. Adlar geçicidir (kodların içeriğinden verildi); Fidelio "Department Code Groups"
         // ekranındaki adlarla ekrandan değiştirilebilir. [kod => [ad, tip]]
         $groups = [
-            '10' => ['Oda', 'revenue'], '11' => ['Oda ek ücreti / bireysel oda', 'revenue'], '12' => ['Dragon Rest', 'revenue'],
+            '10' => ['Room Revenue', 'revenue'], '11' => ['Room Revenue', 'revenue'],   // Fidelio'daki ad (100 ve 107 kod pencerelerinden) '12' => ['Dragon Rest', 'revenue'],
             '15' => ['Pansiyon', 'revenue'], '16' => ['Bireysel pansiyon', 'revenue'], '20' => ['Yiyecek', 'revenue'],
             '30' => ['İçecek', 'revenue'], '40' => ['Telefon ve internet', 'revenue'], '50' => ['Diğer gelirler', 'revenue'],
             '55' => ['KDV indirimi', 'revenue'], '60' => ['Çamaşırhane', 'revenue'], '75' => ['Paket farkları', 'revenue'],
@@ -64,6 +64,7 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_transaction_codes')->where('group_id', $groupId($group))->whereNull('food_beverage')->update(['food_beverage' => 'other']);
         }
         $codeQuery(['105', '115'])->update(['is_no_show' => true]);
+        $codeQuery(['100', '107'])->update(['arrangement_code' => 'ACC', 'revenue_bucket' => 'room']);   // Fidelio: ACC Accommodation Expense
 
         // Gelir dışı kodların tipi
         $codeQuery('800')->update(['type' => 'paid_out', 'revenue_bucket' => null]);
@@ -118,7 +119,7 @@ class RocksHotelReferenceSeeder extends Seeder
         }
 
         // Yetkiler ve sistem yöneticisi rolü
-        foreach ([['setup.outlets', 'Outlet tanımları', 'setup']] as [$code, $name, $group]) {
+        foreach ([['setup.outlets', 'Outlet tanımları', 'setup'], ['setup.transaction_codes', 'Departman kodları', 'setup']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -146,11 +147,13 @@ class RocksHotelReferenceSeeder extends Seeder
         // Departman kodu → vergi. Fidelio'da her kodun penceresinde tarihli vergi var (ör. 100 Room, 107 Room Supplement:
         // "1.01.2001 – … VAT 5 %"). Kodların tamamı tek tek alınamadığı için otelin kararıyla: bütün gelir kodları %5;
         // adında oran yazan kodlar ("Others %0", "Others %16", "Others %20") o oranla. Spa, kuaför ve çamaşırhane kodları da %5
-        // verildi, teyit edilecek (docs/fidelio/eslesme.md). Gelir dışı kodlar (ödeme, paid-out, iç, depozito, kur farkı) vergisizdir.
+        // verildi, teyit edilecek (docs/fidelio/eslesme.md). Çamaşırhane ve transfer P4556 raporundan %16. Gelir dışı kodlar (ödeme, paid-out, iç, depozito, kur farkı) vergisizdir.
         // Daha önce vergisi bağlanmış koda dokunulmaz (ekrandan yapılan değişiklik korunur).
         $taxIds = DB::table('pms_taxes')->where('property_id', $propertyId)->whereNull('valid_to')->pluck('id', 'code');
+        // Fidelio raporu P4556 "Department code totals … with tax group" (25.11.2026): 510 Laundry ve 520 Transfer → VAT 16 %.
         $byName = ['552' => 'VAT16', '553' => 'VAT16', '554' => 'VAT16', '555' => 'VAT20', '556' => 'VAT20', '557' => 'VAT20',
-            '580' => 'VAT0', '581' => 'VAT0', '582' => 'VAT0'];
+            '580' => 'VAT0', '581' => 'VAT0', '582' => 'VAT0',
+            '510' => 'VAT16', '511' => 'VAT16', '512' => 'VAT16', '520' => 'VAT16', '521' => 'VAT16', '522' => 'VAT16'];
         $untaxed = ['550', '551', '880'];   // kur farkı
         $linked = DB::table('pms_transaction_code_taxes')->pluck('transaction_code_id')->all();
         $revenue = DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('type', 'revenue')
@@ -158,7 +161,17 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach ($revenue as $code) {
             DB::table('pms_transaction_code_taxes')->insert([
                 'transaction_code_id' => $code->id, 'tax_id' => $taxIds[$byName[$code->code] ?? 'VAT5'], 'sequence' => 1, 'calc_base' => 'net',
+                'valid_from' => '2001-01-01',   // Fidelio: "1.01.2001 – …"
             ]);
+        }
+
+        // Fidelio "Adjustment Dept": asıl kodun düzeltme kodu = ona bağlı ilk "DISC" (DIS kategorili) indirim kodu (100 → 102, 107 → 108).
+        foreach (DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('is_discount', true)
+            ->whereNotNull('discount_of_transaction_code_id')->orderByRaw('CAST(code AS UNSIGNED)')->get(['id', 'category', 'name', 'discount_of_transaction_code_id']) as $discount) {
+            if (! str_starts_with(strtoupper($discount->name), 'REB') && ! str_contains(strtoupper($discount->name), 'REB.')) {
+                DB::table('pms_transaction_codes')->where('id', $discount->discount_of_transaction_code_id)->whereNull('adjustment_transaction_code_id')
+                    ->update(['adjustment_transaction_code_id' => $discount->id]);
+            }
         }
 
         DB::table('pms_properties')->where('id', $propertyId)->update([

@@ -36,6 +36,7 @@ class TaxRateService
             foreach ($links as $link) {
                 DB::table('pms_transaction_code_taxes')->insert([
                     'transaction_code_id' => $link->transaction_code_id, 'tax_id' => $new->id, 'sequence' => $link->sequence, 'calc_base' => $link->calc_base,
+                    'valid_from' => $link->valid_from, 'valid_to' => $link->valid_to,
                 ]);
             }
 

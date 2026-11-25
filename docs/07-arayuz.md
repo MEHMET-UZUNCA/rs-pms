@@ -156,7 +156,7 @@ Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidel
 
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
-İlk yapılan ekran: **Ayarlar → Outlet'ler**. Bütün ayar listeleri aynı düzende olacak.
+Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.
 
 | Tuş | İşlev |
 |---|---|

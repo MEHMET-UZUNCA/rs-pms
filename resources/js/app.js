@@ -150,3 +150,18 @@ if (codeList) {
     onlySelected?.addEventListener('change', apply);
     apply();
 }
+
+// Satır ekle / sil (ör. departman kodunun tarihli vergi satırları): data-rows tablosu, data-row-template şablonu (__i__ yerine sıra no)
+document.addEventListener('click', (e) => {
+    const add = e.target.closest('[data-row-add]');
+    if (add) {
+        const table = document.querySelector(`[data-rows="${add.dataset.rowAdd}"]`);
+        const index = Number(table.dataset.nextIndex || 0);
+        table.dataset.nextIndex = index + 1;
+        const html = table.querySelector('template[data-row-template]').innerHTML.replaceAll('__i__', index);
+        table.tBodies[0].insertAdjacentHTML('beforeend', html);
+        table.tBodies[0].lastElementChild.querySelector('select, input')?.focus();
+    }
+    const remove = e.target.closest('[data-row-remove]');
+    if (remove) remove.closest('[data-row]').remove();
+});

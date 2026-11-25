@@ -62,6 +62,14 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/05-outletler-05-yeni-dogrulama-hatasi.png` | Aynı kodla ikinci outlet açılamaz |
 | `videolar/05-outletler-klavye-ile-kullanim.mp4` | Giriş → Ayarlar menüsü → liste, hızlı arama, `Alt+E` düzenle, RVC no, `F10` kaydet, `Alt+U` yukarı, `Esc` kapat |
 
+## 06 — Ayarlar → Departman Kodları (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/06-departman-kodlari-01-liste.png` | 271 kod, Fidelio sırasıyla; grup, KDV, outlet sütunları; hızlı arama ve grup süzgeci |
+| `goruntuler/06-departman-kodlari-02-duzenle-100-room.png` | Fidelio "Department Codes → Edit" alanları; tarihli vergi; düzeltme kodu 102 |
+| `goruntuler/06-departman-kodlari-03-tarihli-vergi-degisikligi.png` | Bir kodun vergisini bir tarihten itibaren değiştirmek (eski satır kapanır, yeni satır eklenir) |
+
 ## Taslakları yerelde açmak
 
 ```bash

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Setup\OutletController;
+use App\Http\Controllers\Setup\TransactionCodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -24,5 +25,17 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::put('/{outlet}', [OutletController::class, 'update'])->name('update');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
         Route::post('/{outlet}/tasi/{direction}', [OutletController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
+    });
+
+    // Ayarlar → Kasa → Departman Kodları
+    Route::middleware('permission:setup.transaction_codes')->prefix('ayarlar/departman-kodlari')->name('setup.transaction-codes.')->group(function () {
+        Route::get('/', [TransactionCodeController::class, 'index'])->name('index');
+        Route::get('/yeni', [TransactionCodeController::class, 'create'])->name('create');
+        Route::post('/', [TransactionCodeController::class, 'store'])->name('store');
+        Route::get('/{code}/duzenle', [TransactionCodeController::class, 'edit'])->name('edit');
+        Route::get('/{code}/kopyala', [TransactionCodeController::class, 'copy'])->name('copy');
+        Route::put('/{code}', [TransactionCodeController::class, 'update'])->name('update');
+        Route::delete('/{code}', [TransactionCodeController::class, 'destroy'])->name('destroy');
+        Route::post('/{code}/tasi/{direction}', [TransactionCodeController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
     });
 });
