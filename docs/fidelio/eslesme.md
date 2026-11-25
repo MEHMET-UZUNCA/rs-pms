@@ -186,8 +186,8 @@ Kayıt başına bir satır. Yapı, RS PMS'teki folyo tasarımını doğruluyor: 
 | AGENCY_ID / COMPANY_ID (+ ad) | rezervasyondan | |
 | POSTING_RESSTATUS | — | Bilgi amaçlı |
 | POSTING_COMMENT | `note` | |
-| REBATING_POSTING_ID | `reversal_of_id` | Suite8'de düzeltme = "rebate" |
-| ZRDF_SHORTDESC / ZRDF_LONGDESC | `reason_code_id` (`category = posting_reversal`) | Düzeltme gerekçesi |
+| REBATING_POSTING_ID | `discount_of_id` **(Ö)** | **Düzeltme değil, indirim:** Suite8'de *rebate*, rezervasyona bağlanan indirim kuralıdır (Cashier Manual). Bu alan, indirimin uygulandığı asıl kaydı gösterir |
+| ZRDF_SHORTDESC / ZRDF_LONGDESC | `pms_rebate_codes` **(Ö)** | Rebate (indirim) tanımı; ör. konaklamada %10, yiyecek-içecekte %8, "3 kez ücretsiz" |
 
 Görünmeyen ama gerekli: **fatura numarası** (kayıt hangi faturada) — fatura tablosundan alınacak.
 
@@ -225,8 +225,55 @@ Bu view'lar Suite8'in **opsiyon (tentative) ve kesin (definite)** ayrımını en
 | YCAD | Otel segmentasyonu (oda tipi grubu) | Tablo açıklaması |
 | YBLD | Bloklar / allotman | `YBLD_DEFNOOFROOMS` |
 | ZCUR | Para birimleri | `PRO_ISV_ZCUR` |
-| ZRDF | Düzeltme gerekçeleri | `PRO_ISV_POSTINGS` |
+| ZRDF | Rebate (indirim) tanımları | `PRO_ISV_POSTINGS`, Cashier Manual |
 | WDAT | Takvim günleri | `WDAT_DATE` |
 | v8_sys_fideliodate | Fidelio iş günü fonksiyonu | Oracle Demand 360 belgesi |
 
 Fatura, cari, depozito, fiyat kodu, departman kodu tabloları `V8LIVE` tablo listesinden belirlenecek.
+
+## 15. Canlı departman kodları (son 30 gün, otelden alınan çıktı)
+
+`PRO_ISV_POSTINGS` üzerinden son 30 günde kullanılan kodlar. Kodlar ve numaralar RS PMS'e **aynen** aktarılacak.
+
+### Kod değerleri (çıktıdan)
+
+| Alan | Değer | Anlamı |
+|---|---|---|
+| CDT | 1 | Harcama (gelir) |
+| CDT | 5 | Ödeme |
+| PAYMENT_TYPE | 0 | Nakit |
+| PAYMENT_TYPE | 2 | Cari (City Ledger) |
+| PAYMENT_TYPE | 3 | Kredi kartı |
+| PAYMENT_TYPE | 4 | Döviz nakit |
+| PAYMENT_TYPE | boş | Banka havalesi |
+| POSTING_LEDGERSTATUS | 0, 1, 2, 6 | **Doğrulanacak.** 0 çoğunluk (misafir defteri olmalı); 1 yalnız ödemelerde ve transferde (depozito olabilir); 2 ödemelerde ve bazı oda kodlarında; 6 yalnız oda/kahvaltı/akşam yemeğinde ve 7'şer adet (aynı birkaç rezervasyon) |
+
+### Kod aralıkları
+
+| Aralık | Grup | Kodlar |
+|---|---|---|
+| 100–199 | Konaklama ve pansiyon | 100 Room, 102 DISC Room, 105 Room No-Show, 107 Room Supplement, 110 Pension Breakfast, 115 Casino Room No-Show, 130 Pension Dinner |
+| 300–899 | Outlet'ler (Simphony) | Her outlet için **4 kod**: FOOD, BVRG, DISC FOOD, DISC BVRG |
+| 500–699 | Diğer hizmetler | 510 Laundry (+511 DISC), 513 Sauna-Massage (+514 DISC), 520 Transfer, 550 **Kur Farkı**, 580 Others %0, 630 Otopark |
+| 900–999 | Ödemeler | 900 Cash, 903 City Ledger, 910 Visa Card, 920 Bank Payment, 950 Pay US Dollar, 951 Pay Euro |
+
+### Outlet'ler (Simphony RVC'leri ile eşlenecek)
+
+| Outlet | Yiyecek | İçecek | İnd. yiyecek | İnd. içecek |
+|---|---|---|---|---|
+| Cafe Rocks | 320 | 321 | 322 | 324 |
+| Pool Bar | 330 | 331 | 332 | 334 |
+| Room Service | 340 | 341 | 342 | 344 |
+| Minibar | 350 | 351 | 352 | 354 |
+| L'Hirondelle | 385 | 386 | 387 | 388 |
+| Sıralı Et | 490 | 493 | 491 | 494 |
+| Catch Seafood | 650 | 660 | 651 (+652 Reb.) | 661 |
+| Casino | 670 | 680 | — | — |
+| Lyra | 810 | 813 | 811 | 814 (+816 Other) |
+| Rocks Pattiserie | 820 | 830 | 821 | 831 |
+
+Sonuçlar:
+- Simphony eşlemesi (`pms_pos_revenue_mappings`) **outlet × {yiyecek, içecek, indirim yiyecek, indirim içecek}** olarak kurulacak; indirim, negatif gelir olarak ayrı kodda.
+- Pansiyon (110 kahvaltı, 130 akşam yemeği) oda fiyatından ayrılan paket elemanları — tasarımdaki `pms_package_elements` ile birebir.
+- **Kur farkı (550)** ayrı gelir kodu: dövizle ödemede kayıt kuru ile ödeme kuru arasındaki fark otomatik bu koda yazılmalı **(Ö)**.
+- Casino ayrı no-show kodu (115) ve outlet'i var: casino misafirleri ayrı izleniyor.
