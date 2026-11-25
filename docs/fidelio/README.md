@@ -13,14 +13,14 @@ Suite8'in ana şeması **`V8LIVE`**. `PROISV`'deki view'lar `V8LIVE`'da da var; 
 
 | View | Şema | Durum |
 |---|---|---|
-| PRO_ISV_POSTINGS | PROISV, V8LIVE | **Folyo kayıtları** — kolonlar bekleniyor |
-| PRO_EXCHANGERATES | V8LIVE | Döviz kurları — kolonlar bekleniyor |
-| PRO_ISV_ZCUR | V8LIVE | Para birimleri (muhtemelen Suite8 `ZCUR` tablosu) — kolonlar bekleniyor |
-| PRO_DAILYROOMRATETOTAL | V8LIVE | Günlük oda fiyatı toplamı — kolonlar bekleniyor |
-| PRO_DAILY_NOF_ROOM_BED_YCAT | V8LIVE | Oda kategorisine göre günlük oda/yatak — kolonlar bekleniyor |
-| PRO_OOOROOMBEDS_YCAT | V8LIVE | Oda kategorisine göre OOO — kolonlar bekleniyor |
-| PRO_YRMS_BEDS_COUNT_BY_YCAT | V8LIVE | Oda kategorisine göre yatak sayısı (Suite8 `YRMS` oda tablosu) — kolonlar bekleniyor |
-| PRO_YEARVIEW_NEW | V8LIVE | Yıllık görünüm — kolonlar bekleniyor |
+| PRO_ISV_POSTINGS | PROISV, V8LIVE | **Folyo kayıtları** — eşlendi (bkz. eslesme.md §11) |
+| PRO_EXCHANGERATES | V8LIVE | Döviz kurları — eşlendi (§12) |
+| PRO_ISV_ZCUR | V8LIVE | Para birimleri (Suite8 `ZCUR`) — eşlendi (§12) |
+| PRO_DAILYROOMRATETOTAL | V8LIVE | Günlük oda geliri, pansiyon/paket kırılımı — eşlendi (§13) |
+| PRO_DAILY_NOF_ROOM_BED_YCAT | V8LIVE | Oda tipine göre günlük oda/yatak — eşlendi (§13) |
+| PRO_OOOROOMBEDS_YCAT | V8LIVE | Oda tipine göre OOO/OOS — eşlendi (§13) |
+| PRO_YRMS_BEDS_COUNT_BY_YCAT | V8LIVE | Oda tipine göre doluluk ve blok — eşlendi (§13) |
+| PRO_YEARVIEW_NEW | V8LIVE | Günlük ev durumu (house status) — eşlendi (§13) |
 
 Fatura, cari, depozito ve tanımlar (oda, fiyat kodu, işlem kodu) için view yok; bunlar `V8LIVE` tablolarından okunacak.
 

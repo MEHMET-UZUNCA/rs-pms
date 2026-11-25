@@ -152,3 +152,81 @@ Zip'teki 12 view profil, rezervasyon ve gelir özetini kapsıyor. Aşağıdakile
 | Rezervasyon → acente/şirket/kaynak/grup **profil ID'leri** | View yalnız ad veriyor; doğru eşleme için ID gerekli |
 | Allotman / bloklar | Gelecek allotmanlar |
 | İzler (traces), uyarılar, sabit ücretler, yönlendirme kuralları | Gelecek rezervasyonların eksiksiz aktarımı |
+
+---
+
+## 11. PRO_ISV_POSTINGS → pms_postings (folyo kayıtları)
+
+Kayıt başına bir satır. Yapı, RS PMS'teki folyo tasarımını doğruluyor: **pencere**, **pencereyi ödeyen profil**, **iş günü ile sistem tarihinin ayrı tutulması**, **ters kayıt (rebate)** ve **transferde orijinal kaynağın saklanması** Suite8'de de aynı.
+
+| Fidelio | RS PMS | Not |
+|---|---|---|
+| POSTING_ID | `pms_postings.legacy_id` **(Ö)** | Arşiv ve açık bakiye devri için |
+| POSTING_DATE | `business_date` | Fidelio iş günü |
+| POSTING_PCDATE | `created_at` | Bilgisayar saati |
+| CASHIER_ID / CASHIER_NUMBER / CASHIER_INITIALS | `cashier_shift_id` (→ `pms_cashiers.number`), `posted_by` | |
+| POSTING_DC_ID / POSTING_DC_NUMBER / POSTING_DC_DESCRIPTION | `transaction_code_id` (`code` = DC_NUMBER), `description` | **DC = departman kodu** (işlem kodu); numaralar aynen korunacak |
+| POSTING_QUANTITY | `quantity` | |
+| POSTING_UNITPRICE / POSTING_GROSSUNITPRICE | `unit_price` (net) / `gross_unit_price` **(Ö)** | |
+| POSTING_SUMUPAMOUNT | `amount` | İşaret kuralı `CDT` ile doğrulanacak |
+| POSTING_FOREIGNPRICE / GROSSFOREIGNPRICE / FOREIGNSUMUPAMOUNT | `foreign_amount` | |
+| POSTING_CURRENCY / POSTING_CURRENCY_ID / POSTING_EXCHRATE | `foreign_currency`, `exchange_rate` | |
+| BASECURRENCY | `pms_properties.base_currency` | |
+| CDT | `kind` (charge / payment) | **Değer listesi gerekli** |
+| PAYMENT_TYPE | `pms_transaction_codes.payment_kind` | **Değer listesi gerekli** |
+| POSTING_LEDGERSTATUS | `ledger` (guest / deposit / ar / …) | **Değer listesi gerekli** |
+| POSTING_WINDOW_ID / WINDOW_NUMBER | `folio_id` (`pms_folios.window`) | |
+| WINDOW_INVOICE_TO_PROFILE_ID / _NAME | `pms_folios.payee_profile_id` | |
+| POSTING_RES_ID (+ ACT/EXP ARR/DEP, ROOMNUMBER) | `reservation_id`, `room_id` | |
+| ROOMNUMBER | `room_id` (kayıt anındaki oda) | |
+| POSTING_FA_ID / FA_LONGDESC / FA_*VALID* | `pms_folios` (`type = passer_by / house_account / master`) | **Financial Account** = rezervasyonsuz hesap. Geçerlilik tarihleri için `pms_folios.name`, `valid_from`, `valid_until` **(Ö)** |
+| POSTING_PROFILE_ID | `pms_postings.payee` (folyodan) | |
+| POSTING_ORG_RES_ID / ORG_FA_ID / ORG_PROFILE_ID | `transfer_from_id` zinciri; ek olarak `origin_reservation_id` **(Ö)** | Transfer edilen kaydın ilk sahibi — Suite8'de doğrudan tutuluyor, raporlarda gerekli |
+| ORG_MARKETCODE_* | `market_segment_id` **(Ö)** kayıtta | Gelirin hangi segmentten geldiği, transferden sonra da korunur |
+| AGENCY_ID / COMPANY_ID (+ ad) | rezervasyondan | |
+| POSTING_RESSTATUS | — | Bilgi amaçlı |
+| POSTING_COMMENT | `note` | |
+| REBATING_POSTING_ID | `reversal_of_id` | Suite8'de düzeltme = "rebate" |
+| ZRDF_SHORTDESC / ZRDF_LONGDESC | `reason_code_id` (`category = posting_reversal`) | Düzeltme gerekçesi |
+
+Görünmeyen ama gerekli: **fatura numarası** (kayıt hangi faturada) — fatura tablosundan alınacak.
+
+## 12. PRO_ISV_ZCUR ve PRO_EXCHANGERATES → döviz
+
+| Fidelio | RS PMS |
+|---|---|
+| ZCUR_ID / SHORTDESC / LONGDESC / ISO3 | `pms_currencies.code` (ISO3), `name`, `legacy_id` |
+| ZCUR_DECDIGITS / ZCUR_ACTIVE / ZCUR_DISPLORDER | `decimals`, `is_active`, `sort` **(Ö)** |
+| ZCUR_MONTHLY | `rate_period` **(Ö)** (daily / monthly) — Suite8'de bazı dövizler aylık kurla çalışıyor |
+| CURRENT_RATE | son `pms_exchange_rates.posting_rate` |
+| WDAT_DATE + EXCH_RATE_DAY / MONTH / YEAR | `pms_exchange_rates` (`business_date`, `posting_rate`); aylık/yıllık kur → `rate_type` **(Ö)** |
+| LYEAR_* | Hesaplanır (geçen yıl karşılaştırması) |
+
+## 13. Doluluk ve gelir özet view'ları → geçmiş istatistik
+
+| View | Ne verir | RS PMS |
+|---|---|---|
+| PRO_YEARVIEW_NEW | Gün bazında ev durumu: oda/yatak, OOO/OOS, kesin/opsiyon satılan oda, blok (alınan/kalan), ücretsiz/ev kullanımı, yetişkin/çocuk, gelen/giden kırılımı | `pms_daily_statistics` (geçmiş, `dimension = total`) ve paralel çalışmada `pms_inventory_daily` ile karşılaştırma |
+| PRO_YRMS_BEDS_COUNT_BY_YCAT | Oda tipi × gün: oda sayısı, kesin/opsiyon blok, kesin/opsiyon doluluk, günübirlik | `pms_daily_statistics` (`dimension = room_type`) |
+| PRO_DAILY_NOF_ROOM_BED_YCAT | Oda tipi × gün oda/yatak sayısı | `rooms_available` |
+| PRO_OOOROOMBEDS_YCAT | Oda tipi × gün OOO/OOS; `YCAT_NOTINAVL` | `rooms_ooo`; `YCAT_NOTINAVL = 1` → `pms_room_types.is_pseudo` |
+| PRO_DAILYROOMRATETOTAL | Gün bazında oda geliri: pansiyon (`PENSION_*`) ve paket kırılımı (`BREAKDOWNTOTAL_*`), brüt/net, ücretsiz/ev kullanımı, garantili | Geçmiş `room_revenue`; pansiyon/kırılım ayrımı RS PMS'teki *oda geliri = fiyat − paket elemanları* kuralını doğruluyor |
+
+Bu view'lar Suite8'in **opsiyon (tentative) ve kesin (definite)** ayrımını envanterde ayrı tuttuğunu gösteriyor; RS PMS'te `sold_definite` / `sold_tentative` var, bloklar için de ayrım önerilir: `block_remaining_definite` / `block_remaining_tentative` **(Ö)**.
+
+## 14. View'lardan çıkan Suite8 tablo adları
+
+| Tablo | Anlamı | Kaynak |
+|---|---|---|
+| YRES | Rezervasyon başlığı | Oracle Demand 360 belgesi (`YRES_EXPDEPTIME`) |
+| YDET | Rezervasyon gün detayı | `YDET_DATE` |
+| YRMS | Odalar | `YRMS_YCAT_ID` |
+| YCAT | Oda tipleri ("setup table of the room types", 10 satır) | Tablo açıklaması |
+| YCAD | Otel segmentasyonu (oda tipi grubu) | Tablo açıklaması |
+| YBLD | Bloklar / allotman | `YBLD_DEFNOOFROOMS` |
+| ZCUR | Para birimleri | `PRO_ISV_ZCUR` |
+| ZRDF | Düzeltme gerekçeleri | `PRO_ISV_POSTINGS` |
+| WDAT | Takvim günleri | `WDAT_DATE` |
+| v8_sys_fideliodate | Fidelio iş günü fonksiyonu | Oracle Demand 360 belgesi |
+
+Fatura, cari, depozito, fiyat kodu, departman kodu tabloları `V8LIVE` tablo listesinden belirlenecek.
