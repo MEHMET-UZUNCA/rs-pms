@@ -64,7 +64,10 @@ RS PMS **ikisini de** destekleyecek; ayar ekranından seçilir. Rocks Hotel'de k
 | Timeout / Ping Frequency / Encoding | 30 sn / 0 / ASCII | |
 | Service Host | 99 – CAPS-ROCKS (192.168.200.9) | Bağlantıyı açan Simphony sunucusu |
 | Seçenek 1, 2, 3, 5 | Açık | 19 haneli giriş, arayüz logu, girişsiz sorgu, **9 haneli kasa no** |
-| Seçenek 4, 7, 8, 9, 10, 11 | Kapalı | 4 haneli kişi sayısı, çevrimdışı kayıt yok, ping yok, 3 haneli RVC, 4 haneli çek no |
+| Seçenek 4, 7, 8, 9, 10, 11, 12, 13 | Kapalı | 4 haneli kişi sayısı, mobil MICROS yok, çevrimdışı kayıt yok, ping yok, 3 haneli RVC, 4 haneli çek no, hediye/sadakat kartı yok, otomatik ters kayıt yok |
+
+Seçenek listesi 13'te biter (tam liste alındı). Ping kapalı olduğundan bağlantının canlılığı ping ile değil, gelen mesajlarla izlenir;
+otomatik ters kayıt kapalı olduğundan iptal edilen çekler Simphony'den ayrı (eksi tutarlı) kayıt olarak gelir.
 
 **Kasadaki PMS ekranları bir ISL betiğiyle çalışır.** EMC → *Extension Application* → **ONBURO** (DbID 83) içeriği:
 
