@@ -66,6 +66,23 @@ RS PMS **ikisini de** destekleyecek; ayar ekranından seçilir. Rocks Hotel'de k
 | Seçenek 1, 2, 3, 5 | Açık | 19 haneli giriş, arayüz logu, girişsiz sorgu, **9 haneli kasa no** |
 | Seçenek 4, 7, 8, 9, 10, 11 | Kapalı | 4 haneli kişi sayısı, çevrimdışı kayıt yok, ping yok, 3 haneli RVC, 4 haneli çek no |
 
+**Kasadaki PMS ekranları bir ISL betiğiyle çalışır.** EMC → *Extension Application* → **ONBURO** (DbID 83) içeriği:
+
+| # | Anahtar | Dosya | Ne |
+|---|---|---|---|
+| 1 | html | — | Kasada misafir listesi / rezervasyon detayı penceresi (HTML) |
+| 2 | McrsExtDialogsML | McrsExtDialogsML.dll | Pencereyi açan Simphony eklentisi |
+| 3 | **MF_ENH** | **MF_ENH.isl** | Fidelio PMS arayüz betiği — mesajları kuran ve çözen asıl kod |
+| 4 | MF_ENH_android | MF_ENH_android.isl | Android kasalar için aynı betik |
+
+HTML penceresinden çıkan cevap biçimi (IFC8'in kasaya döndürdüğü):
+- **Misafir listesi:** satırlar `^` ile ayrılır; ilk satır başlıktır (`Room RmT #   Name        Arrive Dep   Rate   Balnc  Agnt/Srce  Group/Comp S`),
+  sonraki her satır `rezervasyon_no*sabit genişlikli metin` (ör. `111*315  TTW  Piccard Jean  20/10 28/01 130.00 3271.00 …`). En çok 20 satır gösterilir.
+- **Kasiyerin seçimi:** pencere `gst_dtl:<rezervasyon_no>` (Detay), `gst_rsv:<rezervasyon_no>` (Rezervasyon) ya da `close:0` döndürür.
+- **Rezervasyon detayı:** `Etiket : değer` satırları `^` ile (Guest Name, Arrival, Departure, Room Type, Time, Room, Adult/Chld, Rate, All Postings, Packages …).
+
+Betik (MF_ENH.isl) mesajların tam biçimini tanımlar; RS PMS dinleyicisi bu betiğin beklediği cevapları birebir üretecek. Betiğin metni istendi (docs/eksikler.md).
+
 **Paralel deneme:** Simphony birden çok arayüz kaydı tutabilir (RVC başına 16 bağlantı numarası). Canlı #101'e dokunmadan
 ikinci bir kayıt (#102, RS PMS adresi) açılır; ayrı bir bağlantı numarasına, **ayrı bir test ödeme tipine** ("Oda Hesabı TEST") ve
 bir test kasasındaki düğmeye bağlanır. Böylece aynı çek iki sisteme birden gitmez: hangi ödeme tipi seçilirse o arayüze gider.
