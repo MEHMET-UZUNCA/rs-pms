@@ -2,6 +2,7 @@
 
 namespace App\Domain\Reservations\Models;
 
+use App\Domain\Rates\Models\RateCode;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,5 +32,10 @@ class ReservationNight extends Model
     public function reservation(): BelongsTo
     {
         return $this->belongsTo(Reservation::class, 'reservation_id');
+    }
+
+    public function rateCode(): BelongsTo
+    {
+        return $this->belongsTo(RateCode::class, 'rate_code_id');
     }
 }

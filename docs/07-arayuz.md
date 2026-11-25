@@ -170,6 +170,14 @@ Sorgu: Ad (`Alt+A`), oda, rezervasyon no, şirket/acente, geliş, çıkış, dur
 `+1` / `-7`, `25.11`, `25.11.2026`. Hızlı filtreler `Alt+1 … Alt+0` (yukarıdaki tablo). `↑/↓` satır seçer; seçili kaydın ağacı
 (iletişim, adres, profiller, folyolar, geçmiş) ve bilgi paneli altta sayfa yenilenmeden açılır. `Alt+G` giriş (check-in).
 
+### Rezervasyon Kartı (yapıldı)
+
+Navigatörde `Ctrl+N` (ya da `Alt+N`) yeni kart, `Enter` / çift tık / `Alt+E` seçili rezervasyonu açar. Sekmeler `Ctrl+1 … Ctrl+0`
+(Fidelio sırası); çalışanlar: `Ctrl+1` Rezervasyon, `Ctrl+3` Profiller, `Ctrl+5` Gece fiyatları, `Ctrl+9` Notlar — diğerleri sırası gelince.
+Misafir: soyadla var olan profil aranır ya da yeni misafir yazılır. Tarih kutuları Fidelio girişini kabul eder (`+2`, `25.11`).
+Oda listesi seçili oda tipine göre süzülür ve odanın durumunu gösterir (Vacant / Dirty …). `F10` kaydet, `Esc` kapat.
+Kayıt rezervasyon servisinden geçer: onay numarası, gece fiyatları (elle fiyat korunur), müsaitlik, oda çakışması ve arıza kontrolü.
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.

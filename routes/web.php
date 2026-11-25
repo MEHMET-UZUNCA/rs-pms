@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Reservations\NavigatorController;
+use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\TransactionCodeController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,13 @@ Route::middleware(['auth', 'property'])->group(function () {
     // Rezervasyon Navigatörü
     Route::middleware('permission:reservations.view')->prefix('rezervasyon')->name('reservations.')->group(function () {
         Route::get('/', [NavigatorController::class, 'index'])->name('navigator');
+        Route::middleware('permission:reservations.edit')->group(function () {
+            Route::get('/yeni', [ReservationCardController::class, 'create'])->name('create');
+            Route::post('/', [ReservationCardController::class, 'store'])->name('store');
+            Route::get('/profiller', [ReservationCardController::class, 'profiles'])->name('profiles');
+            Route::get('/{reservation}', [ReservationCardController::class, 'edit'])->whereNumber('reservation')->name('edit');
+            Route::put('/{reservation}', [ReservationCardController::class, 'update'])->whereNumber('reservation')->name('update');
+        });
         Route::get('/{reservation}/ozet', [NavigatorController::class, 'summary'])->name('summary');
         Route::get('/hesap/{folio}/ozet', [NavigatorController::class, 'folioSummary'])->name('folio-summary');
         Route::post('/{reservation}/giris', [NavigatorController::class, 'checkIn'])->middleware('permission:reservations.checkin')->name('check-in');

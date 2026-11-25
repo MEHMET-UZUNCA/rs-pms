@@ -192,3 +192,66 @@ document.addEventListener('click', (e) => {
     const remove = e.target.closest('[data-row-remove]');
     if (remove) remove.closest('[data-row]').remove();
 });
+
+// Sekmeler (Rezervasyon Kartı: Ctrl+1 … Ctrl+0): [data-tabs] içinde data-tab-button / data-tab-panel. Hatalı alan varsa onun sekmesi açılır.
+document.querySelectorAll('[data-tabs]').forEach((root) => {
+    const buttons = [...root.querySelectorAll('[data-tab-button]')];
+    const show = (id) => {
+        buttons.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tabButton === id)));
+        root.querySelectorAll('[data-tab-panel]').forEach((p) => { p.hidden = p.dataset.tabPanel !== id; });
+        try { sessionStorage.setItem('tab:' + location.pathname, id); } catch {}
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.tabButton)));
+    const invalid = root.querySelector('.input-error')?.closest('[data-tab-panel]')?.dataset.tabPanel;
+    let saved = null;
+    try { saved = sessionStorage.getItem('tab:' + location.pathname); } catch {}
+    show(invalid ?? (buttons.some((b) => b.dataset.tabButton === saved) ? saved : buttons[0]?.dataset.tabButton));
+});
+
+// Oda listesi seçili oda tipine göre süzülür
+const roomType = document.querySelector('[data-room-type]');
+const roomSelect = document.querySelector('[data-room-select]');
+if (roomType && roomSelect) {
+    const filterRooms = () => {
+        roomSelect.querySelectorAll('option[data-type]').forEach((o) => { o.hidden = o.dataset.type !== roomType.value; });
+        if (roomSelect.selectedOptions[0]?.hidden) roomSelect.value = '';
+    };
+    roomType.addEventListener('change', filterRooms);
+    filterRooms();
+}
+
+// Profil arama: soyad yazılır, var olan profil seçilirse yeni misafir alanları gizlenir
+const profileSearch = document.querySelector('[data-profile-search]');
+if (profileSearch) {
+    const results = document.querySelector('[data-profile-results]');
+    const idInput = document.querySelector('[data-profile-id]');
+    const chosen = document.querySelector('[data-profile-chosen]');
+    const newGuest = document.querySelectorAll('[data-new-guest], [data-new-guest-label]');
+    let timer;
+    const choose = (p) => {
+        idInput.value = p ? p.id : '';
+        chosen.textContent = p ? `${p.display_name}${p.nationality_code ? ' · ' + p.nationality_code : ''}` : '';
+        chosen.classList.toggle('hidden', !p);
+        newGuest.forEach((el) => el.classList.toggle('hidden', !!p));
+        results.classList.add('hidden');
+    };
+    profileSearch.addEventListener('input', () => {
+        clearTimeout(timer);
+        if (idInput.value) choose(null);
+        const q = profileSearch.value.trim();
+        if (q.length < 2) { results.classList.add('hidden'); return; }
+        timer = setTimeout(async () => {
+            const res = await fetch(`${profileSearch.dataset.profileSearch}?q=${encodeURIComponent(q)}`, { headers: { Accept: 'application/json' } });
+            const list = res.ok ? await res.json() : [];
+            results.replaceChildren(...list.map((p) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'block w-full text-left px-2 py-1 hover:bg-brand-50';
+                b.textContent = `${p.display_name}${p.nationality_code ? ' · ' + p.nationality_code : ''}`;
+                b.addEventListener('click', () => { choose(p); profileSearch.value = p.display_name; });
+                return b;
+            }));
+            results.classList.toggle('hidden', list.length === 0);
+        }, 200);
+    });
+}

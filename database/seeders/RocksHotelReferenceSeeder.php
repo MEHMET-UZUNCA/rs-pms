@@ -169,7 +169,8 @@ class RocksHotelReferenceSeeder extends Seeder
 
         // Yetkiler ve sistem yöneticisi rolü
         foreach ([['setup.outlets', 'Outlet tanımları', 'setup'], ['setup.transaction_codes', 'Departman kodları', 'setup'],
-            ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations']] as [$code, $name, $group]) {
+            ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations'],
+            ['reservations.edit', 'Rezervasyon açma ve düzenleme', 'reservations']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);

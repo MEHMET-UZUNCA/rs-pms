@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Rezervasyon Kartı (Fidelio New / Edit Reservation): Ctrl+1…Ctrl+0 sekmeleri (Rezervasyon, Profiller, Gece fiyatları, Notlar çalışır; diğerleri yerinde), yeni misafir ya da profil arama, Fidelio tarih girişi, oda tipine göre süzülen oda listesi (oda durumuyla), fiyat kodu ve elle fiyat, rezervasyon tipi / segment / kaynak / şirket / acente / garanti / kredi limiti / oda hesabı izni, notlar ve durum geçmişi. Navigatörde Ctrl+N yeni, Enter / çift tık düzenle. Rezervasyon servisine düzenleme metodu (tarih, oda, fiyat, kişi değişikliği; elle fiyatla tarih uzatma). Yetki: reservations.edit. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Çok dilli arayüz: varsayılan dil İngilizce, terimler Fidelio Suite8 ile aynı (Reservation Navigator, In House, Arrivals, Departures, Check In, Billing, Department Codes, Business Date; kat hizmetleri: Vacant/Occupied, Clean/Dirty/Inspected/Pick Up, Out of Order/Out of Service); Türkçe ikinci dil. Kullanıcı dilini üst çubuktan (ve giriş ekranından) seçer, seçim kullanıcı kaydında saklanır. Metinler lang/en/pms.php ve lang/tr/pms.php'de; Türkçe doğrulama mesajları. Bütün ekranlar (ana çerçeve, giriş, outlet'ler, departman kodları, rezervasyon navigatörü) dil dosyalarına bağlandı. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Simphony eşlemeleri Fidelio'nun 24.11.2026 kayıtlarından: her outlet için satış kalemi 1 → FOOD, 2 → BVRG kodu; ödeme tipleri 131/231/402/404/401 → sanal hesaplar 9901/9902/9903/9401 ve 900/910/903 ödeme kodları. Oda dışı ödemeler artık Fidelio'daki gibi sanal hesaba satış + ödeme olarak yazılır (outlet cirosu PMS'te). Eksi tutarlı ödeme (iade) doğru işaretle yazılır. Testler SQLite ve MySQL'de geçti. (M.U)

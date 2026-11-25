@@ -71,7 +71,7 @@ class DemoDataSeeder extends Seeder
 
             return (int) $pid;
         };
-        $agent = $profile('agent', 'Örnek Turizm Acentesi', ['company_name' => 'Örnek Turizm Acentesi'], ['phone' => '+90 392 000 00 01']);
+        $agent = $profile('travel_agent', 'Örnek Turizm Acentesi', ['company_name' => 'Örnek Turizm Acentesi'], ['phone' => '+90 392 000 00 01']);
         $company = $profile('company', 'Örnek Holding A.Ş.', ['company_name' => 'Örnek Holding A.Ş.'], ['email' => 'rezervasyon@ornek.example']);
         $casino = $profile('company', 'Casino', ['company_name' => 'Casino']);
         $guest = fn (string $last, string $first, string $country, array $comms = []) => $profile('individual', "{$last}, {$first}",

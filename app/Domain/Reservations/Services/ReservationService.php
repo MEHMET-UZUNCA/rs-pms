@@ -98,6 +98,81 @@ class ReservationService
         });
     }
 
+    /**
+     * Rezervasyon kartından düzenleme. Tarih değişirse geceler yeniden kurulur (elle fiyat korunur); oda tipi, fiyat kodu, kişi sayısı ya da
+     * elle fiyat değişirse gelmemiş geceler yeniden fiyatlanır; oda değişirse oda atama kuralları (çakışma, arıza) uygulanır.
+     *
+     * @param  array<string,mixed>  $data  rezervasyon alanları + isteğe bağlı child_bands [1=>n,…], manual_amount, room_id
+     */
+    public function update(Reservation $reservation, array $data, ?int $userId = null): Reservation
+    {
+        return DB::transaction(function () use ($reservation, $data, $userId) {
+            $this->assertActive($reservation);
+            $bands = $data['child_bands'] ?? [1 => $reservation->child_band_1, 2 => $reservation->child_band_2, 3 => $reservation->child_band_3];
+            $manual = array_key_exists('manual_amount', $data) ? $data['manual_amount'] : null;
+            $roomId = array_key_exists('room_id', $data) ? ($data['room_id'] ? (int) $data['room_id'] : null) : $reservation->room_id;
+            [$arrival, $departure] = [$data['arrival_date'] ?? null, $data['departure_date'] ?? null];
+            unset($data['child_bands'], $data['manual_amount'], $data['room_id'], $data['arrival_date'], $data['departure_date']);
+
+            $pricing = ['room_type_id', 'rate_code_id', 'adults'];
+            $repricing = $manual !== null || collect($pricing)->contains(fn ($f) => array_key_exists($f, $data) && (string) $data[$f] !== (string) $reservation->{$f})
+                || (int) array_sum($bands) !== (int) $reservation->children;
+
+            if (isset($data['rate_code_id'])) {
+                $data['currency_code'] = RateCode::query()->whereKey($data['rate_code_id'])->value('currency_code') ?? $reservation->currency_code;
+            }
+            if (isset($data['room_type_id']) && $reservation->status !== 'in_house') {
+                $data['charge_room_type_id'] = $data['room_type_id'];
+            }
+            $reservation->update(array_merge($data, [
+                'children' => (int) array_sum($bands), 'child_band_1' => (int) ($bands[1] ?? 0), 'child_band_2' => (int) ($bands[2] ?? 0),
+                'child_band_3' => (int) ($bands[3] ?? 0), 'updated_by' => $userId,
+            ]));
+
+            [$oldFrom, $oldTo] = [$reservation->arrival_date, $reservation->departure_date];
+            $from = CarbonImmutable::parse($arrival ?? $oldFrom);
+            $to = CarbonImmutable::parse($departure ?? $oldTo);
+            if (! $from->isSameDay($oldFrom) || ! $to->isSameDay($oldTo)) {
+                if ($manual === null) {
+                    $reservation = $this->changeDates($reservation->fresh(), $from->toDateString(), $to->toDateString(), $userId);
+                } else {
+                    // Elle fiyat verildi: tarihler değişir, bütün gelmemiş geceler aşağıda bu fiyatla yeniden kurulur.
+                    if ($reservation->status === 'in_house' && ! $from->isSameDay($oldFrom)) {
+                        throw new ReservationException('İçerideki misafirin giriş tarihi değiştirilemez.');
+                    }
+                    if ($to->lte($from)) {
+                        throw new ReservationException('Çıkış tarihi girişten sonra olmalı.');
+                    }
+                    $reservation->update(['arrival_date' => $from->toDateString(), 'departure_date' => $to->toDateString(), 'nights' => $from->diffInDays($to)]);
+                    $reservation->nightRows()->where('status', 'expected')->where(fn ($q) => $q->where('stay_date', '<', $from->toDateString())
+                        ->orWhere('stay_date', '>=', $to->toDateString()))->delete();
+                    $this->refreshAvailability($reservation, $from->min($oldFrom), $to->max($oldTo));
+                }
+            }
+            if ($repricing) {
+                $kept = $manual === null ? $reservation->nightRows()->where('is_overridden', true)->get()
+                    ->mapWithKeys(fn ($n) => [$n->stay_date->toDateString() => (float) $n->amount])->all() : [];
+                $reservation->nightRows()->where('status', 'expected')->delete();
+                $this->buildNights($reservation->fresh(), $bands, (int) $reservation->extra_beds, $manual !== null ? (float) $manual : null, $kept);
+            }
+
+            $reservation = $reservation->fresh();
+            if ($roomId !== $reservation->room_id) {
+                if ($roomId) {
+                    $reservation = $this->assignRoom($reservation, Room::query()->findOrFail($roomId), $userId);
+                } elseif ($reservation->status !== 'in_house') {
+                    $reservation->update(['room_id' => null]);
+                    $reservation->nightRows()->update(['room_id' => null]);
+                } else {
+                    throw new ReservationException('İçerideki misafirin odası boşaltılamaz; oda değiştirin.');
+                }
+            }
+            $this->refreshAvailability($reservation, $reservation->arrival_date, $reservation->departure_date);
+
+            return $reservation->fresh(['nightRows']);
+        });
+    }
+
     public function cancel(Reservation $reservation, int $reasonCodeId, ?int $userId = null): Reservation
     {
         return DB::transaction(function () use ($reservation, $reasonCodeId, $userId) {

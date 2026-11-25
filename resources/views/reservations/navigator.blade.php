@@ -66,7 +66,7 @@
                         </tr></thead>
                         <tbody>
                         @foreach ($rows as $r)
-                            <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}"
+                            <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
                                 <td class="font-semibold">{{ $r->room?->number }}</td>
@@ -96,8 +96,12 @@
         </section>
 
         <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
-            <span class="btn btn-side opacity-40" title="{{ __('pms.res.coming_soon') }}">{{ __('pms.common.new') }} <span class="kbd ml-auto">Ctrl+N</span></span>
-            <span class="btn btn-side opacity-40" title="{{ __('pms.res.coming_soon') }}">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Enter</span></span>
+            @can('permission', 'reservations.edit')
+                <a href="{{ route('reservations.create') }}" class="btn btn-side" data-hotkey="ctrl+n alt+n">{{ __('pms.common.new') }} <span class="kbd ml-auto">Ctrl+N</span></a>
+            @endcan
+            @can('permission', 'reservations.edit')
+                <a class="btn btn-side" data-needs-selection="res-grid" data-action="edit" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Enter</span></a>
+            @endcan
             @can('permission', 'reservations.checkin')
                 <form method="POST" data-confirm="{{ __('pms.res.check_in_confirm') }}">
                     @csrf

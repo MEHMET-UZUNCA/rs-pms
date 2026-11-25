@@ -16,6 +16,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
 | 8 | Logo Tiger: sürüm, REST lisansı, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Bekleniyor |
 | 9 | Rocks Hotel oda tipleri ve oda listesi (Fidelio YCAT/YRMS) | Fidelio | Gerçek oda tanımları (şu an yalnız örnek veri var) | Bekleniyor |
+| 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
 | 10 | Fiyat kodları ve sezon fiyatları | Fidelio | Gerçek fiyat tanımları | Bekleniyor |
 
 ## Alınanlar
@@ -42,7 +43,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 ## Yapılacak ekranlar ve işler (sırayla)
 
-1. Rezervasyon Kartı (Ctrl+1 … Ctrl+0) — yeni / düzenle
+1. ~~Rezervasyon Kartı~~ yapıldı (Ctrl+1, 3, 5, 9) — kalan sekmeler: Ctrl+2 envanter, Ctrl+4 paketler, Ctrl+6 özellikler, Ctrl+7 kredi kartı, Ctrl+8 sabit ücretler, Ctrl+0 yemek planı; iptal ve paylaşım (share)
 2. ~~Simphony dinleyicisi (Enhanced protokol)~~ yapıldı — kalan: SPH.XML'den satış kalemi eşlemeleri, oda dışı ödemelerin FA'ya yazılması, Simphony'de ikinci arayüz kaydı (#102) ile canlı deneme
 3. Folyo (Billing) ekranı
 4. Vergiler (Tax Details) ekranı ve Departman Kodu Grupları ekranı

@@ -89,6 +89,14 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/08-dil-02-navigator-ingilizce.png` | Fidelio terimleri: In House, Arrivals, Departures, Check In, Business Date; Front Office menüsü |
 | `goruntuler/08-dil-03-navigator-turkce.png` | Aynı ekran Türkçe (üst çubukta TR) |
 
+## 09 — Rezervasyon Kartı (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/09-rezervasyon-karti-01-yeni-profil-arama.png` | Navigatörde `Ctrl+N` → yeni kart; soyadla profil arama, ya da yeni misafir |
+| `goruntuler/09-rezervasyon-karti-02-kaydedildi.png` | `F10` ile kaydedildi: onay no, oda, gece fiyatı ve toplam |
+| `goruntuler/09-rezervasyon-karti-03-gece-fiyatlari.png` | `Ctrl+5` gece gece fiyat (Rate Grid) |
+
 ## Taslakları yerelde açmak
 
 ```bash
