@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Uygulama katmanı 1. adım: 34 model; Rocks Hotel tanım verileri (Fidelio'nun 61 departman kodu, 22 indirim kodu asıl kodlarına bağlı, 10 outlet, para birimleri, kur farkı kodu); servisler: boşluksuz numara serisi, vergi hesaplama (fiyata dahil/hariç), fiyat hesaplama (kişi sayısı, çocuk bantları, ek yatak, en dar aralık, haftanın günü, gün tipi, türetilmiş fiyat, yuvarlama, pansiyon paketi), günlük müsaitlik hesabı (arıza, kesin/opsiyon satış, blok), folyo kaydı (harcama, ödeme, ters kayıt, transfer, tekrar güvenliği, kapalı folyo/iş günü kontrolü) — 12 yeni test. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Fidelio uyumlu PROISV view'ları: 13 view, 391 kolon — Fidelio ile aynı ad, kolon adı, sıra ve kod değerleri (durum 0–13, profil kategorisi 1–6, CDT 1/5, ödeme tipi, cinsiyet…). Kolonların Fidelio ile birebir aynı olduğunu ve kod değerlerini doğrulayan testler; sunucu için ayrı proisv şeması ve yalnız okuma kullanıcısı betiği. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - 8. aşama: dış kimlikler, RS ONE olay kuyruğu, kimlik bildirimi, Fidelio aktarım partileri ve hataları, kanal yöneticisi (bağlantı, eşleme, gönderim kuyruğu), kayıtlı raporlar, bildirimler, webhook — 13 tablo. Tasarım belgesindeki her tablonun veritabanında bulunduğunu doğrulayan test eklendi. Veritabanı tamamlandı: 211 tablo, 604 bağlantı, 10 tetikleyici. Testler SQLite ve MySQL'de geçti. (M.U)

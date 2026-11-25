@@ -4,7 +4,7 @@
 Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalır, restoran/bar satış noktaları
 **Oracle Simphony**'den gelir. İleride **RS ONE** ile tek uygulamada birleşecektir.
 
-> Durum: **Veritabanı tamamlandı.** 211 `pms_` tablosu, 604 bağlantı, 10 tetikleyici ve Fidelio uyumlu 13 PROISV view'ı (391 kolon, Fidelio ile birebir) oluşturuldu; 37 test. Sıradaki: uygulama katmanı (modeller, servisler, ekranlar).
+> Durum: **Uygulama katmanı — 1. adım.** Veritabanı `main`'de (211 tablo, 13 Fidelio uyumlu view). Modeller, Rocks Hotel tanım verileri (Fidelio'nun 61 departman kodu, 10 outlet) ve temel servisler (numara serisi, vergi, fiyat hesaplama, müsaitlik, folyo kaydı) eklendi; 49 test.
 
 ## Belgeler
 
