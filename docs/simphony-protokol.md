@@ -88,8 +88,28 @@ SOH <kasa no 9 hane> <arayüz adı 16 hane, "MF_ENH          "> STX FS <sıra 2 
 - Vergi: Simphony **VAT** modunda; vergi kalemi 1–63 **vergi dahil matrah** taşır (Oracle belgesi). Logda 1 ve 2 kullanılıyor.
 - Sondaki 8 alan: çek no, çek garsonu, servis dönemi (POSTING_ADD_INFO=0), RVC no (EMC "#", ör. 15 = Rocks Patisserie), kişi, tarih, saat, önceki ödeme.
 
-## 7. Açık noktalar
+## 7. IFC8 ayarı (`C:\FIDELIO\IFC8\SPH\SPH.XML`)
 
-- `SPH.XML` (IFC8: `C:\FIDELIO\IFC8\SPH\SPH.XML`): satış kalemi × outlet → departman kodu ve ödeme tipi → sanal oda eşlemesi.
+| Ayar | Değer | RS PMS'te |
+|---|---|---|
+| IFC1 COMM | TCP, LOCAL, port **5010** | Dinleyici portu 5010 (seeder) |
+| CheckSum / Layer2 | M87CS / M87TCP | §1'deki checksum |
+| MaximumGuestsNum | 20 | Liste en çok 20 satır |
+| RegisterIdLen | 30 | Rezervasyon no 30 haneye sola dayalı |
+| MaxNumberOfTaxItemizer | 63 | 63 vergi kalemi |
+| ResQuery / GuestQuery satırları | Name, Arrival, Departure, Payment Method, Remarks 1–2, Adults / Kids, Group, Ratecode, Messages / Name, Address 1–2, ZIP / City, State, Country, Phone, E-Mail, Language, VIP | Aynı sıra ve etiketler |
+| ReservationQueryHeader | "Room Name Arrival/Departure Payment" | Aynı başlık |
+| BilldisplayOption 1 (tarih dd.mm, açıklama 18, tutar 8, toplam "Total") | Kasada folyo gösterimi açık | Logda görülmedi; mesajı görülünce eklenecek |
+| ExtendedInquiryOption 2, PostAnswerNameOption 0, ChecknumberOption 3, RequestType 1 | — | Davranış logdakiyle aynı |
+| PMS1 | Suite8 veritabanına doğrudan bağlantı (V8Live), **IFC numarası 7**, yönlendirme kasa numarasına göre | — |
+
+**Satış kalemi → departman kodu eşlemesi IFC8'de değil, Fidelio Suite8'deki 7 numaralı arayüz tanımında** tutulur: IFC8 kaydı
+`SalesOutlet` (RVC), `Subtotal1…n` (satış kalemleri) ve `PaymentMethod` (ödeme tipi) ile Suite8'e gönderir, Suite8 bunları departman
+kodlarına ve sanal odalara çevirir (canlı IFC8 ekranında `Posted by PaymentMethod="231" to DesType|DestId="2|9902"`).
+SPH.XML'de şifreli veritabanı parolaları vardır; bu dosya depoya konmaz.
+
+## 8. Açık noktalar
+
+- Suite8'deki 7 numaralı arayüzün eşleme ekranları: outlet (RVC) × satış kalemi (Subtotal) → departman kodu, ödeme tipi → sanal oda / departman kodu.
 - Simphony ödeme tipi listesi (131, 231, 401, 402, 404, 601 adları), satış kalemi ve vergi kalemi adları.
 - `FO_FI_GST_MESSAGE` / `FO_FI_GST_LOCATOR` başarılı cevap biçimi (logda yalnız "bulunamadı" görüldü) — ilk sürümde aynı hata cevabı verilir.
