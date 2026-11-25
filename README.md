@@ -41,9 +41,13 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 composer install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate
+php artisan migrate --seed          # Rocks Hotel tanımları: 277 departman kodu, 15 outlet, vergiler, roller
+php artisan pms:create-user MU "M.U" kullanici@ornek.com --role=admin   # şifre sorulur
+npm install && npm run build
 php artisan test
 ```
+
+Giriş: `/giris` — kullanıcı adı (ör. `MU`) ya da e-posta ve şifre.
 
 Testler varsayılan olarak SQLite (bellekte) üzerinde çalışır; MySQL ile denemek için `DB_CONNECTION=mysql` ve bağlantı bilgileri verilir.
 

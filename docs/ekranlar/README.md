@@ -43,6 +43,25 @@ Adlandırma: `<ekran no>-<ekran adı>-<sıra no>-<durum>.png` — ekranlar numar
 | `goruntuler/03-oda-plani-01-14-gun.png` | 14 günlük oda planı, durum renkleri, temizlik durumu |
 | `videolar/03-oda-plani-gezinme-ve-karta-gecis.mp4` | Navigatörden oda planına geçiş, 7/30/14 gün görünümü, rezervasyon kartına geçiş |
 
+## 04 — Giriş (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/04-giris-01-pencere.png` | Giriş penceresi: kullanıcı adı (ya da e-posta) ve şifre |
+
+## 05 — Ayarlar → Outlet'ler (gerçek uygulama)
+
+Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, sağda komut düğmeleri.
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/05-outletler-01-liste.png` | 15 outlet, seçili satır (↑/↓ ile gezinme), iş günü durum çubuğunda |
+| `goruntuler/05-outletler-02-ayarlar-menusu.png` | Menü çubuğu → Ayarlar |
+| `goruntuler/05-outletler-03-duzenle-byblos.png` | Düzenleme: bilgiler ve bağlı departman kodları ("Yalnız seçilenler") |
+| `goruntuler/05-outletler-04-yeni-baska-outletteki-kodlar.png` | Yeni outlet: başka outlet'e bağlı kodlar soluk ve seçilemez |
+| `goruntuler/05-outletler-05-yeni-dogrulama-hatasi.png` | Aynı kodla ikinci outlet açılamaz |
+| `videolar/05-outletler-klavye-ile-kullanim.mp4` | Giriş → Ayarlar menüsü → liste, hızlı arama, `Alt+E` düzenle, RVC no, `F10` kaydet, `Alt+U` yukarı, `Esc` kapat |
+
 ## Taslakları yerelde açmak
 
 ```bash

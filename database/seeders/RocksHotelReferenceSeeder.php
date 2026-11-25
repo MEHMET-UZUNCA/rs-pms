@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Rates\Services\FidelioDepartmentCodeImporter;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Rocks Hotel tanım verileri — Fidelio'nun canlı departman kodları ve outlet'leri (docs/fidelio/eslesme.md §15).
+ * Rocks Hotel tanım verileri — Fidelio'nun departman kodlarının tamamı, outlet'ler, vergiler, yetkiler (docs/fidelio/eslesme.md §15).
  * Kod numaraları ve adları Fidelio ile aynıdır. Vergi oranları, Simphony RVC numaraları ve Logo hesap kodları
  * otelden alınınca ayrıca girilecek (burada uydurulmaz). Birden fazla çalıştırılabilir; var olan kaydı günceller.
  */
@@ -14,7 +15,10 @@ class RocksHotelReferenceSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ([['TRY', 'TL', 'Türk Lirası', '₺', 1], ['EUR', 'EUR', 'Euro', '€', 2], ['USD', 'USD', 'ABD Doları', '$', 3], ['GBP', 'GBP', 'İngiliz Sterlini', '£', 4]] as [$code, $short, $name, $symbol, $sort]) {
+        foreach ([['TRY', 'TL', 'Türk Lirası', '₺', 1], ['EUR', 'EUR', 'Euro', '€', 2], ['USD', 'USD', 'ABD Doları', '$', 3], ['GBP', 'GBP', 'İngiliz Sterlini', '£', 4],
+            ['CHF', 'CHF', 'İsviçre Frangı', 'Fr', 5], ['SEK', 'SEK', 'İsveç Kronu', 'kr', 6], ['CAD', 'CAD', 'Kanada Doları', '$', 7], ['NOK', 'NOK', 'Norveç Kronu', 'kr', 8],
+            ['JPY', 'JPY', 'Japon Yeni', '¥', 9], ['SAR', 'SAR', 'Suudi Arabistan Riyali', 'SR', 10], ['KWD', 'KWD', 'Kuveyt Dinarı', 'KD', 11],
+            ['AUD', 'AUD', 'Avustralya Doları', '$', 12], ['DKK', 'DKK', 'Danimarka Kronu', 'kr', 13]] as [$code, $short, $name, $symbol, $sort]) {
             DB::table('pms_currencies')->updateOrInsert(['code' => $code], ['short_code' => $short, 'name' => $name, 'symbol' => $symbol, 'decimals' => 2, 'is_active' => true, 'sort' => $sort, 'updated_at' => now()]);
         }
         foreach ([['CY', 'CYP', 'Kıbrıs', 'Cyprus', 'Kıbrıslı', '+90'], ['TR', 'TUR', 'Türkiye', 'Turkey', 'Türk', '+90'], ['GB', 'GBR', 'Birleşik Krallık', 'United Kingdom', 'İngiliz', '+44'],
@@ -29,82 +33,92 @@ class RocksHotelReferenceSeeder extends Seeder
         ]);
         $propertyId = (int) DB::table('pms_properties')->where('code', 'RCK')->value('id');
 
+        // Fidelio departman kodu grupları. Adlar geçicidir (kodların içeriğinden verildi); Fidelio "Department Code Groups"
+        // ekranındaki adlarla ekrandan değiştirilebilir. [kod => [ad, tip]]
         $groups = [
-            'ROOM' => ['Konaklama ve pansiyon', 'revenue'], 'FNB' => ['Yiyecek içecek (outlet)', 'revenue'],
-            'OTHER' => ['Diğer hizmetler', 'revenue'], 'PAY' => ['Ödemeler', 'payment'],
+            '10' => ['Oda', 'revenue'], '11' => ['Oda ek ücreti / bireysel oda', 'revenue'], '12' => ['Dragon Rest', 'revenue'],
+            '15' => ['Pansiyon', 'revenue'], '16' => ['Bireysel pansiyon', 'revenue'], '20' => ['Yiyecek', 'revenue'],
+            '30' => ['İçecek', 'revenue'], '40' => ['Telefon ve internet', 'revenue'], '50' => ['Diğer gelirler', 'revenue'],
+            '55' => ['KDV indirimi', 'revenue'], '60' => ['Çamaşırhane', 'revenue'], '75' => ['Paket farkları', 'revenue'],
+            '80' => ['Paid-out', 'non_revenue'], '90' => ['Ödemeler', 'payment'], '95' => ['Döviz ödemeleri', 'payment'],
+            'GEN' => ['Sistem kodları', 'non_revenue'], 'PAY' => ['Sistem ödeme kodları', 'payment'],
         ];
-        $groupIds = [];
         foreach ($groups as $code => [$name, $type]) {
-            DB::table('pms_transaction_code_groups')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => $type, 'updated_at' => now()]);
-            $groupIds[$code] = (int) DB::table('pms_transaction_code_groups')->where('property_id', $propertyId)->where('code', $code)->value('id');
+            DB::table('pms_transaction_code_groups')->updateOrInsert(['property_id' => $propertyId, 'code' => (string) $code], ['name' => $name, 'type' => $type, 'updated_at' => now()]);
         }
 
-        // [kod, ad, grup, tip, gelir kovası, yiyecek/içecek, indirim mi, hangi kodun indirimi, no-show, ödeme türü, döviz]
-        $codes = [
-            ['100', 'Room', 'ROOM', 'revenue', 'room'], ['102', 'DISC Room', 'ROOM', 'revenue', 'room', null, true, '100'],
-            ['105', 'Room No-Show', 'ROOM', 'revenue', 'room', null, false, null, true], ['107', 'Room Supplement', 'ROOM', 'revenue', 'room'],
-            ['110', 'Pension Breakfast', 'ROOM', 'revenue', 'breakfast'], ['115', 'Casino Room No-Show', 'ROOM', 'revenue', 'room', null, false, null, true],
-            ['130', 'Pension Dinner', 'ROOM', 'revenue', 'dinner'],
-            ['510', 'Laundry', 'OTHER', 'revenue', 'laundry'], ['511', 'DISC Laundry', 'OTHER', 'revenue', 'laundry', null, true, '510'],
-            ['513', 'SAUNA-MASSAGE', 'OTHER', 'revenue', 'spa'], ['514', 'DISC. SAUNA-MASSAGE', 'OTHER', 'revenue', 'spa', null, true, '513'],
-            ['520', 'Transfer', 'OTHER', 'revenue', 'other'], ['550', 'Kur Farki', 'OTHER', 'revenue', 'other'],
-            ['580', 'Others %0', 'OTHER', 'revenue', 'other'], ['630', 'Otopark', 'OTHER', 'revenue', 'other'],
-            ['900', 'Cash', 'PAY', 'payment', null, null, false, null, false, 'cash'], ['903', 'City Ledger', 'PAY', 'payment', null, null, false, null, false, 'city_ledger'],
-            ['910', 'Visa Card', 'PAY', 'payment', null, null, false, null, false, 'card'], ['920', 'Bank Payment', 'PAY', 'payment', null, null, false, null, false, 'bank_transfer'],
-            ['950', 'Pay US Dollar', 'PAY', 'payment', null, null, false, null, false, 'foreign_cash', 'USD'],
-            ['951', 'Pay Euro', 'PAY', 'payment', null, null, false, null, false, 'foreign_cash', 'EUR'],
-        ];
+        // Fidelio "Department Codes" listesinin tamamı (database/data/fidelio/department-codes.tsv) — hepsi kullanımda.
+        (new FidelioDepartmentCodeImporter)->import($propertyId, FidelioDepartmentCodeImporter::parse(
+            file_get_contents(database_path('data/fidelio/department-codes.tsv'))
+        ));
 
-        // Outlet'ler: [outlet kodu, ad, tip, yiyecek, içecek, ind. yiyecek, ind. içecek]
-        $outlets = [
-            ['CAFE', 'Cafe Rocks', 'restaurant', ['320', 'FOOD  Cafe Rocks'], ['321', 'BVRG Cafe Rocks'], ['322', 'DISC FOOD Cafe Rocks'], ['324', 'DISC BVRG Cafe Rocks']],
-            ['POOL', 'Pool Bar', 'bar', ['330', 'FOOD  Pool Bar'], ['331', 'BVRG  Pool Bar'], ['332', 'DISC FOOD Pool Bar'], ['334', 'DISC BVRG Pool Bar']],
-            ['RSVC', 'Room Service', 'room_service', ['340', 'FOOD Room Service'], ['341', 'BVRG Room Service'], ['342', 'DISC FOOD Room Service'], ['344', 'DISC BVRG Room Service']],
-            ['MINI', 'Minibar', 'minibar', ['350', 'FOOD Minibar'], ['351', 'BVRG Minibar'], ['352', 'DISC FOOD Minibar'], ['354', 'DISC BVRG Minibar']],
-            ['HIRO', "L'Hirondelle", 'restaurant', ['385', 'FOOD L HIRONDELLE'], ['386', 'BVRG L HIRONDELLE'], ['387', 'DISC L HIRONDELLE FOOD'], ['388', 'DISC L HIRONDELLE BEVRAGE']],
-            ['SIRA', 'Sıralı Et', 'restaurant', ['490', 'FOOD Sirali Et'], ['493', 'BVRG Sirali Et'], ['491', 'Disc. FOOD Sirali Et'], ['494', 'DISC. BVRG Sirali Et']],
-            ['CTCH', 'Catch Seafood', 'restaurant', ['650', 'Catch Seafood Food'], ['660', 'Catch Seafood Beverage'], ['651', 'Catch Seafood Food Disc.'], ['661', 'Catch Seafood Beverage Disc.']],
-            ['CASI', 'Casino', 'bar', ['670', 'Casino Food'], ['680', 'Casino Beverage'], null, null],
-            ['LYRA', 'Lyra', 'restaurant', ['810', 'FOOD Lyra'], ['813', 'BVRG  Lyra'], ['811', 'Disc. FOOD Lyra'], ['814', 'Disc. BVRG  Lyra']],
-            ['PATI', 'Rocks Pattiserie', 'restaurant', ['820', 'Rocks Pattiserie Food'], ['830', 'Rocks Pattiserie Bvrg'], ['821', 'Rocks Pattiserie Food Disc.'], ['831', 'Rocks Pattiserie Bvrg Disc.']],
-        ];
+        $codeQuery = fn (array|string $codes) => DB::table('pms_transaction_codes')->where('property_id', $propertyId)->whereIn('code', (array) $codes);
+        $groupId = fn (string $code) => (int) DB::table('pms_transaction_code_groups')->where('property_id', $propertyId)->where('code', $code)->value('id');
 
-        $upsertCode = function (array $c, ?int $outletId = null) use ($propertyId, $groupIds) {
-            [$code, $name, $group, $type] = $c;
-            $values = [
-                'group_id' => $groupIds[$group], 'name' => $name, 'type' => $type, 'revenue_bucket' => $c[4] ?? null, 'food_beverage' => $c[5] ?? null,
-                'is_discount' => (bool) ($c[6] ?? false), 'is_no_show' => (bool) ($c[8] ?? false), 'payment_kind' => $c[9] ?? null,
-                'currency_code' => $c[10] ?? null, 'outlet_id' => $outletId, 'manual_post_allowed' => true, 'is_active' => true, 'updated_at' => now(),
-            ];
-            if (isset($c[7])) {
-                $values['discount_of_transaction_code_id'] = DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('code', $c[7])->value('id');
+        // Gelir kovası ve yiyecek/içecek ayrımı gruba göre (istatistik ve Logo için)
+        $codeQuery(['100', '102', '103', '105', '106', '107', '108', '109', '115', '116', '200', '201', '202'])->update(['revenue_bucket' => 'room']);
+        foreach (['20' => 'food', '12' => 'food', '30' => 'beverage'] as $group => $kind) {
+            DB::table('pms_transaction_codes')->where('group_id', $groupId($group))->update(['revenue_bucket' => $kind, 'food_beverage' => $kind]);
+        }
+        foreach (['50', '40', '55', '60', '75'] as $group) {
+            DB::table('pms_transaction_codes')->where('group_id', $groupId($group))->whereNull('food_beverage')->update(['food_beverage' => 'other']);
+        }
+        $codeQuery(['105', '115'])->update(['is_no_show' => true]);
+
+        // Gelir dışı kodların tipi
+        $codeQuery('800')->update(['type' => 'paid_out', 'revenue_bucket' => null]);
+        $codeQuery(['879', '980', '990', '991', '993'])->update(['type' => 'internal', 'revenue_bucket' => null]);
+        $codeQuery(['904', '992'])->update(['type' => 'deposit', 'revenue_bucket' => null]);
+
+        // Ödeme kodları: ödeme türü ve döviz
+        foreach ([
+            'cash' => [['900'], ['902']], 'cheque' => [['901']], 'city_ledger' => [['903']],
+            'card' => [['910'], ['911'], ['912'], ['913'], ['914'], ['915'], ['994', 'EUR'], ['995', 'USD'], ['996', 'GBP']],
+            'bank_transfer' => [['920'], ['921', 'EUR'], ['922', 'USD'], ['923', 'GBP']],
+            'foreign_cash' => [['950', 'USD'], ['951', 'EUR'], ['952', 'CHF'], ['953', 'SEK'], ['954', 'CAD'], ['955', 'NOK'], ['956', 'JPY'],
+                ['957', 'SAR'], ['958', 'KWD'], ['959', 'AUD'], ['960', 'DKK'], ['961', 'GBP'], ['963', 'USD'], ['964', null], ['965', 'USD'],
+                ['966', 'EUR'], ['967', 'GBP'], ['968', null]],
+        ] as $kind => $list) {
+            foreach ($list as $item) {
+                $codeQuery($item[0])->update(['type' => 'payment', 'payment_kind' => $kind, 'currency_code' => $item[1] ?? null, 'revenue_bucket' => null, 'food_beverage' => null]);
             }
-            DB::table('pms_transaction_codes')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], $values);
-        };
-
-        foreach ($codes as $c) {
-            $upsertCode($c);
         }
 
-        foreach ($outlets as $i => [$code, $name, $type, $food, $bvrg, $discFood, $discBvrg]) {
+        // Outlet'ler ve kodları: [outlet kodu, ad, tip, kod numaraları]. İlk kod varsayılan koddur.
+        $range = fn (int $from, int $to) => array_map('strval', range($from, $to));
+        $outlets = [
+            ['CAFE', 'Cafe Rocks', 'restaurant', $range(320, 328)],
+            ['POOL', 'Pool Bar', 'bar', $range(330, 338)],
+            ['RSVC', 'Room Service', 'room_service', $range(340, 348)],
+            ['MINI', 'Minibar', 'minibar', $range(350, 358)],
+            ['BANQ', 'Banket', 'banquet', $range(370, 378)],
+            ['HIRO', "L'Hirondelle", 'restaurant', [...$range(385, 388), ...$range(450, 452), '543']],
+            ['HABE', 'La Habenera', 'restaurant', ['395', '397', '398', '399', ...$range(544, 546), ...$range(440, 442), ...$range(500, 502), ...$range(610, 612), ...$range(620, 622)]],
+            ['DRAG', 'Dragon Rest', 'restaurant', ['410', '411']],
+            ['ONYX', 'Onyx', 'bar', $range(480, 488)],
+            ['SIRA', 'Sıralı Et', 'restaurant', $range(490, 495)],
+            ['CTCH', 'Catch Seafood', 'restaurant', $range(650, 661)],
+            ['CASI', 'Casino', 'bar', $range(670, 692)],
+            ['BYBL', 'Byblos', 'restaurant', $range(700, 722)],
+            ['LYRA', 'Lyra', 'restaurant', [...$range(810, 818), ...$range(117, 119)]],
+            ['PATI', 'Rocks Pattiserie', 'restaurant', $range(820, 832)],
+        ];
+        foreach ($outlets as $i => [$code, $name, $type, $codes]) {
             DB::table('pms_outlets')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => $type, 'source_system' => 'simphony', 'sort' => $i + 1, 'is_active' => true, 'updated_at' => now()]);
             $outletId = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', $code)->value('id');
-            $upsertCode([$food[0], $food[1], 'FNB', 'revenue', 'food', 'food'], $outletId);
-            $upsertCode([$bvrg[0], $bvrg[1], 'FNB', 'revenue', 'beverage', 'beverage'], $outletId);
-            if ($discFood) {
-                $upsertCode([$discFood[0], $discFood[1], 'FNB', 'revenue', 'food', 'food', true, $food[0]], $outletId);
-            }
-            if ($discBvrg) {
-                $upsertCode([$discBvrg[0], $discBvrg[1], 'FNB', 'revenue', 'beverage', 'beverage', true, $bvrg[0]], $outletId);
-            }
-            DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('code', $food[0])->value('id')]);
+            $codeQuery($codes)->update(['outlet_id' => $outletId]);
+            DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => $codeQuery($codes[0])->value('id')]);
         }
 
-        // Catch Seafood'un ayrı "Reb." kodu ve Lyra'nın "OTHER" kodu
-        $catch = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', 'CTCH')->value('id');
-        $lyra = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', 'LYRA')->value('id');
-        $upsertCode(['652', 'Catch Seafood Food Reb.', 'FNB', 'revenue', 'food', 'food', true, '650'], $catch);
-        $upsertCode(['816', 'OTHER Lyra', 'FNB', 'revenue', 'other', 'other'], $lyra);
+        // Yetkiler ve sistem yöneticisi rolü
+        foreach ([['setup.outlets', 'Outlet tanımları', 'setup']] as [$code, $name, $group]) {
+            DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
+        }
+        DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
+        $adminRole = (int) DB::table('pms_roles')->where('code', 'admin')->value('id');
+        foreach (DB::table('pms_permissions')->pluck('id') as $permissionId) {
+            DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $adminRole, 'permission_id' => $permissionId]);
+        }
 
         // Fidelio "Tax Details" (Rocks Hotel&Casino, Girne). Oran formülden alınır; Fidelio'daki ad bazı satırlarda formülle
         // uyuşmuyor (ör. "VAT 18 %" formülü x*(5/100)) — hesap formülle yapıldığı için formül esas, eski ad legacy_name'de saklanır.

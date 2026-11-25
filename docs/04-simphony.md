@@ -93,7 +93,12 @@ Simphony'de iptal edilen ya da düzeltilen çek, negatif tutarlı yeni kayıt ol
 
 ## 4.4 Outlet tanımları
 
-- Outlet'ler `pms_outlets`'te tutulur; `simphony_rvc_number` ile eşleşir.
+- Outlet'ler `pms_outlets`'te tutulur; `simphony_rvc_number` ile eşleşir. Ekran: **Ayarlar → Outlet'ler** (açma, düzenleme, kopyalama,
+  silme/pasife alma, sıralama; outlet'e bağlı departman kodlarının seçimi; varsayılan kod).
+- Rocks Hotel'de tanımlı 15 outlet (Fidelio departman kodlarından): Cafe Rocks (320–328), Pool Bar (330–338), Room Service (340–348),
+  Minibar (350–358), Banket (370–378), L'Hirondelle (385–388, 450–452, 543), La Habenera (395–399, 544–546 ve La Habenera banket kodları
+  440–442, 500–502, 610–612, 620–622), Dragon Rest (410–411), Onyx (480–488), Sıralı Et (490–495), Catch Seafood (650–661),
+  Casino (670–692), Byblos (700–722), Lyra (810–818, 117–119), Rocks Pattiserie (820–832). Simphony RVC numaraları ekrandan girilecek.
 - İlk kurulumda Simphony'deki RVC listesi içe aktarılır, sonra PMS'te işlem kodlarına eşlenir.
 - RS ONE'daki SPA ve restoran departmanları da outlet olarak tanımlanır (`source_system = rsone`), böylece tüm harcamalar aynı raporda görünür.
 

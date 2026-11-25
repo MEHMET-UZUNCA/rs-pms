@@ -3,7 +3,65 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/*
+ * RS PMS görsel dili: Fidelio Suite8 yerleşimi (menü çubuğu, pencere, ayar listesi, sağda komut düğmeleri, durum çubuğu)
+ * sade ve modern renklerle. Renkler token olarak tanımlıdır; ekranlar yalnız bu tokenları kullanır.
+ */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+    --color-brand-50: #eef4fb;
+    --color-brand-100: #d9e6f5;
+    --color-brand-200: #b3cdea;
+    --color-brand-500: #2f6db3;
+    --color-brand-600: #245a96;
+    --color-brand-700: #1c4776;
+    --color-brand-900: #102a47;
+    --color-surface: #f4f6f9;
+    --color-panel: #ffffff;
+    --color-line: #d5dbe3;
+    --color-muted: #6b7785;
+    --color-ink: #1d2733;
+    --color-row-alt: #f8fafc;
+    --color-row-selected: #cfe0f5;
+    --color-danger: #b42318;
+    --color-ok: #1a7f37;
+}
+
+@layer base {
+    html, body { height: 100%; }
+    body { background: var(--color-surface); color: var(--color-ink); font-size: 13px; }
+    u.hk { text-decoration-thickness: 1px; text-underline-offset: 2px; }
+}
+
+@layer components {
+    .win { @apply bg-panel border border-line rounded-md shadow-sm flex flex-col min-h-0; }
+    .win-title { @apply flex items-center justify-between px-3 py-1.5 bg-brand-700 text-white text-[13px] font-semibold rounded-t-md; }
+    .field-label { @apply block text-[12px] text-muted mb-0.5; }
+    .input { @apply w-full h-7 px-2 border border-line rounded bg-white text-[13px] focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500; }
+    .input-error { @apply border-danger; }
+    .btn { @apply inline-flex items-center gap-1.5 h-7 px-3 border border-line rounded bg-white text-[13px] text-ink hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:opacity-40 disabled:pointer-events-none whitespace-nowrap; }
+    .btn-primary { @apply bg-brand-600 border-brand-600 text-white hover:bg-brand-700; }
+    .btn-side { @apply w-full justify-start; }
+    .grid-table { @apply w-full border-collapse text-[13px]; }
+    .grid-table th { @apply sticky top-0 z-10 bg-surface text-left font-normal text-muted border-b border-line px-2 py-1 whitespace-nowrap; }
+    .grid-table td { @apply px-2 py-[3px] border-b border-line/60 whitespace-nowrap; }
+    .grid-table tbody tr:nth-child(even) { background: var(--color-row-alt); }
+    .grid-table tbody tr[data-id] { @apply cursor-default; }
+    .grid-table tbody tr.is-selected { background: var(--color-row-selected); }
+    .grid-table tbody tr.is-inactive td { @apply text-muted opacity-60; }
+    .menu-item { @apply px-3 py-1 rounded hover:bg-brand-50 cursor-default select-none; }
+    .menu-drop { @apply absolute left-0 top-full mt-px min-w-56 bg-panel border border-line rounded-md shadow-lg py-1 z-50 hidden; }
+    .menu-drop a, .menu-drop span { @apply block px-3 py-1 whitespace-nowrap; }
+    .menu-drop a { @apply hover:bg-brand-50; }
+    .menu-drop span { @apply text-muted/70; }
+    .menu-root.is-open .menu-drop { @apply block; }
+    .menu-root.is-open > .menu-item { @apply bg-brand-50; }
+    .tree a, .tree span { @apply block px-2 py-0.5 rounded; }
+    .tree a { @apply hover:bg-brand-50; }
+    .tree a.is-current { @apply bg-row-selected font-semibold; }
+    .tree span.is-soon { @apply text-muted/70; }
+    .flash { @apply px-3 py-1.5 rounded border text-[13px]; }
+    .flash-ok { @apply border-ok/30 bg-ok/10 text-ok; }
+    .flash-error { @apply border-danger/30 bg-danger/10 text-danger; }
+    .kbd { @apply inline-block px-1 rounded border border-line bg-surface text-[11px] text-muted font-mono; }
 }

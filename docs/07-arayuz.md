@@ -154,6 +154,24 @@ Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidel
 | Conference Diary | Konferans Günlüğü | Salon × saat çizelgesi, sürükle-bırak etkinlik |
 | Logbook | Vardiya Defteri | Departman notları, okundu bilgisi |
 
+### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
+
+İlk yapılan ekran: **Ayarlar → Outlet'ler**. Bütün ayar listeleri aynı düzende olacak.
+
+| Tuş | İşlev |
+|---|---|
+| `↑` / `↓` | Satırlar arasında gezin |
+| `Enter` / çift tık | Seçili kaydı düzenle |
+| `Alt + N` / `Insert` | Yeni |
+| `Alt + E` | Düzenle |
+| `Alt + C` | Kopyala |
+| `Alt + D` / `Delete` | Sil (onay sorar; kullanımdaki kayıt silinmez, pasife alınır) |
+| `Alt + U` / `Alt + O` | Yukarı / aşağı taşı (sıra) |
+| `F10` / `Ctrl + Enter` | Düzenleme penceresinde Tamam |
+| `Esc` | İptal / pencereyi kapat |
+
+Hızlı arama kutusu yazarken listeyi anında süzer; `Enter` sunucuda arar. "Pasifleri göster" pasif kayıtları da listeler.
+
 ## 7.4 Modern ekler (Fidelio'da olmayan, personeli yormayan)
 
 - **Bugün ekranı** (Kamra): giriş yapan kullanıcının ilk gördüğü özet. Fidelio ekranlarına kısayollarla tek tuşla geçilir.
