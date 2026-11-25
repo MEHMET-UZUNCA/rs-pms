@@ -191,6 +191,21 @@ Kayıt başına bir satır. Yapı, RS PMS'teki folyo tasarımını doğruluyor: 
 
 Görünmeyen ama gerekli: **fatura numarası** (kayıt hangi faturada) — fatura tablosundan alınacak.
 
+### 11.1 PROISV sürümünde olmayan kolonlar
+
+Aktarım kaynağı **PROISV**; oradaki `PRO_ISV_POSTINGS` 45 kolon, V8LIVE sürümü 57 kolon. PROISV'de **olmayanlar** ve etkisi:
+
+| Eksik kolon | Etkisi | Çözüm |
+|---|---|---|
+| POSTING_GROSSUNITPRICE, POSTING_GROSSFOREIGNPRICE | Birim fiyatın brütü yok | Brüt = `POSTING_SUMUPAMOUNT / POSTING_QUANTITY`; vergi oranı departman kodundan |
+| WINDOW_NUMBER | Pencere numarası (1–8) doğrudan yok, yalnız `POSTING_WINDOW_ID` var | Arşiv için pencere kimliği yeterli. Açık folyolar geçiş gecesi Suite8 raporundan pencere bazında devralınır |
+| WINDOW_INVOICE_TO_PROFILE_ID / _NAME | Pencereyi kimin ödediği yok | Arşivde boş kalır; açık folyolarda geçiş gecesi girilir |
+| ORG_MARKETCODE_* | Kaydın segmenti yok | Rezervasyonun segmenti kullanılır (`PRO_ISV_RESERVATIONINFO.MARKETCODE`) |
+| POSTING_PROFILE_NATION, ORG_PROFILE_NATION | Milliyet yok | Profilden alınır |
+| REBATING_POSTING_ID, ZRDF_* | İndirimin hangi kayda ait olduğu ve rebate kodu yok | İndirimler zaten ayrı **DISC** departman kodlarında; tutarlar doğru aktarılır, yalnız asıl kayda bağlantı kurulmaz |
+
+Sonuç: 19 yıllık geçmişin **arşivi ve gelir raporları** PROISV ile eksiksiz alınır. **Geçiş anındaki açık folyolar** (pencere ve ödeyen bilgisiyle) geçiş gecesi Suite8'den devralınır — tasarımda zaten böyle planlandı (06-fidelio-gecis.md).
+
 ## 12. PRO_ISV_ZCUR ve PRO_EXCHANGERATES → döviz
 
 | Fidelio | RS PMS |
