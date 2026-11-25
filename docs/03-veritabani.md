@@ -723,7 +723,7 @@ id, transaction_code_id FK, tax_id FK, sequence TINYINT, calc_base (net/net_plus
 id
 property_id          FK
 folio_number         VARCHAR(20)             UQ(property_id, folio_number)
-type                 VARCHAR(20)             — guest / master / passer_by / pseudo_room / house_account / ar
+type                 VARCHAR(20)             — guest / master / passer_by / pseudo_room / house_account / ar / event
 reservation_id       FK            null
 window               TINYINT                 — 1..8 (Fidelio pencere)       UQ(reservation_id, window) ‹F: WINDOW_NUMBER›
 name                 VARCHAR(100)  null      — Rezervasyonsuz hesap adı ‹F: FA_LONGDESC›
@@ -787,6 +787,7 @@ stay_date            DATE          null      — Oda ücretinin ait olduğu gece
 reservation_night_id FK            null
 package_id           FK            null
 outlet_id            FK            null
+event_id             FK            null      — Banket / toplantı etkinliği
 pos_posting_id       FK            null      — Simphony'den geldiyse
 pos_check_number     VARCHAR(30)   null
 market_segment_id    FK            null      — Gelirin segmenti, transferden sonra da korunur ‹F: ORG_MARKETCODE›
@@ -1149,6 +1150,98 @@ pms_attachments:           id, property_id, attachable_type, attachable_id, file
 
 ---
 
+## O. Konferans, toplantı ve banket (Suite8 Conference & Catering)
+
+Suite8 CCM modülünün karşılığı; Kamra'nın banket akışı (talep → teklif → etkinlik emri (BEO) → tahsilat → kapanış) örnek alındı.
+Konaklamalı toplantılarda etkinlik rezervasyonu bir oda bloğuna (`pms_blocks`) bağlanır; faturalama etkinliğin ana folyosundan yapılır.
+
+### O1. Salonlar
+```
+pms_function_spaces:          id, property_id, code, name, parent_id FK self null  — Bölünebilir salon / birleşik salon
+                              is_combination BOOLEAN, floor_id FK null, area_m2, height_m null, has_daylight,
+                              color, sort, is_active, timestamps, deleted_at          ‹F: Function Space Definition›
+pms_seating_styles:           id, property_id, code, name (Tiyatro, Sınıf, U, Banket, Kokteyl, Toplantı masası) ‹F: Seating Arrangements›
+pms_function_space_capacities: id, function_space_id FK, seating_style_id FK, capacity_min, capacity_max ‹F: Capacity Categories›
+pms_function_space_rates:     id, function_space_id FK, period (hour/half_day/full_day/evening), amount,
+                              currency_code, transaction_code_id FK, valid_from, valid_to ‹F: Function Space Rate Codes›
+pms_event_attributes:         id, property_id, code, name, category (Teknik, Konfor…)  ‹F: Attributes, Attribute Categories›
+pms_function_space_attributes: function_space_id FK, event_attribute_id FK, quantity null  PK(function_space_id, event_attribute_id)
+```
+
+### O2. Tanımlar
+```
+pms_event_types:              id, property_id, code, name (Toplantı, Düğün, Gala, Kokteyl, Seminer), event_group null ‹F: Event Types, Event Groups›
+pms_event_statuses:           id, property_id, code, name (Prospect, Tentative, Definite, Actual, Cancelled, Lost),
+                              blocks_space BOOLEAN — Salonu kapatır mı, is_final, sort  ‹F: Status Definition›
+pms_competitors:              id, property_id, code, name                                  ‹F: Lost To›
+pms_menu_categories:          id, property_id, code, name (Başlangıç, Ana yemek, Tatlı, İçecek)   ‹F: Menu Item Categories›
+pms_menu_items:               id, property_id, menu_category_id FK, code, name, description, unit (kişi/adet/porsiyon),
+                              price, cost null, transaction_code_id FK, is_active          ‹F: Menu Items, Menu Item Rates›
+pms_menus:                    id, property_id, code, name, price_per_person, transaction_code_id FK, is_active ‹F: Standard Menus›
+pms_menu_menu_items:          id, menu_id FK, menu_item_id FK, course SMALLINT, sort       ‹F: Menu Details›
+pms_event_resources:          id, property_id, code, name (Projeksiyon, Mikrofon, Sahne), quantity_total,
+                              price, period (event/day/hour), transaction_code_id FK      ‹F: Miscellaneous Items (CCM)›
+pms_event_packages:           id, property_id, code, name (Tam gün toplantı paketi), price_per_person,
+                              currency_code, is_active                                     ‹F: Conference Packages›
+pms_event_package_elements:   id, event_package_id FK, element_type (space/menu/menu_item/resource/room),
+                              element_id, quantity_per_person, amount, transaction_code_id FK ‹F: Package Events, Package Resources›
+```
+
+### O3. Etkinlik rezervasyonu (sözleşme başlığı)
+```
+pms_event_bookings:           id
+                              property_id, booking_number UQ, name
+                              event_status_id FK
+                              profile_id FK (şirket / müşteri), agent_profile_id FK null, contact_profile_id FK null
+                              block_id FK null              — Konaklama bloğu
+                              sales_user_id FK users null   — Satış sorumlusu
+                              start_date, end_date
+                              attendees_expected SMALLINT
+                              market_segment_id, source_code_id, channel_code_id FK null
+                              currency_code
+                              option_date DATE null, decision_date DATE null
+                              cancellation_policy_id FK null, deposit_policy_id FK null
+                              master_folio_id FK null       — Faturalama (pms_folios.type = event)
+                              lost_to_competitor_id FK null, lost_reason_code_id FK null
+                              notes TEXT null, legacy_id null
+                              created_by, updated_by, timestamps, deleted_at          ‹F: CCM Booking›
+pms_event_quotes:             id, event_booking_id FK, revision SMALLINT, total_amount, currency_code,
+                              valid_until, status (draft/sent/accepted/rejected/expired), document_id FK null,
+                              created_by, created_at                                       — Teklif revizyonları
+pms_event_payment_schedules:  id, event_booking_id FK, due_date, amount, currency_code,
+                              status (pending/paid/cancelled), paid_posting_id FK null     — Ödeme planı
+```
+
+### O4. Etkinlikler (fonksiyonlar) ve içerikleri
+```
+pms_events:                   id
+                              event_booking_id FK, property_id
+                              event_type_id FK, event_status_id FK
+                              function_space_id FK, seating_style_id FK null
+                              name
+                              start_at, end_at              TIMESTAMP
+                              setup_minutes, teardown_minutes SMALLINT
+                              attendees_expected, attendees_guaranteed, attendees_actual SMALLINT
+                              space_rate_amount DECIMAL(14,2) null, space_rate_period VARCHAR(10) null
+                              is_space_shareable BOOLEAN
+                              beo_number VARCHAR(20) null   — Etkinlik emri (BEO) no
+                              notes TEXT null
+                              created_by, timestamps
+                              IX(function_space_id, start_at, end_at)  — Aynı salonda çakışma servis katmanında engellenir
+pms_event_menus:              id, event_id FK, menu_id FK, covers SMALLINT, price_per_person, serve_at null, notes null
+pms_event_items:              id, event_id FK, item_type (menu_item/resource/package/service/other), item_id null,
+                              description, quantity, unit_price, transaction_code_id FK,
+                              posted_posting_id FK null    — Faturalandığında
+pms_event_tasks:              id, event_id FK, department (fnb/kitchen/technical/housekeeping/front_office/security),
+                              description, due_at, status (open/done/cancelled), done_by null, done_at null
+                              ‹F: Responsible Departments› — BEO görev listesi
+```
+
+Folyo bağlantısı: `pms_folios.type` değerlerine `event` eklenir; `pms_postings.event_id FK null` eklenir.
+Etkinlik raporları (salon doluluğu, kişi başı gelir, kaybedilen işler) bu tablolardan üretilir.
+
+---
+
 ## 3.1 Ana ilişkiler
 
 ```mermaid
@@ -1193,21 +1286,37 @@ erDiagram
 | L. Logo | 3 |
 | M. Entegrasyon | 5 |
 | N. Suite8 işlev kapsamı (N1–N8) | 40 |
-| **Toplam** | **163** |
+| O. Konferans ve banket | 23 |
+| **Toplam** | **186** |
 
-## 3.3 Raporlama view'ları (Fidelio PRO_ISV düzeninde)
+## 3.3 Fidelio uyumlu view'lar (PROISV ile aynı ad ve kolonlar)
 
-Fidelio'daki `PRO_ISV_*` view'ları otelde raporlama ve dış araçlar için kullanılıyor. Alışkanlık bozulmasın ve paralel çalışmada
-iki sistem kolayca karşılaştırılsın diye RS PMS de aynı amaçlı, **salt okunur** view'lar sunar:
+Tablolar düzenli (normalize) kalır. Fidelio'daki **PROISV şemasının 13 view'ı**, RS PMS'te **aynı adla ve aynı kolon adlarıyla**
+salt okunur view olarak yeniden oluşturulur. Böylece bugün bu view'lardan okuyan rapor, Excel ve yazılımlar yalnız bağlantı adresi
+değiştirilerek çalışmaya devam eder; paralel çalışmada iki sistem aynı sorguyla karşılaştırılır.
 
-| RS PMS view | Fidelio karşılığı | İçerik |
-|---|---|---|
-| `pms_v_postings` | PRO_ISV_POSTINGS | Kayıt + kod + kasiyer + pencere + ödeyen + rezervasyon + oda + ilk sahip + segment + indirim |
-| `pms_v_reservation_info` | PRO_ISV_RESERVATIONINFO | Rezervasyon × gece; misafir, acente, şirket, kaynak, grup adları, kodlar, tutarlar |
-| `pms_v_reservation_revenue` | PRO_ISV_RESERVATIONREVENUE | Rezervasyon/folyo × gün gelir kovaları (oda, kahvaltı, öğle, akşam, F&B, minibar, telefon, diğer; brüt/net) |
-| `pms_v_profile_info` | PRO_ISV_PROFILEINFO | Profil + birincil adres/iletişim |
-| `pms_v_guest_registration` | PRO_GIYKIMBIL | Kimlik bildirimi listesi |
-| `pms_v_house_status` | PRO_YEARVIEW_NEW | Gün bazında oda/yatak, OOO/OOS, kesin/opsiyon, blok, gelen/giden |
-| `pms_v_exchange_rates` | PRO_EXCHANGERATES | Günlük kurlar |
+| View | Satır birimi | Kolon | Kaynak tablolar |
+|---|---|---|---|
+| `PRO_ISV_POSTINGS` | Folyo kaydı | 45 | pms_postings, pms_transaction_codes, pms_folios, pms_cashiers, pms_reservations, pms_rooms, pms_profiles |
+| `PRO_ISV_RESERVATIONINFO` | Rezervasyon × gece | 122 | pms_reservations, pms_reservation_nights, pms_profiles, pms_rate_codes, pms_market_segments, pms_market_groups, pms_source_codes, pms_channel_codes, pms_room_types, pms_room_classes, pms_bookings, pms_blocks, pms_postings |
+| `PRO_ISV_RESERVATIONREVENUE` | Rezervasyon / rezervasyonsuz hesap × gün | 86 | pms_postings (gelir kovaları), pms_reservations, pms_reservation_nights, pms_folios, pms_blocks |
+| `PRO_ISV_PROFILEINFO` | Profil (birincil adres/iletişim) | 52 | pms_profiles, pms_profile_addresses, pms_profile_communications, pms_profile_identities |
+| `PRO_ISV_IND_FAM_LINKS` | Profil bağlantısı | 8 | pms_profile_relations, pms_profiles |
+| `PRO_ISV_MEMBERCARDINFO` | Üyelik kartı | 5 | pms_profile_memberships, pms_membership_types |
+| `PRO_ISV_MULTIGUEST_LIST` | Rezervasyon × ek misafir | 2 | pms_reservation_guests |
+| `PRO_ISV_PROMOTIONS` | Gece × promosyon | 9 | pms_reservation_night_promotions, pms_promotions |
+| `PRO_GIYKIMBIL` | Kimlik bildirimi satırı | 38 | pms_reservation_guests, pms_profiles, pms_profile_identities, pms_reservations |
+| `PRO_ISV_DAILY_ROOMBED_RMTYP` | Oda tipi × gün | 7 | pms_rooms, pms_room_types, pms_room_classes |
+| `PRO_ISV_OOOROOMBEDS_ROOMTYPE` | Oda tipi × gün | 9 | pms_room_outages, pms_room_types |
+| `PRO_ISV_VIRTUALNUMBERS` | Rezervasyon × dahili no | 3 | pms_virtual_number_assignments, pms_virtual_numbers |
+| `PRO_ISV_SAMPLE_INHOUSE` | İçerideki rezervasyon | 5 | pms_reservations (Fidelio'da geçersiz olan örnek; RS PMS'te çalışır hali) |
 
-Kolon adları Türkçe açıklamalı ve Fidelio'dakine yakın tutulur; Logo, BI ya da Excel raporları bu view'lardan okur.
+Kurallar:
+- Kolon **adları, sırası ve anlamı** Fidelio ile aynıdır. Kod değerleri de Fidelio'daki gibi döner
+  (ör. `RESERVATIONSTATUS` 0/1/3, `CALCULATEDSTATUS` 0–13, `PROFILE_INTERNALCATEGORY` 1–6, `CDT` 1/5, `SEX` 1/2/3).
+  Dönüşüm tabloları: [fidelio/README.md](fidelio/README.md). Kolon karşılıkları: [fidelio/kolon-kolon.md](fidelio/kolon-kolon.md).
+- Fidelio kimlikleri (`*_ID`) aktarılan kayıtlarda `legacy_id`'den, RS PMS'te açılan yeni kayıtlarda RS PMS `id`'sinden gelir.
+- View'lar ayrı bir MySQL veritabanında (`proisv`) durur; yalnız okuma yetkili kullanıcı verilir.
+  Ad uyumu için MySQL `lower_case_table_names = 1` ile kurulur (Oracle'daki gibi büyük/küçük harf duyarsız).
+- Ek gereken raporlar için V8LIVE'daki diğer view'ların (`PRO_YEARVIEW_NEW`, `PRO_EXCHANGERATES`, `PRO_DAILYROOMRATETOTAL` vb.)
+  karşılığı da aynı yöntemle eklenebilir.

@@ -31,6 +31,7 @@ app/Domain/
   Cashiering/    folyo, pencere, yönlendirme, işlem kodları, kayıtlar, ödeme, fatura, kasa
   Receivables/   cari hesaplar (city ledger), cari faturalar, tahsilat eşleme
   NightAudit/    gece kapanışı adımları, günlük istatistik
+  Events/        konferans, toplantı, banket (salon, etkinlik, menü, BEO)
   Housekeeping/  oda durumu, görevler, uyuşmazlıklar, kayıp eşya
   Integrations/
     Simphony/    outlet, eşlemeler, arayüz mesajları
@@ -77,7 +78,8 @@ app/Domain/
 | **6** | Cari (AR) + Logo aktarımı | Acente/şirket faturaları, günlük fiş Logo'ya |
 | **7** | Simphony | Oda hesabına yazma, outlet ciro aktarımı |
 | **8** | Kat hizmetleri | Oda durumu, görev atama, telefon ekranı |
+| **8b** | Konferans ve banket | Salonlar, etkinlik rezervasyonu, teklif, BEO, menü, faturalama |
 | **9** | Fidelio aktarımı + paralel çalışma | Profiller, gelecek rezervasyonlar, açık bakiyeler, arşiv |
 | **10** | RS ONE bağlantısı | Ortak müşteri, SPA/restoran harcaması |
 
-Sonraki adımlar (kapsam dışı, ileride): kanal yöneticisi, çevrimiçi rezervasyon motoru, kapı kilidi, santral, banket.
+Sonraki adımlar (kapsam dışı, ileride): kanal yöneticisi, çevrimiçi rezervasyon motoru, kapı kilidi, santral.

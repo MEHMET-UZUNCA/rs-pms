@@ -125,7 +125,7 @@ Gösterim: ✅ tasarımda var · ➕ bu kontrolde eklendi · 🔗 RS ONE'da (bir
 | Queue Rooms | ➕ | `pms_reservations.queued_at` |
 | Room Assignment, Assignment Groups | ✅ | Oda atama servisi + `is_room_locked` |
 | Overbooking (otel / oda tipi) | ✅➕ | `pms_inventory_daily.overbooking_limit`, `pms_overbooking_limits` |
-| House Status | ✅ | `pms_inventory_daily`, `pms_v_house_status` |
+| House Status | ✅ | `pms_inventory_daily` |
 | Room History | ✅ | Sorgu |
 | Maintenance (guest service tasks) | ➕ | `pms_service_requests` (🔗 RS ONE iş takip) |
 | Lost & Found | ✅ | `pms_lost_found` |
@@ -164,6 +164,6 @@ Gösterim: ✅ tasarımda var · ➕ bu kontrolde eklendi · 🔗 RS ONE'da (bir
 | Logbook | ➕ | `pms_logbook_entries` |
 | Back Office Export | ✅ | Logo aktarımı (`pms_logo_*`) |
 | Interfaces (IFC8, POS) | ✅ | Simphony (`pms_pos_*`) |
-| Reports, Cube reports, Custom SQL | ✅ | Raporlama view'ları (`pms_v_*`) |
-| Conference & Catering, Function Spaces | ⏭ | Otelde kullanılmıyorsa sonraya |
+| Reports, Cube reports, Custom SQL | ✅ | Fidelio uyumlu `PRO_ISV_*` view'ları (aynı ad ve kolonlar) |
+| Conference & Catering: Function Spaces, Seating, Capacities, Event Types, Status Definition, Menus, Menu Items, Misc Items, Conference Packages, Lost To, Responsible Departments | ✅ | Modül O: `pms_function_spaces`, `pms_event_bookings`, `pms_events`, `pms_menus`… (23 tablo) |
 | Form Customization, Hotel Connector, V8 Online, OTA Upload | ⏭ | Kanal yöneticisi aşamasında |
