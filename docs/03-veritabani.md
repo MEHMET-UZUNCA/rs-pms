@@ -1038,7 +1038,7 @@ pms_guest_registrations:  id, property_id, reservation_id FK, reservation_guest_
                           type (check_in/check_out/room_change), business_date,
                           status (pending/sent/failed/not_required), attempts, sent_at null,
                           response JSON null, error null, timestamps           — Kimlik bildirimi (KBS)
-pms_legacy_import_batches: id, entity, source (fidelio), started_at, finished_at null,
+pms_legacy_import_batches: id, entity, source (fidelio), parameters JSON null (ör. tarih aralığı), started_at, finished_at null,
                           total, imported, skipped, failed, log_path null, run_by
 pms_legacy_import_errors: id, batch_id FK, legacy_id, error TEXT, payload JSON
 ```

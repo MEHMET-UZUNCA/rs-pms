@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- 8. aşama: dış kimlikler, RS ONE olay kuyruğu, kimlik bildirimi, Fidelio aktarım partileri ve hataları, kanal yöneticisi (bağlantı, eşleme, gönderim kuyruğu), kayıtlı raporlar, bildirimler, webhook — 13 tablo. Tasarım belgesindeki her tablonun veritabanında bulunduğunu doğrulayan test eklendi. Veritabanı tamamlandı: 211 tablo, 604 bağlantı, 10 tetikleyici. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - 7. aşama: Simphony (outlet'ler, arayüz, gelir ve ödeme eşlemeleri, ham mesajlar, oda hesabı kayıtları, günlük satış) ve konferans/toplantı/banket (salonlar, oturma düzeni ve kapasite, salon fiyatı, özellikler, etkinlik tipi ve durumu, rakipler, menüler, ekipman, toplantı paketleri, etkinlik rezervasyonu, teklif, ödeme planı, açık konular, etkinlikler, menü/kalem/görevler) — 32 tablo ve testleri. Tetikleyici kuralları tek sınıfta toplandı (FinancialRecordGuard). Testler SQLite ve MySQL'de geçti. (M.U)
 
 - 6. aşama: cari hesaplar (hesap tipi, hesap, cari faturalar, tahsilatlar, eşleme, ekstre, ihtar), stopaj, acente komisyonları (kod, kural, hesaplanan komisyon), Logo Tiger aktarımı (hesap eşlemesi, aktarım partisi, fiş satırları) — 14 tablo ve testleri. Profil, folyo ve provizyonun cari/komisyon bağlantılarına kısıt eklendi. Cari tahsilat silinemez, Logo fiş satırı değiştirilemez (tetikleyici). Testler SQLite ve MySQL'de geçti. (M.U)

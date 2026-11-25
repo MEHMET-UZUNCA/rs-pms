@@ -4,7 +4,7 @@
 Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalır, restoran/bar satış noktaları
 **Oracle Simphony**'den gelir. İleride **RS ONE** ile tek uygulamada birleşecektir.
 
-> Durum: **Geliştirme — 7. aşama.** Veritabanı tasarımı onaylandı (212 tablo). Oluşturulan: 7 aşama, 198 tablo (çekirdekten Simphony ve banket'e kadar).
+> Durum: **Veritabanı tamamlandı.** Tasarımdaki 211 `pms_` tablosunun tamamı oluşturuldu (8 aşama; 604 bağlantı, 10 tetikleyici, 35 test). Sıradaki: Fidelio uyumlu PROISV view'ları, ardından uygulama katmanı (modeller, servisler, ekranlar).
 
 ## Belgeler
 
