@@ -35,7 +35,7 @@ class OutletScreenTest extends DomainTestCase
     public function test_guests_are_sent_to_login_and_can_sign_in_with_username(): void
     {
         $this->get('/ayarlar/outletler')->assertRedirect('/giris');
-        $this->get('/giris')->assertOk()->assertSee('Kullanıcı adı');
+        $this->get('/giris')->assertOk()->assertSee('User name');   // varsayılan dil İngilizce
 
         $this->post('/giris', ['login' => 'admin', 'password' => 'yanlis'])->assertSessionHasErrors('login');
         $this->post('/giris', ['login' => 'admin', 'password' => 'gizli-sifre'])->assertRedirect('/ayarlar/outletler');   // girişten önce istenen ekrana döner
@@ -145,7 +145,7 @@ class OutletScreenTest extends DomainTestCase
         $this->assertSame(3, $pool->fresh()->sort);
         $this->assertSame(4, $this->outlet('CAFE')->sort);
 
-        $this->actingAs($this->admin)->get("/ayarlar/outletler/{$pool->id}/kopyala")->assertOk()->assertSee('Pool Bar (kopya)');
+        $this->actingAs($this->admin)->get("/ayarlar/outletler/{$pool->id}/kopyala")->assertOk()->assertSee('Pool Bar (copy)');
     }
 
     public function test_create_user_command_links_user_to_property(): void

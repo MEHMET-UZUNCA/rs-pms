@@ -138,7 +138,7 @@ class TransactionCodeScreenTest extends DomainTestCase
     public function test_copy_prefills_without_number_and_clerk_is_forbidden(): void
     {
         $this->actingAs($this->admin)->get('/ayarlar/departman-kodlari/'.$this->tc('320')->id.'/kopyala')->assertOk()
-            ->assertSee('Kopyala: 320')->assertSee('value="FOOD  Cafe Rocks"', false);
+            ->assertSee('Copy Department Code: 320')->assertSee('value="FOOD  Cafe Rocks"', false);
 
         $clerk = User::create(['username' => 'ON', 'name' => 'Ön büro', 'email' => 'on@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $clerk->id, 'property_id' => $this->property,

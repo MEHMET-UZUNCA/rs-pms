@@ -57,7 +57,7 @@ class OutletController extends Controller
         $this->authorizeProperty($outlet);
         $copy = $outlet->replicate(['simphony_rvc_number', 'default_transaction_code_id', 'sort']);
         $copy->code = '';
-        $copy->name = $outlet->name.' (kopya)';
+        $copy->name = $outlet->name.' '.__('pms.outlet.copy_suffix');
 
         return $this->form($copy, [], $outlet);
     }
@@ -83,7 +83,7 @@ class OutletController extends Controller
             return back()->with('error', $e->getMessage())->with('selected', $outlet->id);
         }
 
-        return redirect()->route('setup.outlets.index')->with('status', "\"{$outlet->name}\" silindi.");
+        return redirect()->route('setup.outlets.index')->with('status', __('pms.common.deleted', ['name' => $outlet->name]));
     }
 
     public function move(Outlet $outlet, string $direction): RedirectResponse
@@ -112,12 +112,13 @@ class OutletController extends Controller
             'codes' => ['array'],
             'codes.*' => ['integer'],
         ], [
-            'code.regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
-            'code.unique' => 'Bu kodla bir outlet zaten var.',
-            'simphony_rvc_number.unique' => 'Bu Simphony RVC numarası başka bir outlet\'te kullanılıyor.',
+            'code.regex' => __('pms.validation.outlet_code_regex'),
+            'code.unique' => __('pms.validation.outlet_code_unique'),
+            'simphony_rvc_number.unique' => __('pms.validation.rvc_unique'),
         ], [
-            'code' => 'Kod', 'name' => 'Ad', 'type' => 'Tip', 'source_system' => 'Kaynak', 'simphony_rvc_number' => 'Simphony RVC no',
-            'rsone_department_id' => 'RS ONE departmanı', 'default_transaction_code_id' => 'Varsayılan kod',
+            'code' => __('pms.common.code'), 'name' => __('pms.common.name'), 'type' => __('pms.common.type'), 'source_system' => __('pms.outlet.source'),
+            'simphony_rvc_number' => __('pms.outlet.rvc_number'), 'rsone_department_id' => __('pms.outlet.rsone_department'),
+            'default_transaction_code_id' => __('pms.outlet.default_code'),
         ]);
         $codes = $data['codes'] ?? [];
         unset($data['codes']);
@@ -130,7 +131,7 @@ class OutletController extends Controller
         }
 
         return redirect()->route('setup.outlets.index', ['pasif' => $saved->is_active ? null : 1])
-            ->with('status', "\"{$saved->name}\" kaydedildi.")->with('selected', $saved->id);
+            ->with('status', __('pms.common.saved', ['name' => $saved->name]))->with('selected', $saved->id);
     }
 
     /** @param array<int> $assigned */

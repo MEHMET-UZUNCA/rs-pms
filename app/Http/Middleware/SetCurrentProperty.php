@@ -19,7 +19,7 @@ class SetCurrentProperty
     {
         $allowed = DB::table('pms_user_properties as up')->join('pms_properties as p', 'p.id', '=', 'up.property_id')
             ->where('up.user_id', $request->user()->id)->where('p.is_active', true)->orderBy('p.id')->distinct()->pluck('p.id')->all();
-        abort_if($allowed === [], 403, 'Bu kullanıcı için tanımlı tesis yok.');
+        abort_if($allowed === [], 403, 'No property is assigned to this user.');
 
         $id = (int) $request->session()->get('property_id');
         if (! in_array($id, array_map('intval', $allowed), true)) {

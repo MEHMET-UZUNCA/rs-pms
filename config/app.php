@@ -82,6 +82,9 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
+    // Arayüz dilleri (lang/<kod>/pms.php). Varsayılan İngilizce: terimler Fidelio Suite8 ile aynı.
+    'locales' => ['en' => 'English', 'tr' => 'Türkçe'],
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

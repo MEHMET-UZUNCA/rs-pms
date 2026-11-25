@@ -1,0 +1,125 @@
+<?php
+
+/*
+ * RS PMS — English (default). Terms follow Oracle Hospitality Suite8 (Fidelio) wording so staff see the same words:
+ * Check In, Check Out, In House, Arrivals, Departures, Room Rack, Billing, Department Codes, Vacant / Occupied, Clean / Dirty …
+ */
+return [
+    'app' => 'RS PMS',
+    'language' => 'Language',
+    'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
+
+    'menu' => [
+        'reservation' => 'Reservation', 'front_office' => 'Front Office', 'cashiering' => 'Cashiering', 'housekeeping' => 'Housekeeping',
+        'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
+        'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
+        'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
+        'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Room Status',
+        'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
+        'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
+        'reports' => 'Reports', 'outlets' => 'Outlets', 'department_codes' => 'Department Codes', 'taxes' => 'Taxes', 'users' => 'Users',
+        'coming_soon' => 'Not available yet',
+    ],
+
+    'common' => [
+        'property' => 'Property', 'user' => 'User', 'business_date' => 'Business Date', 'logout' => 'Logout', 'home' => 'Home',
+        'available_screens' => 'Choose a screen from the menu bar. Available screens:',
+        'new' => 'New', 'edit' => 'Edit', 'copy' => 'Copy', 'delete' => 'Delete', 'up' => 'Up', 'down' => 'Down', 'close' => 'Close',
+        'ok' => 'OK', 'cancel' => 'Cancel', 'search' => 'Search', 'quick_search' => 'Quick Search', 'show_inactive' => 'Show Inactive',
+        'inactive' => 'Inactive', 'active' => 'Active', 'all' => 'All', 'none' => '<None>', 'same' => '<Same>', 'no_records' => 'No records.',
+        'records' => ':count records', 'select_row' => 'Select a row.', 'saved' => ':name saved.', 'deleted' => ':name deleted.',
+        'delete_confirm' => 'Delete the selected record? A record in use cannot be deleted; set it inactive instead.',
+        'yes' => 'Yes', 'no' => 'No', 'balance' => 'Balance', 'amount' => 'Amount', 'date' => 'Date', 'description' => 'Description',
+        'code' => 'Code', 'name' => 'Name', 'type' => 'Type', 'group' => 'Group', 'number' => 'No.', 'sort' => 'Sort',
+        'setup_title' => 'Setup', 'not_loaded' => 'Information could not be loaded.', 'connection_error' => 'Connection error.',
+    ],
+
+    'login' => [
+        'title' => 'Login', 'username' => 'User name', 'password' => 'Password', 'remember' => 'Remember me', 'submit' => 'Login',
+        'failed' => 'Wrong user name or password.', 'throttled' => 'Too many failed attempts. Try again in :seconds seconds.',
+    ],
+
+    'setup' => [
+        'cashiering' => 'Cashiering', 'reservation' => 'Reservation', 'system' => 'System',
+        'department_code_groups' => 'Department Code Groups', 'payment_types' => 'Payment Types', 'rate_codes' => 'Rate Codes',
+        'room_types' => 'Room Types', 'users_roles' => 'Users and Roles',
+    ],
+
+    'outlet' => [
+        'title' => 'Outlets', 'subtitle' => 'Simphony revenue centers (RVC) and RS ONE departments', 'count' => ':count outlets',
+        'rvc' => 'Simphony RVC', 'rvc_number' => 'Simphony RVC No.', 'source' => 'Source', 'default_code' => 'Default Department Code',
+        'default_auto' => '— automatic (lowest number) —', 'default_hint' => 'Amounts without a sales itemizer mapping are posted to this code.',
+        'rvc_hint' => 'The Simphony RVC number is the revenue center number ("#") in Simphony EMC; postings from Simphony are linked to the outlet by it.',
+        'rsone_department' => 'RS ONE Department', 'code_count' => 'Codes', 'department_codes' => 'Department Codes',
+        'filter_codes' => 'Filter: number or description', 'only_selected' => 'Selected only', 'selected_count' => 'codes selected',
+        'linked_outlet' => 'Linked Outlet', 'other_outlet_hint' => 'Codes linked to another outlet are greyed out; remove them there first.',
+        'short' => 'Code', 'discount' => '(discount)', 'new_title' => 'New Outlet', 'edit_title' => 'Edit Outlet: :name', 'copy_title' => 'Copy Outlet: :name',
+        'copy_suffix' => '(copy)',
+        'types' => ['restaurant' => 'Restaurant', 'bar' => 'Bar', 'room_service' => 'Room Service', 'minibar' => 'Minibar', 'banquet' => 'Banquet',
+            'spa' => 'Spa', 'shop' => 'Shop', 'other' => 'Other'],
+        'sources' => ['simphony' => 'Simphony', 'rsone' => 'RS ONE', 'manual' => 'Manual (PMS)'],
+    ],
+
+    'dc' => [
+        'title' => 'Department Codes', 'subtitle' => 'Revenue, payment and system codes', 'count' => ':count codes',
+        'number' => 'Number', 'code' => 'Code', 'manual' => 'Manual', 'unit' => 'Unit', 'vat' => 'VAT', 'outlet' => 'Outlet',
+        'search_hint' => 'Number, code or description', 'folio_text' => 'Folio Text', 'folio_text_hint' => '(description is printed if empty)',
+        'arrangement' => 'Arrangement', 'government_code' => 'Government Code', 'allow_manual_post' => 'Allow Manual Post',
+        'return_dep' => 'Return Dep.', 'unit_description' => 'Unit Description', 'default_price' => 'Default Price', 'physical_origin' => 'Physical Origin',
+        'tax' => 'Tax', 'tax_hint' => 'Tax (dated) — empty end date: open ended', 'valid_from' => 'From', 'valid_to' => 'Until',
+        'tax_inclusive' => 'Amounts are entered including tax', 'disabled' => 'Disabled', 'in_prearrival' => 'in Prearrival',
+        'in_billing' => 'in Billing', 'in_ar' => 'in AR', 'in_payments' => 'in Payments', 'payment_type' => 'Payment Type',
+        'foreign_currency' => 'Foreign Currency', 'direct_debit' => 'Direct Debit Payment', 'non_hotel_revenue' => 'Non-Hotel Revenue',
+        'cc_commission' => 'CC Commission', 'percentage' => 'Percentage', 'statistic_type' => 'Statistic Type', 'food_beverage' => 'Food / Beverage',
+        'credit_limit' => 'Credit Limit', 'folio_subfunction' => 'Folio Subfunction', 'adjustment_dept' => 'Adjustment Dept',
+        'open_cash_drawer' => 'Open Cash Drawer', 'hostess_enabled' => 'Hostess Enabled', 'post_tax_only' => 'Post Tax Only',
+        'rs_pms' => 'RS PMS', 'is_discount' => 'Discount / rebate code', 'is_no_show' => 'No-show code', 'discount_of' => 'Base code of the discount',
+        'tax_history_hint' => 'Changing a tax keeps history: close the old line with an end date and add a new line with a start date.',
+        'new_title' => 'New Department Code', 'edit_title' => 'Edit Department Code: :name', 'copy_title' => 'Copy Department Code: :name',
+        'types' => ['revenue' => 'Debit — revenue', 'payment' => 'Credit — payment', 'paid_out' => 'Paid-out', 'deposit' => 'Deposit',
+            'ar_transfer' => 'AR transfer', 'internal' => 'Internal'],
+        'payment_kinds' => ['cash' => 'Cash', 'card' => 'Credit Card', 'bank_transfer' => 'Bank Transfer', 'city_ledger' => 'City Ledger',
+            'foreign_cash' => 'Foreign Currency Cash', 'cheque' => 'Cheque', 'voucher' => 'Voucher'],
+        'buckets' => ['room' => 'Logis (Room)', 'breakfast' => 'Breakfast', 'lunch' => 'Lunch', 'dinner' => 'Dinner', 'allinc_food' => 'All Inclusive Food',
+            'allinc_beverage' => 'All Inclusive Beverage', 'food' => 'Food', 'beverage' => 'Beverage', 'minibar' => 'Minibar',
+            'telephone' => 'Telephone', 'spa' => 'Spa', 'laundry' => 'Laundry', 'other' => 'Other'],
+        'fb' => ['food' => 'Food', 'beverage' => 'Beverage', 'other' => 'Other'],
+    ],
+
+    'res' => [
+        'navigator' => 'Reservation Navigator', 'name' => 'Name', 'room' => 'Room', 'conf_no' => 'Conf. No.', 'company_agent' => 'Company / Agent',
+        'arrival' => 'Arrival', 'departure' => 'Departure', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'All statuses',
+        'guest' => 'Guest', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'status' => 'Status',
+        'limit_hint' => '(first :limit — narrow the query)', 'keys_hint' => '↑/↓ move · F3 search · Alt+1…0 filters',
+        'check_in' => 'Check In', 'check_in_confirm' => 'Check in the selected reservation?', 'checked_in' => ':name — room :room checked in.',
+        'folio' => 'Billing', 'cancel' => 'Cancel', 'coming_soon' => 'Available with the reservation card',
+        'contact' => 'Communication', 'address' => 'Address', 'profiles' => 'Profiles', 'folios' => 'Folios', 'window' => 'window :n',
+        'history' => 'Previous stays', 'note' => 'Note', 'room_type_short' => 'Room / Type', 'stay' => 'Stay', 'nights_count' => ':n nights',
+        'adults' => '{1} :count adult|[2,*] :count adults', 'children' => '{1} :count child|[2,*] :count children', 'not_assigned' => 'not assigned', 'simphony' => 'Simphony',
+        'room_charges_open' => 'Room charges allowed', 'room_charges_closed' => 'Room charges blocked', 'none' => '—', 'no_folio' => 'none',
+        'fa_number' => 'Account No.', 'validity' => 'Validity', 'open' => 'Open', 'closed' => 'Closed', 'last_postings' => 'Last postings',
+        'business_date_title' => 'Business Date :date',
+        'filters' => ['iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
+            'fa' => 'FA In House', 'fa-acilacak' => 'FA Arrivals', 'fa-kapanacak' => 'FA Departures', 'fa-kapali' => 'FA Checked Out', 'fa-ileri' => 'FA Future'],
+        'statuses' => ['confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
+            'checked_out' => 'Checked Out', 'cancelled' => 'Cancelled', 'no_show' => 'No Show'],
+    ],
+
+    // Housekeeping / room status — Suite8 terms
+    'hk' => [
+        'fo_status' => ['vacant' => 'Vacant', 'occupied' => 'Occupied'],
+        'hk_status' => ['clean' => 'Clean', 'dirty' => 'Dirty', 'inspected' => 'Inspected', 'pickup' => 'Pick Up'],
+        'service_status' => ['in_service' => 'In Service', 'out_of_order' => 'Out of Order', 'out_of_service' => 'Out of Service'],
+        'short' => ['vacant_clean' => 'VC', 'vacant_dirty' => 'VD', 'occupied_clean' => 'OC', 'occupied_dirty' => 'OD', 'out_of_order' => 'OOO', 'out_of_service' => 'OOS'],
+        'discrepancy' => ['skip' => 'Skip', 'sleep' => 'Sleep', 'person' => 'Person'],
+    ],
+    'validation' => [
+        'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
+        'outlet_code_unique' => 'An outlet with this code already exists.',
+        'rvc_unique' => 'This Simphony RVC number is used by another outlet.',
+        'dc_number_regex' => 'The number may only contain digits (max. 6).',
+        'dc_number_unique' => 'A department code with this number already exists.',
+        'payment_kind_required' => 'A payment type is required for a payment code.',
+    ],
+];

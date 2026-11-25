@@ -12,7 +12,7 @@ class RequirePermission
 {
     public function handle(Request $request, Closure $next, string $code): Response
     {
-        abort_unless(Gate::allows('permission', $code), 403, 'Bu ekran için yetkiniz yok.');
+        abort_unless(Gate::allows('permission', $code), 403, 'You are not allowed to use this screen.');
 
         return $next($request);
     }

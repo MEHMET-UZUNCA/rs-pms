@@ -35,6 +35,11 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 
+## Dil
+
+- Servis hata mesajları (ör. "Girişten önce oda atanmalı", outlet/departman kodu kuralları) henüz yalnız Türkçe; dil dosyasına taşınacak.
+- İngilizce terimlerin Fidelio ekranlarıyla birebir aynılığı personelle bir kez gözden geçirilecek (farklı görülen terim lang/en/pms.php'de düzeltilir).
+
 ## Yapılacak ekranlar ve işler (sırayla)
 
 1. Rezervasyon Kartı (Ctrl+1 … Ctrl+0) — yeni / düzenle

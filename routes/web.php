@@ -7,6 +7,15 @@ use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\TransactionCodeController;
 use Illuminate\Support\Facades\Route;
 
+// Dil seçimi (girişten önce de çalışır; girişli kullanıcıda kalıcı olarak kaydedilir)
+Route::post('/dil/{locale}', function (string $locale) {
+    abort_unless(array_key_exists($locale, config('app.locales')), 404);
+    session(['locale' => $locale]);
+    auth()->user()?->update(['locale' => $locale]);
+
+    return back();
+})->name('locale');
+
 Route::middleware('guest')->group(function () {
     Route::get('/giris', [LoginController::class, 'show'])->name('login');
     Route::post('/giris', [LoginController::class, 'login'])->middleware('throttle:20,1');

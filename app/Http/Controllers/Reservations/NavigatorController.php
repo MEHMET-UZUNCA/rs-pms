@@ -71,7 +71,7 @@ class NavigatorController extends Controller
             ->where('status', 'checked_out')->count();
 
         return view('reservations._summary', ['r' => $reservation, 'profiles' => $profiles, 'history' => $history,
-            'statusLabel' => self::STATUSES[$reservation->status] ?? $reservation->status]);
+            'statusLabel' => __('pms.res.statuses.'.$reservation->status)]);
     }
 
     public function folioSummary(Folio $folio): View
@@ -94,7 +94,7 @@ class NavigatorController extends Controller
             return back()->with('error', $e->getMessage())->with('selected', $reservation->id);
         }
 
-        return back()->with('status', "{$reservation->profile?->display_name} — oda {$reservation->room?->number} giriş yapıldı.")->with('selected', $reservation->id);
+        return back()->with('status', __('pms.res.checked_in', ['name' => $reservation->profile?->display_name, 'room' => $reservation->room?->number]))->with('selected', $reservation->id);
     }
 
     private function reservations(int $propertyId, ?string $filter, CarbonImmutable $bd, Request $request, ?CarbonImmutable $arrival, ?CarbonImmutable $departure)

@@ -6,6 +6,13 @@
  *    adreslerini (data-url-*) kullanır. Hızlı arama (data-grid-filter) satırları anında süzer.
  *  - Onay: data-confirm="…" olan form gönderilmeden önce sorar.
  */
+// Arayüz dili <html lang> özniteliğinden; ekranlardaki metinler sunucuda lang/<dil>/pms.php'den gelir, burada yalnız betik mesajları var.
+const LANG = document.documentElement.lang === 'tr' ? 'tr' : 'en';
+const T = {
+    en: { notLoaded: 'Information could not be loaded.', connection: 'Connection error.' },
+    tr: { notLoaded: 'Bilgi alınamadı.', connection: 'Bağlantı hatası.' },
+}[LANG];
+
 const isTyping = (el) => el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName));
 
 function keyName(e) {
@@ -68,8 +75,8 @@ function initGrid(grid) {
         detailTimer = setTimeout(async () => {
             try {
                 const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-                if (detailFor === url) detail.innerHTML = res.ok ? await res.text() : '<p class="p-3 text-danger">Bilgi alınamadı.</p>';
-            } catch { if (detailFor === url) detail.innerHTML = '<p class="p-3 text-danger">Bağlantı hatası.</p>'; }
+                if (detailFor === url) detail.innerHTML = res.ok ? await res.text() : `<p class="p-3 text-danger">${T.notLoaded}</p>`;
+            } catch { if (detailFor === url) detail.innerHTML = `<p class="p-3 text-danger">${T.connection}</p>`; }
         }, 120);
     }
 
@@ -133,7 +140,7 @@ document.addEventListener('submit', (e) => {
 // Saat (durum çubuğu)
 const clock = document.querySelector('[data-clock]');
 if (clock) {
-    const tick = () => { clock.textContent = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); };
+    const tick = () => { clock.textContent = new Date().toLocaleTimeString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { hour: '2-digit', minute: '2-digit' }); };
     tick();
     setInterval(tick, 15000);
 }

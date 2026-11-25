@@ -110,7 +110,7 @@ class TransactionCodeController extends Controller
             return back()->with('error', $e->getMessage())->with('selected', $code->id);
         }
 
-        return redirect()->route('setup.transaction-codes.index')->with('status', "{$code->code} {$code->name} silindi.");
+        return redirect()->route('setup.transaction-codes.index')->with('status', __('pms.common.deleted', ['name' => $code->code.' '.$code->name]));
     }
 
     public function move(TransactionCode $code, string $direction): RedirectResponse
@@ -155,12 +155,13 @@ class TransactionCodeController extends Controller
             'taxes.*.valid_from' => ['nullable', 'date'],
             'taxes.*.valid_to' => ['nullable', 'date'],
         ], [
-            'code.regex' => 'Numara yalnız rakamlardan oluşur (en çok 6 hane).',
-            'code.unique' => 'Bu numarayla bir departman kodu zaten var.',
-            'payment_kind.required_if' => 'Ödeme kodu için ödeme türü seçilmeli.',
+            'code.regex' => __('pms.validation.dc_number_regex'),
+            'code.unique' => __('pms.validation.dc_number_unique'),
+            'payment_kind.required_if' => __('pms.validation.payment_kind_required'),
         ], [
-            'code' => 'Numara', 'category' => 'Kısa kod', 'name' => 'Açıklama', 'folio_text' => 'Folyo metni', 'type' => 'Tip', 'group_id' => 'Grup',
-            'default_price' => 'Varsayılan fiyat', 'cc_commission_pct' => 'Komisyon yüzdesi', 'credit_limit' => 'Kredi limiti',
+            'code' => __('pms.dc.number'), 'category' => __('pms.dc.code'), 'name' => __('pms.common.description'), 'folio_text' => __('pms.dc.folio_text'),
+            'type' => __('pms.common.type'), 'group_id' => __('pms.common.group'), 'default_price' => __('pms.dc.default_price'),
+            'cc_commission_pct' => __('pms.dc.percentage'), 'credit_limit' => __('pms.dc.credit_limit'),
         ]);
         foreach (['is_active', 'manual_post_allowed', 'is_discount', 'is_no_show', 'is_tax_inclusive', 'disabled_in_prearrival', 'disabled_in_billing',
             'disabled_in_ar', 'disabled_in_payments', 'direct_debit', 'non_hotel_revenue', 'open_cash_drawer', 'hostess_enabled', 'post_tax_only'] as $flag) {
@@ -179,7 +180,7 @@ class TransactionCodeController extends Controller
         }
 
         return redirect()->route('setup.transaction-codes.index', ['pasif' => $saved->is_active ? null : 1])
-            ->with('status', "{$saved->code} {$saved->name} kaydedildi.")->with('selected', $saved->id);
+            ->with('status', __('pms.common.saved', ['name' => $saved->code.' '.$saved->name]))->with('selected', $saved->id);
     }
 
     /** @return array<int, array{tax_id:int, valid_from:?string, valid_to:?string}> */

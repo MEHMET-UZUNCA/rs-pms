@@ -26,7 +26,7 @@ class LoginController extends Controller
         $key = 'login:'.Str::lower($data['login']).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages(['login' => 'Çok fazla hatalı deneme. '.RateLimiter::availableIn($key).' saniye sonra tekrar deneyin.']);
+            throw ValidationException::withMessages(['login' => __('pms.login.throttled', ['seconds' => RateLimiter::availableIn($key)])]);
         }
 
         $field = str_contains($data['login'], '@') ? 'email' : 'username';
@@ -34,7 +34,7 @@ class LoginController extends Controller
 
         if (! Auth::attempt([$field => $value, 'password' => $data['password'], 'is_active' => true], $request->boolean('remember'))) {
             RateLimiter::hit($key, 60);
-            throw ValidationException::withMessages(['login' => 'Kullanıcı adı ya da şifre hatalı.']);
+            throw ValidationException::withMessages(['login' => __('pms.login.failed')]);
         }
 
         RateLimiter::clear($key);

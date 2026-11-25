@@ -36,6 +36,16 @@ Kaynak: Oracle *Suite8 Quick Keys / Introduction / Reservations / Cashiering / F
 - **Tarih kutusu:** Her ekranda tarih kutusu Fidelio'daki gibi çalışır (yazarak `+1`, `-7`, `t` = bugün; takvimden seçim).
 - **Tablolar:** Kolonlar sürükle-bırakla sıralanır, gizlenir, genişlik kaydedilir (kullanıcı bazında).
 
+### Dil
+
+- **Varsayılan dil İngilizce**; terimler Fidelio Suite8 ile birebir aynı (Reservation Navigator, In House, Arrivals, Departures, Check In,
+  Check Out, Billing, Department Codes, Business Date; kat hizmetlerinde Vacant / Occupied, Clean / Dirty / Inspected / Pick Up,
+  Out of Order / Out of Service).
+- İkinci dil **Türkçe**. Her kullanıcı üst çubuktaki **EN / TR** düğmesiyle dilini seçer; seçim kullanıcı kaydında saklanır
+  (giriş ekranında da seçilebilir).
+- Metinler `lang/en/pms.php` ve `lang/tr/pms.php` dosyalarındadır; iki dosyada aynı anahtarların bulunduğu test edilir.
+  Yeni dil eklemek: `lang/<kod>/pms.php` + `config/app.php` → `locales`.
+
 ## 7.2 Klavye kısayolları (Fidelio Suite8 ile birebir)
 
 ### Genel

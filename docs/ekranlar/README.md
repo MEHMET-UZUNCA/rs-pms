@@ -81,6 +81,14 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 
 Örnek veri: `php artisan db:seed --class=DemoDataSeeder` (yalnız geliştirme; gerçek otel verisi değildir).
 
+## 08 — Dil (İngilizce varsayılan, Türkçe)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/08-dil-01-giris-ingilizce.png` | Giriş ekranı İngilizce, dil seçimi |
+| `goruntuler/08-dil-02-navigator-ingilizce.png` | Fidelio terimleri: In House, Arrivals, Departures, Check In, Business Date; Front Office menüsü |
+| `goruntuler/08-dil-03-navigator-turkce.png` | Aynı ekran Türkçe (üst çubukta TR) |
+
 ## Taslakları yerelde açmak
 
 ```bash
