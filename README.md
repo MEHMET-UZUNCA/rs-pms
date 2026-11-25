@@ -4,7 +4,7 @@
 Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalır, restoran/bar satış noktaları
 **Oracle Simphony**'den gelir. İleride **RS ONE** ile tek uygulamada birleşecektir.
 
-> Durum: **Geliştirme — 6. aşama.** Veritabanı tasarımı onaylandı (212 tablo). Oluşturulan: çekirdek, oda envanteri, kodlar, profiller, işlem kodları, fiyat ve müsaitlik, rezervasyon, kasa, gece kapanışı ve istatistik, kat hizmetleri, yönetim, cari hesaplar, acente komisyonları, Logo aktarımı (166 tablo).
+> Durum: **Geliştirme — 7. aşama.** Veritabanı tasarımı onaylandı (212 tablo). Oluşturulan: 7 aşama, 198 tablo (çekirdekten Simphony ve banket'e kadar).
 
 ## Belgeler
 

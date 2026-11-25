@@ -1,8 +1,8 @@
 <?php
 
+use App\Support\Database\FinancialRecordGuard;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Schema;
  */
 return new class extends Migration
 {
-    private const POSTING_UPDATABLE = ['reversed_by_id', 'invoice_id'];
-
     public function up(): void
     {
         $lookup = function (string $name) {
@@ -467,12 +465,14 @@ return new class extends Migration
             $table->foreign('posting_id')->references('id')->on('pms_postings');
         });
 
-        $this->createImmutabilityTriggers();
+        FinancialRecordGuard::protectCashiering();
     }
 
     public function down(): void
     {
-        $this->dropImmutabilityTriggers();
+        foreach (['pms_postings', 'pms_posting_taxes', 'pms_invoice_lines', 'pms_invoices'] as $guarded) {
+            FinancialRecordGuard::drop($guarded);
+        }
         Schema::table('pms_reservation_transports', function (Blueprint $table) {
             $table->dropForeign(['posting_id']);
         });
@@ -490,46 +490,6 @@ return new class extends Migration
             'pms_cashiers', 'pms_cashier_terminals', 'pms_article_groups', 'pms_folio_groups', 'pms_window_types',
         ] as $table) {
             Schema::dropIfExists($table);
-        }
-    }
-
-    /** Mali kayıtların silinmesini ve izinsiz değiştirilmesini veritabanında engeller (MySQL/MariaDB ve SQLite). */
-    private function createImmutabilityTriggers(): void
-    {
-        $driver = DB::getDriverName();
-        $locked = array_values(array_diff(Schema::getColumnListing('pms_postings'), self::POSTING_UPDATABLE));
-        $message = 'Mali kayit degistirilemez veya silinemez; ters kayit kullanin.';
-
-        if ($driver === 'sqlite') {
-            DB::unprepared("CREATE TRIGGER pms_postings_no_delete BEFORE DELETE ON pms_postings BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-            DB::unprepared('CREATE TRIGGER pms_postings_no_update BEFORE UPDATE OF '.implode(', ', $locked)." ON pms_postings BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-            foreach (['pms_posting_taxes', 'pms_invoice_lines'] as $table) {
-                DB::unprepared("CREATE TRIGGER {$table}_no_delete BEFORE DELETE ON {$table} BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-                DB::unprepared("CREATE TRIGGER {$table}_no_update BEFORE UPDATE ON {$table} BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-            }
-            DB::unprepared("CREATE TRIGGER pms_invoices_no_delete BEFORE DELETE ON pms_invoices BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-
-            return;
-        }
-
-        if (in_array($driver, ['mysql', 'mariadb'], true)) {
-            $signal = "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '{$message}'";
-            $changed = implode(' OR ', array_map(fn ($c) => "NOT (OLD.`{$c}` <=> NEW.`{$c}`)", $locked));
-            DB::unprepared("CREATE TRIGGER pms_postings_no_delete BEFORE DELETE ON pms_postings FOR EACH ROW {$signal}");
-            DB::unprepared("CREATE TRIGGER pms_postings_no_update BEFORE UPDATE ON pms_postings FOR EACH ROW BEGIN IF {$changed} THEN {$signal}; END IF; END");
-            foreach (['pms_posting_taxes', 'pms_invoice_lines'] as $table) {
-                DB::unprepared("CREATE TRIGGER {$table}_no_delete BEFORE DELETE ON {$table} FOR EACH ROW {$signal}");
-                DB::unprepared("CREATE TRIGGER {$table}_no_update BEFORE UPDATE ON {$table} FOR EACH ROW {$signal}");
-            }
-            DB::unprepared("CREATE TRIGGER pms_invoices_no_delete BEFORE DELETE ON pms_invoices FOR EACH ROW {$signal}");
-        }
-    }
-
-    private function dropImmutabilityTriggers(): void
-    {
-        foreach (['pms_postings_no_delete', 'pms_postings_no_update', 'pms_posting_taxes_no_delete', 'pms_posting_taxes_no_update',
-            'pms_invoice_lines_no_delete', 'pms_invoice_lines_no_update', 'pms_invoices_no_delete'] as $trigger) {
-            DB::unprepared("DROP TRIGGER IF EXISTS {$trigger}");
         }
     }
 };

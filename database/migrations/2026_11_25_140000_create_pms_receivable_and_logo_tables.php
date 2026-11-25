@@ -1,8 +1,8 @@
 <?php
 
+use App\Support\Database\FinancialRecordGuard;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -248,14 +248,14 @@ return new class extends Migration
             $table->foreign('ar_account_id')->references('id')->on('pms_ar_accounts');
         });
 
-        $this->createTriggers();
+        FinancialRecordGuard::protect('pms_ar_payments', null);
+        FinancialRecordGuard::protect('pms_logo_export_lines', []);
     }
 
     public function down(): void
     {
-        foreach (['pms_ar_payments_no_delete', 'pms_logo_export_lines_no_delete', 'pms_logo_export_lines_no_update'] as $trigger) {
-            DB::unprepared("DROP TRIGGER IF EXISTS {$trigger}");
-        }
+        FinancialRecordGuard::drop('pms_ar_payments');
+        FinancialRecordGuard::drop('pms_logo_export_lines');
         Schema::table('pms_billing_authorizations', function (Blueprint $table) {
             $table->dropForeign(['ar_account_id']);
         });
@@ -272,22 +272,6 @@ return new class extends Migration
             'pms_ar_payments', 'pms_ar_invoices', 'pms_ar_accounts', 'pms_ar_account_types',
         ] as $table) {
             Schema::dropIfExists($table);
-        }
-    }
-
-    private function createTriggers(): void
-    {
-        $driver = DB::getDriverName();
-        $message = 'Mali kayit degistirilemez veya silinemez; ters kayit veya yeni parti kullanin.';
-        if ($driver === 'sqlite') {
-            DB::unprepared("CREATE TRIGGER pms_ar_payments_no_delete BEFORE DELETE ON pms_ar_payments BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-            DB::unprepared("CREATE TRIGGER pms_logo_export_lines_no_delete BEFORE DELETE ON pms_logo_export_lines BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-            DB::unprepared("CREATE TRIGGER pms_logo_export_lines_no_update BEFORE UPDATE ON pms_logo_export_lines BEGIN SELECT RAISE(ABORT, '{$message}'); END;");
-        } elseif (in_array($driver, ['mysql', 'mariadb'], true)) {
-            $signal = "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '{$message}'";
-            DB::unprepared("CREATE TRIGGER pms_ar_payments_no_delete BEFORE DELETE ON pms_ar_payments FOR EACH ROW {$signal}");
-            DB::unprepared("CREATE TRIGGER pms_logo_export_lines_no_delete BEFORE DELETE ON pms_logo_export_lines FOR EACH ROW {$signal}");
-            DB::unprepared("CREATE TRIGGER pms_logo_export_lines_no_update BEFORE UPDATE ON pms_logo_export_lines FOR EACH ROW {$signal}");
         }
     }
 };
