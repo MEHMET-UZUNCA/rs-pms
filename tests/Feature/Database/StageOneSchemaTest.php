@@ -63,7 +63,7 @@ class StageOneSchemaTest extends TestCase
         // D. Profiller
         'pms_profiles' => ['id', 'property_id', 'type', 'status', 'salutation', 'letter_greeting', 'first_name', 'middle_name', 'last_name',
             'company_name', 'display_name', 'gender', 'birth_date', 'father_name', 'mother_name', 'marital_status', 'occupation',
-            'wedding_date', 'nationality_code', 'vip_level_id', 'tax_office', 'tax_number', 'iata_code', 'commission_code_id',
+            'wedding_date', 'nationality_code', 'marketing_consent_source', 'photo_path', 'vip_level_id', 'tax_office', 'tax_number', 'iata_code', 'commission_code_id',
             'ar_account_id', 'default_rate_code_id', 'no_mailing', 'no_emailing', 'store_private_data', 'rsone_client_id',
             'merged_into_id', 'merged_at', 'primary_contact_profile_id', 'origin_hotel_name', 'origin_hotel_legacy_id',
             'legacy_system', 'legacy_id', 'legacy_global_id', 'legacy_created_by', 'legacy_updated_by'],

@@ -1,34 +1,167 @@
 # 7. Arayüz
 
-Arayüz Türkçe; görünüm ve düzen **QloApps yönetim paneli** örnek alınarak (kod alınmadan) yeniden çizilir.
-RS ONE ile aynı bileşen dili (Blade + Tailwind) kullanılır; birleşmede iki uygulama aynı görünür.
+**İlke: Personel Fidelio Suite8'den geçerken yeniden öğrenmek zorunda kalmamalı.**
+Bu yüzden ekranların **yerleşimi, adları, sekme sırası ve klavye kısayolları Fidelio Suite8 ile aynıdır.**
+Görsel olarak (renk, yazı tipi, düzen inceliği) modern ve sade bir web arayüzü kullanılır; QloApps yönetim panelinin liste ve filtre
+ekranları ile Kamra'nın "Bugün" ekranı bu görsel dil için örnektir. Arayüz Türkçedir; RS ONE ile aynı bileşenler (Blade + Tailwind) kullanılır.
 
-## 7.1 Genel düzen (QloApps'ten)
+Kaynak: Oracle *Suite8 Quick Keys / Introduction / Reservations / Cashiering / Front Desk / Rooms Management / Miscellaneous Manual V8.9*.
 
-- **Sol menü** (daraltılabilir): Ön Büro, Rezervasyonlar, Oda Planı, Kasa, Cari, Kat Hizmetleri, Raporlar, Gece Kapanışı, Tanımlar.
-- **Üst çubuk:** tesis seçici, **iş günü göstergesi** (takvim gününden farklıysa renkli), hızlı arama (oda no / misafir / rezervasyon no), kullanıcı.
-- **Liste ekranları:** başlıkta filtre satırı, sıralanabilir kolonlar, toplu işlem, Excel/PDF dışa aktarma.
-- **Kart ekranları:** sekmeli (Genel, Misafirler, Fiyat, Folyo, İzler, Geçmiş).
-- Klavye kısayolları (resepsiyonda fare kullanımını azaltmak için): F2 arama, F3 yeni rezervasyon, F8 kayıt at.
+## 7.1 Ana düzen (Fidelio Suite8 ile aynı)
 
-## 7.2 Ekranlar
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ Menü çubuğu: Rezervasyon · Ön Büro · Kasa · Kat Hizmetleri · Müşteri ·       │
+│              Toplantı/Banket · Hızlı Tuşlar · Çeşitli · Ayarlar · Pencereler │
+├───────────┬──────────────────────────────────────────────────────────────────┤
+│ Kısayol   │ Navigator ekranı (Fidelio düzeni)                                │
+│ çubuğu    │ ┌──────────────────────────────────────────────────────────────┐ │
+│ (renkli   │ │ Sorgu alanları (ad, oda, rez. no, tarih, durum filtreleri)   │ │
+│ gruplar)  │ ├──────────────────────────────────────────────────────────────┤ │
+│           │ │ Sonuç tablosu (kolonlar kullanıcıya göre ayarlanır)          │ │
+│ Favoriler │ ├──────────────────────────────┬───────────────────────────────┤ │
+│ Rezerv.   │ │ Ağaç (adres, iletişim, rez., │ Bilgi paneli (Fidelio "HTML   │ │
+│ Ön büro   │ │ folyo, notlar, geçmiş)       │ view"): seçili kaydın özeti   │ │
+│ Kasa      │ └──────────────────────────────┴───────────────────────────────┘ │
+│ ...       │                                                                  │
+├───────────┴──────────────────────────────────────────────────────────────────┤
+│ Durum çubuğu: Tesis · Kullanıcı · Kasiyer · İŞ GÜNÜ (tarih kutusu) · Bildirim│
+└──────────────────────────────────────────────────────────────────────────────┘
+```
 
-| Ekran | Örnek | İçerik |
+- **Menü çubuğu** Fidelio'daki ana menülerle aynı sırada.
+- **Kısayol çubuğu (Shortcut Bar):** solda renkli gruplar; kullanıcı kendi **Favoriler** grubunu oluşturur, sağ tıkla ekler/çıkarır, sürükleyerek sıralar (Fidelio ile aynı).
+- **Navigator ekranları:** Rezervasyon, Profil, Kasa (Billing), Blok, Etkinlik ekranlarının hepsi aynı üç bölümlü yapıdadır: üstte sorgu, ortada sonuç tablosu, altta ağaç + bilgi paneli. Bilgi paneli çift tıkla gizlenir/açılır, kullanıcı tercihi saklanır.
+- **Mavi detay oku:** Bir sayının yanındaki ok o sayının listesini açar (ör. Ev Durumu'nda "Arızalı oda 3 →").
+- **Tarih kutusu:** Her ekranda tarih kutusu Fidelio'daki gibi çalışır (yazarak `+1`, `-7`, `t` = bugün; takvimden seçim).
+- **Tablolar:** Kolonlar sürükle-bırakla sıralanır, gizlenir, genişlik kaydedilir (kullanıcı bazında).
+
+## 7.2 Klavye kısayolları (Fidelio Suite8 ile birebir)
+
+### Genel
+| Tuş | İşlev |
+|---|---|
+| `F1` | Yardım |
+| `Alt + F4` | Açık pencereyi kapat |
+| `F10` | Tüm pencereleri kapat (Close All) |
+| `F8` | Oturumu kilitle / kullanıcı değiştir (Login ekranı) |
+| `F12` | İmleci sorgu kutusundan sonuç tablosunun ilk satırına taşı |
+| `Alt + harf` | Altı çizili harfi olan alana git (ör. Profil aramada `Alt + A` → Ad) |
+| `Alt + ↓` | Açılır listeyi aç |
+| `Tab` / `Shift + Tab` | Sonraki / önceki alan |
+| `Ctrl + Tab` / `Ctrl + Shift + Tab` | Sonraki / önceki sekme |
+| `Esc` | İşlemi iptal et, açılır listeyi kapat |
+| `Home` / `End` | Alanın başı / sonu |
+| `Shift + F8` | Arayüz işlevleri (anahtar kartı, uyandırma, telefon hakkı) |
+
+### Rezervasyon ve ön büro
+| Tuş | İşlev |
+|---|---|
+| `Ctrl + N` | Yeni rezervasyon |
+| `Ctrl + Q` | Hızlı rezervasyon |
+| `Ctrl + D` | Müsaitlik |
+| `Ctrl + Shift + D` | Oda tipi müsaitliği |
+| `Ctrl + Shift + M` | Azami müsaitlik |
+| `Ctrl + R` | Fiyat sorgulama (Rate Query) |
+| `Ctrl + L` | Oda planı (Room Rack) |
+| `Ctrl + F` | Kat planı (Floor Plan) |
+| `Ctrl + S` | Oda arama |
+| `Ctrl + W` | Bekleme listesi önceliği |
+| `Ctrl + Shift + S` | Otel segmenti istatistiği |
+| `Ctrl + Shift + G` | Hedefler (Goals) |
+| `Shift + Alt + L` | Vardiya defteri (Logbook) |
+| `Shift + Alt + R` | Döviz hesaplayıcı |
+
+### Rezervasyon kartı sekmeleri
+| Tuş | Sekme |
+|---|---|
+| `Ctrl + 1` | Rezervasyon |
+| `Ctrl + 2` | Envanter (ödünç eşya) |
+| `Ctrl + 3` | Profiller (misafir, şirket, acente, kaynak, grup) |
+| `Ctrl + 4` | Paketler |
+| `Ctrl + 5` | Gece gece fiyat (Grid) |
+| `Ctrl + 6` | Özellikler / özel istekler |
+| `Ctrl + 7` | Kredi kartı |
+| `Ctrl + 8` | Sabit ücretler |
+| `Ctrl + 9` | Notlar |
+| `Ctrl + 0` | Yemek planı / özel özellikler |
+
+### Rezervasyon ve kasa navigatöründe hızlı filtre
+| Tuş | Filtre |
+|---|---|
+| `Alt + 1` | İçerideki rezervasyonlar |
+| `Alt + 2` | Bugün gelecekler |
+| `Alt + 3` | Bugün gidecekler |
+| `Alt + 4` | Çıkış yapmış rezervasyonlar |
+| `Alt + 5` | İleri tarihli rezervasyonlar |
+| `Alt + 6` | İçerideki rezervasyonsuz hesaplar (FA) |
+| `Alt + 7` | Bugün açılacak FA'lar |
+| `Alt + 8` | Bugün kapanacak FA'lar |
+| `Alt + 9` | Kapanmış FA'lar |
+| `Alt + 0` | İleri tarihli FA'lar |
+
+### Kasa
+| Tuş | İşlev |
+|---|---|
+| `Ctrl + B` | Folyo / Billing |
+| `Ctrl + E` | Kayıt at (Posting) |
+| `Ctrl + T` | Acente komisyonları (Travel Agent Processing) |
+
+### Toplantı / banket
+| Tuş | İşlev |
+|---|---|
+| `F3` | Konferans günlüğü (salon takvimi) |
+| `Ctrl + F3` | Salon doluluğu |
+| `Ctrl + Shift + F3` | Etkinlik boşlukları |
+| `Shift + Alt + F3` | Konferans kat planı |
+
+### Diğer
+| Tuş | İşlev |
+|---|---|
+| `F4` | Takvim (görev ve etkinlikler) |
+| `Ctrl + Shift + R` | Raporlar |
+| `Alt + I` / `Alt + E` | Not alanında şablon metni içe al / dışa ver |
+
+Tarayıcının kendi kısayollarıyla çakışanlar (`Ctrl + N`, `Ctrl + R`, `Ctrl + L`, `Ctrl + S`, `Ctrl + W`, `Ctrl + D`, `Ctrl + F`, `Ctrl + T`, `Ctrl + E`, `Ctrl + B`, `Ctrl + Q`, `F3`, `F4`, `F12`, `Alt + F4`):
+uygulama bu tuşları yakalar ve Fidelio işlevini çalıştırır. `Ctrl + W`, `Ctrl + N`, `Ctrl + T` ve `Alt + F4` gibi bazı tuşları tarayıcı
+sekmede yakalamaya izin vermez; bu yüzden RS PMS, resepsiyon bilgisayarlarında **uygulama modunda** (tam ekran, sekmesiz pencere,
+Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidelio tuşları çalışır.
+
+## 7.3 Ekranlar (Fidelio adları ve içerikleriyle)
+
+| Fidelio ekranı | RS PMS ekranı | İçerik |
 |---|---|---|
-| **Bugün** | Kamra "Today" | Gelecekler, gidecekler, içeridekiler, ödenmemiş bakiyeler, oda durumu özeti, izler |
-| **Müsaitlik / Hızlı rezervasyon** | QloApps "Book Now" | Tarih + kişi → oda tipi bazında müsait sayı ve fiyat; odayı seç, rezervasyona ekle |
-| **Oda planı (tape chart)** | QloApps Front Desk, Fidelio | Odalar × günler; sürükle-bırak oda değiştirme, süre uzatma; renkler durum ve segmente göre |
-| **Rezervasyon kartı** | Fidelio | Misafir, tarih, oda, fiyat kodu, gecelik fiyatlar, garanti, paylaşanlar, izler, uyarılar |
-| **Profil kartı** | Fidelio | Bilgiler, kimlik, iletişim, tercihler, geçmiş konaklamalar (arşiv dahil), istatistik |
-| **Giriş / Çıkış** | Kamra | Kimlik okuma, oda atama, anahtar, kimlik bildirimi; çıkışta folyo kontrolü ve fatura |
-| **Folyo** | Fidelio | 8 pencere sekmesi, kayıt at, ters kayıt, transfer, yönlendirme, ödeme, fatura |
-| **Kasa** | Fidelio | Vardiya aç/kapat, sayım, fark |
-| **Cari** | Kamra | Hesap listesi, açık kalemler, yaşlandırma, tahsilat eşleme, ekstre |
-| **Kat hizmetleri** | Kamra | Oda durum panosu, görev dağıtımı, telefon ekranı (kat görevlisi) |
-| **Gece kapanışı** | Kamra | Kontrol listesi (engelleyen/uyaran), tek düğme, adım ilerlemesi, rapor paketi |
-| **Raporlar** | Fidelio | Gelecekler/gidecekler, doluluk, gelir (işlem kodu), segment, yönetici raporu, tahmin |
-| **Tanımlar** | QloApps | Tesis, oda tipi, oda, fiyat kodu, fiyat tablosu, paket, işlem kodu, outlet, Simphony ve Logo eşlemeleri |
+| Reservation Navigator | Rezervasyon Navigatörü | Sorgu + sonuç + ağaç/bilgi paneli; `Alt+1..0` filtreleri |
+| New / Edit Reservation | Rezervasyon Kartı | `Ctrl+1..0` sekmeleri; profil bağlama, gece gece fiyat, paylaşım, iz, uyarı |
+| Quick Reservation | Hızlı Rezervasyon | Tek ekranda ad, tarih, tip, fiyat |
+| Availability / Room Type Availability | Müsaitlik | Oda tipi × gün; blok, opsiyon, OOO; kaçan talep kaydı |
+| Rate Query | Fiyat Sorgulama | Tarih + kişi → fiyat kodları × oda tipleri; paket ve gün tipi takvimi |
+| Room Rack | Oda Planı | Odalar × günler; sürükle-bırak oda değiştir, uzat, kısalt; giriş/çıkış, OOO |
+| Floor Plan | Kat Planı | Katlara göre oda kutuları; durum renkleri |
+| Room Search | Oda Arama | Özellik, kat, tip, durum filtreleri |
+| House Status | Ev Durumu | Bugün/yarın: dolu, boş, gelen, giden, OOO/OOS (mavi detay oklarıyla) |
+| Arrivals / In House | Gelecekler / İçeridekiler | Toplu giriş, oda atama, anahtar, kimlik |
+| Billing | Folyo | 8 pencere sekmesi, kayıt at, ters kayıt, transfer, böl, yönlendir, ödeme, fatura |
+| Posting | Kayıt At | Toplu / tek kayıt girişi |
+| Passer By | Ayakta Satış | Rezervasyonsuz hızlı satış |
+| Close Cashier | Kasa Kapanışı | Sayım, fark, kasa raporu |
+| Accounts Receivable | Cari Hesaplar | Açık kalemler, yaşlandırma, tahsilat eşleme, ekstre, ihtar |
+| Housekeeping / Attendants | Kat Hizmetleri | Oda durum panosu, görev dağıtımı, telefon ekranı |
+| Discrepant Rooms | Uyuşmazlıklar | Skip / sleep / kişi sayısı |
+| Night Audit | Gece Kapanışı | Kontrol listesi, adım adım ilerleme, raporlar |
+| Profiles | Profil Navigatörü | Bireysel, şirket, acente, kaynak, grup; birleştirme |
+| Block Reservation | Blok / Allotman | Blok başlığı, gün × tip tablosu, rooming list, release |
+| Conference Diary | Konferans Günlüğü | Salon × saat çizelgesi, sürükle-bırak etkinlik |
+| Logbook | Vardiya Defteri | Departman notları, okundu bilgisi |
 
-## 7.3 Onay sonrası ilk iş
+## 7.4 Modern ekler (Fidelio'da olmayan, personeli yormayan)
 
-Kodlamadan önce **Bugün**, **Oda planı** ve **Rezervasyon kartı** ekranlarının tıklanabilir görsel taslakları hazırlanıp onaya sunulacak.
+- **Bugün ekranı** (Kamra): giriş yapan kullanıcının ilk gördüğü özet. Fidelio ekranlarına kısayollarla tek tuşla geçilir.
+- **Genel arama kutusu** (üst çubuk): oda no, ad, rezervasyon no, telefon — tek kutudan.
+- **Çevrimiçi giriş** onay kuyruğu, **onay istekleri** (amire giden işlemler) bildirimleri.
+- **Telefon/tablet ekranları:** kat görevlisi ve teknik servis için ayrı, sade ekranlar.
+
+## 7.5 Onay sonrası ilk iş
+
+Kodlamadan önce **Rezervasyon Navigatörü**, **Rezervasyon Kartı** ve **Oda Planı (Room Rack)** ekranlarının Fidelio yerleşiminde
+tıklanabilir görsel taslakları hazırlanıp personele gösterilecek.

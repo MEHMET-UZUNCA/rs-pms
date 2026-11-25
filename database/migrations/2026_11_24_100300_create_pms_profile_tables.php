@@ -49,6 +49,8 @@ return new class extends Migration
             $table->string('blacklist_reason', 500)->nullable();
             $table->boolean('marketing_consent')->default(false);
             $table->timestamp('marketing_consent_at')->nullable();
+            $table->string('marketing_consent_source', 30)->nullable(); // check_in / web / phone / rsone
+            $table->string('photo_path', 500)->nullable();
             $table->timestamp('privacy_notice_at')->nullable();
             $table->boolean('no_mailing')->default(false);         // F: NOMAILING
             $table->boolean('no_emailing')->default(false);        // F: NOEMAILING

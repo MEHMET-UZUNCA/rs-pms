@@ -97,6 +97,7 @@ pms_exchange_rates:  id, property_id FK, currency_code FK, business_date DATE �
                      rate_type VARCHAR(10) — day / month / year ‹F: EXCH_RATE_DAY/MONTH/YEAR›,
                      buy_rate, sell_rate, posting_rate DECIMAL(18,8)  — folyoda kullanılan kur,
                      exchange_fee_pct DECIMAL(5,2) null — Döviz bozdurma komisyonu ‹F: Exchange Rate Fee›,
+                     max_exchange_amount DECIMAL(14,2) null — Tek işlemde azami bozdurma,
                      source VARCHAR(20) (manual / central_bank / fidelio), created_by, timestamps
                      UQ(property_id, currency_code, business_date, rate_type)
 ```
@@ -311,6 +312,8 @@ default_source_code_id    FK       null
 blacklist_reason     VARCHAR(500)  null
 marketing_consent    BOOLEAN
 marketing_consent_at TIMESTAMP     null
+marketing_consent_source VARCHAR(30) null    — check_in / web / phone / rsone
+photo_path           VARCHAR(500)  null
 privacy_notice_at    TIMESTAMP     null      — Aydınlatma metni onayı
 rsone_client_id      BIGINT        null      — RS ONE clients.id
 merged_into_id       FK self       null      — Birleştirilen mükerrer kayıt ‹F: MERGEDTO_PROFILE_ID›
@@ -384,6 +387,7 @@ name                 VARCHAR(100)
 description          TEXT          null
 currency_code        CHAR(3)
 package_id           FK            null      — Pansiyon (BB, HB, FB, AI)
+package_nights       SMALLINT      null      — Sabit süreli paket (ör. 7 gece tatil paketi)
 is_tax_inclusive     BOOLEAN
 is_public            BOOLEAN                 — Çevrimiçi satışta görünür
 is_negotiated        BOOLEAN                 — Yalnız anlaşmalı profillere
@@ -480,6 +484,7 @@ pms_deposit_policy_rules:       id, policy_id FK, due_type (on_booking/days_befo
 ### pms_promotions / pms_reservation_night_promotions — Promosyonlar ‹F: PRO_ISV_PROMOTIONS›
 ```
 pms_promotions:                   id, property_id, code VARCHAR(3), name,
+                                  promo_code VARCHAR(30) null — Çevrimiçi indirim kodu, max_uses null, times_used,
                                   rule_code VARCHAR(3), rule_name,
                                   rule_type (free_nights/percent/amount)  — Suite8: 1 Aksiyon (gün indirimi), 2 Erken rezervasyon (%)
                                   value DECIMAL(14,2), stay_from, stay_to, booking_from, booking_to DATE null,
@@ -537,6 +542,9 @@ nights               SMALLINT
 sale_date            DATE          null      — Satış tarihi ‹F: SALEDATE›
 eta, etd             TIME          null
 checked_in_at, checked_out_at       TIMESTAMP null
+checked_in_by, checked_out_by       FK users null
+room_assigned_by     FK users      null
+room_assigned_at     TIMESTAMP     null
 check_in_business_date, check_out_business_date DATE null
 option_date          DATE          null      — Opsiyon bitişi (tentative)
 -- Oda
@@ -670,6 +678,8 @@ pms_blocks:          id, property_id, code UQ ‹F: BLOCK_NAME›, name, type (a
                      start_date, end_date, release_days SMALLINT, cutoff_date DATE null,
                      rate_code_id FK, market_segment_id FK, source_code_id FK,
                      deducts_inventory BOOLEAN, rooming_list_due DATE null, contract_number null,
+                     master_reservation_id FK null — Grup ana rezervasyonu (ortak masraflar), attrition_pct DECIMAL(5,2) null —
+                     cezasız düşülebilecek oda oranı, deposit_due_date DATE null,
                      notes TEXT null, created_by, timestamps, deleted_at
 pms_block_inventory: id, block_id FK, room_type_id FK, date DATE,
                      allotted SMALLINT, picked_up SMALLINT (önbellek), released SMALLINT,
@@ -844,10 +854,12 @@ pms_invoice_lines:
 ### pms_cashiers / pms_cashier_shifts / pms_cashier_shift_totals — Kasa
 ```
 pms_cashiers:            id, property_id, number SMALLINT ‹F: CASHIER_NUMBER›, initials VARCHAR(3) ‹F: CASHIER_INITIALS›, name,
-                         user_id FK null, is_interface BOOLEAN — Arayüz (Simphony) kasiyeri, is_active, legacy_id ‹F: CASHIER_ID›
+                         user_id FK null, is_interface BOOLEAN — Arayüz (Simphony) kasiyeri, is_active, legacy_id ‹F: CASHIER_ID›,
+                         pin_hash null, pin_attempts TINYINT, locked_until null — Hızlı kasiyer değişimi için PIN (Kamra),
+                         max_cash_refund DECIMAL(14,2) null, allowed_payment_codes JSON null
                          UQ(property_id, number)
-pms_cashier_shifts:      id, property_id, cashier_id FK, business_date, status (open/closed),
-                         opened_at, opened_by, closed_at null, closed_by null, notes null
+pms_cashier_shifts:      id, property_id, cashier_id FK, cashier_terminal_id FK null, business_date, status (open/closed),
+                         opening_float JSON (para birimi bazında), opened_at, opened_by, closed_at null, closed_by null, notes null
 pms_cashier_shift_totals: id, shift_id FK, transaction_code_id FK (ödeme kodu), currency_code,
                          opening_amount, system_amount, counted_amount, difference
 ```
@@ -858,7 +870,7 @@ pms_cashier_shift_totals: id, shift_id FK, transaction_code_id FK (ödeme kodu),
 
 ```
 pms_ar_accounts:    id, property_id, account_number UQ, profile_id FK (şirket/acente), name,
-                    status (active/on_hold/closed), credit_limit, payment_terms_days,
+                    status (active/on_hold/closed), restricted_reason null, credit_limit, payment_terms_days,
                     currency_code, statement_email null, logo_cari_code VARCHAR(30) — Logo cari kodu,
                     contact_name, contact_phone, notes, timestamps, deleted_at
 pms_ar_invoices:    id, property_id, ar_account_id FK, invoice_id FK null, folio_id FK null,
@@ -933,6 +945,8 @@ pms_hk_sections:     id, property_id, code, name, sort
 pms_hk_attendants:   id, property_id, user_id FK null, name, is_active
 pms_hk_assignments:  id, property_id, business_date, attendant_id FK, room_id FK,
                      task_type (departure/stayover/turndown/deep_clean/inspection),
+                     hk_task_type_id FK null, priority (low/normal/high/urgent), due_by null, escalation_level TINYINT,
+                     reject_reason null,
                      status (pending/in_progress/done/inspected/skipped), credits,
                      started_at, finished_at, inspected_by null, note null, photo_path null, timestamps
                      IX(property_id, business_date, attendant_id)
@@ -1242,6 +1256,105 @@ Etkinlik raporları (salon doluluğu, kişi başı gelir, kaybedilen işler) bu 
 
 ---
 
+## P. Kamra karşılaştırmasından eklenenler
+
+Kamra'nın 148 veri tipi tek tek karşılaştırıldı ([09-kamra-karsilastirma.md](09-kamra-karsilastirma.md)). Eksik olan 26 tablo:
+
+### P1. Kasa ve onay
+```
+pms_approval_requests:    id, property_id, type (allowance/adjustment/rate_override/refund/write_off/paid_out/ar_allocation),
+                          approvable_type, approvable_id (folyo / rezervasyon / cari tahsilat), amount null, currency_code null,
+                          reason_code_id FK null, reason TEXT, status (pending/approved/rejected/cancelled),
+                          requested_by, requested_at, decided_by null, decided_at null, decision_note null
+                          — Yetki sınırını aşan işlemler amire onaya gider (Kamra allowance_request)
+pms_cashier_terminals:    id, property_id, code, name (Resepsiyon 1, Resepsiyon 2), outlet_id FK null,
+                          default_float DECIMAL(14,2), printer_name null, is_active
+pms_cash_transfers:       id, property_id, business_date, kind (drop/transfer/float/bank_deposit),
+                          from_shift_id FK null, to_shift_id FK null, currency_code, amount,
+                          status (requested/received/cancelled), requested_by, requested_at, received_by null, received_at null, note null
+                          — Kasadan kasaya / kasadan merkez kasaya para aktarımı
+pms_currency_exchanges:   id, property_id, business_date, cashier_shift_id FK, profile_id FK null, folio_id FK null,
+                          direction (buy/sell), currency_code, foreign_amount, exchange_rate, local_amount, fee_amount,
+                          document_no, posted_by, created_at          ‹F: Currency Exchange› — Misafire döviz bozdurma
+pms_security_deposits:    id, property_id, reservation_id FK, profile_id FK null, method (cash/card_preauth/transfer),
+                          required_amount, collected_amount, withheld_amount, refunded_amount, currency_code,
+                          status (required/collected/partially_refunded/refunded/withheld), reason null, evidence_path null,
+                          refund_reference null, created_by, timestamps       — Hasar / teminat depozitosu
+pms_tax_withholdings:     id, property_id, ar_account_id FK, ar_payment_id FK null, invoice_id FK null, tax_id FK null,
+                          label, rate, amount, withheld_on DATE, certificate_number null, status (pending/received)
+                          — Kurumların kestiği stopaj / tevkifat
+pms_payment_links:        id, property_id, folio_id FK null, reservation_id FK null, provider, amount, currency_code,
+                          url, external_id, status (created/paid/expired/cancelled), paid_posting_id FK null,
+                          expires_at, created_by, timestamps                  — Ön ödeme / depozito için ödeme bağlantısı
+```
+
+### P2. Çevrimiçi giriş (online check-in)
+```
+pms_precheckins:          id, reservation_id FK, token CHAR(64) UQ, status (sent/opened/submitted/verified/rejected),
+                          sent_at, submitted_at null, verified_by null, verified_at null,
+                          form_data JSON (kimlik, adres, geliş saati, istekler), signature_path null,
+                          privacy_consent BOOLEAN, marketing_consent BOOLEAN, ip null
+```
+
+### P3. Fiyat yönetimi
+```
+pms_rate_guardrails:      id, property_id, room_type_id FK null, rate_code_id FK null, floor_price, ceiling_price,
+                          weekdays TINYINT, is_active          — Elle fiyat girişinde alt/üst sınır (Kamra rate_guardrail)
+pms_occupancy_rate_rules: id, property_id, room_type_id FK null, occupancy_from_pct, premium_pct, min_rate null,
+                          is_active                             — Dolulukla artan fiyat (Kamra hurdle_rate, Suite8 Hurdles)
+```
+
+### P4. Kanal yöneticisi (sonraki aşama için şimdiden)
+```
+pms_channel_connections:  id, property_id, provider (channex/siteminder/hotelrunner/...), is_active, credentials JSON (şifreli),
+                          external_property_id, endpoint null, webhook_secret null, sync_days SMALLINT, last_sync_at null
+pms_channel_mappings:     id, channel_connection_id FK, room_type_id FK, rate_code_id FK null,
+                          external_room_id, external_rate_id null
+pms_channel_ari_queue:    id, channel_connection_id FK, date_from, date_to, kinds JSON (availability/rate/restriction),
+                          status (queued/sent/failed), attempts, next_attempt_at null, sent_at null,
+                          sent_values JSON null, error null, created_at      — Müsaitlik/fiyat gönderim kuyruğu
+```
+
+### P5. Kat hizmetleri, çamaşır, servis talebi
+```
+pms_hk_task_types:        id, property_id, code, name (Çıkış temizliği, Kalan oda, Akşam hazırlığı, Kontrol),
+                          minutes SMALLINT, credits DECIMAL(4,1), requires_inspection BOOLEAN, same_day_turn_allowed BOOLEAN
+pms_laundry_rates:        id, property_id, item_name, service_type (wash/dry_clean/iron), rate, express_rate,
+                          transaction_code_id FK (510 Laundry), is_active
+pms_laundry_orders:       id, property_id, reservation_id FK null, room_id FK null, order_type (guest/house),
+                          status (collected/in_process/ready/delivered/cancelled), is_express, is_complimentary,
+                          total, posted_posting_id FK null, collected_by, collected_at, ready_at null,
+                          delivered_by null, delivered_at null, note null
+pms_laundry_order_items:  id, laundry_order_id FK, laundry_rate_id FK, quantity, returned_quantity, rate, amount
+pms_service_request_events: id, service_request_id FK, kind (created/assigned/status_changed/comment/escalated),
+                          from_value null, to_value null, note null, user_id null, created_at
+```
+
+### P6. Kontrol listeleri (SOP)
+```
+pms_checklist_templates:  id, property_id, key (check_in/check_out/night_audit/vip_arrival/event_beo), name,
+                          department null, event_type_id FK null, is_active
+pms_checklist_steps:      id, checklist_template_id FK, sequence, title, instruction TEXT null,
+                          is_blocking BOOLEAN, due_offset_days SMALLINT null
+pms_event_open_items:     id, event_booking_id FK, title, detail null, owner_side (hotel/client), due_date null,
+                          price_impact DECIMAL(14,2) null, status (open/closed)   — Banket açık konular
+```
+
+### P7. Raporlama, bildirim, entegrasyon
+```
+pms_saved_reports:        id, property_id, user_id FK, title, is_shared, dataset, columns JSON, filters JSON,
+                          group_by JSON, sort JSON, schedule (none/daily/weekly/monthly), schedule_time null,
+                          recipients JSON null, last_sent_at null           — Kullanıcının kaydettiği rapor + e-posta zamanlama
+pms_notifications:        id, property_id, module, subject, notifiable_type null, notifiable_id null, route null, created_at
+pms_notification_reads:   notification_id FK, user_id FK, read_at                       PK(notification_id, user_id)
+pms_webhooks:             id, property_id, label, url, events JSON, secret (şifreli), is_active,
+                          last_status null, last_delivery_at null, consecutive_failures
+pms_webhook_deliveries:   id, webhook_id FK, event, event_id, status (pending/sent/failed), attempts,
+                          response_code null, duration_ms null, next_retry_at null, delivered_at null, last_error null, payload JSON
+```
+
+---
+
 ## 3.1 Ana ilişkiler
 
 ```mermaid
@@ -1287,7 +1400,8 @@ erDiagram
 | M. Entegrasyon | 5 |
 | N. Suite8 işlev kapsamı (N1–N8) | 40 |
 | O. Konferans ve banket | 23 |
-| **Toplam** | **186** |
+| P. Kamra karşılaştırması (P1–P7) | 26 |
+| **Toplam** | **212** |
 
 ## 3.3 Fidelio uyumlu view'lar (PROISV ile aynı ad ve kolonlar)
 
