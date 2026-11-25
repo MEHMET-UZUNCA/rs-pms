@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Rezervasyon Navigatörü</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eef1f5}
+a{color:#1d4ed8;text-decoration:none}a:hover{color:#1e3a8a}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1b2430; font-size: 13px; min-height: 900px; display: flex; flex-direction: column; background: #eef1f5">
+
+  <nav aria-label="Ana menü" style="display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 0 12px; background: #1f3a5f; color: #ffffff; min-height: 40px">
+    <span style="font-weight: 700; letter-spacing: 0.04em; padding: 0 14px 0 4px">RS PMS</span>
+    <a href="01-rezervasyon-navigatoru.dc.html" style="color: #ffffff; padding: 10px 12px; background: #2d5286; border-radius: 4px">Rezervasyon</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Ön Büro</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Kasa</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Kat Hizmetleri</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Müşteri</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Toplantı/Banket</a>
+    <a href="03-oda-plani.dc.html" style="color: #dbe6f5; padding: 10px 12px">Hızlı Tuşlar</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Çeşitli</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Ayarlar</a>
+    <a href="#" style="color: #dbe6f5; padding: 10px 12px">Pencereler</a>
+    <span style="flex: 1"></span>
+    <label for="genel-ara" style="position: absolute; left: -9999px">Genel arama</label>
+    <input id="genel-ara" placeholder="Oda, ad, rezervasyon no, telefon" style="width: 280px; max-width: 100%; height: 28px; border: 0; border-radius: 4px; padding: 0 10px; font: inherit">
+  </nav>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1; min-height: 0">
+
+    <aside aria-label="Kısayol çubuğu" style="flex: 1 1 200px; max-width: 220px; background: #f7f9fc; border-right: 1px solid #d5dce6; padding: 10px 8px; display: flex; flex-direction: column; gap: 6px">
+      <div style="background: #f59e0b; color: #1b2430; font-weight: 600; padding: 7px 10px; border-radius: 4px">Favoriler</div>
+      <a href="02-rezervasyon-karti.dc.html" style="display: flex; justify-content: space-between; padding: 6px 10px; color: #1b2430; border-radius: 4px">Yeni rezervasyon <span style="color: #5b6675">Ctrl+N</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 6px 10px; color: #1b2430">Hızlı rezervasyon <span style="color: #5b6675">Ctrl+Q</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 6px 10px; color: #1b2430">Müsaitlik <span style="color: #5b6675">Ctrl+D</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 6px 10px; color: #1b2430">Fiyat sorgu <span style="color: #5b6675">Ctrl+R</span></a>
+      <a href="03-oda-plani.dc.html" style="display: flex; justify-content: space-between; padding: 6px 10px; color: #1b2430">Oda planı <span style="color: #5b6675">Ctrl+L</span></a>
+      <div style="background: #2d5286; color: #ffffff; font-weight: 600; padding: 7px 10px; border-radius: 4px; margin-top: 8px">Rezervasyon</div>
+      <div style="background: #0f766e; color: #ffffff; font-weight: 600; padding: 7px 10px; border-radius: 4px">Ön Büro</div>
+      <div style="background: #7c3aed; color: #ffffff; font-weight: 600; padding: 7px 10px; border-radius: 4px">Kasa</div>
+      <div style="background: #be185d; color: #ffffff; font-weight: 600; padding: 7px 10px; border-radius: 4px">Kat Hizmetleri</div>
+      <div style="background: #475569; color: #ffffff; font-weight: 600; padding: 7px 10px; border-radius: 4px">Raporlar</div>
+    </aside>
+
+    <main style="flex: 999 1 560px; min-width: 0; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px">
+        <h1 style="margin: 0; font-size: 18px; font-weight: 700">Rezervasyon Navigatörü</h1>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap">
+          <a href="02-rezervasyon-karti.dc.html" style="background: #1d4ed8; color: #ffffff; padding: 7px 12px; border-radius: 4px; font-weight: 600">Yeni (Ctrl+N)</a>
+          <button type="button" style="font: inherit; border: 1px solid #c3ccd8; background: #ffffff; padding: 7px 12px; border-radius: 4px">Giriş yap</button>
+          <button type="button" style="font: inherit; border: 1px solid #c3ccd8; background: #ffffff; padding: 7px 12px; border-radius: 4px">Folyo (Ctrl+B)</button>
+          <button type="button" style="font: inherit; border: 1px solid #c3ccd8; background: #ffffff; padding: 7px 12px; border-radius: 4px">İptal</button>
+        </div>
+      </div>
+
+      <section aria-label="Sorgu" style="background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 10px 12px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 12px">
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span><u>A</u>d</span><input value="" style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span><u>O</u>da</span><input style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span>Rez. no</span><input style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span>Şirket / Acente</span><input style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span>Geliş</span><input value="25.11.2026" style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675"><span>Çıkış</span><input style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit"></label>
+        <div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+            <button type="button" onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }} <span style="opacity: 0.75">{{ f.key }}</span></button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section aria-label="Sonuçlar" style="background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; overflow-x: auto">
+        <table style="width: 100%; border-collapse: collapse; min-width: 900px">
+          <thead>
+            <tr style="background: #e7edf5; text-align: left; color: #334155">
+              <th style="padding: 8px 10px">Oda</th><th style="padding: 8px 10px">Misafir</th><th style="padding: 8px 10px">Geliş</th><th style="padding: 8px 10px">Çıkış</th>
+              <th style="padding: 8px 10px">Tip</th><th style="padding: 8px 10px">Fiyat kodu</th><th style="padding: 8px 10px">Kişi</th><th style="padding: 8px 10px">Acente / Şirket</th>
+              <th style="padding: 8px 10px">Durum</th><th style="padding: 8px 10px; text-align: right">Bakiye</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+              <tr onClick="{{ r.pick }}" style="{{ r.style }}">
+                <td style="padding: 7px 10px; font-weight: 600">{{ r.room }}</td>
+                <td style="padding: 7px 10px"><a href="02-rezervasyon-karti.dc.html">{{ r.guest }}</a></td>
+                <td style="padding: 7px 10px">{{ r.arr }}</td><td style="padding: 7px 10px">{{ r.dep }}</td>
+                <td style="padding: 7px 10px">{{ r.type }}</td><td style="padding: 7px 10px">{{ r.rate }}</td>
+                <td style="padding: 7px 10px">{{ r.pax }}</td><td style="padding: 7px 10px">{{ r.agent }}</td>
+                <td style="padding: 7px 10px"><span style="{{ r.badge }}">{{ r.status }}</span></td>
+                <td style="padding: 7px 10px; text-align: right; font-variant-numeric: tabular-nums">{{ r.balance }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-label="Seçili rezervasyon" style="display: flex; flex-wrap: wrap; gap: 10px">
+        <div style="flex: 1 1 260px; background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 10px 12px">
+          <div style="font-weight: 600; margin-bottom: 6px">{{ sel.guest }}</div>
+          <ul style="margin: 0; padding-left: 16px; line-height: 1.8; color: #334155">
+            <li>Adres ve iletişim</li><li>Profiller (şirket, acente, kaynak)</li><li>Folyo — 2 pencere</li><li>İzler (2) · Uyarılar (1)</li><li>Geçmiş konaklamalar (Fidelio arşivi dahil)</li>
+          </ul>
+        </div>
+        <div style="flex: 3 1 480px; background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 10px 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 16px">
+          <div><div style="color: #5b6675">Oda / Tip</div><div style="font-weight: 600">{{ sel.room }} · {{ sel.type }}</div></div>
+          <div><div style="color: #5b6675">Konaklama</div><div style="font-weight: 600">{{ sel.arr }} – {{ sel.dep }}</div></div>
+          <div><div style="color: #5b6675">Fiyat kodu</div><div style="font-weight: 600">{{ sel.rate }}</div></div>
+          <div><div style="color: #5b6675">Bakiye</div><div style="font-weight: 600">{{ sel.balance }}</div></div>
+          <div><div style="color: #5b6675">Acente / Şirket</div><div style="font-weight: 600">{{ sel.agent }}</div></div>
+          <div><div style="color: #5b6675">Kişi</div><div style="font-weight: 600">{{ sel.pax }}</div></div>
+          <div><div style="color: #5b6675">Durum</div><div style="font-weight: 600">{{ sel.status }}</div></div>
+          <div><div style="color: #5b6675">Simphony</div><div style="font-weight: 600">Oda hesabı açık</div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer style="display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 6px 14px; background: #dde4ee; border-top: 1px solid #c3ccd8; color: #334155">
+    <span>Tesis: <strong>Rocks Hotel</strong></span>
+    <span>Kullanıcı: <strong>resepsiyon1</strong></span>
+    <span>Kasiyer: <strong>12</strong></span>
+    <span style="background: #fef3c7; color: #78350f; padding: 2px 8px; border-radius: 4px">İş günü: <strong>25.11.2026</strong></span>
+    <span style="flex: 1"></span>
+    <span>F10 tümünü kapat · F12 tabloya geç · F8 kilitle</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { filter: 'inhouse', selected: 0 }; }
+  renderVals() {
+    const data = [
+      { room: '214', guest: 'Örnek Misafir A', arr: '22.11.2026', dep: '27.11.2026', type: 'DBL', rate: 'BAR', pax: '2+1', agent: 'Örnek Acente', status: 'İçeride', balance: '12.450,00 ₺' },
+      { room: '305', guest: 'Örnek Misafir B', arr: '24.11.2026', dep: '26.11.2026', type: 'SUI', rate: 'CORP', pax: '2', agent: 'Örnek Şirket', status: 'Bugün gidecek', balance: '3.200,00 ₺' },
+      { room: '118', guest: 'Örnek Misafir C', arr: '25.11.2026', dep: '30.11.2026', type: 'DBL', rate: 'TA-HB', pax: '2', agent: 'Örnek Acente', status: 'Bugün gelecek', balance: '0,00 ₺' },
+      { room: '402', guest: 'Örnek Misafir D', arr: '20.11.2026', dep: '28.11.2026', type: 'TRP', rate: 'BAR', pax: '3', agent: '—', status: 'İçeride', balance: '8.900,00 ₺' },
+      { room: '221', guest: 'Örnek Misafir E', arr: '25.11.2026', dep: '26.11.2026', type: 'DBL', rate: 'CASINO', pax: '1', agent: 'Casino', status: 'Bugün gelecek', balance: '0,00 ₺' },
+      { room: '310', guest: 'Örnek Misafir F', arr: '23.11.2026', dep: '29.11.2026', type: 'DBL', rate: 'BAR', pax: '2', agent: '—', status: 'İçeride', balance: '5.120,00 ₺' }
+    ];
+    const badge = (s) => s === 'İçeride' ? 'background:#dcfce7;color:#14532d;padding:2px 8px;border-radius:10px'
+      : s === 'Bugün gelecek' ? 'background:#dbeafe;color:#1e3a8a;padding:2px 8px;border-radius:10px'
+      : 'background:#fef3c7;color:#78350f;padding:2px 8px;border-radius:10px';
+    const rows = data.map((r, i) => ({ ...r, badge: badge(r.status),
+      style: 'cursor:pointer;border-top:1px solid #e5e9f0;' + (i === this.state.selected ? 'background:#e0eaff' : ''),
+      pick: () => this.setState({ selected: i }) }));
+    const defs = [['inhouse', 'İçeridekiler', 'Alt+1'], ['arr', 'Bugün gelecekler', 'Alt+2'], ['dep', 'Bugün gidecekler', 'Alt+3'], ['out', 'Çıkış yapmış', 'Alt+4'], ['future', 'İleri tarihli', 'Alt+5'], ['fa', 'Rezervasyonsuz hesaplar', 'Alt+6']];
+    const filters = defs.map(([id, label, key]) => ({ label, key,
+      style: 'font:inherit;padding:5px 10px;border-radius:14px;cursor:pointer;border:1px solid ' + (this.state.filter === id ? '#1d4ed8;background:#1d4ed8;color:#ffffff' : '#c3ccd8;background:#ffffff;color:#1b2430'),
+      pick: () => this.setState({ filter: id }) }));
+    return { rows, filters, sel: data[this.state.selected] };
+  }
+}
+</script>
+</body>
+</html>

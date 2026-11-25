@@ -19,6 +19,7 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 | 7 | [Arayüz](docs/07-arayuz.md) | Ekranlar (QloApps düzeni örnek alınarak) |
 | 8 | [Kapsam kontrolü](docs/08-kapsam-kontrolu.md) | Suite8 işlevleri → RS PMS tabloları |
 | 9 | [Kamra karşılaştırması](docs/09-kamra-karsilastirma.md) | Kamra'nın 148 veri tipi → RS PMS tabloları |
+| — | [Ekran taslakları](docs/ekranlar/README.md) | Görüntüler, videolar ve kaynak dosyalar |
 | — | [Fidelio kolon kolon eşleme](docs/fidelio/kolon-kolon.md) | PROISV 13 view, 391 kolon |
 
 ## Onaylanan kararlar

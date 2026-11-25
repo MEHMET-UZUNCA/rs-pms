@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Oda Planı</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eef1f5}
+a{color:#1d4ed8;text-decoration:none}a:hover{color:#1e3a8a}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1b2430; font-size: 13px; min-height: 900px; display: flex; flex-direction: column; background: #eef1f5">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 16px; background: #1f3a5f; color: #ffffff">
+    <a href="01-rezervasyon-navigatoru.dc.html" style="color: #dbe6f5">← Navigatör</a>
+    <h1 style="margin: 0; font-size: 17px; font-weight: 700">Oda Planı <span style="font-weight: 400; color: #dbe6f5">Ctrl+L</span></h1>
+    <span style="flex: 1"></span>
+    <span style="color: #dbe6f5">Örnek veri</span>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 10px 16px; background: #ffffff; border-bottom: 1px solid #d5dce6">
+    <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Başlangıç<input value="25.11.2026" style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; width: 120px"></label>
+    <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Oda tipi<select style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>Tümü</option><option>DBL</option><option>TRP</option><option>SUI</option></select></label>
+    <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Kat<select style="height: 28px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>Tümü</option><option>1</option><option>2</option></select></label>
+    <div role="group" aria-label="Görünüm" style="display: flex; gap: 4px">
+      <sc-for list="{{spans}}" as="s" hint-placeholder-count="3">
+        <button type="button" onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</button>
+      </sc-for>
+    </div>
+    <span style="flex: 1"></span>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; color: #334155">
+      <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #16a34a"></span>İçeride</span>
+      <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #2563eb"></span>Gelecek</span>
+      <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #d97706"></span>Opsiyon</span>
+      <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 3px; background: #6b7280"></span>Arızalı (OOO)</span>
+    </div>
+  </div>
+
+  <main style="flex: 1; padding: 12px 16px; overflow-x: auto">
+    <div style="min-width: 1100px; background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px">
+      <div style="display: grid; grid-template-columns: 150px repeat(14, minmax(0, 1fr)); background: #e7edf5; border-bottom: 1px solid #c3ccd8; font-weight: 600; color: #334155">
+        <div style="padding: 8px 10px">Oda · Tip · Durum</div>
+        <sc-for list="{{days}}" as="d" hint-placeholder-count="14">
+          <div style="{{ d.style }}">{{ d.label }}</div>
+        </sc-for>
+      </div>
+      <sc-for list="{{rooms}}" as="r" hint-placeholder-count="10">
+        <div style="display: grid; grid-template-columns: 150px repeat(14, minmax(0, 1fr)); border-bottom: 1px solid #e5e9f0; min-height: 40px; align-items: center; position: relative">
+          <div style="padding: 6px 10px; display: flex; gap: 8px; align-items: center">
+            <strong>{{ r.number }}</strong><span style="color: #5b6675">{{ r.type }}</span><span style="{{ r.hkStyle }}">{{ r.hk }}</span>
+          </div>
+          <sc-for list="{{ r.bars }}" as="b" hint-placeholder-count="1">
+            <a href="02-rezervasyon-karti.dc.html" style="{{ b.style }}">{{ b.label }}</a>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <p style="color: #5b6675; margin: 10px 2px 0">Sürükle-bırak: rezervasyonu başka odaya taşı · Kenarından çek: süre uzat/kısalt · Çift tık: rezervasyon kartı · Boş hücre: yeni rezervasyon (Ctrl+N)</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { span: 14 }; }
+  renderVals() {
+    const names = ['Çar', 'Per', 'Cum', 'Cmt', 'Paz', 'Pzt', 'Sal'];
+    const days = Array.from({ length: 14 }, (_, i) => {
+      const day = 25 + i; const d = day > 30 ? day - 30 : day; const m = day > 30 ? '12' : '11';
+      const weekend = i % 7 === 3 || i % 7 === 4;
+      return { label: names[i % 7] + ' ' + d + '.' + m, style: 'padding:8px 4px;text-align:center;border-left:1px solid #d5dce6;' + (i === 0 ? 'background:#fef3c7;' : weekend ? 'background:#edf2f9;' : '') };
+    });
+    const colors = { in: '#16a34a', arr: '#2563eb', opt: '#d97706', ooo: '#6b7280' };
+    const bar = (start, len, kind, label) => ({ label,
+      style: 'grid-column:' + (start + 2) + ' / span ' + len + ';grid-row:1;margin:4px 3px;padding:5px 8px;border-radius:5px;color:#ffffff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:' + colors[kind] });
+    const hk = { clean: ['Temiz', 'background:#dcfce7;color:#14532d'], dirty: ['Kirli', 'background:#fee2e2;color:#7f1d1d'], insp: ['Kontrol', 'background:#dbeafe;color:#1e3a8a'] };
+    const rooms = [
+      ['101', 'DBL', 'clean', [bar(0, 3, 'arr', 'Örnek Misafir G'), bar(5, 4, 'opt', 'Opsiyon · Örnek Acente')]],
+      ['102', 'DBL', 'dirty', [bar(0, 2, 'in', 'Örnek Misafir H')]],
+      ['118', 'DBL', 'insp', [bar(0, 5, 'arr', 'Örnek Misafir C')]],
+      ['201', 'TRP', 'clean', [bar(2, 6, 'arr', 'Örnek Grup')]],
+      ['214', 'DBL', 'dirty', [bar(0, 2, 'in', 'Örnek Misafir A'), bar(4, 3, 'arr', 'Örnek Misafir I')]],
+      ['221', 'DBL', 'clean', [bar(0, 1, 'arr', 'Örnek Misafir E')]],
+      ['305', 'SUI', 'dirty', [bar(0, 1, 'in', 'Örnek Misafir B')]],
+      ['306', 'SUI', 'clean', [bar(1, 5, 'ooo', 'Arızalı — klima')]],
+      ['310', 'DBL', 'dirty', [bar(0, 4, 'in', 'Örnek Misafir F')]],
+      ['402', 'TRP', 'dirty', [bar(0, 3, 'in', 'Örnek Misafir D')]]
+    ].map(([number, type, h, bars]) => ({ number, type, hk: hk[h][0], hkStyle: 'font-size:11px;padding:1px 6px;border-radius:8px;' + hk[h][1], bars }));
+    const spans = [[7, '7 gün'], [14, '14 gün'], [30, '30 gün']].map(([n, label]) => ({ label,
+      style: 'font:inherit;cursor:pointer;padding:5px 10px;border-radius:4px;border:1px solid ' + (this.state.span === n ? '#1d4ed8;background:#1d4ed8;color:#ffffff' : '#c3ccd8;background:#ffffff;color:#1b2430'),
+      pick: () => this.setState({ span: n }) }));
+    return { days, rooms, spans };
+  }
+}
+</script>
+</body>
+</html>

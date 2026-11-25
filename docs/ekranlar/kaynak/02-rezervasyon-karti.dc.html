@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Rezervasyon Kartı</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eef1f5}
+a{color:#1d4ed8;text-decoration:none}a:hover{color:#1e3a8a}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #1b2430; font-size: 13px; min-height: 900px; display: flex; flex-direction: column; background: #eef1f5">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 16px; background: #1f3a5f; color: #ffffff">
+    <a href="01-rezervasyon-navigatoru.dc.html" style="color: #dbe6f5">← Navigatör</a>
+    <h1 style="margin: 0; font-size: 17px; font-weight: 700">Rezervasyon Kartı · 2026-018245</h1>
+    <span style="background: #dcfce7; color: #14532d; padding: 2px 10px; border-radius: 10px; font-weight: 600">Kesin</span>
+    <span style="flex: 1"></span>
+    <span style="color: #dbe6f5">Örnek veri</span>
+  </header>
+
+  <div role="tablist" aria-label="Rezervasyon kartı sekmeleri" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 8px 16px 0; background: #dde4ee; border-bottom: 1px solid #c3ccd8">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="10">
+      <button type="button" role="tab" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }} <span style="opacity: 0.7; font-size: 11px">{{ t.key }}</span></button>
+    </sc-for>
+  </div>
+
+  <main style="flex: 1; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start">
+
+    <section style="flex: 999 1 640px; min-width: 0; background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 14px 16px">
+
+      <sc-if value="{{ show.res }}" hint-placeholder-val="{{ true }}">
+        <h2 style="margin: 0 0 12px; font-size: 15px">Rezervasyon <span style="color: #5b6675; font-weight: 400">Ctrl+1</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 14px">
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675; grid-column: span 2">Misafir<input value="Örnek Misafir C" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Geliş<input value="25.11.2026" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Çıkış<input value="30.11.2026" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Gece<input value="5" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Oda tipi<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>DBL</option><option>TRP</option><option>SUI</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Fiyat oda tipi<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>DBL</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Oda<input value="118" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Yetişkin<input value="2" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Ücretsiz çocuk / CA1 / CA2<input value="0 / 0 / 0" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Fiyat kodu<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>TA-HB</option><option>BAR</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Pansiyon<input value="HB — Yarım pansiyon" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Market<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>TOA — Tur operatörü</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Kaynak<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>AGT — Acente</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Kanal<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>EML — E-posta</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Garanti<select style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 6px; font: inherit"><option>Acente garantili</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Acente voucher no<input value="[VOUCHER NO]" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675">Simphony indirim kodu<input value="" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; flex-direction: column; gap: 3px; color: #5b6675; grid-column: span 2">Fatura talimatı<input value="Oda + kahvaltı acenteye, ekstralar misafire" style="height: 30px; border: 1px solid #c3ccd8; border-radius: 4px; padding: 0 8px; font: inherit; color: #1b2430"></label>
+          <label style="display: flex; align-items: center; gap: 8px; color: #1b2430"><input type="checkbox" checked>Oda hesabına harcama</label>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show.grid }}" hint-placeholder-val="{{ false }}">
+        <h2 style="margin: 0 0 12px; font-size: 15px">Gece gece fiyat <span style="color: #5b6675; font-weight: 400">Ctrl+5</span></h2>
+        <div style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; min-width: 620px">
+            <thead><tr style="background: #e7edf5; text-align: left"><th style="padding: 7px 10px">Gece</th><th style="padding: 7px 10px">Oda tipi</th><th style="padding: 7px 10px">Oda</th><th style="padding: 7px 10px">Fiyat kodu</th><th style="padding: 7px 10px">Kişi</th><th style="padding: 7px 10px; text-align: right">Brüt</th><th style="padding: 7px 10px; text-align: right">Paket</th><th style="padding: 7px 10px">Elle</th></tr></thead>
+            <tbody>
+              <sc-for list="{{nights}}" as="n" hint-placeholder-count="5">
+                <tr style="border-top: 1px solid #e5e9f0"><td style="padding: 7px 10px">{{ n.date }}</td><td style="padding: 7px 10px">DBL</td><td style="padding: 7px 10px">118</td><td style="padding: 7px 10px">TA-HB</td><td style="padding: 7px 10px">2</td><td style="padding: 7px 10px; text-align: right">[FİYAT]</td><td style="padding: 7px 10px; text-align: right">[PAKET]</td><td style="padding: 7px 10px">—</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show.other }}" hint-placeholder-val="{{ false }}">
+        <h2 style="margin: 0 0 8px; font-size: 15px">{{ current.label }} <span style="color: #5b6675; font-weight: 400">{{ current.key }}</span></h2>
+        <p style="margin: 0; color: #5b6675">{{ current.desc }}</p>
+      </sc-if>
+    </section>
+
+    <aside style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 12px">
+      <div style="background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 12px 14px">
+        <div style="font-weight: 600; margin-bottom: 8px">Bağlı profiller</div>
+        <div style="display: grid; grid-template-columns: 90px 1fr; gap: 6px; color: #334155">
+          <span style="color: #5b6675">Misafir</span><a href="#">Örnek Misafir C</a>
+          <span style="color: #5b6675">Acente</span><a href="#">Örnek Acente</a>
+          <span style="color: #5b6675">Şirket</span><span>—</span>
+          <span style="color: #5b6675">Kaynak</span><span>—</span>
+          <span style="color: #5b6675">Grup</span><span>—</span>
+        </div>
+      </div>
+      <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: 6px; padding: 12px 14px">
+        <div style="font-weight: 600; margin-bottom: 4px; color: #7c2d12">Uyarı (girişte açılır)</div>
+        <div style="color: #7c2d12">Geç geliş bildirdi — oda tutulsun.</div>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #d5dce6; border-radius: 6px; padding: 12px 14px">
+        <div style="font-weight: 600; margin-bottom: 6px">İzler</div>
+        <div style="color: #334155; line-height: 1.7">25.11 · Kat hizmetleri: Ek yastık<br>26.11 · Ön büro: Havalimanı transferi teyidi</div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <button type="button" style="font: inherit; background: #1d4ed8; color: #ffffff; border: 0; padding: 9px 14px; border-radius: 4px; font-weight: 600">Kaydet</button>
+        <button type="button" style="font: inherit; background: #0f766e; color: #ffffff; border: 0; padding: 9px 14px; border-radius: 4px; font-weight: 600">Giriş yap</button>
+        <button type="button" style="font: inherit; background: #ffffff; border: 1px solid #c3ccd8; padding: 9px 14px; border-radius: 4px">Folyo (Ctrl+B)</button>
+        <a href="01-rezervasyon-navigatoru.dc.html" style="padding: 9px 14px; border: 1px solid #c3ccd8; border-radius: 4px; background: #ffffff; color: #1b2430">Kapat (Esc)</a>
+      </div>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tab: 1 }; }
+  renderVals() {
+    const defs = [
+      [1, 'Rezervasyon', 'Ctrl+1', ''],
+      [2, 'Envanter', 'Ctrl+2', 'Ödünç eşyalar: bebek yatağı, ek yatak, ütü — stok kontrollü.'],
+      [3, 'Profiller', 'Ctrl+3', 'Misafir, şirket, acente, kaynak, grup ve ek misafirler (multiguest).'],
+      [4, 'Paketler', 'Ctrl+4', 'Pansiyon ve ek paketler; fiyata dahil olan kısım ve haklar (Simphony).'],
+      [5, 'Gece fiyatları', 'Ctrl+5', ''],
+      [6, 'Özellikler', 'Ctrl+6', 'Özel istekler ve tercihler (deniz manzarası, alçak kat…).'],
+      [7, 'Kredi kartı', 'Ctrl+7', 'Kart (yalnız ödeme sağlayıcı anahtarı ve son 4 hane), ön provizyon.'],
+      [8, 'Sabit ücretler', 'Ctrl+8', 'Her gün / tek sefer / girişte / çıkışta otomatik kayıt.'],
+      [9, 'Notlar', 'Ctrl+9', 'Kategorili notlar; girişte gösterilecekler işaretlenir.'],
+      [0, 'Yemek planı', 'Ctrl+0', 'Gün gün kahvaltı / öğle / akşam planı.']
+    ];
+    const tabs = defs.map(([id, label, key]) => ({ label, key,
+      style: 'font:inherit;cursor:pointer;padding:8px 12px;border:1px solid #c3ccd8;border-bottom:0;border-radius:6px 6px 0 0;' + (this.state.tab === id ? 'background:#ffffff;color:#1b2430;font-weight:600' : 'background:#eef1f5;color:#334155'),
+      pick: () => this.setState({ tab: id }) }));
+    const cur = defs.find((d) => d[0] === this.state.tab);
+    const nights = ['25.11.2026', '26.11.2026', '27.11.2026', '28.11.2026', '29.11.2026'].map((date) => ({ date }));
+    return {
+      tabs, nights,
+      show: { res: this.state.tab === 1, grid: this.state.tab === 5, other: this.state.tab !== 1 && this.state.tab !== 5 },
+      current: { label: cur[1], key: cur[2], desc: cur[3] }
+    };
+  }
+}
+</script>
+</body>
+</html>
