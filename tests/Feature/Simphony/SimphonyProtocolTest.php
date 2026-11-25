@@ -140,15 +140,29 @@ class SimphonyProtocolTest extends DomainTestCase
         $this->assertSame(0, DB::table('pms_postings')->where('source', 'simphony')->count());
     }
 
-    public function test_non_front_office_tender_is_recorded_as_sale(): void
+    public function test_non_front_office_tender_posts_sale_and_payment_to_pseudo_room_like_fidelio(): void
     {
-        DB::table('pms_pos_tender_mappings')->insert(['property_id' => $this->property, 'tender_number' => 231, 'tender_name' => 'Kredi Karti', 'kind' => 'card']);
-        $reply = $this->send('01', 'IFC_CHG_PST', [' ', ' ', '231', ...self::body([1 => 500], [], '11007', 11, '500.00')]);
-        $this->assertSame(['N', 'P', str_pad('POS Kredi Karti', 30), '500.00', '0'], $reply->fields);
-        $sale = DB::table('pms_pos_postings')->first();
-        $this->assertSame('accepted', $sale->status);
-        $this->assertNull($sale->folio_id);
-        $this->assertSame((int) DB::table('pms_outlets')->where('code', 'KUAF')->value('id'), (int) $sale->outlet_id);   // RVC 11 = Kuaför
+        // Fidelio 24.11.2026: CHK 15151781 Rocks Patisserie, 170 TL Visa → 9902 POS: 820 Rocks Pattiserie Food 170 + 910 Visa Card 170
+        $reply = $this->send('01', 'IFC_CHG_PST', [' ', ' ', '231', ...self::body([1 => 200], [1 => -30], '15151781', 15, '170.00')]);
+        $pos = DB::table('pms_folios')->where('folio_number', '9902')->first();
+        $this->assertSame(['N', 'P', str_pad('9902/POS', 30), '170.00', (string) $pos->id], $reply->fields);
+
+        $lines = DB::table('pms_postings as p')->join('pms_transaction_codes as tc', 'tc.id', '=', 'p.transaction_code_id')
+            ->where('p.folio_id', $pos->id)->orderBy('p.id')->get(['tc.code', 'p.amount'])->map(fn ($l) => [$l->code, (float) $l->amount])->all();
+        $this->assertSame([['820', 200.0], ['821', -30.0], ['910', -170.0]], $lines);
+        $this->assertSame(0.0, (float) DB::table('pms_folios')->where('id', $pos->id)->value('balance'));   // satış = ödeme
+
+        // Cafe Rocks nakit (131 → 9901 POS CASH, 900 Cash): kalem 2 içecek → 321 BVRG Cafe Rocks
+        $this->send('02', 'IFC_CHG_PST', [' ', ' ', '131', ...self::body([2 => 370], [2 => -111], '331456', 3, '259.00')]);
+        $cash = DB::table('pms_postings as p')->join('pms_transaction_codes as tc', 'tc.id', '=', 'p.transaction_code_id')
+            ->join('pms_folios as f', 'f.id', '=', 'p.folio_id')->where('f.folio_number', '9901')->orderBy('p.id')->pluck('tc.code')->all();
+        $this->assertSame(['321', '324', '900'], $cash);
+
+        // Eşlemesi olmayan ödeme tipi: yalnız satış kaydı
+        $other = $this->send('03', 'IFC_CHG_PST', [' ', ' ', '999', ...self::body([1 => 50], [], '11007', 11, '50.00')]);
+        $this->assertSame('P', $other->fields[1]);
+        $this->assertSame(3, DB::table('pms_pos_postings')->where('status', 'accepted')->count());
+        $this->assertSame((int) DB::table('pms_outlets')->where('code', 'KUAF')->value('id'), (int) DB::table('pms_pos_postings')->orderByDesc('id')->value('outlet_id'));
     }
 
     public function test_split_payment_is_prorated_and_messages_are_logged(): void

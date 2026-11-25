@@ -44,7 +44,7 @@ class PostingService
         }
         $kind = $code->type === 'deposit' ? 'deposit' : 'payment';
 
-        return $this->write($folio, $code, -abs(round($amount, 2)), 1, $description, array_merge(['kind' => $kind, 'ledger' => $kind === 'deposit' ? 'deposit' : 'guest'], $attributes));
+        return $this->write($folio, $code, -round($amount, 2), 1, $description, array_merge(['kind' => $kind, 'ledger' => $kind === 'deposit' ? 'deposit' : 'guest'], $attributes));
     }
 
     /** Ters kayıt: aynı tutarın eksisi, orijinale bağlı. Bir kayıt yalnız bir kez ters çevrilebilir. */

@@ -177,12 +177,7 @@ class MessageHandler
         ];
 
         if ($req->kind === 'non_front_office') {
-            $tender = DB::table('pms_pos_tender_mappings')->where('property_id', $propertyId)->where('tender_number', $req->tender)
-                ->where(fn ($q) => $q->whereNull('outlet_id')->orWhere('outlet_id', $outlet?->id))->orderByDesc('outlet_id')->first();
-            $label = 'POS '.($tender?->tender_name ?? $req->tender);
-            DB::table('pms_pos_postings')->insert($base + ['room_number' => 'POS', 'status' => 'accepted']);
-
-            return $frame->reply('IFC_CHG_PST', ['N', 'P', str_pad(self::ascii(Str::limit($label, 30, '')), 30), self::money($req->amount), '0']);
+            return $this->nonFrontOffice($propertyId, $frame, $req, $outlet, $base, $decline);
         }
 
         $guests = $this->inHouse($propertyId, $req->guestInput);
@@ -225,6 +220,44 @@ class MessageHandler
         }
 
         return $frame->reply('IFC_CHG_PST', ['N', 'P', str_pad($this->label($reservation, 30), 30), self::money($req->amount), (string) $reservation->id]);
+    }
+
+    /**
+     * Oda hesabı dışındaki ödeme (nakit, kart, personel cari): Fidelio'daki gibi ödeme tipinin sanal hesabına satış kalemleri ve
+     * ödeme kodu birlikte yazılır (ör. 231 → 9902 POS: 820 Rocks Pattiserie Food + 910 Visa Card). Eşleme yoksa yalnız satış kaydı tutulur.
+     */
+    private function nonFrontOffice(int $propertyId, Frame $frame, ChargeRequest $req, ?Outlet $outlet, array $base, \Closure $decline): Frame
+    {
+        $tender = DB::table('pms_pos_tender_mappings')->where('property_id', $propertyId)->where('tender_number', $req->tender)
+            ->where(fn ($q) => $q->whereNull('outlet_id')->orWhere('outlet_id', $outlet?->id))->orderByRaw('CASE WHEN outlet_id IS NULL THEN 1 ELSE 0 END')->first();
+        $folio = $tender?->target_folio_id ? Folio::find($tender->target_folio_id) : null;
+        $label = $folio ? $folio->folio_number.'/'.self::ascii($folio->name) : 'POS '.self::ascii($tender?->tender_name ?? (string) $req->tender);
+
+        if (! $folio || ! $tender->transaction_code_id) {
+            DB::table('pms_pos_postings')->insert($base + ['room_number' => 'POS', 'status' => 'accepted']);
+
+            return $frame->reply('IFC_CHG_PST', ['N', 'P', str_pad(Str::limit($label, 30, ''), 30), self::money($req->amount), '0']);
+        }
+
+        try {
+            DB::transaction(function () use ($base, $folio, $tender, $req, $outlet, $propertyId) {
+                $posId = DB::table('pms_pos_postings')->insertGetId($base + ['room_number' => $folio->folio_number, 'folio_id' => $folio->id, 'status' => 'accepted']);
+                $attributes = fn (string $n) => ['idempotency_key' => $req->idempotencyKey().':'.$n, 'source' => 'simphony', 'outlet_id' => $outlet?->id,
+                    'reference' => 'CHK '.$req->check.' RVC '.$req->rvc, 'pos_check_number' => $req->check, 'pos_posting_id' => $posId];
+                foreach ($this->lines($propertyId, $outlet, $req) as $n => [$code, $amount]) {
+                    $this->postings->charge($folio, $code, $amount, 1, null, $attributes((string) $n));
+                }
+                if (abs($req->amount) >= 0.005) {
+                    $this->postings->payment($folio, TransactionCode::findOrFail($tender->transaction_code_id), $req->amount, null, $attributes('pay'));
+                }
+            });
+        } catch (PostingException $e) {
+            DB::table('pms_pos_postings')->insert($base + ['room_number' => $folio->folio_number, 'status' => 'rejected', 'reject_reason' => 'posting_error']);
+
+            return $decline(Str::limit($e->getMessage(), 30, ''));
+        }
+
+        return $frame->reply('IFC_CHG_PST', ['N', 'P', str_pad(Str::limit($label, 30, ''), 30), self::money($req->amount), (string) $folio->id]);
     }
 
     /**

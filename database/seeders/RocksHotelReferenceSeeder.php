@@ -118,6 +118,45 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => $codeQuery($codes[0])->value('id')]);
         }
 
+        // Simphony satış kalemi → departman kodu (Fidelio 24.11.2026 kayıtlarından): kalem 1 yiyecek → FOOD kodu, kalem 2 içecek → BVRG kodu.
+        // İndirimler kodun düzeltme koduna (Adjustment Dept) gider. Diğer kalemler (3, 4, 6, 7, 8) Simphony kalem adları gelince eklenecek.
+        $foodBev = ['HABE' => ['395', '544'], 'HIRO' => ['385', '386'], 'CAFE' => ['320', '321'], 'POOL' => ['330', '331'], 'MINI' => ['350', '351'],
+            'RSVC' => ['340', '341'], 'BANQ' => ['370', '371'], 'CASI' => ['670', '680'], 'CTCH' => ['650', '660'], 'ONYX' => ['480', '483'],
+            'BYBL' => ['700', '710'], 'PATI' => ['820', '830'], 'SIRA' => ['490', '493'], 'LYRA' => ['810', '813']];
+        foreach ($foodBev as $outletCode => $codes) {
+            $outletId = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', $outletCode)->value('id');
+            foreach ($codes as $i => $no) {
+                DB::table('pms_pos_revenue_mappings')->updateOrInsert(
+                    ['property_id' => $propertyId, 'outlet_id' => $outletId, 'source_type' => 'sales_itemizer', 'source_code' => (string) ($i + 1)],
+                    ['source_name' => $i === 0 ? 'Yiyecek' : 'İçecek', 'transaction_code_id' => $codeQuery($no)->value('id'), 'updated_at' => now()]);
+            }
+        }
+
+        // Oda hesabı dışındaki ödemeler: Fidelio'daki sanal odalar (rezervasyonsuz hesap) ve ödeme kodları (IFC8 logu + 24.11.2026 kayıtları).
+        $today = DB::table('pms_properties')->where('id', $propertyId)->value('current_business_date');
+        $fa = function (string $no, string $name) use ($propertyId, $today) {
+            if (! DB::table('pms_folios')->where('property_id', $propertyId)->where('folio_number', $no)->exists()) {
+                DB::table('pms_folios')->insert(['property_id' => $propertyId, 'folio_number' => $no, 'type' => 'pseudo_room', 'name' => $name,
+                    'window' => 1, 'opened_business_date' => $today, 'notes' => 'Simphony oda dışı ödemeleri (Fidelio sanal oda '.$no.')',
+                    'created_at' => now(), 'updated_at' => now()]);
+            }
+
+            return (int) DB::table('pms_folios')->where('property_id', $propertyId)->where('folio_number', $no)->value('id');
+        };
+        foreach ([
+            [601, 'Oda Hesabi', 'room_charge', null, null],
+            [131, 'Nakit', 'cash', '900', ['9901', 'POS CASH']],
+            [231, 'Kredi Karti', 'card', '910', ['9902', 'POS']],
+            [402, 'Kart (402)', 'card', '910', ['9902', 'POS']],
+            [404, 'Room Service Nakit', 'cash', '900', ['9903', 'ROOM SERVICE CASH']],
+            [401, 'Personel Cari', 'city_ledger', '903', ['9401', 'PERSONEL CARI']],
+        ] as [$number, $name, $kind, $payCode, $target]) {
+            DB::table('pms_pos_tender_mappings')->updateOrInsert(['property_id' => $propertyId, 'outlet_id' => null, 'tender_number' => $number], [
+                'tender_name' => $name, 'kind' => $kind, 'transaction_code_id' => $payCode ? $codeQuery($payCode)->value('id') : null,
+                'target_folio_id' => $target ? $fa($target[0], $target[1]) : null, 'updated_at' => now(),
+            ]);
+        }
+
         // Simphony arayüzü (MF_ENH). Bugün Simphony #101 kaydı IFC8'e (192.168.200.11:5010) bağlı; RS PMS aynı portu dinler.
         // Paralel denemede Simphony'de ikinci kayıt (#102) açılır ve bu adresi gösterir (docs/04-simphony.md §4.1). Başta kapalıdır.
         if (! DB::table('pms_pos_interfaces')->where('property_id', $propertyId)->where('system', 'simphony')->exists()) {

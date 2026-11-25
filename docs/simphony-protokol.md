@@ -108,8 +108,24 @@ SOH <kasa no 9 hane> <arayüz adı 16 hane, "MF_ENH          "> STX FS <sıra 2 
 kodlarına ve sanal odalara çevirir (canlı IFC8 ekranında `Posted by PaymentMethod="231" to DesType|DestId="2|9902"`).
 SPH.XML'de şifreli veritabanı parolaları vardır; bu dosya depoya konmaz.
 
-## 8. Açık noktalar
+## 8. Fidelio'nun yazdığı kayıtlar (PROISV, 24.11.2026) — RS PMS aynısını yapar
 
-- Suite8'deki 7 numaralı arayüzün eşleme ekranları: outlet (RVC) × satış kalemi (Subtotal) → departman kodu, ödeme tipi → sanal oda / departman kodu.
+| Ne | Fidelio | RS PMS |
+|---|---|---|
+| Kayıtları atan | Kasiyer 86 ("Interface Fidelio"), açıklamada çek no (ör. 15151781) | source=simphony, referans "CHK <no> RVC <rvc>", pos_check_number |
+| Satış kalemi 1 / 2 | Outlet'in FOOD / BVRG kodu (Patisserie 820/830, Cafe Rocks 320/321, Room Service 340/341, Casino 670/680, Sıralı Et 490/493 …) | pms_pos_revenue_mappings (seeder) |
+| İndirim | Kodun DISC karşılığı (821, 322, 324, 342, 831 …) | Düzeltme kodu (Adjustment Dept) |
+| Oda hesabı (601) | Misafirin odası | Misafirin folyosu, 1. pencere |
+| Nakit 131 | 9901 POS CASH: satış + 900 Cash | Aynı (sanal hesap 9901) |
+| Kart 231 / 402 | 9902 POS: satış + 910 Visa Card | Aynı (sanal hesap 9902) |
+| 404 | 9903 ROOM SERVICE CASH | Aynı (900 Cash) |
+| 401 | 9401 PERSONEL CARI | Aynı (903 City Ledger) |
+| Bölünmüş ödeme | Satış kalemleri ödeme oranında bölünür (640 nakit = 476,28 + 163,72) | Aynı |
+
+Kalem 3, 4, 6, 7, 8 (logda az kullanılan) için Simphony'deki kalem adları gerekiyor; o zamana kadar outlet'in varsayılan koduna yazılır.
+
+## 9. Açık noktalar
+
+- Simphony satış kalemi (Sales Itemizer) 3, 4, 6, 7, 8'in adları (EMC → Descriptors) — hangi departman koduna gideceği.
 - Simphony ödeme tipi listesi (131, 231, 401, 402, 404, 601 adları), satış kalemi ve vergi kalemi adları.
 - `FO_FI_GST_MESSAGE` / `FO_FI_GST_LOCATOR` başarılı cevap biçimi (logda yalnız "bulunamadı" görüldü) — ilk sürümde aynı hata cevabı verilir.
