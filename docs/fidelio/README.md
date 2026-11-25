@@ -24,6 +24,27 @@ Suite8'in ana şeması **`V8LIVE`**. `PROISV`'deki view'lar `V8LIVE`'da da var; 
 
 Fatura, cari, depozito ve tanımlar (oda, fiyat kodu, işlem kodu) için view yok; bunlar `V8LIVE` tablolarından okunacak.
 
+## Karar: aktarım kaynağı PROISV şeması
+
+Otelin kararıyla Fidelio verisi **yalnız `PROISV` şemasındaki 13 view'dan** okunacak (`V8LIVE`'daki ek view'lar kullanılmayacak).
+
+| Veri | PROISV kaynağı | Not |
+|---|---|---|
+| Profiller, ilişkiler, üyelik kartları | PRO_ISV_PROFILEINFO, PRO_ISV_IND_FAM_LINKS, PRO_ISV_MEMBERCARDINFO | |
+| Rezervasyonlar ve gecelik satırlar | PRO_ISV_RESERVATIONINFO | |
+| Ek misafirler | PRO_ISV_MULTIGUEST_LIST | |
+| Promosyonlar | PRO_ISV_PROMOTIONS | |
+| Folyo kayıtları | PRO_ISV_POSTINGS | Para birimi ve kur bilgisi kayıtlardan (`POSTING_CURRENCY`, `POSTING_EXCHRATE`) |
+| Kimlik bilgileri | PRO_GIYKIMBIL | |
+| Gelir geçmişi | PRO_ISV_RESERVATIONREVENUE | |
+| Oda/yatak ve OOO/OOS geçmişi | PRO_ISV_DAILY_ROOMBED_RMTYP, PRO_ISV_OOOROOMBEDS_ROOMTYPE | Doluluk istatistiği rezervasyon view'ından hesaplanır (V8LIVE'daki YEARVIEW yerine) |
+| Sanal dahili numaralar | PRO_ISV_VIRTUALNUMBERS | Santral entegrasyonuna kadar kullanılmaz |
+| — | PRO_ISV_SAMPLE_INHOUSE | Geçersiz (INVALID), kullanılmaz |
+
+PROISV'de **olmayan** ve geçişte başka yoldan (Suite8 ekranlarından dışa aktarma / geçiş gecesi raporları) alınacak veriler:
+para birimi ve kur tanımları, oda tipi ve oda listesi, fiyat kodları ve fiyat tablosu, departman kodları (kod listesi postings'ten çıkarıldı, bkz. eslesme.md §15),
+faturalar, cari hesap açık kalemleri, depozitolar, misafir tercihleri, bloklar/allotmanlar, izler.
+
 ## Suite8 kod değerleri (view açıklamalarından)
 
 | Alan | Değerler |
