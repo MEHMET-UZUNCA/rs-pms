@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- 6. aşama: cari hesaplar (hesap tipi, hesap, cari faturalar, tahsilatlar, eşleme, ekstre, ihtar), stopaj, acente komisyonları (kod, kural, hesaplanan komisyon), Logo Tiger aktarımı (hesap eşlemesi, aktarım partisi, fiş satırları) — 14 tablo ve testleri. Profil, folyo ve provizyonun cari/komisyon bağlantılarına kısıt eklendi. Cari tahsilat silinemez, Logo fiş satırı değiştirilemez (tetikleyici). Testler SQLite ve MySQL'de geçti. (M.U)
+
 - 5. aşama: gece kapanışı (çalışma, adımlar, kontrol listesi), günlük istatistik (Fidelio gelir kovaları ve yatak bazlı sayılar), günlük gelir, defter dengesi; kat hizmetleri (bölüm, görevli, görev tipi, görev, durum geçmişi, uyuşmazlık, kayıp eşya); suit bileşenleri, servis talepleri ve geçmişi, kart anahtar, sanal dahili no; çamaşır; bütçe, elle istatistik, vardiya defteri, pazarlama kodları, ek dosyalar; kontrol listeleri — 30 tablo ve testleri. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - 4. aşama: kasa — folyo (8 pencere), yönlendirme, folyo kayıtları, vergi kırılımı, fatura ve satırları, kasiyer/terminal/vardiya ve sayım, vergi muafiyeti, provizyon/cari onayı, onay istekleri, para aktarımı, döviz bozdurma, teminat depozitosu, ödeme bağlantısı, ürünler, belge şablonları ve geçmişi, hediye çekleri — 25 tablo ve testleri. Mali kayıtların silinmesi ve değiştirilmesi veritabanı tetikleyicileriyle engellendi (yalnız ters kayıt). Testler SQLite ve MySQL'de geçti. (M.U)

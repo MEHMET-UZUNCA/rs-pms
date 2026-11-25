@@ -1010,7 +1010,8 @@ pms_pos_daily_sales_lines: id, daily_sales_id FK, line_type (revenue/tender/tax/
 
 ```
 pms_logo_account_mappings: id, property_id, mappable_type (transaction_code/tax/ar_account/outlet/ledger),
-                           mappable_id, logo_account_code, logo_cost_center null, logo_department null,
+                           mappable_id null, logo_key null (kimliksiz eşleme: defter adı guest/deposit/ar),
+                           logo_account_code, logo_cost_center null, logo_department null,
                            logo_project_code null, valid_from DATE null, timestamps
 pms_logo_export_batches:   id, property_id, business_date,
                            type (daily_revenue/collections/ar_invoices/ar_payments/outlet_sales),
