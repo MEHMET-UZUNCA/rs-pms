@@ -18,6 +18,27 @@
 | Uzun çalışan süreç | Simphony arayüz dinleyicisi (`php artisan pms:simphony-listen`), Supervisor ile | Simphony TCP üzerinden bağlanır |
 | Test | PHPUnit, SQLite :memory: + kritik testler MySQL'de | RS ONE ile aynı düzen |
 
+## 1.2.1 Veritabanı yapısı: ilişkisel, tek ana veritabanı
+
+RS PMS **ilişkisel** (MySQL) bir veritabanı kullanır; **dağıtık değildir**.
+
+- Folyo bakiyesi, fatura numarası, oda atama ve gece kapanışı aynı anda birden fazla tabloyu değiştirir. Bunların ya hep birlikte
+  ya hiç olmaması (ACID işlem) gerekir; bu tek veritabanında güvenle sağlanır. Dağıtık yapıda aynı garanti çok daha zordur.
+- Tek otel (ve ileride birkaç tesis) için veri hacmi tek MySQL sunucusunun rahatça taşıyacağı düzeydedir (19 yıllık Fidelio verisi dahil).
+
+Mantıksal olarak üç veritabanı, aynı MySQL sunucusunda:
+
+| Veritabanı | İçerik | Erişim |
+|---|---|---|
+| `rs_pms` | Canlı PMS tabloları (`pms_*`) | Uygulama (okuma/yazma) |
+| `proisv` | Fidelio uyumlu `PRO_ISV_*` view'ları | Raporlar, dış yazılımlar (yalnız okuma) |
+| `rs_pms_archive` | Fidelio'dan alınan 19 yıllık geçmiş | Uygulama ve raporlar (yalnız okuma) |
+
+Ölçek ve süreklilik:
+- **Redis:** önbellek, kuyruk (gece kapanışı, Logo, Simphony işleri) ve kilitler.
+- **Okuma kopyası (replica):** Rapor yükü artarsa MySQL'in ikinci bir kopyası açılır, raporlar oradan okunur; kayıtlar ana sunucuya yazılır.
+- **Yedek:** Günlük tam yedek + ikili günlük (binlog) ile dakika bazında geri dönüş.
+
 ## 1.3 Kod düzeni (RS ONE ile aynı)
 
 ```

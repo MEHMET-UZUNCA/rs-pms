@@ -4,7 +4,7 @@
 Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalır, restoran/bar satış noktaları
 **Oracle Simphony**'den gelir. İleride **RS ONE** ile tek uygulamada birleşecektir.
 
-> Durum: **Tasarım aşaması — onay bekliyor.** Henüz kod yok; aşağıdaki belgeler onaylandıktan sonra geliştirmeye başlanacak.
+> Durum: **Geliştirme — 1. aşama.** Veritabanı tasarımı onaylandı; çekirdek, oda envanteri, kodlar ve profil tabloları (43 tablo) oluşturuldu.
 
 ## Belgeler
 
@@ -31,6 +31,18 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 | POS | Oracle **Simphony 18**; bugün kayıtlar IFC8, oda sorguları doğrudan Fidelio'ya — hedef: ikisi de RS PMS'e |
 | Kimlik bildirimi (KBS) | Şu an yok; tablo tasarımda hazır, sonraya bırakıldı |
 | Fidelio verisi | Suite8 veritabanına erişim var; geçiş boyunca canlı |
+
+## Kurulum (geliştirme)
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan test
+```
+
+Testler varsayılan olarak SQLite (bellekte) üzerinde çalışır; MySQL ile denemek için `DB_CONNECTION=mysql` ve bağlantı bilgileri verilir.
 
 ## Teknoloji (özet)
 
