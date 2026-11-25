@@ -56,7 +56,7 @@ class OutletScreenTest extends DomainTestCase
     public function test_list_shows_rocks_outlets_in_order_with_business_date_and_search(): void
     {
         $this->actingAs($this->admin)->get('/ayarlar/outletler')->assertOk()
-            ->assertSeeInOrder(['Cafe Rocks', 'Pool Bar', 'Room Service', 'Minibar', 'Banket', "L'Hirondelle", 'La Habenera', 'Byblos', 'Lyra'], false)
+            ->assertSeeInOrder(['La Habenera', "L'Hirondelle", 'Cafe Rocks', 'Pool Bar', 'Minibar', 'Room Service', 'Banket', 'Spa Center', 'Laundry', 'Casino', 'Kuaför', 'Catch Seafood', 'Onyx', 'Byblos', 'Rocks Pattiserie', 'Sıralı Et', 'Lyra', 'Dragon Rest'], false)
             ->assertSee('01.12.2026')   // iş günü durum çubuğunda
             ->assertSee('data-hotkey="alt+n insert"', false);
 
@@ -64,6 +64,10 @@ class OutletScreenTest extends DomainTestCase
 
         $this->assertSame(9, $this->outlet('BYBL')->transactionCodes()->count());    // 700–702, 710–712, 720–722
         $this->assertSame('700', $this->outlet('BYBL')->defaultTransactionCode->code);
+        $this->assertSame(14, $this->outlet('BYBL')->simphony_rvc_number);                // EMC → Revenue Centers "#"
+        $this->assertSame(['510', '511', '512'], $this->outlet('LAUN')->transactionCodes()->orderBy('code')->pluck('code')->all());
+        $this->assertNull($this->outlet('DRAG')->simphony_rvc_number);
+        $this->assertSame('manual', $this->outlet('DRAG')->source_system);
     }
 
     public function test_new_outlet_is_saved_with_codes_and_default_code(): void
@@ -83,12 +87,11 @@ class OutletScreenTest extends DomainTestCase
         $this->assertSame(21, $outlet->simphony_rvc_number);
         $this->assertSame((int) $ids['470'], (int) $outlet->default_transaction_code_id);   // otomatik: en küçük numara
         $this->assertSame(3, $outlet->transactionCodes()->count());
-        $this->assertSame(16, $outlet->sort);
+        $this->assertSame(19, $outlet->sort);
     }
 
     public function test_validation_rejects_duplicate_code_rvc_and_codes_of_other_outlets(): void
     {
-        DB::table('pms_outlets')->where('code', 'CAFE')->update(['simphony_rvc_number' => 1]);
         $cafeCode = DB::table('pms_transaction_codes')->where('property_id', $this->property)->where('code', '320')->value('id');
         $cash = DB::table('pms_transaction_codes')->where('property_id', $this->property)->where('code', '900')->value('id');
         $base = ['name' => 'X', 'type' => 'bar', 'source_system' => 'simphony', 'is_active' => '1'];
@@ -139,8 +142,8 @@ class OutletScreenTest extends DomainTestCase
     {
         $pool = $this->outlet('POOL');
         $this->actingAs($this->admin)->post("/ayarlar/outletler/{$pool->id}/tasi/up")->assertRedirect();
-        $this->assertSame(1, $pool->fresh()->sort);
-        $this->assertSame(2, $this->outlet('CAFE')->sort);
+        $this->assertSame(3, $pool->fresh()->sort);
+        $this->assertSame(4, $this->outlet('CAFE')->sort);
 
         $this->actingAs($this->admin)->get("/ayarlar/outletler/{$pool->id}/kopyala")->assertOk()->assertSee('Pool Bar (kopya)');
     }

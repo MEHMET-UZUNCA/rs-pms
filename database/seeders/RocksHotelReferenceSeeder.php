@@ -84,27 +84,34 @@ class RocksHotelReferenceSeeder extends Seeder
             }
         }
 
-        // Outlet'ler ve kodları: [outlet kodu, ad, tip, kod numaraları]. İlk kod varsayılan koddur.
+        // Outlet'ler: Simphony EMC → Revenue Centers listesi (sıra = Simphony RVC numarası "#"). Dragon Rest Simphony'de yok (elle kayıt).
+        // [outlet kodu, ad, tip, Simphony RVC no, departman kodları]. İlk kod varsayılan koddur.
         $range = fn (int $from, int $to) => array_map('strval', range($from, $to));
         $outlets = [
-            ['CAFE', 'Cafe Rocks', 'restaurant', $range(320, 328)],
-            ['POOL', 'Pool Bar', 'bar', $range(330, 338)],
-            ['RSVC', 'Room Service', 'room_service', $range(340, 348)],
-            ['MINI', 'Minibar', 'minibar', $range(350, 358)],
-            ['BANQ', 'Banket', 'banquet', $range(370, 378)],
-            ['HIRO', "L'Hirondelle", 'restaurant', [...$range(385, 388), ...$range(450, 452), '543']],
-            ['HABE', 'La Habenera', 'restaurant', ['395', '397', '398', '399', ...$range(544, 546), ...$range(440, 442), ...$range(500, 502), ...$range(610, 612), ...$range(620, 622)]],
-            ['DRAG', 'Dragon Rest', 'restaurant', ['410', '411']],
-            ['ONYX', 'Onyx', 'bar', $range(480, 488)],
-            ['SIRA', 'Sıralı Et', 'restaurant', $range(490, 495)],
-            ['CTCH', 'Catch Seafood', 'restaurant', $range(650, 661)],
-            ['CASI', 'Casino', 'bar', $range(670, 692)],
-            ['BYBL', 'Byblos', 'restaurant', $range(700, 722)],
-            ['LYRA', 'Lyra', 'restaurant', [...$range(810, 818), ...$range(117, 119)]],
-            ['PATI', 'Rocks Pattiserie', 'restaurant', $range(820, 832)],
+            ['HABE', 'La Habenera', 'restaurant', 1, ['395', '397', '398', '399', ...$range(544, 546), ...$range(440, 442), ...$range(500, 502), ...$range(610, 612), ...$range(620, 622)]],
+            ['HIRO', "L'Hirondelle", 'restaurant', 2, [...$range(385, 388), ...$range(450, 452), '543']],
+            ['CAFE', 'Cafe Rocks', 'restaurant', 3, $range(320, 328)],
+            ['POOL', 'Pool Bar', 'bar', 4, $range(330, 338)],
+            ['MINI', 'Minibar', 'minibar', 5, $range(350, 358)],
+            ['RSVC', 'Room Service', 'room_service', 6, $range(340, 348)],
+            ['BANQ', 'Banket', 'banquet', 7, $range(370, 378)],
+            ['SPA', 'Spa Center', 'spa', 8, [...$range(513, 515), ...$range(526, 528), ...$range(547, 549)]],
+            ['LAUN', 'Laundry', 'other', 9, $range(510, 512)],
+            ['CASI', 'Casino', 'bar', 10, $range(670, 692)],
+            ['KUAF', 'Kuaför', 'other', 11, $range(640, 642)],
+            ['CTCH', 'Catch Seafood', 'restaurant', 12, $range(650, 661)],
+            ['ONYX', 'Onyx', 'bar', 13, $range(480, 488)],
+            ['BYBL', 'Byblos', 'restaurant', 14, $range(700, 722)],
+            ['PATI', 'Rocks Pattiserie', 'restaurant', 15, $range(820, 832)],
+            ['SIRA', 'Sıralı Et', 'restaurant', 16, $range(490, 495)],
+            ['LYRA', 'Lyra', 'restaurant', 17, [...$range(810, 818), ...$range(117, 119)]],
+            ['DRAG', 'Dragon Rest', 'restaurant', null, ['410', '411']],
         ];
-        foreach ($outlets as $i => [$code, $name, $type, $codes]) {
-            DB::table('pms_outlets')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => $type, 'source_system' => 'simphony', 'sort' => $i + 1, 'is_active' => true, 'updated_at' => now()]);
+        foreach ($outlets as $i => [$code, $name, $type, $rvc, $codes]) {
+            DB::table('pms_outlets')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], [
+                'name' => $name, 'type' => $type, 'source_system' => $rvc ? 'simphony' : 'manual', 'simphony_rvc_number' => $rvc,
+                'sort' => $i + 1, 'is_active' => true, 'updated_at' => now(),
+            ]);
             $outletId = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', $code)->value('id');
             $codeQuery($codes)->update(['outlet_id' => $outletId]);
             DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => $codeQuery($codes[0])->value('id')]);
