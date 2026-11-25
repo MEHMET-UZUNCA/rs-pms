@@ -10,17 +10,39 @@ PMS'e buradan gelir. İki ayrı akış vardır:
 
 ## 4.1 Bağlantı yöntemi
 
-Simphony üçüncü parti PMS'lerle **TCP tabanlı PMS arayüzü** üzerinden konuşur. Simphony'de her RVC bir PMS arayüzüne bağlanır;
-"Oda hesabı" ödeme tipi (tender) bu arayüze yönlendirilir.
+### Bugünkü durum (otelden alınan bilgi)
+
+- **Simphony 18** sürümü.
+- **Kayıtlar (posting)** Fidelio'ya **IFC8 üzerinden** gidiyor.
+- **Oda sorguları** Simphony'den Fidelio'ya doğrudan bağlı.
+
+```
+Bugün:   Simphony 18 ──(sorgu)──────────────► Fidelio Suite8
+         Simphony 18 ──(kayıt)──► IFC8 ─────► Fidelio Suite8
+
+Hedef:   Simphony 18 ──(sorgu + kayıt)──────► RS PMS (Simphony PMS arayüzü dinleyicisi)
+```
+
+IFC8, Oracle'ın Opera/Suite8'e özel ara katmanıdır; RS PMS'e bağlanamaz. Bu yüzden RS PMS, Simphony'nin bugün
+konuştuğu tarafı (Fidelio + IFC8) **taklit eden** bir TCP dinleyici sunar ve Simphony'deki PMS arayüzü ayarı RS PMS'i gösterecek şekilde değiştirilir.
 
 | Seçenek | Açıklama | Değerlendirme |
 |---|---|---|
-| **A. Simphony PMS arayüzü (TCP)** | RS PMS bir TCP dinleyici açar; Simphony sorgu ve kayıt mesajlarını doğrudan gönderir | **Önerilen.** Ara yazılım ve ek lisans gerektirmez |
-| B. FIAS (IFC8 üzerinden) | Oracle'ın IFC8 ara katmanı; Fidelio/Opera ile bugün muhtemelen böyle bağlı | IFC8 lisansı ve sunucusu gerekir; geçişte geçici çözüm olabilir |
-| C. REST / OHIP | Oracle'ın yeni bulut entegrasyon platformu | Simphony sürümüne ve lisansa bağlı |
+| **A. Simphony PMS arayüzü (TCP), sorgu + kayıt tek bağlantı** | RS PMS dinleyici açar; Simphony'nin "üçüncü parti PMS" arayüzü RS PMS'e yönlendirilir | **Önerilen.** IFC8 devreden çıkar, ek lisans yok |
+| B. FIAS protokolü | RS PMS, FIAS mesajlarını (IFC8'in Simphony tarafına konuştuğu dil) konuşur | Simphony 18'in bu bağlantıyı IFC8 olmadan kabul edip etmediği doğrulanmalı |
+| C. REST / OHIP | Oracle'ın bulut entegrasyon platformu | Simphony 18 için uygun değil |
 
-> **Doğrulanacak:** Mesaj biçimleri Oracle'ın *Simphony Enhanced PMS Interface* ve *IFC8 FIAS* belgelerinden birebir alınacak.
-> Otelin Simphony sürümü, bugün Fidelio'ya nasıl bağlandığı (IFC8 var mı) ve Simphony yetkili servisinin desteği netleşmeden kodlamaya başlanmayacak.
+### Paralel çalışma döneminde
+Fidelio canlıyken Simphony bağlantısı Fidelio'da kalır. RS PMS'te Simphony arayüzü **test modunda** çalışır:
+- Simphony'nin test istasyonu (ya da test RVC'si) RS PMS'e bağlanır.
+- Geçiş gecesi yalnız Simphony'deki arayüz adresi değiştirilir; geri dönüş gerekirse eski adrese alınır.
+
+> **Doğrulanacak (kodlamadan önce):**
+> 1. Simphony 18'deki mevcut PMS arayüzü ayarlarının ekran görüntüleri (EMC → Property → Interfaces; RVC parametreleri; "Oda hesabı" tender ayarı).
+> 2. IFC8'in hangi protokolle ayarlandığı (FIAS sürümü), IFC8 ayar dosyası/ekranı.
+> 3. Simphony yetkili servisinden: Simphony 18'in üçüncü parti PMS'e doğrudan bağlanabildiği arayüz tipi ve mesaj belgesi
+>    (Oracle *Simphony PMS Interface* / *IFC8 FIAS Specification*).
+> Mesaj biçimleri bu belgelerden birebir alınacak; tahminle kodlanmayacak.
 
 ## 4.2 Akış 1 — Oda hesabına yazma
 

@@ -18,6 +18,16 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 | 6 | [Fidelio'dan geçiş](docs/06-fidelio-gecis.md) | 19 yıllık verinin taşınması ve arşiv |
 | 7 | [Arayüz](docs/07-arayuz.md) | Ekranlar (QloApps düzeni örnek alınarak) |
 
+## Onaylanan kararlar
+
+| Konu | Karar |
+|---|---|
+| Veritabanı tasarımı | 115 tablo, `pms_` öneki — **onaylandı** |
+| Muhasebe | Logo **Tiger** |
+| POS | Oracle **Simphony 18**; bugün kayıtlar IFC8, oda sorguları doğrudan Fidelio'ya — hedef: ikisi de RS PMS'e |
+| Kimlik bildirimi (KBS) | Şu an yok; tablo tasarımda hazır, sonraya bırakıldı |
+| Fidelio verisi | Suite8 veritabanına erişim var; geçiş boyunca canlı |
+
 ## Teknoloji (özet)
 
 Laravel 13 · PHP 8.3 · MySQL 8 · Redis (önbellek, kuyruk, kilit) · Blade + Tailwind 4 — RS ONE ile aynı yığın.

@@ -19,9 +19,10 @@ Fidelio'da yaklaşık **19 yıllık** veri var. Tamamı yeni sistemin canlı tab
 
 ## 6.2 Adımlar
 
-1. **Erişim:** Suite8'in Oracle veritabanına salt okunur kullanıcı (otelin Suite8 destek firmasından).
-2. **Şema çıkarma:** Tablo/kolon listesi ve satır sayıları. Suite8'in tablo yapısı resmi olarak yayınlanmadığı için
-   eşleme tablo içerikleri incelenerek yapılacak. Elimde doğrulanmış bir Suite8 şeması yok; tahmine dayalı eşleme yapılmayacak.
+1. **Erişim:** Suite8'in Oracle veritabanına salt okunur erişim **mevcut** (otel onayladı). Fidelio geçiş tamamlanana kadar canlı kalır.
+2. **Şema çıkarma:** Tablo/kolon listesi ve satır sayıları (`docs/fidelio/` altına konacak). Suite8'in tablo yapısı resmi olarak
+   yayınlanmadığı için eşleme tablo içerikleri incelenerek yapılacak; tahmine dayalı eşleme yapılmayacak.
+   Daha önce yapılan veri çekme çalışmasının sorguları/çıktıları varsa buraya eklenecek.
 3. **Ham kopya:** Gerekli tablolar Oracle'dan MySQL arşiv veritabanına olduğu gibi kopyalanır (`rs_pms_archive.fid_*`).
 4. **Eşleme belgesi:** Fidelio tablo/kolon → RS PMS tablo/kolon, kod dönüşümleri, tekilleştirme kuralları.
 5. **Deneme aktarımı:** Test sunucusunda; sayım ve tutar karşılaştırması (profil sayısı, gelecek rezervasyon sayısı, açık bakiye toplamı).

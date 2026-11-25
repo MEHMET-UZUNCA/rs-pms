@@ -27,15 +27,20 @@ masraf merkezi ve departman. Eşlemesi eksik kod varsa gece kapanışı **engell
 - Her satır kaynağına bağlıdır (`source_type`, `source_id`): Logo'daki bir rakamdan PMS'teki kayda inilebilir.
 - Kapanmış iş gününde düzeltme yapılmaz; düzeltme bugünün iş gününde ters kayıtla yapılır ve bugünün fişinde gider.
 
-## 5.4 Bağlantı yöntemi — netleşecek
+## 5.4 Bağlantı yöntemi — Logo Tiger
 
-Logo ürününe göre seçilecek:
+Otelde **Logo Tiger** kullanılıyor. Seçenekler (tercih sırasıyla):
 
-| Logo ürünü | Yöntem |
-|---|---|
-| Tiger / Go (on-prem) | Logo Objects (LObjects) ya da Logo REST servisi |
-| j-Platform | REST API |
-| Netsis | NetOpenX |
-| Hiçbiri mümkün değilse | Logo'nun içe aktarma biçiminde XML/Excel dosyası (elle yükleme) |
+| Yöntem | Açıklama | Not |
+|---|---|---|
+| **1. Logo REST servisi** | Tiger'ın REST katmanı üzerinden fiş ve cari kart gönderimi | Lisansta REST servisi olup olmadığı kontrol edilecek |
+| 2. Logo Objects (LObjects) | Windows üzerinde çalışan COM nesneleri; PMS ile Logo arasında küçük bir aktarım servisi gerekir | REST yoksa |
+| 3. XML içe aktarma | Tiger'ın mahsup fişi XML biçiminde dosya; muhasebe elle yükler | Geçici ya da yedek yöntem |
 
-> **Sorular:** Hangi Logo ürünü ve sürümü? Fiş tipi (mahsup)? Günlük toplu mu, fatura bazında mı? Faturayı PMS mi kesecek, Logo mu?
+PMS tarafındaki tasarım üçünde de aynıdır (`pms_logo_export_*`); yalnız gönderici sınıf değişir.
+
+> **Kalan sorular:**
+> - Tiger sürümü ve REST servisi lisansı var mı?
+> - Firma / dönem numarası, mahsup fişi tipi, şube/bölüm kodları
+> - Faturayı PMS mi kesecek, Logo mu? (Tasarımda PMS keser, Logo'ya fiş gider.)
+> - Cari kartlar Logo'da mı açılıyor, PMS'ten mi gönderilecek?
