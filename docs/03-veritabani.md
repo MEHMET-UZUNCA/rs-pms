@@ -823,6 +823,8 @@ IX(folio_id), IX(property_id, business_date), IX(transaction_code_id, business_d
 ```
 Kurallar:
 - Güncellenebilen alanlar yalnız `reversed_by_id` ve `invoice_id`.
+- Bu kural **veritabanı tetikleyicileriyle** de zorlanır (`pms_postings`, `pms_posting_taxes`, `pms_invoice_lines` silinemez/değiştirilemez; `pms_invoices` silinemez). Uygulama hatası ya da elle yapılan SQL bile mali kaydı bozamaz.
+  Kurulum notu: MySQL'de ikili günlük (binlog) açıksa uygulama kullanıcısının tetikleyici oluşturabilmesi için `TRIGGER` yetkisi ve `log_bin_trust_function_creators = 1` gerekir.
 - Folyo bakiyesi = `SUM(amount)`; `pms_folios.balance` aynı işlemde güncellenir, gece kapanışında doğrulanır.
 - Transfer: kaynak folyoya ters kayıt + hedef folyoya yeni kayıt (`transfer_from_id`), ikisi aynı işlemde; `origin_*` alanları ilk sahibi taşır.
 - **İndirim (rebate):** indirimli koda kayıt atılınca kural uygulanır, `kind = discount` ayrı kayıt `discount_of_id` ile bağlanır.
