@@ -9,7 +9,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 1 | Department Code Groups ve Main Groups ekranları (grup adları 15, 16, 20, 30, 40, 50, 55, 60, 75, 80, 90, 95) | Fidelio | Grup adları şimdilik geçici (10, 11 = Room Revenue alındı) | Bekleniyor |
 | 2 | P4556 raporunun diğer sayfaları (VAT 0 %, VAT 1 %, VAT 10 %, VAT 20 %) | Fidelio raporu | Spa, kuaför, VAT Discount, paket kodlarının vergisini teyit | Bekleniyor |
 | 3 | Spa (513), Kuaför (640), 560/561 VAT Discount, 781 Package, 798 Deposit Retain kod pencereleri → "Tax" kutusu | Fidelio | Şimdilik %5 verildi, teyit | Bekleniyor |
-| 4a | **MF_ENH.isl betiğinin metni** (EMC → Extension Application → ONBURO → 3. satır MF_ENH → "Designer" sekmesi ya da "Export to Package") | Simphony EMC | Kasa ile PMS arasındaki mesajların kesin biçimi — dinleyici buna göre yazılacak | **Öncelikli** |
+| 4a | **Arayüz trafik logu** — birkaç oda sorgusu ve oda hesabı içeren bir günlük kayıt: IFC8 sunucusunda (192.168.200.11) IFC8'in log klasörü ve/veya Simphony Service Host'ta (192.168.200.9) arayüz logu (seçenek 2 açık) | IFC8 / Simphony | MF_ENH betiği şifreli; mesajların kesin biçimi gerçek trafikten çıkarılacak. İçindeki misafir adları depoya konmaz, test verisi anonimleştirilir | **Öncelikli** |
 | 5 | Simphony Sales Itemizers (1–16) ve Tax Rates listesi | Simphony EMC | Satış kalemi → departman kodu eşlemesi (ör. Cafe Rocks itemizer 1 → 320) | Bekleniyor |
 | 6 | IFC8'deki RVC → departman kodu eşlemesi | IFC8 yapılandırması | RVC numarasının "#" mı "RVC ID" mi olduğunu teyit | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
@@ -27,6 +27,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | P4556 VAT 5 % ve VAT 16 % sayfaları | 510 Laundry, 520 Transfer %16; oda/pansiyon/outlet %5 doğrulandı |
 | Simphony RVC listesi (17 RVC) | Outlet'ler, docs/04-simphony.md §4.4 |
 | Simphony Interfaces #101 General / Options / Service Host | docs/04-simphony.md §4.1 — Enhanced protokol (ISL MF_ENH), TCP 192.168.200.11:5010 |
+| ORACLE_Micros_Simphony_Enh_IFC_19.1.4 paketi (ayar dosyası; ISL'ler şifreli) | docs/04-simphony.md §4.1 |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 

@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Simphony Enhanced IFC 19.1.4 paketi incelendi: ayar dosyasındaki değerler belgelendi; ISL betikleri şifreli olduğundan mesaj biçimi gerçek trafik logundan çıkarılacak. (M.U)
+
 - Simphony: kasadaki PMS penceresinin (Extension Application ONBURO, MF_ENH betiği) yapısı ve misafir listesi / rezervasyon detayı cevap biçimi belgelendi. (M.U)
 
 - Rezervasyon Navigatörü: sorgu (ad, oda, rez. no, şirket/acente, geliş/çıkış — Fidelio tarih girişi t, +1, 25.11 —, durum), Fidelio hızlı filtreleri Alt+1…Alt+0 (içeride, bugün gelecek/gidecek, çıkmış, ileri tarihli, rezervasyonsuz hesaplar), sonuç listesi (bakiye dahil), seçili kaydın ağacı ve bilgi paneli (sayfa yenilenmeden), Alt+G giriş. Örnek veri seeder'ı (DemoDataSeeder; gerçek servislerle: rezervasyon, oda atama, giriş, folyo, kayıt, çıkış, iptal, FA). Yetkiler: reservations.view, reservations.checkin. Simphony EMC arayüz ayarları belgelendi (Enhanced protokol MF_ENH, TCP 192.168.200.11:5010, seçenekler; paralel deneme için ikinci arayüz). Bekleyen bilgiler listesi: docs/eksikler.md. Testler SQLite ve MySQL'de geçti. (M.U)

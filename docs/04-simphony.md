@@ -84,7 +84,27 @@ HTML penceresinden çıkan cevap biçimi (IFC8'in kasaya döndürdüğü):
 - **Kasiyerin seçimi:** pencere `gst_dtl:<rezervasyon_no>` (Detay), `gst_rsv:<rezervasyon_no>` (Rezervasyon) ya da `close:0` döndürür.
 - **Rezervasyon detayı:** `Etiket : değer` satırları `^` ile (Guest Name, Arrival, Departure, Room Type, Time, Room, Adult/Chld, Rate, All Postings, Packages …).
 
-Betik (MF_ENH.isl) mesajların tam biçimini tanımlar; RS PMS dinleyicisi bu betiğin beklediği cevapları birebir üretecek. Betiğin metni istendi (docs/eksikler.md).
+Betik Oracle paketi **ORACLE_Micros_Simphony_Enh_IFC_19.1.4** ile gelir. `MF_ENH.isl` ve `MF_ENH_android.isl` **şifreli** dağıtılır
+(okunabilir metin değildir); çözülmeye çalışılmayacak. Mesaj biçimi üç kaynaktan kurulacak: Oracle'ın Enhanced PMS belgesi (F16307),
+kasa penceresinin HTML'i ve **gerçek trafik kaydı** (arayüz logu açık: seçenek 2; IFC8 de mesajları loglar).
+
+Paketin ayar dosyası (`CONTENT_EnhIFC_Config`) — Rocks Hotel'deki değerler:
+
+| Ayar | Değer | Anlamı (RS PMS için) |
+|---|---|---|
+| MAGCARDONLY | 0 | Oda hesabı için manyetik kart şart değil |
+| SUPPRESSGSTMSG | 1 | Kayıt sırasında misafir mesajı gösterilmez (cevapta mesaj bayrağı `N`) |
+| SUPPRESSNFOREF | 1 | Oda hesabı dışındaki ödemelerde referans gönderilmez |
+| REVERSEGST | 1 | Eksi ödemede kişi sayısı da eksi gelir (ters kayıt) |
+| FULL_DSVC | 1 | İndirim ve servis ücreti tam kırılımla (16 indirim, 14 servis kalemi) |
+| POST_64TAXES | 1 | 64 vergi kalemi gönderilir |
+| POSTING_ADD_INFO | 0 | Ek bilgi alanında **servis dönemi** (Serving Period) gelir |
+| SendAllDtls | 1 | Oda hesabı dışındaki ödemelerde de **bütün çek detayları** gönderilir |
+| POST_ON_FINAL_TMED | 0 | Yalnız arayüze bağlı ödeme tipleri gönderilir (her ödeme değil) |
+| RVCNAMELOC / LOCVALIDMIN | 1 / 30 | Locator (misafir yer bilgisi): ilk satır RVC adı, 30 dk geçerli |
+| RESTRICTED_POSTING | 0 | Kiosk kısıtlaması yok |
+
+`SendAllDtls=1` önemli: Simphony'de nakit/kart ödeme tipleri de arayüze bağlanırsa bütün çek detayları gelir (bkz. §4.3 yöntem B).
 
 **Paralel deneme:** Simphony birden çok arayüz kaydı tutabilir (RVC başına 16 bağlantı numarası). Canlı #101'e dokunmadan
 ikinci bir kayıt (#102, RS PMS adresi) açılır; ayrı bir bağlantı numarasına, **ayrı bir test ödeme tipine** ("Oda Hesabı TEST") ve
