@@ -54,12 +54,32 @@ function initGrid(grid) {
     const rows = () => [...grid.querySelectorAll('tbody tr[data-id]')].filter((r) => !r.hidden);
     const buttons = [...document.querySelectorAll(`[data-needs-selection="${grid.id}"]`)];
 
+    // Seçili satırın alt paneli (data-detail-target) sayfa yenilenmeden yüklenir (data-url-detail).
+    const detail = grid.dataset.detailTarget ? document.querySelector(grid.dataset.detailTarget) : null;
+    let detailTimer = null;
+    let detailFor = null;
+    function loadDetail(row) {
+        if (!detail) return;
+        const url = row?.dataset.urlDetail;
+        if (!url) { detail.innerHTML = detail.dataset.empty ?? ''; detailFor = null; return; }
+        if (detailFor === url) return;
+        detailFor = url;
+        clearTimeout(detailTimer);
+        detailTimer = setTimeout(async () => {
+            try {
+                const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (detailFor === url) detail.innerHTML = res.ok ? await res.text() : '<p class="p-3 text-danger">Bilgi alınamadı.</p>';
+            } catch { if (detailFor === url) detail.innerHTML = '<p class="p-3 text-danger">Bağlantı hatası.</p>'; }
+        }, 120);
+    }
+
     function select(row, scroll = true) {
         grid.querySelectorAll('tr.is-selected').forEach((r) => r.classList.remove('is-selected'));
         if (row) {
             row.classList.add('is-selected');
             if (scroll) row.scrollIntoView({ block: 'nearest' });
         }
+        loadDetail(row);
         buttons.forEach((b) => {
             const url = row?.dataset[`url${b.dataset.action[0].toUpperCase()}${b.dataset.action.slice(1)}`];
             if (b.tagName === 'A') { if (url) b.href = url; else b.removeAttribute('href'); }

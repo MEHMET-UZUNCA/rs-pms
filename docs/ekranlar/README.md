@@ -70,6 +70,17 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/06-departman-kodlari-02-duzenle-100-room.png` | Fidelio "Department Codes → Edit" alanları; tarihli vergi; düzeltme kodu 102 |
 | `goruntuler/06-departman-kodlari-03-tarihli-vergi-degisikligi.png` | Bir kodun vergisini bir tarihten itibaren değiştirmek (eski satır kapanır, yeni satır eklenir) |
 
+## 07 — Rezervasyon Navigatörü (gerçek uygulama, örnek veriyle)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/07-rezervasyon-navigatoru-01-iceridekiler.png` | `Alt+1` içeridekiler; seçili rezervasyonun ağacı ve bilgi paneli |
+| `goruntuler/07-rezervasyon-navigatoru-02-bugun-gelecekler.png` | `Alt+2` bugün gelecekler; oda atanmışlar için `Alt+G` giriş |
+| `goruntuler/07-rezervasyon-navigatoru-03-sorgu-sirket.png` | Şirket/acente sorgusu (`F3`), bütün durumlar |
+| `goruntuler/07-rezervasyon-navigatoru-04-rezervasyonsuz-hesaplar.png` | `Alt+6` rezervasyonsuz hesaplar (FA) ve son kayıtları |
+
+Örnek veri: `php artisan db:seed --class=DemoDataSeeder` (yalnız geliştirme; gerçek otel verisi değildir).
+
 ## Taslakları yerelde açmak
 
 ```bash

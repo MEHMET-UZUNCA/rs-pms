@@ -52,7 +52,23 @@ Kaynaklar: *Simphony Property Management System Interface Reference* (F12084, 18
 | Fiş dökümü | Yok | `FO_FI_FINAL_TENDER`: çekin metin hali (ürün ürün) — folyoda fiş detayı olarak saklanır |
 | Nakit/kart çekler | Yok | **Var:** ödeme tipi arayüze bağlanırsa nakit ve kartla kapanan çekler de ("Non Front-Office") aynı mesajla gelir |
 
-RS PMS **ikisini de** destekleyecek; ayar ekranından seçilir. Böylece Simphony'deki mevcut ayar neyse ona uyar.
+RS PMS **ikisini de** destekleyecek; ayar ekranından seçilir. Rocks Hotel'de kullanılan: **Enhanced** (ISL MF_ENH).
+
+### Rocks Hotel'deki mevcut ayar (EMC → Setup → Interfaces, kayıt #101 "Onburolfc")
+
+| Alan | Değer | Anlamı |
+|---|---|---|
+| Communication Name / ISL Script | **MF_ENH** | MICROS-Fidelio **Enhanced** PMS arayüzü — mesajlar `IFC_CHG_PST`, `IFC_GST_SEL`, `FO_FI_FINAL_TENDER` |
+| Interface Type / Communications Type | 0 – PMS/SIM / **1 – TCP** | |
+| TCP Host / Port | **192.168.200.11 : 5010** | IFC8'in dinlediği adres |
+| Timeout / Ping Frequency / Encoding | 30 sn / 0 / ASCII | |
+| Service Host | 99 – CAPS-ROCKS (192.168.200.9) | Bağlantıyı açan Simphony sunucusu |
+| Seçenek 1, 2, 3, 5 | Açık | 19 haneli giriş, arayüz logu, girişsiz sorgu, **9 haneli kasa no** |
+| Seçenek 4, 7, 8, 9, 10, 11 | Kapalı | 4 haneli kişi sayısı, çevrimdışı kayıt yok, ping yok, 3 haneli RVC, 4 haneli çek no |
+
+**Paralel deneme:** Simphony birden çok arayüz kaydı tutabilir (RVC başına 16 bağlantı numarası). Canlı #101'e dokunmadan
+ikinci bir kayıt (#102, RS PMS adresi) açılır; ayrı bir bağlantı numarasına, **ayrı bir test ödeme tipine** ("Oda Hesabı TEST") ve
+bir test kasasındaki düğmeye bağlanır. Böylece aynı çek iki sisteme birden gitmez: hangi ödeme tipi seçilirse o arayüze gider.
 
 ### Simphony EMC'de yapılacak değişiklik (geçiş gecesi)
 1. *Setup → Interfaces* → mevcut PMS arayüzü kaydı → *Options*: **TCP Host Name** = RS PMS sunucusunun IP'si, **TCP Port** = RS PMS'te ayarlanan port.

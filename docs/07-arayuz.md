@@ -154,6 +154,12 @@ Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidel
 | Conference Diary | Konferans Günlüğü | Salon × saat çizelgesi, sürükle-bırak etkinlik |
 | Logbook | Vardiya Defteri | Departman notları, okundu bilgisi |
 
+### Rezervasyon Navigatörü (yapıldı)
+
+Sorgu: Ad (`Alt+A`), oda, rezervasyon no, şirket/acente, geliş, çıkış, durum; `F3` ara. Tarih kutusu Fidelio gibi: `t` iş günü,
+`+1` / `-7`, `25.11`, `25.11.2026`. Hızlı filtreler `Alt+1 … Alt+0` (yukarıdaki tablo). `↑/↓` satır seçer; seçili kaydın ağacı
+(iletişim, adres, profiller, folyolar, geçmiş) ve bilgi paneli altta sayfa yenilenmeden açılır. `Alt+G` giriş (check-in).
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.

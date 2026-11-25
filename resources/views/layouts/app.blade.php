@@ -3,7 +3,7 @@
     $businessDate = $currentProperty->current_business_date;
     // Fidelio ana menüleri (docs/07-arayuz.md §7.1). Hazır olan ekranlar bağlantı, diğerleri sırası gelince açılır.
     $menus = [
-        'Rezervasyon' => [['Rezervasyon Navigatörü', null], ['Hızlı Rezervasyon', null], ['Müsaitlik', null], ['Fiyat Sorgulama', null], ['Blok / Allotman', null]],
+        'Rezervasyon' => [['Rezervasyon Navigatörü', Gate::allows('permission', 'reservations.view') ? route('reservations.navigator') : null], ['Hızlı Rezervasyon', null], ['Müsaitlik', null], ['Fiyat Sorgulama', null], ['Blok / Allotman', null]],
         'Ön Büro' => [['Gelecekler', null], ['İçeridekiler', null], ['Oda Planı', null], ['Ev Durumu', null]],
         'Kasa' => [['Folyo', null], ['Kayıt At', null], ['Ayakta Satış', null], ['Kasa Kapanışı', null], ['Cari Hesaplar', null]],
         'Kat Hizmetleri' => [['Oda Durumu', null], ['Görev Dağıtımı', null], ['Uyuşmazlıklar', null]],
