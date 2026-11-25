@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 
 /** Tablo: pms_exchange_rates — tasarım: docs/03-veritabani.md */
@@ -14,7 +15,7 @@ class ExchangeRate extends Model
     protected function casts(): array
     {
         return [
-            'business_date' => 'date',
+            'business_date' => DateOnly::class,
             'posting_rate' => 'decimal:8',
             'buy_rate' => 'decimal:8',
             'sell_rate' => 'decimal:8',

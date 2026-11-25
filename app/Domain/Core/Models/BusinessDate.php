@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,7 +16,7 @@ class BusinessDate extends Model
     protected function casts(): array
     {
         return [
-            'business_date' => 'date',
+            'business_date' => DateOnly::class,
             'opened_at' => 'datetime',
             'closed_at' => 'datetime',
         ];

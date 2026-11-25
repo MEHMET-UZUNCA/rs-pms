@@ -2,6 +2,7 @@
 
 namespace App\Domain\Inventory\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,8 +16,8 @@ class RoomOutage extends Model
     protected function casts(): array
     {
         return [
-            'date_from' => 'date',
-            'date_to' => 'date',
+            'date_from' => DateOnly::class,
+            'date_to' => DateOnly::class,
             'released_at' => 'datetime',
         ];
     }

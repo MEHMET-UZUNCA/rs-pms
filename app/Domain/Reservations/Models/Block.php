@@ -2,6 +2,7 @@
 
 namespace App\Domain\Reservations\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,8 +18,8 @@ class Block extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => DateOnly::class,
+            'end_date' => DateOnly::class,
             'deducts_inventory' => 'boolean',
         ];
     }

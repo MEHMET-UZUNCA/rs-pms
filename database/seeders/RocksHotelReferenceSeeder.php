@@ -106,6 +106,22 @@ class RocksHotelReferenceSeeder extends Seeder
         $upsertCode(['652', 'Catch Seafood Food Reb.', 'FNB', 'revenue', 'food', 'food', true, '650'], $catch);
         $upsertCode(['816', 'OTHER Lyra', 'FNB', 'revenue', 'other', 'other'], $lyra);
 
+        // Fidelio "Tax Details" (Rocks Hotel&Casino, Girne). Oran formülden alınır; Fidelio'daki ad bazı satırlarda formülle
+        // uyuşmuyor (ör. "VAT 18 %" formülü x*(5/100)) — hesap formülle yapıldığı için formül esas, eski ad legacy_name'de saklanır.
+        // [kod, oran, sıra, Fidelio adı, Fidelio departmanı, sıfır kaydet]
+        foreach ([
+            ['VAT0', 0, 3, 'VAT 0 %', 'VAT 0 %', true], ['VAT1', 1, 5, 'VAT 1 %', 'VAT 1 %', false], ['VAT5', 5, 1, 'VAT 18 %', 'VAT 5 %', false],
+            ['VAT20', 20, null, 'VAT 20 %', 'VAT 20 %', false], ['VAT10', 10, 2, 'VAT 26 %', 'VAT 10 %', false], ['VAT16', 16, 4, 'VAT 8 %', 'VAT 16 %', false],
+        ] as [$code, $rate, $sort, $legacyName, $department, $postZero]) {
+            if (! DB::table('pms_taxes')->where('property_id', $propertyId)->where('code', $code)->exists()) {
+                DB::table('pms_taxes')->insert([
+                    'property_id' => $propertyId, 'code' => $code, 'name' => "KDV %{$rate}", 'calc_type' => 'percent', 'rate' => $rate,
+                    'is_inclusive' => true, 'valid_from' => '2001-01-01', 'source' => 'fidelio', 'sort' => $sort, 'print_separately' => false,
+                    'post_zero' => $postZero, 'legacy_name' => $legacyName, 'legacy_department' => $department, 'created_at' => now(), 'updated_at' => now(),
+                ]);
+            }
+        }
+
         DB::table('pms_properties')->where('id', $propertyId)->update([
             'exchange_diff_transaction_code_id' => DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('code', '550')->value('id'),
         ]);

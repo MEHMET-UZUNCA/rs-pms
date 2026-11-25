@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Uygulama 2. adım: Fidelio "Tax Details" vergileri (oranlar formülden: %0, %1, %5, %10, %16, %20; Fidelio adı/departmanı, sıra, sıfır kaydetme saklanır), tarihli vergi oranı değişikliği (pms:change-tax-rate), Fidelio kayıtlarından oran içe aktarma (pms:import-fidelio-tax-rates), Fidelio departman kodu içe aktarma (pms:import-fidelio-department-codes; ROO/DIS/REB/PEN/IND kategorileri, grup numaraları, vergi departmanları, indirim/rebate bağlantıları); rezervasyon servisi (açma, tarih değiştirme, iptal, oda atama, giriş, çıkış); gece kapanışı servisi (kontroller, no-show, oda ücreti + paket elemanları, istatistik, iş günü ilerletme, amir onayıyla geçiş). Tarih alanları yalnız tarih olarak saklanır (DateOnly). Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Uygulama katmanı 1. adım: 34 model; Rocks Hotel tanım verileri (Fidelio'nun 61 departman kodu, 22 indirim kodu asıl kodlarına bağlı, 10 outlet, para birimleri, kur farkı kodu); servisler: boşluksuz numara serisi, vergi hesaplama (fiyata dahil/hariç), fiyat hesaplama (kişi sayısı, çocuk bantları, ek yatak, en dar aralık, haftanın günü, gün tipi, türetilmiş fiyat, yuvarlama, pansiyon paketi), günlük müsaitlik hesabı (arıza, kesin/opsiyon satış, blok), folyo kaydı (harcama, ödeme, ters kayıt, transfer, tekrar güvenliği, kapalı folyo/iş günü kontrolü) — 12 yeni test. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Fidelio uyumlu PROISV view'ları: 13 view, 391 kolon — Fidelio ile aynı ad, kolon adı, sıra ve kod değerleri (durum 0–13, profil kategorisi 1–6, CDT 1/5, ödeme tipi, cinsiyet…). Kolonların Fidelio ile birebir aynı olduğunu ve kod değerlerini doğrulayan testler; sunucu için ayrı proisv şeması ve yalnız okuma kullanıcısı betiği. Testler SQLite ve MySQL'de geçti. (M.U)

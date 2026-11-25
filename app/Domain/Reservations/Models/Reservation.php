@@ -8,6 +8,7 @@ use App\Domain\Inventory\Models\Room;
 use App\Domain\Inventory\Models\RoomType;
 use App\Domain\Profiles\Models\Profile;
 use App\Domain\Rates\Models\RateCode;
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,15 +23,19 @@ class Reservation extends Model
     protected function casts(): array
     {
         return [
-            'arrival_date' => 'date',
-            'departure_date' => 'date',
-            'original_departure_date' => 'date',
-            'sale_date' => 'date',
-            'option_date' => 'date',
+            'total_room_amount' => 'decimal:2',
+            'total_package_amount' => 'decimal:2',
+            'deposit_required' => 'decimal:2',
+            'credit_limit' => 'decimal:2',
+            'arrival_date' => DateOnly::class,
+            'departure_date' => DateOnly::class,
+            'original_departure_date' => DateOnly::class,
+            'sale_date' => DateOnly::class,
+            'option_date' => DateOnly::class,
             'checked_in_at' => 'datetime',
             'checked_out_at' => 'datetime',
-            'check_in_business_date' => 'date',
-            'check_out_business_date' => 'date',
+            'check_in_business_date' => DateOnly::class,
+            'check_out_business_date' => DateOnly::class,
             'is_room_locked' => 'boolean',
             'is_complimentary' => 'boolean',
             'is_house_use' => 'boolean',
@@ -46,7 +51,8 @@ class Reservation extends Model
         return $this->belongsTo(Profile::class, 'profile_id');
     }
 
-    public function nights(): HasMany
+    /** Gece satırları ("nights" kolonu gece sayısıdır, ilişki adı onunla çakışmasın diye nightRows). */
+    public function nightRows(): HasMany
     {
         return $this->hasMany(ReservationNight::class, 'reservation_id');
     }

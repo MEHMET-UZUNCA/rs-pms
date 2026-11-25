@@ -3,6 +3,7 @@
 namespace App\Domain\Cashiering\Models;
 
 use App\Domain\Rates\Models\TransactionCode;
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,8 +20,8 @@ class Posting extends Model
     protected function casts(): array
     {
         return [
-            'business_date' => 'date',
-            'stay_date' => 'date',
+            'business_date' => DateOnly::class,
+            'stay_date' => DateOnly::class,
             'amount' => 'decimal:2',
             'net_amount' => 'decimal:2',
             'tax_amount' => 'decimal:2',

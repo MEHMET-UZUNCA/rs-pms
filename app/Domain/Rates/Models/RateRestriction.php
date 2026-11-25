@@ -2,6 +2,7 @@
 
 namespace App\Domain\Rates\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 
 /** Tablo: pms_rate_restrictions — tasarım: docs/03-veritabani.md */
@@ -14,7 +15,7 @@ class RateRestriction extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            'date' => DateOnly::class,
             'is_closed' => 'boolean',
             'closed_to_arrival' => 'boolean',
             'closed_to_departure' => 'boolean',

@@ -3,6 +3,7 @@
 namespace App\Domain\Cashiering\Models;
 
 use App\Domain\Reservations\Models\Reservation;
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,10 +19,10 @@ class Folio extends Model
     {
         return [
             'balance' => 'decimal:2',
-            'opened_business_date' => 'date',
-            'closed_business_date' => 'date',
-            'valid_from' => 'date',
-            'valid_until' => 'date',
+            'opened_business_date' => DateOnly::class,
+            'closed_business_date' => DateOnly::class,
+            'valid_from' => DateOnly::class,
+            'valid_until' => DateOnly::class,
         ];
     }
 

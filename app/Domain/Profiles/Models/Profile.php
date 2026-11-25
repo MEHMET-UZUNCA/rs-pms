@@ -2,6 +2,7 @@
 
 namespace App\Domain\Profiles\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,8 +19,8 @@ class Profile extends Model
     protected function casts(): array
     {
         return [
-            'birth_date' => 'date',
-            'wedding_date' => 'date',
+            'birth_date' => DateOnly::class,
+            'wedding_date' => DateOnly::class,
             'marketing_consent' => 'boolean',
             'no_mailing' => 'boolean',
             'no_emailing' => 'boolean',

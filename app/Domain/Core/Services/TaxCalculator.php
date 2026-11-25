@@ -17,10 +17,11 @@ class TaxCalculator
      */
     public function split(TransactionCode $code, float $amount, ?CarbonInterface $date = null): array
     {
+        $day = ($date ?? now())->toDateString();
         $taxes = $code->taxes()
             ->where('calc_type', 'percent')
-            ->where(fn ($q) => $q->whereNull('valid_from')->orWhere('valid_from', '<=', $date ?? now()))
-            ->where(fn ($q) => $q->whereNull('valid_to')->orWhere('valid_to', '>=', $date ?? now()))
+            ->where(fn ($q) => $q->whereNull('valid_from')->orWhere('valid_from', '<=', $day))
+            ->where(fn ($q) => $q->whereNull('valid_to')->orWhere('valid_to', '>=', $day))
             ->orderBy('pms_transaction_code_taxes.sequence')
             ->get();
 
@@ -36,6 +37,9 @@ class TaxCalculator
         $lines = [];
         $remaining = round($gross - $net, 2);
         foreach ($taxes->values() as $i => $tax) {
+            if ((float) $tax->rate == 0.0 && ! $tax->post_zero) {
+                continue;
+            }
             $isLast = $i === $taxes->count() - 1;
             $lineAmount = $isLast ? $remaining : round($net * (float) $tax->rate / 100, 2);
             $remaining = round($remaining - $lineAmount, 2);

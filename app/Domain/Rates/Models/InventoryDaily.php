@@ -3,6 +3,7 @@
 namespace App\Domain\Rates\Models;
 
 use App\Domain\Inventory\Models\RoomType;
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,7 +19,7 @@ class InventoryDaily extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            'date' => DateOnly::class,
         ];
     }
 

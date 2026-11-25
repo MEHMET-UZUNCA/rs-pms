@@ -4,6 +4,7 @@ namespace App\Domain\Core\Models;
 
 use App\Domain\Inventory\Models\Room;
 use App\Domain\Inventory\Models\RoomType;
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,7 +21,7 @@ class Property extends Model
     protected function casts(): array
     {
         return [
-            'current_business_date' => 'date',
+            'current_business_date' => DateOnly::class,
             'is_active' => 'boolean',
         ];
     }

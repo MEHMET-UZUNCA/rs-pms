@@ -2,6 +2,7 @@
 
 namespace App\Domain\Rates\Models;
 
+use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,8 +24,8 @@ class RateCode extends Model
             'is_public' => 'boolean',
             'is_negotiated' => 'boolean',
             'is_active' => 'boolean',
-            'valid_from' => 'date',
-            'valid_to' => 'date',
+            'valid_from' => DateOnly::class,
+            'valid_to' => DateOnly::class,
             'derive_value' => 'decimal:2',
         ];
     }
