@@ -207,7 +207,11 @@ Simphony 18 ──► R&A (Reporting & Analytics) ──(BI API, REST)──► 
 
 ## 4.5 Teknik
 
-- Dinleyici: `php artisan pms:simphony-listen` (Supervisor altında sürekli çalışır). Standart ve Enhanced protokolü konuşur; ping'e
+- **Yapıldı:** `php artisan pms:simphony-listen` — MF_ENH protokolü (docs/simphony-protokol.md): sürüm, oda sorgusu, rezervasyon ve misafir
+  detayı, oda hesabı (misafir seçimi → kayıt → fiş dökümü), oda dışı ödemeler (satış kaydı), tekrar gönderime aynı cevap, bölünmüş ödemede
+  oranlama, ping. Satış kalemi → departman kodu eşlemesi `pms_pos_revenue_mappings` tablosundan; eşleme yoksa outlet'in varsayılan kodu,
+  indirim için kodun düzeltme kodu (Adjustment Dept). Gerçek TCP bağlantısıyla, logdaki diyalog oynatılarak denendi.
+- Eski not: Dinleyici: `php artisan pms:simphony-listen` (Supervisor altında sürekli çalışır). Standart ve Enhanced protokolü konuşur; ping'e
   cevap verir; aynı sıra numarası + `R` gelirse son cevabı tekrarlar. Her mesaj önce `pms_pos_messages`'a ham olarak yazılır, sonra işlenir.
 - Satış aktarımı: `php artisan pms:simphony-sync` (zamanlanmış görev; BI API).
 - Cevap süresi hedefi: < 1 saniye (Simphony'nin zaman aşımı içinde). İşlem tek veritabanı işlemiyle yapılır, Redis kilidi folyo bazında.

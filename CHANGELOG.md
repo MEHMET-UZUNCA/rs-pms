@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Simphony dinleyicisi (pms:simphony-listen): IFC8 logundan çıkarılan MF_ENH protokolü (docs/simphony-protokol.md) — çerçeve ve checksum, akıştan çerçeve ayırma, sürüm, oda sorgusu, rezervasyon/misafir detayı, misafir mesajı/locator, oda hesabı (misafir seçimi, kayıt, ret sebepleri: misafir yok, oda hesabı kapalı, kredi limiti, kapalı gün), fiş dökümü, oda dışı ödemeler (satış kaydı), tekrar gönderim ve çift ödeme koruması, bölünmüş ödemede oranlama, ping; bütün mesajlar pms_pos_messages'a yazılır; IP izin listesi. Satış kalemleri departman kodlarına (eşleme yoksa outlet varsayılan kodu, indirim için Adjustment Dept). Simphony arayüz kaydı seeder'da (kapalı, port 5010). Fiş metni pms_pos_postings.receipt_text. 8 test + gerçek TCP denemesi. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Simphony Enhanced IFC 19.1.4 paketi incelendi: ayar dosyasındaki değerler belgelendi; ISL betikleri şifreli olduğundan mesaj biçimi gerçek trafik logundan çıkarılacak. (M.U)
 
 - Simphony: kasadaki PMS penceresinin (Extension Application ONBURO, MF_ENH betiği) yapısı ve misafir listesi / rezervasyon detayı cevap biçimi belgelendi. (M.U)

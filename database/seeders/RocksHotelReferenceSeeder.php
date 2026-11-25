@@ -118,6 +118,16 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => $codeQuery($codes[0])->value('id')]);
         }
 
+        // Simphony arayüzü (MF_ENH). Bugün Simphony #101 kaydı IFC8'e (192.168.200.11:5010) bağlı; RS PMS aynı portu dinler.
+        // Paralel denemede Simphony'de ikinci kayıt (#102) açılır ve bu adresi gösterir (docs/04-simphony.md §4.1). Başta kapalıdır.
+        if (! DB::table('pms_pos_interfaces')->where('property_id', $propertyId)->where('system', 'simphony')->exists()) {
+            DB::table('pms_pos_interfaces')->insert([
+                'property_id' => $propertyId, 'name' => 'Simphony MF_ENH', 'system' => 'simphony', 'protocol' => 'simphony_enhanced',
+                'listen_host' => '0.0.0.0', 'listen_port' => 5010, 'allowed_ips' => json_encode(['192.168.200.9']), 'is_active' => false,
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+        }
+
         // Yetkiler ve sistem yöneticisi rolü
         foreach ([['setup.outlets', 'Outlet tanımları', 'setup'], ['setup.transaction_codes', 'Departman kodları', 'setup'],
             ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations']] as [$code, $name, $group]) {
