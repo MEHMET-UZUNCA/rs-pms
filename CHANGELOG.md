@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- 3. aşama: rezervasyon tabloları — blok/allotman, çok odalı rezervasyon, rezervasyon, gece satırları, ek misafirler, paketler, durum ve oda değişikliği geçmişi, sabit ücretler, depozito talepleri, kart anahtarları, izler, uyarılar, gece promosyonları, indirim bağlantıları, çevrimiçi giriş; rezervasyon hizmetleri (ikram, transfer, ödünç eşya, mesaj, uyandırma, bagaj) — 27 tablo ve testleri. Odanın içerideki rezervasyonu bağlantısına kısıt eklendi. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Ekran taslakları (Rezervasyon Navigatörü, Rezervasyon Kartı, Oda Planı) docs/ekranlar altına düzenli adlarla kaydedildi: 13 ekran görüntüsü, 3 kullanım videosu, kaynak dosyalar ve yerel görüntüleyici. (M.U)
 
 - 2. aşama: işlem kodları (Fidelio departman kodları), fiyat kodları, sezonlar, gün tipleri, fiyat tablosu, paketler, iptal/depozito politikaları, kısıtlar, günlük müsaitlik, overbooking, promosyon ve indirim kuralları, fiyat sınırları, kaçan talepler — 27 tablo ve testleri. 1. aşamadaki profil/fiyat bağlantılarına kısıt eklendi. Testler SQLite ve MySQL'de geçti. (M.U)
