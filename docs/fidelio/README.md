@@ -65,4 +65,4 @@ faturalar, cari hesap açık kalemleri, depozitolar, misafir tercihleri, bloklar
 Rezervasyon view'ları **rezervasyon × gün** satırı döner (`DETAIL_ID`, `DETAIL_DATE`, `CURRENT_DETAIL_ID`, `LAST_DETAIL_ID`).
 Her günün kendi oda tipi, oda numarası, fiyat kodu, tutarı ve kişi sayısı var. Bu, RS PMS'teki `pms_reservation_nights` tasarımıyla birebir örtüşüyor.
 
-Ayrıntılı eşleme: [eslesme.md](eslesme.md)
+Ayrıntılı eşleme: [eslesme.md](eslesme.md) · Kolon kolon tam liste (canlı PROISV, 391 kolon): [kolon-kolon.md](kolon-kolon.md)

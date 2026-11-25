@@ -2,6 +2,8 @@
 
 ## Tasarım
 
+- Veritabanı kapsam kontrolü: canlı PROISV view'larının 391 kolonu tek tek eşlendi (kolon-kolon.md); Suite8 kılavuzlarındaki işlevler tarandı (08-kapsam-kontrolu.md); 40 yeni tablo ve yeni alanlar eklendi. Toplam 163 tablo. (M.U)
+
 - Fidelio: PROISV postings view'ında olmayan 12 kolon ve etkisi belgelendi. (M.U)
 
 - Fidelio aktarım kaynağı PROISV şemasındaki 13 view olarak belirlendi; PROISV'de olmayan veriler listelendi. (M.U)

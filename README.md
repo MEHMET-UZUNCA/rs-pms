@@ -17,12 +17,14 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 | 5 | [Logo aktarımı](docs/05-logo.md) | Günlük gelir fişi, tahsilat, cari |
 | 6 | [Fidelio'dan geçiş](docs/06-fidelio-gecis.md) | 19 yıllık verinin taşınması ve arşiv |
 | 7 | [Arayüz](docs/07-arayuz.md) | Ekranlar (QloApps düzeni örnek alınarak) |
+| 8 | [Kapsam kontrolü](docs/08-kapsam-kontrolu.md) | Suite8 işlevleri → RS PMS tabloları |
+| — | [Fidelio kolon kolon eşleme](docs/fidelio/kolon-kolon.md) | PROISV 13 view, 391 kolon |
 
 ## Onaylanan kararlar
 
 | Konu | Karar |
 |---|---|
-| Veritabanı tasarımı | 121 tablo + 7 raporlama view'ı, `pms_` öneki; Fidelio view'larına göre düzenlendi — **onaylandı** |
+| Veritabanı tasarımı | 163 tablo + 7 raporlama view'ı, `pms_` öneki; Fidelio PROISV view'larının 391 kolonu ve Suite8 işlev listesine göre kontrol edildi |
 | Muhasebe | Logo **Tiger** |
 | POS | Oracle **Simphony 18**; bugün kayıtlar IFC8, oda sorguları doğrudan Fidelio'ya — hedef: ikisi de RS PMS'e |
 | Kimlik bildirimi (KBS) | Şu an yok; tablo tasarımda hazır, sonraya bırakıldı |

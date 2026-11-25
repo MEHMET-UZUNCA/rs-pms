@@ -96,6 +96,7 @@ pms_currencies:      code CHAR(3) PK (ISO3), short_code VARCHAR(3) ‹F: ZCUR_SH
 pms_exchange_rates:  id, property_id FK, currency_code FK, business_date DATE ‹F: WDAT_DATE›,
                      rate_type VARCHAR(10) — day / month / year ‹F: EXCH_RATE_DAY/MONTH/YEAR›,
                      buy_rate, sell_rate, posting_rate DECIMAL(18,8)  — folyoda kullanılan kur,
+                     exchange_fee_pct DECIMAL(5,2) null — Döviz bozdurma komisyonu ‹F: Exchange Rate Fee›,
                      source VARCHAR(20) (manual / central_bank / fidelio), created_by, timestamps
                      UQ(property_id, currency_code, business_date, rate_type)
 ```
@@ -135,7 +136,8 @@ code VARCHAR(10), name, requires_note BOOLEAN, is_active                UQ(prope
 
 ### pms_countries — Ülkeler
 ```
-code CHAR(2) PK, name_tr, name_en, nationality_tr, kbs_code VARCHAR(10) null, phone_prefix
+code CHAR(2) PK, iso3 CHAR(3), fidelio_code VARCHAR(3) ‹F: COUNTRY/NATION›, name_tr, name_en, nationality_tr,
+kbs_code VARCHAR(10) null ‹F: UYRUK_KODU›, phone_prefix, legacy_id ‹F: XCOU_ID›
 ```
 
 ### pms_audit_logs — Denetim kaydı
@@ -161,7 +163,8 @@ pms_floors:    id, property_id FK, building_id FK null, code, name, sort, timest
 
 ### pms_room_classes — Oda sınıfları / otel segmenti (Standart, Suit, Villa) ‹F: YCAD›
 ```
-id, property_id FK, code VARCHAR(10), name, sort, timestamps, deleted_at              UQ(property_id, code)
+id, property_id FK, code VARCHAR(10) ‹F: HOTELSEGMENT›, name ‹F: YCAD_LONGDESC›, sort, legacy_id ‹F: YCAD_ID›,
+timestamps, deleted_at                                                               UQ(property_id, code)
 ```
 
 ### pms_room_types — Oda tipleri
@@ -310,7 +313,17 @@ marketing_consent    BOOLEAN
 marketing_consent_at TIMESTAMP     null
 privacy_notice_at    TIMESTAMP     null      — Aydınlatma metni onayı
 rsone_client_id      BIGINT        null      — RS ONE clients.id
-merged_into_id       FK self       null      — Birleştirilen mükerrer kayıt
+merged_into_id       FK self       null      — Birleştirilen mükerrer kayıt ‹F: MERGEDTO_PROFILE_ID›
+merged_at            TIMESTAMP     null      ‹F: MERGETIME›
+primary_contact_profile_id FK self null      — Şirketin ana irtibat kişisi ‹F: PRIMARY_CONTACT_ID›
+wedding_date         DATE          null      ‹F: WEDDINGDAY›
+no_mailing           BOOLEAN                 — Posta gönderilmez ‹F: NOMAILING›
+no_emailing          BOOLEAN                 — E-posta gönderilmez ‹F: NOEMAILING›
+store_private_data   BOOLEAN                 — Kişisel veri saklama izni ‹F: STOREPRIVATEDATA›
+origin_hotel_name    VARCHAR(200)  null      — Profilin açıldığı otel ‹F: ORIGINATED_HOTEL_NAME›
+origin_hotel_legacy_id VARCHAR(50) null      ‹F: ORIGINATED_HOTEL_ID›
+legacy_global_id     VARCHAR(50)   null      — Fidelio merkezi profil no ‹F: PROFILE_GLOBALID›
+legacy_created_by, legacy_updated_by VARCHAR(100) null — Fidelio kullanıcı adı
 legacy_system, legacy_id           null
 created_by, updated_by, timestamps, deleted_at
 IX(property_id, type, display_name), IX(last_name, first_name), IX(tax_number), IX(rsone_client_id), IX(legacy_system, legacy_id)
@@ -334,11 +347,13 @@ pms_profile_identities:     id, profile_id FK, document_type (kktc_id/tc_id/pass
 pms_profile_relations:      id, profile_id FK, related_profile_id FK, relation (employee_of/booker_for/family/spouse/child/assistant)
                             ‹F: PRO_ISV_IND_FAM_LINKS›
 pms_profile_preferences:    id, profile_id FK, special_request_id FK, note null
-pms_profile_memberships:    id, profile_id FK, role (ar_number/iata/vat/loyalty/corporate_id/other) ‹F: CARDROLE›,
-                            program, number ‹F: CARDVALUE›, level null, valid_until null
+pms_membership_types:       id, property_id, code VARCHAR(3) ‹F: SHORTDESC›, name ‹F: LONGDESC›,
+                            role (ar_number/iata/vat/loyalty/corporate_id/other) ‹F: CARDROLE›
+pms_profile_memberships:    id, profile_id FK, membership_type_id FK, number ‹F: CARDVALUE›, level null, valid_until null
 pms_profile_negotiated_rates: id, profile_id FK, property_id FK, rate_code_id FK, valid_from null, valid_to null
-pms_profile_notes:          id, profile_id FK, area (general/front_office/housekeeping/accounting/sales),
-                            note TEXT, is_internal, created_by, timestamps
+pms_note_categories:        id, property_id, code, name, area (general/front_office/housekeeping/accounting/sales) ‹F: Note Categories›
+pms_notes:                  id, property_id, notable_type, notable_id (profil / rezervasyon / blok / folyo / cari),
+                            note_category_id FK, note TEXT, is_internal, show_on_check_in, created_by, timestamps
 pms_profile_stats:          profile_id PK, first_stay_date, last_stay_date, stays, nights, room_revenue,
                             other_revenue, total_revenue, cancellations, no_shows, updated_at
                             — Gece kapanışında güncellenir; Fidelio geçmişi de buraya toplanır
@@ -394,6 +409,7 @@ rate_code_id FK, room_type_id FK                                           PK(ra
 id
 rate_code_id         FK
 room_type_id         FK
+day_type_id          FK            null      — Gün tipine özel fiyat (hafta sonu, etkinlik günü) ‹F: Day Types›
 date_from, date_to   DATE                    — Dahil
 weekdays             TINYINT                 — Bit maskesi: Pzt=1 … Paz=64; 127 = her gün
 price_1, price_2, price_3, price_4  DECIMAL(14,2) null — 1..4 yetişkin fiyatı (oda başı)
@@ -487,9 +503,9 @@ pms_reservation_rebates: id, reservation_id FK, rebate_code_id FK, apply_from (n
 
 ## F. Rezervasyon
 
-### pms_bookings — Çok odalı rezervasyon başlığı
+### pms_bookings — Çok odalı rezervasyon başlığı ‹F: PARTY›
 ```
-id, property_id, booking_number UQ, booker_profile_id FK null, booker_name, booker_phone, booker_email,
+id, property_id, booking_number UQ, name VARCHAR(60) null ‹F: PARTY_LONGDESC›, legacy_id ‹F: PARTY_ID›, booker_profile_id FK null, booker_name, booker_phone, booker_email,
 source_code_id FK null, channel, external_reference null, notes TEXT null, created_by, timestamps
 ```
 
@@ -566,10 +582,13 @@ no_show_at           TIMESTAMP     null
 waitlist_priority    SMALLINT      null
 -- Diğer
 is_walk_in, is_day_use BOOLEAN
+queued_at            TIMESTAMP     null      — Oda bekleyen misafir (Queue Rooms)
+billing_instruction_code_id FK     null      ‹F: Billing Instruction Codes›
 vehicle_plate        VARCHAR(30)   null      ‹F: ARACPLAKANO›
 guest_comments       TEXT          null      ‹F: REMARKS›
 internal_notes       TEXT          null
-legacy_system, legacy_id           null
+legacy_system, legacy_id           null      ‹F: RESERVATION_ID›
+legacy_created_by, legacy_updated_by VARCHAR(100) null
 created_by, updated_by, timestamps
 IX(property_id, arrival_date), IX(property_id, departure_date), IX(property_id, status),
 IX(room_id, arrival_date), IX(profile_id), IX(block_id), IX(company_profile_id), IX(agent_profile_id)
@@ -589,6 +608,11 @@ adults, children, free_children, child_band_1, child_band_2, child_band_3, child
 amount               DECIMAL(14,2)           — Brüt gece fiyatı (paket dahil) ‹F: RATECODEAMOUNT›
 net_amount           DECIMAL(14,2)           — Vergisiz ‹F: NETRATECODEAMOUNT›
 package_amount       DECIMAL(14,2)           ‹F: PACKAGEAMOUNT›
+package_foreign_amount DECIMAL(14,2) null   ‹F: PACKAGEFOREIGNAMOUNT›
+package_included_amount DECIMAL(14,2)        — Fiyata dahil paket kısmı ‹F: PACKAGEAMOUNT_INCLUDED›
+package_included_foreign_amount DECIMAL(14,2) null ‹F: PACKAGEFOREIGNAMOUNT_INCLUDED›
+manual_amount        DECIMAL(14,2) null      — Elle girilen fiyat ‹F: RATEMANUAL›
+manual_foreign_amount DECIMAL(14,2) null     ‹F: FOREIGNRATEMANUAL›
 currency_code        CHAR(3)                 ‹F: CURRENCY›
 exchange_rate        DECIMAL(18,8) null      ‹F: EXCHANGERATE›
 foreign_amount       DECIMAL(14,2) null      ‹F: FOREIGNRATECODEAMOUNT›
@@ -640,7 +664,7 @@ id, alertable_type, alertable_id, area (check_in/check_out/reservation/any), mes
 
 ### pms_blocks / pms_block_inventory — Grup ve allotman
 ```
-pms_blocks:          id, property_id, code UQ, name, type (allotment/group),
+pms_blocks:          id, property_id, code UQ ‹F: BLOCK_NAME›, name, type (allotment/group), legacy_id ‹F: BLOCK_ID›,
                      status (inquiry/tentative/definite/cancelled),
                      profile_id FK (acente/şirket), group_profile_id FK null,
                      start_date, end_date, release_days SMALLINT, cutoff_date DATE null,
@@ -675,8 +699,8 @@ type                 VARCHAR(20)             — revenue / payment / paid_out / 
 payment_kind         VARCHAR(20)   null      — cash / card / bank_transfer / city_ledger / voucher / foreign_cash
                                                ‹F: PAYMENT_TYPE 0 nakit, 2 cari, 3 kart, 4 döviz, boş havale›
 currency_code        CHAR(3)       null      — Döviz nakit kodları için
-revenue_bucket       VARCHAR(20)   null      — room / breakfast / lunch / dinner / food / beverage / minibar /
-                                               telephone / spa / laundry / other ‹F: GROSSROOM … GROSSMISC›
+revenue_bucket       VARCHAR(20)   null      — room / breakfast / lunch / dinner / allinc_food / allinc_beverage /
+                                               food / beverage / minibar / telephone / spa / laundry / other ‹F: GROSSROOM … GROSSMISC›
 food_beverage        VARCHAR(10)   null      — food / beverage / other (outlet kodları)
 is_discount          BOOLEAN                 — İndirim kodu (DISC …), negatif gelir
 discount_of_transaction_code_id FK null      — Hangi kodun indirimi (322 → 320)
@@ -703,7 +727,10 @@ type                 VARCHAR(20)             — guest / master / passer_by / ps
 reservation_id       FK            null
 window               TINYINT                 — 1..8 (Fidelio pencere)       UQ(reservation_id, window) ‹F: WINDOW_NUMBER›
 name                 VARCHAR(100)  null      — Rezervasyonsuz hesap adı ‹F: FA_LONGDESC›
-valid_from, valid_until DATE       null      — Rezervasyonsuz hesap geçerliliği ‹F: FA_EXP/ACTVALIDFROM/UNTIL›
+folio_group_id       FK            null      — Rezervasyonsuz hesap grubu (Casino, Personel…) ‹F: FA groups›
+window_type_id       FK            null      — Pencere tipi (Misafir, Şirket, Acente…)
+valid_from, valid_until DATE       null      — Beklenen geçerlilik ‹F: FA_EXPVALIDFROM/UNTIL›
+actual_from, actual_until DATE     null      — Gerçekleşen ‹F: FA_ACTVALIDFROM/UNTIL›
 payee_profile_id     FK            null      — Bu pencereyi kim öder ‹F: WINDOW_INVOICE_TO_PROFILE_ID›
 legacy_id            VARCHAR(50)   null      ‹F: WINDOW_ID / FA_ID›
 ar_account_id        FK            null
@@ -753,8 +780,9 @@ amount               DECIMAL(14,2)           — İşaretli: harcama +, ödeme �
 net_amount           DECIMAL(14,2)
 tax_amount           DECIMAL(14,2)
 foreign_currency     CHAR(3)       null
-foreign_amount       DECIMAL(14,2) null
-exchange_rate        DECIMAL(18,8) null
+foreign_unit_price   DECIMAL(14,2) null      ‹F: POSTING_FOREIGNPRICE›
+foreign_amount       DECIMAL(14,2) null      ‹F: POSTING_FOREIGNSUMUPAMOUNT›
+exchange_rate        DECIMAL(18,8) null      ‹F: POSTING_EXCHRATE›
 stay_date            DATE          null      — Oda ücretinin ait olduğu gece
 reservation_night_id FK            null
 package_id           FK            null
@@ -778,6 +806,7 @@ note                 VARCHAR(500)  null
 invoice_id           FK            null      — Faturaya girdiğinde dolar
 idempotency_key      VARCHAR(100)  null      UQ
 legacy_id            VARCHAR(50)   null      ‹F: POSTING_ID›
+legacy_ledger_status TINYINT       null      — Fidelio ham defter durumu ‹F: POSTING_LEDGERSTATUS›
 created_at                                   ‹F: POSTING_PCDATE›
 IX(folio_id), IX(property_id, business_date), IX(transaction_code_id, business_date), IX(reservation_id), IX(outlet_id, business_date)
 ```
@@ -813,7 +842,9 @@ pms_invoice_lines:
 
 ### pms_cashiers / pms_cashier_shifts / pms_cashier_shift_totals — Kasa
 ```
-pms_cashiers:            id, property_id, number SMALLINT, name, user_id FK null, is_active   UQ(property_id, number)
+pms_cashiers:            id, property_id, number SMALLINT ‹F: CASHIER_NUMBER›, initials VARCHAR(3) ‹F: CASHIER_INITIALS›, name,
+                         user_id FK null, is_interface BOOLEAN — Arayüz (Simphony) kasiyeri, is_active, legacy_id ‹F: CASHIER_ID›
+                         UQ(property_id, number)
 pms_cashier_shifts:      id, property_id, cashier_id FK, business_date, status (open/closed),
                          opened_at, opened_by, closed_at null, closed_by null, notes null
 pms_cashier_shift_totals: id, shift_id FK, transaction_code_id FK (ödeme kodu), currency_code,
@@ -863,7 +894,9 @@ pms_daily_statistics:   id, property_id, business_date,
                         dimension_key VARCHAR(50),
                         rooms_available, rooms_ooo, rooms_sold, rooms_comp, rooms_house_use,
                         adults, children, arrivals, departures, no_shows, cancellations, walk_ins,
-                        room_revenue, breakfast_revenue, lunch_revenue, dinner_revenue, fnb_revenue,
+                        beds_available, rooms_oos, beds_oos, beds_ooo  ‹F: NOOFBEDS, OOS*, OOOBEDS›
+                        room_revenue, breakfast_revenue, lunch_revenue, dinner_revenue, allinc_food_revenue,
+                        allinc_beverage_revenue, fnb_revenue,
                         minibar_revenue, telephone_revenue, other_revenue, total_revenue,   — net ‹F: NET*›
                         room_revenue_gross, total_revenue_gross,
                         rooms_sold_tentative, blocks_definite, blocks_tentative, rooms_day_use  ‹F: PRO_YEARVIEW_NEW›
@@ -995,6 +1028,127 @@ API kimlik doğrulama: Laravel Sanctum (`personal_access_tokens`); RS ONE ve Sim
 
 ---
 
+---
+
+## N. Suite8 işlev kapsamı — ek tablolar
+
+Oracle'ın Suite8 kılavuzları (Setup, Reservations, Cashiering, Front Desk, Rooms Management, Miscellaneous, CRM) taranarak
+Fidelio'da olup tasarımda eksik kalan işlevler eklendi. Tam liste: [08-kapsam-kontrolu.md](08-kapsam-kontrolu.md).
+
+### N1. Kasa ve faturalama
+```
+pms_article_groups:        id, property_id, code, name                                       ‹F: Article Groups›
+pms_articles:              id, property_id, article_group_id FK, transaction_code_id FK, code, name,
+                           price DECIMAL(14,2), barcode null, is_active                       ‹F: Articles› — Minibar ürünleri gibi
+pms_billing_instruction_codes: id, property_id, code, name, text                              ‹F: Billing Instruction Codes›
+pms_window_types:          id, property_id, code, name (Misafir, Şirket, Acente, Ekstralar)   ‹F: Billing Window Types›
+pms_folio_groups:          id, property_id, code, name (Casino, Personel, Ev hesabı)          ‹F: Financial Account Groups›
+pms_tax_exemptions:        id, property_id, code, name, tax_id FK, exemptable_type, exemptable_id
+                           (profil / rezervasyon), valid_from, valid_to, document_no null     ‹F: Tax Exemption›
+pms_billing_authorizations: id, reservation_id FK, type (card_preauth/city_ledger/advance_billing),
+                           payment_token_id FK null, ar_account_id FK null, amount, currency_code,
+                           approval_code null, status (requested/approved/declined/released),
+                           approved_by null, approved_at null, expires_at null                ‹F: Credit Card / City Ledger / Advanced Billing Authorization›
+pms_document_templates:    id, property_id, type (invoice/proforma/information_folio/confirmation/
+                           registration_card/statement/reminder/voucher), language_code, name,
+                           body LONGTEXT (Blade şablonu), is_default                          ‹F: Folio Styles, Text Templates›
+pms_documents:             id, property_id, documentable_type, documentable_id, template_id FK,
+                           type, number null, file_path, sent_to null, channel (print/email/sms),
+                           created_by, created_at                                             ‹F: Document History, Correspondence›
+```
+
+### N2. Acente komisyonları (Travel Agent Processing)
+```
+pms_commission_codes:      id, property_id, code, name, currency_code                         ‹F: Commission Codes›
+pms_commission_rules:      id, commission_code_id FK, basis (room_net/room_gross/total_net),
+                           percent DECIMAL(5,2) null, amount_per_night DECIMAL(14,2) null,
+                           rate_code_id FK null, valid_from, valid_to                         ‹F: Commission Rules›
+pms_commissions:           id, property_id, reservation_id FK, agent_profile_id FK, commission_code_id FK,
+                           base_amount, commission_amount, currency_code,
+                           status (calculated/approved/paid/cancelled), paid_at null,
+                           ar_payment_id FK null, note null, created_by, timestamps           ‹F: Commission Details›
+```
+`pms_profiles` (acente): `commission_code_id FK null` eklenir.
+
+### N3. Cari hesap ek tabloları
+```
+pms_ar_account_types:      id, property_id, code, name, payment_terms_days, credit_limit_default  ‹F: Accounts Types›
+pms_ar_reminders:          id, ar_account_id FK, level TINYINT, sent_at, document_id FK null, created_by ‹F: Reminder Letters›
+```
+`pms_ar_accounts`: `ar_account_type_id FK` eklenir.
+
+### N4. Hediye çeki ve kuponlar
+```
+pms_voucher_types:         id, property_id, code, name, barcode_prefix null, transaction_code_id FK ‹F: Voucher Types›
+pms_vouchers:              id, property_id, voucher_type_id FK, number UQ, amount, currency_code,
+                           issued_to_profile_id null, issued_at, valid_until null,
+                           status (active/used/expired/cancelled), used_posting_id FK null,
+                           rsone_gift_voucher_id null                                        ‹F: Voucher Management›
+```
+
+### N5. Rezervasyon hizmetleri
+```
+pms_amenities:             id, property_id, code, name, transaction_code_id FK null, price null,
+                           department (housekeeping/fnb/front_office)                         ‹F: Amenities›
+pms_reservation_amenities: id, reservation_id FK, amenity_id FK, deliver_date, cycle (once/daily/every_n_days),
+                           quantity, status (pending/delivered/cancelled), delivered_by null, delivered_at null ‹F: Amenity Cycles›
+pms_transport_types:       id, property_id, code, name (Havalimanı transferi, VIP), transaction_code_id FK null, price null ‹F: Transportation Types›
+pms_reservation_transports: id, reservation_id FK, direction (arrival/departure), transport_type_id FK,
+                           pickup_at, location (Ercan, Larnaka…), flight_no null, persons,
+                           status (requested/confirmed/done/cancelled), posting_id FK null    ‹F: Guest Transportation›
+pms_items:                 id, property_id, code, name (bebek yatağı, ek yatak, ütü), quantity_total,
+                           transaction_code_id FK null, price null                           ‹F: Miscellaneous Items / Inventory›
+pms_reservation_items:     id, reservation_id FK, item_id FK, quantity, date_from, date_to   — Stok kontrollü
+pms_guest_messages:        id, property_id, reservation_id FK, from_name, message TEXT,
+                           received_at, received_by, delivered_at null, delivered_by null,
+                           channel (desk/phone/sms/email)                                    ‹F: Messages›
+pms_wakeup_calls:          id, property_id, reservation_id FK, room_id FK, call_at,
+                           status (pending/done/failed/cancelled), source (manual/pbx), done_at null ‹F: Wake Up›
+pms_luggage:               id, property_id, reservation_id FK null, profile_id FK null, tag_number,
+                           pieces, location, stored_at, stored_by, released_at null, released_by null ‹F: Luggage›
+```
+
+### N6. Fiyat yönetimi ekleri
+```
+pms_day_types:             id, property_id, code, name, color                                ‹F: Day Types›
+pms_day_type_calendar:     id, property_id, date, day_type_id FK                    UQ(property_id, date) ‹F: Day Types Calendar›
+pms_turnaways:             id, property_id, business_date, arrival_date, nights, room_type_id FK null,
+                           rate_code_id FK null, persons, reason_code_id FK, profile_id null,
+                           source_code_id null, created_by, created_at                       ‹F: Turnaway Reasons› — Kaçan talep
+pms_overbooking_limits:    id, property_id, room_type_id FK null (null = tüm otel), date,
+                           limit SMALLINT, created_by                    UQ(property_id, room_type_id, date) ‹F: Overbooking›
+```
+
+### N7. Oda ve kat hizmetleri ekleri
+```
+pms_room_components:       id, suite_room_id FK, component_room_id FK                         ‹F: Virtual Suite Config›
+                           — Bağlantılı odaların suit olarak satılması; suit satılınca bileşen odalar envanterden düşer
+pms_service_requests:      id, property_id, room_id FK, reservation_id FK null, category (maintenance/housekeeping/guest_request),
+                           description, priority, status (open/in_progress/resolved/cancelled),
+                           sets_room_status (ooo/oos/null), photo_path null, rsone_task_id null,
+                           reported_by, resolved_by null, resolved_at null, timestamps        ‹F: Maintenance›
+pms_key_cards:             id, property_id, reservation_id FK, room_id FK, card_count, issued_at,
+                           valid_until, issued_by, encoder null, cancelled_at null            ‹F: Key interface›
+pms_virtual_numbers:       id, property_id, number VARCHAR(10), is_active                     ‹F: Virtual Number Setup›
+pms_virtual_number_assignments: id, virtual_number_id FK, reservation_id FK, assigned_at,
+                           released_at null, is_active                                       ‹F: PRO_ISV_VIRTUALNUMBERS›
+```
+
+### N8. Yönetim
+```
+pms_budgets:               id, property_id, date, metric (rooms_sold/occupancy/adr/room_revenue/fnb_revenue/...),
+                           dimension (total/market_segment/room_type), dimension_key, value     ‹F: Budget›
+pms_manual_statistics:     id, property_id, business_date, code, name, value, created_by     ‹F: Manual Statistics›
+pms_logbook_entries:       id, property_id, business_date, department, category, entry TEXT,
+                           is_important, created_by, created_at, read_by JSON                ‹F: Logbook› — Vardiya defteri
+pms_marketing_codes:       id, property_id, code, name, group                                ‹F: Marketing Info›
+pms_profile_marketing_codes: profile_id FK, marketing_code_id FK                  PK(profile_id, marketing_code_id)
+pms_attachments:           id, property_id, attachable_type, attachable_id, file_path, file_name,
+                           mime, size, uploaded_by, created_at                               ‹F: Linked Documents›
+```
+
+---
+
 ## 3.1 Ana ilişkiler
 
 ```mermaid
@@ -1028,7 +1182,7 @@ erDiagram
 | A. Çekirdek (`users` dahil) | 15 |
 | B. Envanter | 10 |
 | C. Kodlar | 7 |
-| D. Profiller | 10 |
+| D. Profiller (not tabloları genelleştirildi, üyelik tipi eklendi) | 12 |
 | E. Fiyat, müsaitlik, promosyon, indirim | 20 |
 | F. Rezervasyon | 14 |
 | G. Kasa | 12 |
@@ -1038,7 +1192,8 @@ erDiagram
 | K. Simphony | 8 |
 | L. Logo | 3 |
 | M. Entegrasyon | 5 |
-| **Toplam** | **121** |
+| N. Suite8 işlev kapsamı (N1–N8) | 40 |
+| **Toplam** | **163** |
 
 ## 3.3 Raporlama view'ları (Fidelio PRO_ISV düzeninde)
 
