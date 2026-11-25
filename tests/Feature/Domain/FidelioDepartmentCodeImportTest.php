@@ -65,4 +65,24 @@ class FidelioDepartmentCodeImportTest extends DomainTestCase
         $this->assertSame('95', DB::table('pms_transaction_code_groups')->where('id', $code('966')->group_id)->value('code'));
         $this->assertFalse((bool) $code('957')->manual_post_allowed);
     }
+
+    public function test_seeded_codes_carry_rocks_tax_rules(): void
+    {
+        $taxOf = fn (string $no) => DB::table('pms_transaction_code_taxes as l')->join('pms_taxes as t', 't.id', '=', 'l.tax_id')
+            ->where('l.transaction_code_id', $this->code($no))->pluck('t.code')->all();
+
+        $this->assertSame(['VAT5'], $taxOf('100'));     // Fidelio: 100 Room → VAT 5 %
+        $this->assertSame(['VAT5'], $taxOf('107'));     // Fidelio: 107 Room Supplement → VAT 5 %
+        $this->assertSame(['VAT5'], $taxOf('320'));
+        $this->assertSame(['VAT5'], $taxOf('513'));     // spa — teyit edilecek
+        $this->assertSame(['VAT0'], $taxOf('580'));     // "Others %0"
+        $this->assertSame(['VAT16'], $taxOf('553'));    // "DISC Others %16"
+        $this->assertSame(['VAT20'], $taxOf('555'));    // "Others %20"
+        $this->assertSame([], $taxOf('550'));           // kur farkı
+        $this->assertSame([], $taxOf('900'));           // ödeme
+        $this->assertSame([], $taxOf('800'));           // paid-out
+        $this->assertSame(0, DB::table('pms_transaction_codes as tc')->where('tc.property_id', $this->property)->where('tc.type', 'revenue')
+            ->whereNotIn('tc.code', ['550', '551', '880'])
+            ->whereNotExists(fn ($q) => $q->from('pms_transaction_code_taxes as l')->whereColumn('l.transaction_code_id', 'tc.id'))->count());
+    }
 }

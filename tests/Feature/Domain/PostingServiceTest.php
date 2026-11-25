@@ -19,6 +19,7 @@ class PostingServiceTest extends DomainTestCase
         parent::setUp();
         $this->postings = app(PostingService::class);
         $vat = DB::table('pms_taxes')->insertGetId(['property_id' => $this->property, 'code' => 'KDV', 'name' => 'KDV', 'rate' => 10]);
+        DB::table('pms_transaction_code_taxes')->where('transaction_code_id', $this->code('100'))->delete();   // seeder'ın %5'i yerine bu testin %10'u
         DB::table('pms_transaction_code_taxes')->insert(['transaction_code_id' => $this->code('100'), 'tax_id' => $vat]);
         $res = $this->reservation($this->roomType(), $this->rateCode(), '2026-12-01', 2, 'in_house');
         $this->folio = Folio::create(['property_id' => $this->property, 'folio_number' => 'F-1', 'reservation_id' => $res, 'window' => 1, 'opened_business_date' => '2026-12-01']);

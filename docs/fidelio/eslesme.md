@@ -292,3 +292,25 @@ Sonuçlar:
 - Pansiyon (110 kahvaltı, 130 akşam yemeği) oda fiyatından ayrılan paket elemanları — tasarımdaki `pms_package_elements` ile birebir.
 - **Kur farkı (550)** ayrı gelir kodu: dövizle ödemede kayıt kuru ile ödeme kuru arasındaki fark otomatik bu koda yazılmalı **(Ö)**.
 - Casino ayrı no-show kodu (115) ve outlet'i var: casino misafirleri ayrı izleniyor.
+
+## §16 Departman kodu → vergi (Rocks Hotel)
+
+Fidelio'da vergi, her departman kodunun düzenleme penceresinde **tarihli** olarak tanımlıdır (Department Codes → Edit → "Tax":
+`1.01.2001 – … VAT 5 %`). Görülen örnekler: 100 Room ve 107 Room Supplement → VAT 5 %. Tax Definition ekranı yalnız vergi
+departmanlarını (TX0–TX5) listeler, kod bağlantısı yoktur. Veritabanı sorgusu çalıştırılamadığı için otelin kararıyla:
+
+| Kodlar | Vergi | Durum |
+|---|---|---|
+| Bütün gelir kodları | VAT5 (%5) | Otel kararı |
+| 552–554 "Others %16" | VAT16 | Addan |
+| 555–557 "Others %20" | VAT20 | Addan |
+| 580–582 "Others %0" | VAT0 | Addan |
+| Spa (513–515, 526–528, 547–549), Kuaför (640–642), Çamaşırhane (510–512) | VAT5 | **Teyit edilecek** — farklı olabilir |
+| 560–561 "VAT Discount %3 / %13", 780–782 paket farkları, 798 Deposit Retain | VAT5 | **Teyit edilecek** |
+| 550–551 kur farkı, 880 Exchange Rate Difference, ödeme / paid-out / iç / depozito kodları | Vergisiz | — |
+
+Departman kodu penceresindeki diğer alanlar (RS PMS'e taşınacak): Folio Text, Type (Debit/Credit), Group (ör. "10 Room Revenue (3)"),
+Arrangement (ör. ACC Accommodation Expense), Government Code, Allow Manual Post, Return Dep., Unit Description, Default Price(s),
+Physical Origin, Disabled (in Prearrival / in Billing / in AR / in Payments), Payment Type, Foreign Currency, Direct Debit Payment, Paidout,
+Non-Hotel Revenue, CC Commission + yüzde, Statistic type (ör. Logis), Credit Limit, Folio Subfunction, **Adjustment Dept** (indirim kodu,
+ör. 100 → 102, 107 → 108), Open Cash Drawer, Hostess Enabled, Post Tax Only.

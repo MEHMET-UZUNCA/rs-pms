@@ -143,6 +143,24 @@ class RocksHotelReferenceSeeder extends Seeder
             }
         }
 
+        // Departman kodu → vergi. Fidelio'da her kodun penceresinde tarihli vergi var (ör. 100 Room, 107 Room Supplement:
+        // "1.01.2001 – … VAT 5 %"). Kodların tamamı tek tek alınamadığı için otelin kararıyla: bütün gelir kodları %5;
+        // adında oran yazan kodlar ("Others %0", "Others %16", "Others %20") o oranla. Spa, kuaför ve çamaşırhane kodları da %5
+        // verildi, teyit edilecek (docs/fidelio/eslesme.md). Gelir dışı kodlar (ödeme, paid-out, iç, depozito, kur farkı) vergisizdir.
+        // Daha önce vergisi bağlanmış koda dokunulmaz (ekrandan yapılan değişiklik korunur).
+        $taxIds = DB::table('pms_taxes')->where('property_id', $propertyId)->whereNull('valid_to')->pluck('id', 'code');
+        $byName = ['552' => 'VAT16', '553' => 'VAT16', '554' => 'VAT16', '555' => 'VAT20', '556' => 'VAT20', '557' => 'VAT20',
+            '580' => 'VAT0', '581' => 'VAT0', '582' => 'VAT0'];
+        $untaxed = ['550', '551', '880'];   // kur farkı
+        $linked = DB::table('pms_transaction_code_taxes')->pluck('transaction_code_id')->all();
+        $revenue = DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('type', 'revenue')
+            ->whereNotIn('code', $untaxed)->whereNotIn('id', $linked)->get(['id', 'code']);
+        foreach ($revenue as $code) {
+            DB::table('pms_transaction_code_taxes')->insert([
+                'transaction_code_id' => $code->id, 'tax_id' => $taxIds[$byName[$code->code] ?? 'VAT5'], 'sequence' => 1, 'calc_base' => 'net',
+            ]);
+        }
+
         DB::table('pms_properties')->where('id', $propertyId)->update([
             'exchange_diff_transaction_code_id' => DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('code', '550')->value('id'),
         ]);
