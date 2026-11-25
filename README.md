@@ -22,7 +22,7 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 
 | Konu | Karar |
 |---|---|
-| Veritabanı tasarımı | 115 tablo, `pms_` öneki — **onaylandı** |
+| Veritabanı tasarımı | 121 tablo + 7 raporlama view'ı, `pms_` öneki; Fidelio view'larına göre düzenlendi — **onaylandı** |
 | Muhasebe | Logo **Tiger** |
 | POS | Oracle **Simphony 18**; bugün kayıtlar IFC8, oda sorguları doğrudan Fidelio'ya — hedef: ikisi de RS PMS'e |
 | Kimlik bildirimi (KBS) | Şu an yok; tablo tasarımda hazır, sonraya bırakıldı |
