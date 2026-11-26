@@ -178,6 +178,13 @@ Misafir: soyadla var olan profil aranır ya da yeni misafir yazılır. Tarih kut
 Oda listesi seçili oda tipine göre süzülür ve odanın durumunu gösterir (Vacant / Dirty …). `F10` kaydet, `Esc` kapat.
 Kayıt rezervasyon servisinden geçer: onay numarası, gece fiyatları (elle fiyat korunur), müsaitlik, oda çakışması ve arıza kontrolü.
 
+### Folyo — Billing (yapıldı)
+
+Navigatörde `Alt+B` (Billing düğmesi) seçili rezervasyonun ya da rezervasyonsuz hesabın (FA) folyosunu açar. Pencereler `Alt+1 … Alt+8`
+(pencere ilk kayıtta açılır). `Alt+P` kayıt (departman kodu, birim fiyat KDV dahil, adet, açıklama), `Alt+Y` ödeme (tutar pencere bakiyesiyle
+dolu gelir), `Alt+R` düzeltme (ters kayıt; bir kayıt bir kez), `Alt+T` seçili kaydı başka pencereye transfer, `Alt+O` check-out (bakiye sıfır
+olmalı). Düzeltmeler varsayılan gizli, "Show corrections" ile görünür. Elle kayda kapalı kodlar (Allow Manual Post / Disabled in Billing) kullanılamaz.
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.

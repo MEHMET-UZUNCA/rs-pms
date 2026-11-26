@@ -97,6 +97,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/09-rezervasyon-karti-02-kaydedildi.png` | `F10` ile kaydedildi: onay no, oda, gece fiyatı ve toplam |
 | `goruntuler/09-rezervasyon-karti-03-gece-fiyatlari.png` | `Ctrl+5` gece gece fiyat (Rate Grid) |
 
+## 10 — Folyo (Billing, gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/10-folyo-01-pencere-1-kayit.png` | Navigatörde `Alt+B` → folyo; 8 pencere, `Alt+P` kayıt (510 ×2, %16 KDV), ödeme, düzeltme, transfer, check-out |
+| `goruntuler/10-folyo-02-transfer-pencere-2.png` | Seçili kayıt `Alt+T` ile 2. pencereye aktarıldı (`Alt+2`) |
+
 ## Taslakları yerelde açmak
 
 ```bash

@@ -45,7 +45,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 1. ~~Rezervasyon Kartı~~ yapıldı (Ctrl+1, 3, 5, 9) — kalan sekmeler: Ctrl+2 envanter, Ctrl+4 paketler, Ctrl+6 özellikler, Ctrl+7 kredi kartı, Ctrl+8 sabit ücretler, Ctrl+0 yemek planı; iptal ve paylaşım (share)
 2. ~~Simphony dinleyicisi (Enhanced protokol)~~ yapıldı — kalan: SPH.XML'den satış kalemi eşlemeleri, oda dışı ödemelerin FA'ya yazılması, Simphony'de ikinci arayüz kaydı (#102) ile canlı deneme
-3. Folyo (Billing) ekranı
+3. ~~Folyo (Billing) ekranı~~ yapıldı — kalan: fatura kesme ve yazdırma, folyo bölme (split), yönlendirme kuralları (routing), kasiyer vardiyası, döviz ile ödeme, ödünç/depozito
 4. Vergiler (Tax Details) ekranı ve Departman Kodu Grupları ekranı
 5. Oda Planı (Room Rack)
 6. Gece kapanışı ekranı

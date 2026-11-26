@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
@@ -63,5 +64,16 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::put('/{code}', [TransactionCodeController::class, 'update'])->name('update');
         Route::delete('/{code}', [TransactionCodeController::class, 'destroy'])->name('destroy');
         Route::post('/{code}/tasi/{direction}', [TransactionCodeController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
+    });
+
+    // Kasa → Folyo (Billing)
+    Route::middleware('permission:cashiering.billing')->prefix('folyo')->name('billing.')->group(function () {
+        Route::get('/rezervasyon/{reservation}', [BillingController::class, 'reservation'])->name('reservation');
+        Route::get('/hesap/{folio}', [BillingController::class, 'account'])->name('account');
+        Route::post('/kayit', [BillingController::class, 'post'])->middleware('permission:cashiering.post')->name('post');
+        Route::post('/odeme', [BillingController::class, 'payment'])->middleware('permission:cashiering.post')->name('payment');
+        Route::post('/kayit/{posting}/duzelt', [BillingController::class, 'correct'])->middleware('permission:cashiering.reverse')->name('correct');
+        Route::post('/kayit/{posting}/aktar', [BillingController::class, 'transfer'])->middleware('permission:cashiering.post')->name('transfer');
+        Route::post('/rezervasyon/{reservation}/cikis', [BillingController::class, 'checkOut'])->middleware('permission:reservations.checkout')->name('check-out');
     });
 });

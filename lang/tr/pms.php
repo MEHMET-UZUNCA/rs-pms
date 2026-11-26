@@ -133,6 +133,20 @@ return [
         'no_profiles' => 'Bağlı şirket / acente profili yok.', 'prices_after_save' => 'Gece fiyatları rezervasyon kaydedilince hesaplanır.',
     ],
 
+    'billing' => [
+        'title' => 'Folyo', 'fa_title' => 'Folyo — :name', 'window' => ':n. pencere', 'empty_window' => 'Bu pencerede kayıt yok.',
+        'total_balance' => 'Toplam bakiye', 'balance' => 'Bakiye', 'date' => 'Tarih', 'code' => 'Kod', 'description' => 'Açıklama', 'qty' => 'Adet',
+        'amount' => 'Tutar', 'reference' => 'Referans', 'user' => 'Kullanıcı', 'reversed' => 'iptal edildi', 'show_reversed' => 'Düzeltmeleri göster',
+        'post' => 'Kayıt at', 'post_hint' => 'Departman kodu, tutar (KDV dahil), adet, açıklama', 'department_code' => 'Departman kodu',
+        'unit_price' => 'Birim fiyat', 'supplement' => 'Açıklama', 'post_button' => 'Kaydet', 'payment' => 'Ödeme', 'payment_code' => 'Ödeme tipi',
+        'pay_button' => 'Öde', 'correction' => 'Düzeltme', 'correction_confirm' => 'Seçili kayıt ters çevrilsin mi?', 'reason' => 'Sebep',
+        'transfer' => 'Transfer', 'to_window' => 'pencereye', 'check_out' => 'Çıkış', 'check_out_confirm' => 'Misafirin çıkışı yapılsın mı?',
+        'posted' => 'Kaydedildi: :code :name :amount', 'paid' => 'Ödeme alındı: :amount', 'reversed_ok' => 'Kayıt ters çevrildi.',
+        'transferred' => 'Kayıt :n. pencereye aktarıldı.', 'checked_out' => ':name çıkış yaptı.', 'unknown_code' => ':code departman kodu bulunamadı.',
+        'not_manual' => ':code departman koduna elle kayıt atılamaz.', 'guest' => 'Misafir', 'room' => 'Oda', 'stay' => 'Konaklama',
+        'rate' => 'Fiyat', 'closed' => 'Kapalı', 'net' => 'Net', 'tax' => 'Vergi',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
         'outlet_code_unique' => 'Bu kodla bir outlet zaten var.',

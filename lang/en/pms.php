@@ -133,6 +133,20 @@ return [
         'no_profiles' => 'No linked company / agent profile.', 'prices_after_save' => 'Nightly rates are calculated when the reservation is saved.',
     ],
 
+    'billing' => [
+        'title' => 'Billing', 'fa_title' => 'Billing — :name', 'window' => 'Window :n', 'empty_window' => 'No postings in this window.',
+        'total_balance' => 'Total balance', 'balance' => 'Balance', 'date' => 'Date', 'code' => 'Dept.', 'description' => 'Description', 'qty' => 'Qty',
+        'amount' => 'Amount', 'reference' => 'Reference', 'user' => 'User', 'reversed' => 'reversed', 'show_reversed' => 'Show corrections',
+        'post' => 'Posting', 'post_hint' => 'Department code, amount (gross, tax included), quantity, supplement', 'department_code' => 'Department code',
+        'unit_price' => 'Unit price', 'supplement' => 'Supplement', 'post_button' => 'Post', 'payment' => 'Payment', 'payment_code' => 'Payment type',
+        'pay_button' => 'Pay', 'correction' => 'Correction', 'correction_confirm' => 'Reverse the selected posting?', 'reason' => 'Reason',
+        'transfer' => 'Transfer', 'to_window' => 'to window', 'check_out' => 'Check Out', 'check_out_confirm' => 'Check out this guest?',
+        'posted' => 'Posted: :code :name :amount', 'paid' => 'Payment posted: :amount', 'reversed_ok' => 'Posting reversed.',
+        'transferred' => 'Posting transferred to window :n.', 'checked_out' => ':name checked out.', 'unknown_code' => 'Department code :code not found.',
+        'not_manual' => 'Department code :code is not allowed for manual posting.', 'guest' => 'Guest', 'room' => 'Room', 'stay' => 'Stay',
+        'rate' => 'Rate', 'closed' => 'Closed', 'net' => 'Net', 'tax' => 'Tax',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
         'outlet_code_unique' => 'An outlet with this code already exists.',

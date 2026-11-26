@@ -48,7 +48,8 @@
                         <thead><tr><th>{{ __('pms.res.fa_number') }}</th><th>{{ __('pms.common.name') }}</th><th>{{ __('pms.common.type') }}</th><th>{{ __('pms.res.validity') }}</th><th>{{ __('pms.res.status') }}</th><th class="text-right">{{ __('pms.common.balance') }}</th></tr></thead>
                         <tbody>
                         @foreach ($rows as $folio)
-                            <tr data-id="{{ $folio->id }}" data-url-detail="{{ route('reservations.folio-summary', $folio) }}">
+                            <tr data-id="{{ $folio->id }}" data-url-detail="{{ route('reservations.folio-summary', $folio) }}"
+                                @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.account', $folio) }}" data-url-edit="{{ route('billing.account', $folio) }}" @endcan>
                                 <td class="font-semibold">{{ $folio->folio_number }}</td><td>{{ $folio->name }}</td><td>{{ $folio->type }}</td>
                                 <td>{{ $folio->valid_from?->format('d.m.Y') }} – {{ $folio->valid_until?->format('d.m.Y') }}</td>
                                 <td>{{ $folio->status === 'open' ? __('pms.res.open') : __('pms.res.closed') }}</td>
@@ -67,6 +68,7 @@
                         <tbody>
                         @foreach ($rows as $r)
                             <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan
+                                @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
                                 <td class="font-semibold">{{ $r->room?->number }}</td>
@@ -108,7 +110,9 @@
                     <button class="btn btn-side" data-needs-selection="res-grid" data-action="checkin" data-hotkey="alt+g">{{ __('pms.res.check_in') }} <span class="kbd ml-auto">Alt+G</span></button>
                 </form>
             @endcan
-            <span class="btn btn-side opacity-40" title="{{ __('pms.menu.coming_soon') }}">{{ __('pms.res.folio') }}</span>
+            @can('permission', 'cashiering.billing')
+                <a class="btn btn-side" data-needs-selection="res-grid" data-action="billing" data-hotkey="alt+b">{{ __('pms.res.folio') }} <span class="kbd ml-auto">Alt+B</span></a>
+            @endcan
             <span class="btn btn-side opacity-40" title="{{ __('pms.menu.coming_soon') }}">{{ __('pms.res.cancel') }}</span>
             <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
