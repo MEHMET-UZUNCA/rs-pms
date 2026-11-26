@@ -41,6 +41,9 @@ return new class extends Migration
     {
         Schema::dropIfExists('pms_lost_found_actions');
         Schema::table('pms_lost_found', function (Blueprint $table) {
+            $table->index('property_id', 'pms_lost_found_property_id_only');   // MySQL: tesis bağlantısı bu indekse geçsin
+        });
+        Schema::table('pms_lost_found', function (Blueprint $table) {
             $table->dropIndex(['property_id', 'kind', 'status']);
             foreach (['group_id', 'public_place_id', 'matched_id', 'created_by'] as $fk) {
                 $table->dropConstrainedForeignId($fk);
