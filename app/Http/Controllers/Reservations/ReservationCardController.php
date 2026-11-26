@@ -181,6 +181,7 @@ class ReservationCardController extends Controller
             'firms' => Profile::where('property_id', $p)->whereIn('type', ['company', 'travel_agent', 'agent', 'source'])->orderBy('display_name')->get(['id', 'display_name', 'type']),
             'linked' => Profile::whereIn('id', array_filter([$reservation->company_profile_id, $reservation->agent_profile_id,
                 $reservation->source_profile_id, $reservation->group_profile_id]))->get(),
+            'boards' => DB::table('pms_packages')->where('property_id', $p)->where('type', 'board')->whereNull('deleted_at')->orderBy('id')->get(),
             'history' => $reservation->exists ? DB::table('pms_reservation_status_logs')->where('reservation_id', $reservation->id)->orderBy('id')->get() : collect(),
         ]);
     }

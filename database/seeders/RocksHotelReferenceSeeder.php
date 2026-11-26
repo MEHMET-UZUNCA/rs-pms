@@ -232,8 +232,11 @@ class RocksHotelReferenceSeeder extends Seeder
         }
 
         // Fiyat tanımları (Fidelio Rates, 26.11.2026). Pansiyon tipleri (Board type): No Board = paket yok.
-        foreach ([['BB', 'Breakfast'], ['HBD', 'Half Board Dinner'], ['HBL', 'Half Board Lunch'], ['FB', 'Full Board'], ['ALL', 'All Inclusive']] as $i => [$code, $name]) {
-            DB::table('pms_packages')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => 'board', 'updated_at' => now()]);
+        // Öğünler: B kahvaltı, L öğle, D akşam (Multiboard öğün sayıları buna göre)
+        foreach ([['BB', 'Breakfast', 1, 0, 0], ['HBD', 'Half Board Dinner', 1, 0, 1], ['HBL', 'Half Board Lunch', 1, 1, 0], ['FB', 'Full Board', 1, 1, 1],
+            ['ALL', 'All Inclusive', 1, 1, 1]] as [$code, $name, $b, $l, $d]) {
+            DB::table('pms_packages')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => 'board',
+                'includes_breakfast' => $b, 'includes_lunch' => $l, 'includes_dinner' => $d, 'updated_at' => now()]);
         }
         // Çocuk yaş kategorileri CA1, CA2 (yaş aralıkları otelden teyit edilecek)
         foreach ([[1, 0, 6, 'CA1'], [2, 7, 12, 'CA2']] as [$band, $from, $to, $name]) {

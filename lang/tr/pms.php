@@ -14,7 +14,7 @@ return [
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
         'rate_query' => 'Fiyat Sorgulama', 'block_reservation' => 'Blok / Allotman', 'arrivals' => 'Gelecekler', 'in_house' => 'İçeridekiler',
-        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'reservation_options' => 'Rezervasyon seçenekleri', 'exchange_rates' => 'Döviz kurları', 'rate_codes' => 'Fiyat kodları', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
+        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'reservation_options' => 'Rezervasyon seçenekleri', 'exchange_rates' => 'Döviz kurları', 'rate_codes' => 'Fiyat kodları', 'meal_plan' => 'Öğün sayıları', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
         'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Kat Hizmetleri',
         'attendants' => 'Görev Dağıtımı', 'discrepant_rooms' => 'Uyuşmazlıklar', 'profile_navigator' => 'Profil Navigatörü',
         'conference_diary' => 'Konferans Günlüğü', 'events' => 'Etkinlikler', 'night_audit' => 'Gece Kapanışı', 'logbook' => 'Vardiya Defteri',
@@ -344,5 +344,14 @@ return [
         'room_status' => 'Oda durumu', 'since' => 'Kuyruğa alınma', 'waiting' => 'Bekleme', 'minutes' => ':n dk', 'ready' => 'Hazır', 'not_ready' => 'Hazır değil',
         'no_room' => 'Oda atanmadı', 'empty' => 'Bekleyen misafir yok.', 'badge' => 'Kuyruk :total · hazır :ready',
         'added' => ':name kuyruğa alındı.', 'removed' => ':name kuyruktan çıkarıldı.', 'err_not_arrival' => 'Yalnız bugün gelecek misafirler kuyruğa alınabilir.',
+    ],
+
+    'meal' => [
+        'title' => 'Öğün sayıları (Meal Plan)', 'subtitle' => 'Multiboard: mutfak için gün gün öğün sayıları', 'days' => 'Gün', 'adults' => 'Yetişkin', 'children' => 'Çocuk', 'total' => 'Toplam',
+        'by_board' => 'Pansiyona göre oda-gece', 'room_nights' => 'Oda-gece', 'meals' => 'Öğünler', 'change' => 'Gecelerin pansiyonunu değiştir', 'apply' => 'Uygula',
+        'save_first' => 'Önce rezervasyonu kaydedin.', 'changed' => ':count gecenin pansiyonu değiştirildi.',
+        'price_hint' => 'Seçili gecelerin pansiyonu değişir (öğün sayıları buna göre). Oda fiyatı değişmez; pansiyon farkı varsa ayrıca kayıt atın.',
+        'rule_hint' => 'Giriş günü, çıkış günü ve günübirlik öğünleri Ayarlar → Rezervasyon seçenekleri (yemek planı varsayılanları) ile belirlenir.',
+        'err_status' => 'İptal, no-show ya da çıkış yapmış rezervasyonun pansiyonu değiştirilemez.', 'err_board' => 'Bilinmeyen pansiyon tipi.',
     ],
 ];

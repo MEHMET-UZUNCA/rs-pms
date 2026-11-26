@@ -181,6 +181,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 |---|---|
 | `goruntuler/21-queue-rooms.png` | Bekleyen misafir, oda durumu (hazır değil), bekleme süresi; üst çubukta kuyruk uyarısı |
 
+## 22 — Multiboard (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/22-multiboard-01-ogun-sayilari.png` | Öğün sayıları: gün gün kahvaltı / öğle / akşam, pansiyona göre oda-gece |
+| `goruntuler/22-multiboard-02-meal-plan-sekmesi.png` | Rezervasyon kartı Meal Plan (Ctrl+0): gece gece pansiyon, pansiyon değiştirme |
+
 ## Taslakları yerelde açmak
 
 ```bash

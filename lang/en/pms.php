@@ -14,7 +14,7 @@ return [
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
         'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
-        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'reservation_options' => 'Reservation Options', 'exchange_rates' => 'Exchange Rates', 'rate_codes' => 'Rates', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'reservation_options' => 'Reservation Options', 'exchange_rates' => 'Exchange Rates', 'rate_codes' => 'Rates', 'meal_plan' => 'Meal Plan Forecast', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
         'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Housekeeping',
         'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
         'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
@@ -344,5 +344,14 @@ return [
         'room_status' => 'Room status', 'since' => 'In queue since', 'waiting' => 'Waiting', 'minutes' => ':n min', 'ready' => 'Ready', 'not_ready' => 'Not ready',
         'no_room' => 'No room assigned', 'empty' => 'No guests waiting.', 'badge' => 'Queue :total · ready :ready',
         'added' => ':name added to the queue.', 'removed' => ':name removed from the queue.', 'err_not_arrival' => 'Only today\'s expected arrivals can be queued.',
+    ],
+
+    'meal' => [
+        'title' => 'Meal Plan Forecast', 'subtitle' => 'Multiboard: meals per day for the kitchen', 'days' => 'Days', 'adults' => 'Adults', 'children' => 'Children', 'total' => 'Total',
+        'by_board' => 'Room nights by board', 'room_nights' => 'Room nights', 'meals' => 'Meals', 'change' => 'Change board for nights', 'apply' => 'Apply',
+        'save_first' => 'Save the reservation first.', 'changed' => 'Board changed for :count nights.',
+        'price_hint' => 'The board of the selected nights changes (meal counts follow). The room price does not change; post a supplement if the board costs more.',
+        'rule_hint' => 'Arrival day, departure day and day use meals follow Setup → Reservation Options (Meal Plan defaults).',
+        'err_status' => 'The board of a cancelled, no-show or checked-out reservation cannot be changed.', 'err_board' => 'Unknown board type.',
     ],
 ];

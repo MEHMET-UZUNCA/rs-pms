@@ -321,7 +321,7 @@ class ReservationService
             ReservationNight::create([
                 'reservation_id' => $reservation->id, 'property_id' => $reservation->property_id, 'stay_date' => $day->toDateString(),
                 'room_type_id' => $reservation->room_type_id, 'charge_room_type_id' => $reservation->charge_room_type_id, 'room_id' => $reservation->room_id,
-                'rate_code_id' => $rateCode->id, 'adults' => $reservation->adults, 'children' => $children,
+                'rate_code_id' => $rateCode->id, 'package_id' => $rateCode->package_id, 'adults' => $reservation->adults, 'children' => $children,
                 'free_children' => (int) $reservation->free_children, 'child_band_1' => (int) ($bands[1] ?? 0), 'child_band_2' => (int) ($bands[2] ?? 0), 'child_band_3' => (int) ($bands[3] ?? 0),
                 'amount' => $amount, 'net_amount' => $net, 'package_amount' => $quote->packageAmount,
                 'package_included_amount' => $rateCode->package?->is_included_in_rate ? $quote->packageAmount : 0,

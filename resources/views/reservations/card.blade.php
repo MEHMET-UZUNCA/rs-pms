@@ -162,7 +162,39 @@
             @endif
         </section>
 
-        @foreach (['inventory', 'packages', 'features', 'credit_card', 'fixed_charges', 'meal_plan'] as $tab)
+        <section data-tab-panel="meal_plan" class="p-3 flex flex-col gap-3" hidden>
+            @if ($new)
+                <p class="text-muted">{{ __('pms.meal.save_first') }}</p>
+            @else
+                @php $nights = $r->nightRows->where('status', '!=', 'cancelled')->sortBy('stay_date'); @endphp
+                <table class="grid-table max-w-2xl" data-meal-plan>
+                    <thead><tr><th>{{ __('pms.common.date') }}</th><th>{{ __('pms.res.rate_code') }}</th><th>{{ __('pms.rates.board') }}</th><th>{{ __('pms.meal.meals') }}</th></tr></thead>
+                    <tbody>
+                    @foreach ($nights as $n)
+                        @php $b = $boards->firstWhere('id', $n->package_id); @endphp
+                        <tr><td>{{ $n->stay_date->format('d.m.Y D') }}</td><td>{{ $n->rateCode?->code }}</td>
+                            <td class="font-semibold">{{ $b ? $b->code.' - '.$b->name : __('pms.rates.no_board') }}</td>
+                            <td class="text-[12px]">{{ $b ? collect(['breakfast', 'lunch', 'dinner'])->filter(fn ($m) => $b->{'includes_'.$m})->map(fn ($m) => __('pms.options.meals.'.$m))->implode(', ') : '—' }}</td></tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                @unless ($locked)
+                    <div class="flex flex-wrap items-end gap-2 rounded border border-line p-2 max-w-2xl">
+                        <b class="w-full">{{ __('pms.meal.change') }}</b>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.ooo.from') }}</span>
+                            <select name="from" form="board-form" class="input">@foreach ($nights as $n)<option value="{{ $n->stay_date->toDateString() }}">{{ $n->stay_date->format('d.m.Y') }}</option>@endforeach</select></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.ooo.to') }}</span>
+                            <select name="to" form="board-form" class="input">@foreach ($nights as $n)<option value="{{ $n->stay_date->toDateString() }}" @selected($loop->last)>{{ $n->stay_date->format('d.m.Y') }}</option>@endforeach</select></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.rates.board') }}</span>
+                            <select name="package_id" form="board-form" class="input"><option value="">{{ __('pms.rates.no_board') }}</option>@foreach ($boards as $b)<option value="{{ $b->id }}">{{ $b->code }} - {{ $b->name }}</option>@endforeach</select></label>
+                        <button form="board-form" class="btn btn-primary">{{ __('pms.meal.apply') }}</button>
+                        <p class="w-full text-[12px] text-muted">{{ __('pms.meal.price_hint') }}</p>
+                    </div>
+                @endunless
+            @endif
+        </section>
+
+        @foreach (['inventory', 'packages', 'features', 'credit_card', 'fixed_charges'] as $tab)
             <section data-tab-panel="{{ $tab }}" class="p-3" hidden><p class="text-muted">{{ __('pms.card.not_yet') }}</p></section>
         @endforeach
     </div>
@@ -174,4 +206,7 @@
         <a href="{{ route('reservations.navigator', $new ? [] : ['secili' => $r->id, 'no' => $r->confirmation_number]) }}" @class(['btn', 'ml-auto' => $locked]) data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd">Esc</span></a>
     </div>
 </form>
+@unless ($new)
+    <form method="POST" action="{{ route('reservations.board', $r) }}" id="board-form" hidden>@csrf</form>
+@endunless
 @endsection

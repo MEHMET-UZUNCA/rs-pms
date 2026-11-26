@@ -22,6 +22,7 @@ class Menu
                 ['block_reservation', null], ['group_reservation', null],
                 ['financial_accounts', $can('reservations.view') ? route('reservations.navigator', ['f' => 'fa']) : null],
                 ['quick_reservation', null],
+                ['meal_plan', $can('reservations.view') ? route('meal-plan.forecast') : null],
             ],
             'front_office' => [
                 ['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null],

@@ -13,6 +13,7 @@ use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
+use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\ExchangeRateController;
@@ -100,6 +101,10 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Rooms Management → House Status (Ctrl+H)
     Route::get('/house-status', HouseStatusController::class)->name('front-office.house-status');
+
+    // Multiboard: pansiyon değişikliği ve öğün sayıları
+    Route::post('/rezervasyon/{reservation}/pansiyon', [MealPlanController::class, 'change'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.board');
+    Route::get('/ogun-sayilari', [MealPlanController::class, 'forecast'])->middleware('permission:reservations.view')->name('meal-plan.forecast');
 
     // Front Desk → Queue Rooms
     Route::middleware('permission:reservations.view')->group(function () {

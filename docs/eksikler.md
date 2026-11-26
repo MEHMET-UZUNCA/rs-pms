@@ -91,4 +91,4 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 7. Logo aktarımı
 8. Fidelio veri aktarımı (PROISV)
 9. Rapor ekranı (Miscellaneous → Reports) — başlangıç seti docs/10-raporlar.md'de (ön büro, oda/kat hizmetleri, doluluk, finans; 19 rapor)
-10. Multiboard (çoklu pansiyon: RO / BB / HB / FB / AI aynı otelde) — altyapı var (pms_packages board tipleri, fiyat kodu → pansiyon, gece kapanışında pansiyon elemanları ayrı kodlara); kalan: rezervasyonda gece bazında pansiyon ve pansiyon değişikliği, kartta Meal Plan sekmesi, mutfak için günlük öğün sayıları raporu, otelin sattığı pansiyon tipleri ve fiyat kodları bekleniyor
+10. ~~Multiboard~~ yapıldı (gece bazında pansiyon, Meal Plan sekmesi, öğün sayıları) — kalan: pansiyon değişikliğinde fiyat farkının otomatik kaydı, pansiyon paketlerinin tutarları (Package Link Header: kahvaltı / akşam yemeği tutarı), otelin sattığı pansiyonların teyidi (AI var mı?)
