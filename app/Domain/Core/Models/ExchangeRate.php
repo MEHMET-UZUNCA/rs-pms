@@ -19,6 +19,10 @@ class ExchangeRate extends Model
             'posting_rate' => 'decimal:8',
             'buy_rate' => 'decimal:8',
             'sell_rate' => 'decimal:8',
+            'cash_buy_rate' => 'decimal:8',
+            'cash_sell_rate' => 'decimal:8',
+            'cash_rate' => 'decimal:8',
+            'ratecode_rate' => 'decimal:8',
         ];
     }
 }

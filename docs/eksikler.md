@@ -61,6 +61,12 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 - Check-out'ta oda Dirty olur, oda değişikliğinde eski oda Dirty olur — uygulama böyle; otel "emin değilim" dedi, Fidelio'daki davranış teyit edilecek.
 - Kat görevlisi görev dağıtımı ekranı.
 
+## Döviz kurları
+
+- KKTC Merkez Bankası (mb.gov.ct.tr/kur/gunluk.xml) geliştirme ortamından erişilemedi (yurt dışı IP'lere kapalı görünüyor); otel sunucusunda denenecek. Okuyucu Türkçe etiketleri (Sembol, Birim, Doviz_Alis, Efektif_Satis …) tanıyor; gerçek dosyadan bir örnek alınınca test eklenecek. O zamana kadar kaynak TCMB.
+- Fidelio'daki EUP (Pay Euro), USP (Pay US Dollar), UST (USD Travel Agency Curr.) ayrı kurlu sözde dövizler; kullanılıyorsa para birimi olarak açılıp kuralda bankadaki karşılığı (EUR/USD) seçilir.
+- Sunucuda zamanlayıcı için cron gerekli: `* * * * * cd /var/www/rs-pms && php artisan schedule:run`.
+
 ## Onay mektubu
 
 - Şablondaki üç yazım düzeltmesi ("Reservation Number", "Booked By", "Giriş Saati") otel tarafından onaylandı.

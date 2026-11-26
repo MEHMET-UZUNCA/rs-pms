@@ -139,6 +139,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/15-kisayollar-01-ekran.png` | F1: genel kısayollar ve ekranlara özel tuşlar |
 | `goruntuler/15-kisayollar-02-menu.png` | Quick Keys menüsü; henüz olmayan ekranlar soluk |
 
+## 16 — Döviz kurları (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/16-doviz-kurlari-01-liste.png` | TCMB'den çekilen günün kurları; Rate / Cash Rate (−%5) / Ratecode Rate, banka kurları, kaynak seçimi, Alt+F şimdi çek |
+| `goruntuler/16-doviz-kurlari-02-kural.png` | Döviz kuralı: dayanak kur, kâr payları, otomatik güncelleme ve elle kur |
+
 ## Taslakları yerelde açmak
 
 ```bash

@@ -11,6 +11,7 @@ use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
+use App\Http\Controllers\Setup\ExchangeRateController;
 use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
@@ -94,6 +95,15 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/', [FinancialAccountController::class, 'store'])->name('store');
         Route::get('/{folio}/duzenle', [FinancialAccountController::class, 'edit'])->name('edit');
         Route::put('/{folio}', [FinancialAccountController::class, 'update'])->name('update');
+    });
+
+    // Ayarlar → Kasa → Döviz kurları (Fidelio Exchange Rates)
+    Route::middleware('permission:setup.exchange_rates')->prefix('ayarlar/doviz-kurlari')->name('setup.exchange.')->group(function () {
+        Route::get('/', [ExchangeRateController::class, 'index'])->name('index');
+        Route::post('/cek', [ExchangeRateController::class, 'fetch'])->name('fetch');
+        Route::put('/kaynak', [ExchangeRateController::class, 'source'])->name('source');
+        Route::get('/{currency}/duzenle', [ExchangeRateController::class, 'edit'])->where('currency', '[A-Z]{3}')->name('edit');
+        Route::put('/{currency}', [ExchangeRateController::class, 'update'])->where('currency', '[A-Z]{3}')->name('update');
     });
 
     // Ayarlar → Rezervasyon seçenekleri (Fidelio Global Settings → Reservation)

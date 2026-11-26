@@ -224,6 +224,13 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_hk_status_codes')->updateOrInsert(['property_id' => $propertyId, 'code' => $code],
                 ['name' => $name, 'kind' => $kind, 'maps_to' => $mapsTo, 'sort' => $i + 1, 'is_active' => true, 'updated_at' => now()]);
         }
+        // Döviz kuru kuralları (Fidelio Exchange Rates, 26.11.2026): Rate = TCMB döviz satış, Cash Rate = Rate − %5, Ratecode Rate = Rate.
+        // Ekrandan değiştirilen kurala dokunulmaz.
+        foreach (['EUR', 'USD', 'GBP', 'CHF', 'SEK', 'CAD', 'NOK', 'JPY', 'SAR', 'KWD', 'AUD', 'DKK'] as $currency) {
+            DB::table('pms_exchange_rate_rules')->insertOrIgnore(['property_id' => $propertyId, 'currency_code' => $currency, 'base' => 'forex_sell',
+                'rate_margin_pct' => 0, 'cash_margin_pct' => -5, 'ratecode_margin_pct' => 0, 'is_auto' => true, 'created_at' => now(), 'updated_at' => now()]);
+        }
+
         // OOO / OOS sebepleri — Fidelio "Room Status Reason" listesi gelince değiştirilecek.
         foreach ([['OOO', 'Out of Order'], ['OOS', 'Out of Service']] as [$code, $name]) {
             DB::table('pms_reason_codes')->updateOrInsert(['property_id' => $propertyId, 'category' => 'room_status', 'code' => $code], ['name' => $name, 'is_active' => true, 'updated_at' => now()]);
@@ -239,7 +246,7 @@ class RocksHotelReferenceSeeder extends Seeder
             ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
             ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
             ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping'],
-            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup']] as [$code, $name, $group]) {
+            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -275,6 +282,11 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach (['SUP', 'IT1', 'FOM'] as $code) {
             if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
                 DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.options']]);
+            }
+        }
+        foreach (['SUP', 'IT1', 'FOM', 'ACC', 'AUD'] as $code) {
+            if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
+                DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.exchange_rates']]);
             }
         }
         // PM hesabı açma: ön büro yönetimi, gece müdürü ve muhasebe

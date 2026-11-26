@@ -43,6 +43,7 @@ class Menu
                 ['outlets', $can('setup.outlets') ? route('setup.outlets.index') : null],
                 ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null],
                 ['taxes', null],
+                ['exchange_rates', $can('setup.exchange_rates') ? route('setup.exchange.index') : null],
                 ['reservation_options', $can('setup.options') ? route('setup.options.reservation') : null],
                 ['users', $can('setup.users') ? route('setup.users.index') : null],
                 ['roles', $can('setup.users') ? route('setup.roles.index') : null],
