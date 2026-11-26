@@ -59,6 +59,12 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 - Fidelio "Room Status Reason" listesi (OOO/OOS sebepleri) — şimdilik yalnız "OOO" ve "OOS" genel sebepleri var.
 - Gece kapanışında dolu odaların "Dirty" yapılması (Fidelio ayarı teyit edilecek), kat görevlisi görev dağıtımı ekranı.
 
+## Onay mektubu
+
+- Şablondaki üç yazım hatası düzeltildi, otelle teyit edilecek: EN "Reservation Numarası" → "Reservation Number", EN "Reservationu Yapan" → "Booked By", TR "Check-In time" → "Giriş Saati". Şablondaki gibi istenirse lang/en/letter.php ve lang/tr/letter.php'den değiştirilir.
+- Yazı tipleri şablondaki gibi (Century Gothic, Century, Calibri, Times New Roman); Windows'ta birebir görünür, bu yazı tipleri olmayan bilgisayarda en yakın yazı tipi kullanılır.
+- Mektubun e-postayla gönderilmesi (SMTP bilgisi gerekir) sonraki adım; şimdilik yazdır / PDF'e kaydet.
+
 ## Yapılacak ekranlar ve işler (sırayla)
 
 1. ~~Rezervasyon Kartı~~ yapıldı (Ctrl+1, 3, 5, 9) — kalan sekmeler: Ctrl+2 envanter, Ctrl+4 paketler, Ctrl+6 özellikler, Ctrl+7 kredi kartı, Ctrl+8 sabit ücretler, Ctrl+0 yemek planı; iptal ve paylaşım (share)

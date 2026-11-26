@@ -88,6 +88,7 @@ return [
     ],
 
     'res' => [
+        'letter' => 'Confirmation Letter', 'print' => 'Print',
         'navigator' => 'Reservation Navigator', 'name' => 'Name', 'room' => 'Room', 'conf_no' => 'Conf. No.', 'company_agent' => 'Company / Agent',
         'arrival' => 'Arrival', 'departure' => 'Departure', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'All statuses',
         'guest' => 'Guest', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'status' => 'Status',

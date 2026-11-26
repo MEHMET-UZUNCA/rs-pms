@@ -118,6 +118,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/12-gece-kapanisi-01-kontroller.png` | Kapanış öncesi kontroller: çıkışı yapılmamış misafir (engeller), açık kasa, gelmeyen misafir (uyarı); amir onayı gerekçesi; adımlar |
 | `goruntuler/12-gece-kapanisi-02-tamamlandi.png` | Kapanış tamamlandı: yeni iş günü, son günün doluluk / ADR / RevPAR / gelir özeti ve departman kodu bazında gelir |
 
+## 13 — Onay Mektubu (Reservation Confirmation Letter, gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/13-onay-mektubu-en.png` | Navigatörde ya da rezervasyon kartında `Alt+L`; Confirmation_Letter_EN şablonu, alanlar rezervasyondan; `Ctrl+P` ile yazdır / PDF'e kaydet |
+| `goruntuler/13-onay-mektubu-tr.png` | Aynı mektup Türkçe (üst çubukta EN / TR; dil verilmezse misafir profilinin dili) |
+
 ## Taslakları yerelde açmak
 
 ```bash

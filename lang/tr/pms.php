@@ -88,6 +88,7 @@ return [
     ],
 
     'res' => [
+        'letter' => 'Onay Mektubu', 'print' => 'Yazdır',
         'navigator' => 'Rezervasyon Navigatörü', 'name' => 'Ad', 'room' => 'Oda', 'conf_no' => 'Rez. no', 'company_agent' => 'Şirket / Acente',
         'arrival' => 'Geliş', 'departure' => 'Çıkış', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'Tüm durumlar',
         'guest' => 'Misafir', 'nights' => 'Gece', 'room_type' => 'Tip', 'rate_code' => 'Fiyat kodu', 'pax' => 'Kişi', 'status' => 'Durum',

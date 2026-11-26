@@ -1,0 +1,33 @@
+<?php
+
+// Onay mektubu metinleri — Confirmation_Letter_TR.pdf şablonuyla aynı.
+return [
+    'title_1' => 'Reservation',
+    'title_2' => 'Confirmation Letter',
+    'hotel_line' => 'Rocks Hotel&Casino, Girne - Kordon Boyu, Girne - 9000 Girne',
+    'dear' => 'Sayın :name,',
+    'intro' => 'Sizleri Rocks Hotel & Casino’da ağırlayacak olmaktan büyük bir memnuniyet duyuyoruz. Rezervasyonunuz aşağıdaki bilgiler doğrultusunda onaylanmıştır:',
+    'guest_name' => 'Misafir Adı',
+    'reservation_number' => 'Rezervasyon Numarası',
+    'check_in_date' => 'Giriş Tarihi',
+    'check_out_date' => 'Çıkış Tarihi',
+    'length_of_stay' => 'Konaklama Süresi',
+    'room_type' => 'Oda Tipi',
+    'number_of_guests' => 'Kişi Sayısı',
+    'room_rate' => 'Gecelik Oda Fiyatı',
+    'per_night' => '',
+    'booked_by' => 'Rezervasyonu Yapan',
+    'special_requests' => 'Özel İstekler',
+    'nights' => ':count gece',
+    'adults' => ':count Yetişkin',
+    'children' => ':count Çocuk',
+    'infants' => ':count Bebek',
+    'guarantee_1' => 'Rezervasyonunuzun geçerlilik kazanması için, toplam konaklama bedelinin tamamının veya ilk gece ücretinin kredi kartı aracılığıyla ön ödeme olarak alınması gerekmektedir.',
+    'guarantee_2' => 'Bu işlem, rezervasyonunuzun garanti altına alınmasını sağlar. İadesiz (Non-Refundable) rezervasyonlarda iptal veya erken çıkış durumlarında ücret iadesi yapılmaz.',
+    'times' => 'Giriş Saati: 14:00 | Çıkış Saati: 12:00',
+    'relations' => 'Havaalanı transferi, özel yastık seçimi veya restoran rezervasyonu gibi talepleriniz için Misafir İlişkileri Ekibimizle iletişime geçebilirsiniz:',
+    'thanks' => 'Rocks Hotel & Casino’yu tercih ettiğiniz için teşekkür eder, sizi Kuzey Kıbrıs’ta ağırlamaktan onur duyarız. Keyifli bir yolculuk ve unutulmaz bir konaklama geçirmenizi dileriz.',
+    'regards' => 'Saygılarımızla,',
+    'department' => 'Rezervasyon Departmanı',
+    'signature' => 'Rocks Hotel & Casino – Girne',
+];

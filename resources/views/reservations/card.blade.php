@@ -169,6 +169,7 @@
 
     <div class="flex items-center gap-2 px-3 py-2 border-t border-line">
         <span class="text-[12px] text-muted">{{ $r->confirmation_number }}</span>
+        @unless ($new)<a href="{{ route('reservations.letter', $r) }}" class="btn" data-hotkey="alt+l">{{ __('pms.res.letter') }} <span class="kbd">Alt+L</span></a>@endunless
         @unless ($locked)<button class="btn btn-primary ml-auto" data-hotkey="f10 ctrl+enter">{{ __('pms.card.save') }} <span class="kbd !text-brand-100 !bg-transparent !border-brand-200">F10</span></button>@endunless
         <a href="{{ route('reservations.navigator', $new ? [] : ['secili' => $r->id, 'no' => $r->confirmation_number]) }}" @class(['btn', 'ml-auto' => $locked]) data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd">Esc</span></a>
     </div>

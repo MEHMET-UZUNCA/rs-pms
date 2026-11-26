@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Onay mektubu (Reservation Confirmation Letter): Rocks Hotel'in EN ve TR şablonlarıyla aynı A4 sayfa (başlık bandı, otel adres satırı, metinler, imza, alt bilgi); misafir adı, rezervasyon numarası, giriş/çıkış tarihi, gece sayısı, oda tipi, kişi sayısı, gecelik fiyat, acenta/şirket ve özel istekler rezervasyondan doldurulur. Navigatörde ve rezervasyon kartında Alt+L; dil EN/TR seçilebilir, verilmezse misafir profilinin dili. Tarayıcıdan yazdırılır ya da PDF'e kaydedilir. Metinler lang/en/letter.php ve lang/tr/letter.php'de. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Kat Hizmetleri ekranı (Fidelio Housekeeping): Fidelio kodları (INS, CL, DI, TU; DND, NL, SO, NS, DBL) yüklendi; oda listesi (blok/kat, Vacant/Occupied, temizlik durumu, işaret, OOO/OOS, misafir, bugün giriş/çıkış), sayaçlı süzgeçler (Alt+1…8), blok ve kat süzgeci, seçili odalara toplu durum ve işaret, OOO/OOS girişi ve kaldırma (dolu ya da atanmış odaya OOO girilmez, kaldırınca oda kirli), durum geçmişi. Yetkiler: housekeeping.view, housekeeping.status, housekeeping.outage. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Kullanıcı içe aktarma (pms:import-users): Fidelio kullanıcıları rastgele 12 karakterlik geçici şifre ve Fidelio grubuna karşılık gelen rolle açılır; şifreler kullanıcıların rol ve yetkileriyle birlikte depo dışındaki bir metin dosyasına yazılır (storage/app/private). İlk girişte şifre değiştirme zorunlu (en az 8 karakter, harf ve rakam, eskisinden farklı); kullanıcı adına tıklayarak şifre değiştirme. Kullanıcıya baş harfler ve unvan alanları. Testler SQLite ve MySQL'de geçti. (M.U)

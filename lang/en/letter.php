@@ -1,0 +1,33 @@
+<?php
+
+// Onay mektubu metinleri — Confirmation_Letter_EN.pdf şablonuyla aynı.
+return [
+    'title_1' => 'Reservation',
+    'title_2' => 'Confirmation Letter',
+    'hotel_line' => 'Rocks Hotel&Casino, Girne - Kordon Boyu, Girne - 9000 Girne',
+    'dear' => 'Dear :name,',
+    'intro' => 'We are delighted to welcome you to Rocks Hotel & Casino. Your reservation has been confirmed based on the following information:',
+    'guest_name' => 'Guest Name',
+    'reservation_number' => 'Reservation Number',
+    'check_in_date' => 'Check-in Date',
+    'check_out_date' => 'Check-out Date',
+    'length_of_stay' => 'Length of Stay',
+    'room_type' => 'Room Type',
+    'number_of_guests' => 'Number of Guests',
+    'room_rate' => 'Room Rate',
+    'per_night' => '(Per Night)',
+    'booked_by' => 'Booked By',
+    'special_requests' => 'Special Requests',
+    'nights' => '{1} :count night|[2,*] :count nights',
+    'adults' => '{1} :count Adult|[2,*] :count Adults',
+    'children' => '{1} :count Child|[2,*] :count Children',
+    'infants' => '{1} :count Infant|[2,*] :count Infants',
+    'guarantee_1' => 'In order for your reservation to be valid, the total cost of accommodation or the first night\'s fee must be paid in advance via credit card.',
+    'guarantee_2' => 'This ensures that your booking is guaranteed. For Non-Refundable reservations, cancellations or early departures are not eligible for refund.',
+    'times' => 'Check-in Time: 14:00 | Check-out Time: 12:00',
+    'relations' => 'For airport transfers, special pillow selections, or restaurant reservations, please contact our Guest Relations Team:',
+    'thanks' => 'Thank you for choosing Rocks Hotel & Casino. We are honored to host you in Northern Cyprus and wish you a pleasant journey and a memorable stay.',
+    'regards' => 'Kind Regards,',
+    'department' => 'Reservation Department',
+    'signature' => 'Rocks Hotel & Casino – Girne',
+];

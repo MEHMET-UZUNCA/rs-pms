@@ -7,6 +7,7 @@ use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
+use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\OutletController;
@@ -61,6 +62,7 @@ Route::middleware(['auth', 'property'])->group(function () {
             Route::put('/{reservation}', [ReservationCardController::class, 'update'])->whereNumber('reservation')->name('update');
         });
         Route::get('/{reservation}/ozet', [NavigatorController::class, 'summary'])->name('summary');
+        Route::get('/{reservation}/onay-mektubu', [ConfirmationLetterController::class, 'show'])->name('letter');
         Route::get('/hesap/{folio}/ozet', [NavigatorController::class, 'folioSummary'])->name('folio-summary');
         Route::post('/{reservation}/giris', [NavigatorController::class, 'checkIn'])->middleware('permission:reservations.checkin')->name('check-in');
     });
