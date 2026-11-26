@@ -252,7 +252,7 @@ class ReservationService
                 throw new ReservationException("Oda {$room->number} dolu.");
             }
 
-            $reservation->update(['status' => 'in_house', 'checked_in_at' => now(), 'checked_in_by' => $userId, 'check_in_business_date' => $today->toDateString()]);
+            $reservation->update(['status' => 'in_house', 'checked_in_at' => now(), 'checked_in_by' => $userId, 'check_in_business_date' => $today->toDateString(), 'queued_at' => null]);
             $room->update(['fo_status' => 'occupied', 'current_reservation_id' => $reservation->id]
                 + (($status = ReservationOptions::roomStatus($reservation->property_id, 'status_after_check_in')) ? ['hk_status' => $status, 'hk_status_changed_at' => now()] : []));
             if (! $reservation->folios()->where('window', 1)->exists()) {

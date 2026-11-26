@@ -34,6 +34,7 @@ class Reservation extends Model
             'option_date' => DateOnly::class,
             'checked_in_at' => 'datetime',
             'checked_out_at' => 'datetime',
+            'queued_at' => 'datetime',
             'check_in_business_date' => DateOnly::class,
             'check_out_business_date' => DateOnly::class,
             'is_room_locked' => 'boolean',

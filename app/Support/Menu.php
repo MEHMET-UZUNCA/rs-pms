@@ -27,7 +27,7 @@ class Menu
                 ['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null],
                 ['in_house', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null],
                 ['new_financial_account', $can('cashiering.accounts') ? route('accounts.create') : null],
-                ['queue_rooms', null],
+                ['queue_rooms', $can('reservations.view') ? route('queue.index') : null],
                 ['lost_found', $can('front_office.lost_found') ? route('lost-found.index') : null],
                 ['room_rack', $can('reservations.view') ? route('front-office.room-rack') : null],
             ],

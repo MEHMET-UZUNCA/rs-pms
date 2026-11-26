@@ -338,4 +338,11 @@ return [
         'source' => 'Kaynak', 'flag' => 'İşaret', 'move' => 'Değişiklik', 'now' => 'Şu an', 'fo' => ['vacant' => 'Boş', 'occupied' => 'Dolu'],
         'not_found' => ':room numaralı oda bulunamadı.', 'hint' => 'Oda numarası girin: kalan misafirler, durum değişiklikleri, arızalar ve oda değişiklikleri görünür.',
     ],
+
+    'queue' => [
+        'title' => 'Bekleyen odalar (Queue)', 'subtitle' => 'Gelmiş, odasını bekleyen misafirler', 'add' => 'Kuyruğa al', 'remove' => 'Kuyruktan çık', 'assign_room' => 'Oda ata',
+        'room_status' => 'Oda durumu', 'since' => 'Kuyruğa alınma', 'waiting' => 'Bekleme', 'minutes' => ':n dk', 'ready' => 'Hazır', 'not_ready' => 'Hazır değil',
+        'no_room' => 'Oda atanmadı', 'empty' => 'Bekleyen misafir yok.', 'badge' => 'Kuyruk :total · hazır :ready',
+        'added' => ':name kuyruğa alındı.', 'removed' => ':name kuyruktan çıkarıldı.', 'err_not_arrival' => 'Yalnız bugün gelecek misafirler kuyruğa alınabilir.',
+    ],
 ];

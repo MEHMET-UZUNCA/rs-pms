@@ -175,6 +175,12 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/20-rooms-02-room-history.png` | Room History: odada kalanlar, durum değişiklikleri, arızalar, oda değişiklikleri |
 | `goruntuler/20-rooms-03-housekeeping-durum-cubugu.png` | Housekeeping ekranının alt durum çubuğu (Fidelio gibi) |
 
+## 21 — Queue Rooms (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/21-queue-rooms.png` | Bekleyen misafir, oda durumu (hazır değil), bekleme süresi; üst çubukta kuyruk uyarısı |
+
 ## Taslakları yerelde açmak
 
 ```bash

@@ -16,6 +16,13 @@
     <header class="flex items-center gap-4 px-3 h-9 bg-brand-900 text-white shrink-0">
         <a href="{{ route('home') }}" class="font-semibold tracking-wide">{{ __('pms.app') }}</a>
         <span class="text-brand-200">{{ $currentProperty->name }}</span>
+        @if ($can('reservations.view') && (\App\Domain\Reservations\Support\ReservationOptions::get($currentProperty->id)['queue_rooms'] ?? false))
+            @php $queue = app(\App\Domain\Reservations\Services\QueueService::class)->counts($currentProperty->id); @endphp
+            @if ($queue['total'] > 0)
+                <a href="{{ route('queue.index') }}" data-queue-badge @class(['px-2 rounded text-[12px]', 'bg-ok text-white animate-pulse' => $queue['ready'] > 0, 'bg-brand-700 text-brand-100' => ! $queue['ready']])>
+                    {{ __('pms.queue.badge', ['total' => $queue['total'], 'ready' => $queue['ready']]) }}</a>
+            @endif
+        @endif
         <div class="ml-auto flex items-center gap-3 text-brand-100">
             <form method="POST" class="flex items-center gap-1" aria-label="{{ __('pms.language') }}">
                 @csrf

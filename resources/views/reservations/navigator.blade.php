@@ -70,6 +70,7 @@
                             <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan data-url-letter="{{ route('reservations.letter', $r) }}"
                                 @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
+                                @if (in_array($r->status, ['confirmed', 'tentative'], true) && $r->arrival_date?->isSameDay($businessDate) && ! $r->queued_at) data-url-queue="{{ route('queue.add', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
                                 <td class="font-semibold">{{ $r->room?->number }}</td>
                                 <td>{{ $r->profile?->display_name }}</td>
@@ -114,6 +115,10 @@
                     <button class="btn btn-side" data-needs-selection="res-grid" data-action="checkin" data-hotkey="alt+g">{{ __('pms.res.check_in') }} <span class="kbd ml-auto">Alt+G</span></button>
                 </form>
             @endcan
+            <form method="POST">
+                @csrf
+                <button class="btn btn-side w-full" data-needs-selection="res-grid" data-action="queue" data-hotkey="alt+q">{{ __('pms.queue.add') }} <span class="kbd ml-auto">Alt+Q</span></button>
+            </form>
             @can('permission', 'cashiering.billing')
                 <a class="btn btn-side" data-needs-selection="res-grid" data-action="billing" data-hotkey="alt+b">{{ __('pms.res.folio') }} <span class="kbd ml-auto">Alt+B</span></a>
             @endcan

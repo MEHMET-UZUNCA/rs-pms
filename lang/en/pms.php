@@ -338,4 +338,11 @@ return [
         'source' => 'Source', 'flag' => 'Flag', 'move' => 'Move', 'now' => 'Now', 'fo' => ['vacant' => 'Vacant', 'occupied' => 'Occupied'],
         'not_found' => 'Room :room not found.', 'hint' => 'Enter a room number to see its guests, status changes, out of order periods and room moves.',
     ],
+
+    'queue' => [
+        'title' => 'Queue Rooms', 'subtitle' => 'Arrived guests waiting for their room', 'add' => 'Queue', 'remove' => 'Unqueue', 'assign_room' => 'Assign room',
+        'room_status' => 'Room status', 'since' => 'In queue since', 'waiting' => 'Waiting', 'minutes' => ':n min', 'ready' => 'Ready', 'not_ready' => 'Not ready',
+        'no_room' => 'No room assigned', 'empty' => 'No guests waiting.', 'badge' => 'Queue :total · ready :ready',
+        'added' => ':name added to the queue.', 'removed' => ':name removed from the queue.', 'err_not_arrival' => 'Only today\'s expected arrivals can be queued.',
+    ],
 ];

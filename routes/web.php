@@ -6,6 +6,7 @@ use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
+use App\Http\Controllers\FrontOffice\QueueController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
@@ -99,6 +100,13 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Rooms Management → House Status (Ctrl+H)
     Route::get('/house-status', HouseStatusController::class)->name('front-office.house-status');
+
+    // Front Desk → Queue Rooms
+    Route::middleware('permission:reservations.view')->group(function () {
+        Route::get('/bekleyen-odalar', [QueueController::class, 'index'])->name('queue.index');
+        Route::post('/rezervasyon/{reservation}/kuyruk', [QueueController::class, 'add'])->whereNumber('reservation')->name('queue.add');
+        Route::delete('/rezervasyon/{reservation}/kuyruk', [QueueController::class, 'remove'])->whereNumber('reservation')->name('queue.remove');
+    });
 
     // Front Desk → Lost & Found
     Route::middleware('permission:front_office.lost_found')->prefix('kayip-esya')->name('lost-found.')->group(function () {
