@@ -57,11 +57,13 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 ## Kat hizmetleri
 
 - Fidelio "Room Status Reason" listesi (OOO/OOS sebepleri) — şimdilik yalnız "OOO" ve "OOS" genel sebepleri var.
-- Gece kapanışında dolu odaların "Dirty" yapılması (Fidelio ayarı teyit edilecek), kat görevlisi görev dağıtımı ekranı.
+- Gece kapanışı oda temizlik durumunu değiştirmez; durumu kat hizmetleri ya da resepsiyon değiştirir (otel bildirdi). Uygulama böyle çalışıyor.
+- Check-out'ta oda Dirty olur, oda değişikliğinde eski oda Dirty olur — uygulama böyle; otel "emin değilim" dedi, Fidelio'daki davranış teyit edilecek.
+- Kat görevlisi görev dağıtımı ekranı.
 
 ## Onay mektubu
 
-- Şablondaki üç yazım hatası düzeltildi, otelle teyit edilecek: EN "Reservation Numarası" → "Reservation Number", EN "Reservationu Yapan" → "Booked By", TR "Check-In time" → "Giriş Saati". Şablondaki gibi istenirse lang/en/letter.php ve lang/tr/letter.php'den değiştirilir.
+- Şablondaki üç yazım düzeltmesi ("Reservation Number", "Booked By", "Giriş Saati") otel tarafından onaylandı.
 - Yazı tipleri şablondaki gibi (Century Gothic, Century, Calibri, Times New Roman); Windows'ta birebir görünür, bu yazı tipleri olmayan bilgisayarda en yakın yazı tipi kullanılır.
 - Mektubun e-postayla gönderilmesi (SMTP bilgisi gerekir) sonraki adım; şimdilik yazdır / PDF'e kaydet.
 
