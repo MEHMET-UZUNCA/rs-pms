@@ -239,7 +239,7 @@ class RocksHotelReferenceSeeder extends Seeder
             ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
             ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
             ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping'],
-            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering']] as [$code, $name, $group]) {
+            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -270,6 +270,11 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach (['SUP', 'IT1'] as $code) {
             if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
                 DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.users']]);
+            }
+        }
+        foreach (['SUP', 'IT1', 'FOM'] as $code) {
+            if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
+                DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.options']]);
             }
         }
         // PM hesabı açma: ön büro yönetimi, gece müdürü ve muhasebe

@@ -12,6 +12,7 @@ use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Rates\Services\RateCalculator;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Support\ReservationOptions;
 use App\Domain\Reservations\Models\ReservationNight;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -252,7 +253,8 @@ class ReservationService
             }
 
             $reservation->update(['status' => 'in_house', 'checked_in_at' => now(), 'checked_in_by' => $userId, 'check_in_business_date' => $today->toDateString()]);
-            $room->update(['fo_status' => 'occupied', 'current_reservation_id' => $reservation->id]);
+            $room->update(['fo_status' => 'occupied', 'current_reservation_id' => $reservation->id]
+                + (($status = ReservationOptions::roomStatus($reservation->property_id, 'status_after_check_in')) ? ['hk_status' => $status, 'hk_status_changed_at' => now()] : []));
             if (! $reservation->folios()->where('window', 1)->exists()) {
                 Folio::create([
                     'property_id' => $reservation->property_id, 'folio_number' => $this->numbers->next($reservation->property_id, 'folio'),
@@ -282,7 +284,9 @@ class ReservationService
             $reservation->folios()->where('status', 'open')->update(['status' => 'closed', 'closed_business_date' => $today, 'closed_by' => $userId]);
             $reservation->nightRows()->where('status', 'expected')->where('stay_date', '>=', $today)->update(['status' => 'cancelled']); // erken çıkış
             if ($reservation->room_id) {
-                Room::query()->whereKey($reservation->room_id)->update(['fo_status' => 'vacant', 'hk_status' => 'dirty', 'current_reservation_id' => null, 'hk_status_changed_at' => now()]);
+                $status = ReservationOptions::roomStatus($reservation->property_id, 'status_after_check_out');
+                Room::query()->whereKey($reservation->room_id)->update(['fo_status' => 'vacant', 'current_reservation_id' => null]
+                    + ($status ? ['hk_status' => $status, 'hk_status_changed_at' => now()] : []));
             }
             $this->log($reservation, 'in_house', 'checked_out', $userId);
             $this->refreshAvailability($reservation, CarbonImmutable::parse($today), $reservation->departure_date);

@@ -12,6 +12,7 @@ use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Models\ReservationNight;
+use App\Domain\Reservations\Support\ReservationOptions;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -160,6 +161,9 @@ class NightAuditService
     {
         $reservations = Reservation::query()->where('property_id', $property->id)->whereIn('status', ['confirmed', 'tentative'])->where('arrival_date', $bd)->get();
         foreach ($reservations as $reservation) {
+            if ($reservation->room_id && ($status = ReservationOptions::roomStatus($property->id, 'status_after_no_show'))) {
+                DB::table('pms_rooms')->where('id', $reservation->room_id)->where('fo_status', 'vacant')->update(['hk_status' => $status, 'hk_status_changed_at' => now()]);
+            }
             $reservation->update(['status' => 'no_show', 'no_show_at' => now(), 'room_id' => null]);
             $reservation->nightRows()->where('status', 'expected')->update(['status' => 'cancelled', 'room_id' => null]);
             DB::table('pms_reservation_status_logs')->insert(['reservation_id' => $reservation->id, 'from_status' => 'confirmed', 'to_status' => 'no_show',
@@ -301,13 +305,19 @@ class NightAuditService
     private function advance(Property $property, string $bd, int $runId, ?int $userId): array
     {
         $next = CarbonImmutable::parse($bd)->addDay()->toDateString();
+        // Fidelio "Room Status after N/A if occupied": dolu odalar (Rocks: Dirty)
+        $occupied = 0;
+        if ($status = ReservationOptions::roomStatus($property->id, 'status_after_audit_occupied')) {
+            $occupied = DB::table('pms_rooms')->where('property_id', $property->id)->where('fo_status', 'occupied')
+                ->update(['hk_status' => $status, 'hk_status_changed_at' => now()]);
+        }
         DB::table('pms_business_dates')->updateOrInsert(['property_id' => $property->id, 'business_date' => $bd],
             ['status' => 'closed', 'closed_at' => now(), 'closed_by' => $userId, 'night_audit_run_id' => $runId, 'updated_at' => now()]);
         DB::table('pms_business_dates')->updateOrInsert(['property_id' => $property->id, 'business_date' => $next],
             ['status' => 'open', 'opened_at' => now(), 'updated_at' => now()]);
         $property->update(['current_business_date' => $next]);
 
-        return ['new_business_date' => $next];
+        return ['new_business_date' => $next, 'occupied_rooms_status' => $occupied];
     }
 
     private function reportPack(int $propertyId, string $bd): array

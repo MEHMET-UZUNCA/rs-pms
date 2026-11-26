@@ -57,7 +57,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 ## Kat hizmetleri
 
 - Fidelio "Room Status Reason" listesi (OOO/OOS sebepleri) — şimdilik yalnız "OOO" ve "OOS" genel sebepleri var.
-- Gece kapanışı oda temizlik durumunu değiştirmez; durumu kat hizmetleri ya da resepsiyon değiştirir (otel bildirdi). Uygulama böyle çalışıyor.
+- Fidelio ayarı (Global Settings → Reservation 1): girişte, çıkışta ve gece kapanışında dolu odada oda **Dirty**, no-show'da değişmez. Otel önce "gece kapanışı değiştirmez" demişti; ayar Dirty gösterdiği için Fidelio ayarı uygulandı, Ayarlar → Rezervasyon seçeneklerinden "Değişmez" yapılabilir — teyit edilecek.
 - Check-out'ta oda Dirty olur, oda değişikliğinde eski oda Dirty olur — uygulama böyle; otel "emin değilim" dedi, Fidelio'daki davranış teyit edilecek.
 - Kat görevlisi görev dağıtımı ekranı.
 

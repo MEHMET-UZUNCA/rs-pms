@@ -12,6 +12,7 @@ use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\OutletController;
+use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
 use App\Http\Controllers\Setup\UserController;
 use App\Http\Controllers\Setup\TransactionCodeController;
@@ -93,6 +94,12 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/', [FinancialAccountController::class, 'store'])->name('store');
         Route::get('/{folio}/duzenle', [FinancialAccountController::class, 'edit'])->name('edit');
         Route::put('/{folio}', [FinancialAccountController::class, 'update'])->name('update');
+    });
+
+    // Ayarlar → Rezervasyon seçenekleri (Fidelio Global Settings → Reservation)
+    Route::middleware('permission:setup.options')->group(function () {
+        Route::get('/ayarlar/rezervasyon-secenekleri', [ReservationOptionsController::class, 'edit'])->name('setup.options.reservation');
+        Route::put('/ayarlar/rezervasyon-secenekleri', [ReservationOptionsController::class, 'update'])->name('setup.options.reservation.update');
     });
 
     // Ayarlar → Sistem → Kullanıcılar ve Roller

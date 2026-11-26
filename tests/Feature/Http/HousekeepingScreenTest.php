@@ -35,7 +35,7 @@ class HousekeepingScreenTest extends DomainTestCase
         }
         $this->assertStringContainsString('Yılmaz, Ahmet', $html);   // 1102 içeride
         $this->assertMatchesRegularExpression('/data-count="vacant_dirty">2</', $html);   // 1106, 1107 (çıkış yaptı)
-        $this->assertMatchesRegularExpression('/data-count="occupied_clean">6</', $html);
+        $this->assertMatchesRegularExpression('/data-count="occupied_dirty">6</', $html);   // Fidelio: girişte oda Dirty olur
 
         $vd = $this->actingAs($this->user)->get('/kat-hizmetleri?f=vd')->getContent();
         $this->assertSame(2, substr_count($vd, 'data-room="'));

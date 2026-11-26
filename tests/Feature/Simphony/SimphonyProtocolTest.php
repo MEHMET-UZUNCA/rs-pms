@@ -73,17 +73,45 @@ class SimphonyProtocolTest extends DomainTestCase
         $this->assertSame('1', $list->fields[1]);
         $id = trim($list->fields[2]);
         $this->assertSame((string) Reservation::whereHas('room', fn ($q) => $q->where('number', '1102'))->value('id'), $id);
-        $this->assertStringStartsWith('1102   Yilmaz, Ahmet', $list->fields[3]);   // ASCII'ye çevrilmiş
+        $this->assertStringStartsWith('1102   YILMAZ, AHMET', $list->fields[3]);   // Fidelio biçimi: SOYAD, AD (ASCII)
         $this->assertSame(' L', $list->fields[4]);
 
         $detail = $this->send('03', 'FO_FI_RES_DETAIL', [str_pad($id, 30)]);
-        $this->assertSame(['10', 'Name           :    Yilmaz, Ahmet'], [$detail->fields[0], rtrim($detail->fields[1])]);
+        $this->assertSame(['10', 'Name           :    YILMAZ, AHMET'], [$detail->fields[0], rtrim($detail->fields[1])]);
         $this->assertSame('Ratecode       :    BAR', rtrim($detail->fields[9]));
         $this->assertSame(74, strlen($detail->fields[1]));
 
         $this->assertSame('FO_87_GST_DETAIL', $this->send('04', 'FO_FI_GST_DETAIL', [str_pad($id, 30)])->type);
         $this->assertSame(['No message found'], $this->send('05', 'FO_FI_GST_MESSAGE', [str_pad($id, 30)])->fields);
         $this->assertSame('FO_87_RES_LIST', $this->send('06', 'FO_FI_RES_QUERY', ['mul'])->type);   // soyadla
+    }
+
+    public function test_room_with_two_guests_lists_both_like_simphony_screens(): void
+    {
+        $res = Reservation::whereHas('room', fn ($q) => $q->where('number', '1102'))->firstOrFail();
+        $res->profile->update(['title' => 'Bay', 'language_code' => 'tr', 'nationality_code' => 'TR']);
+        $res->update(['guest_comments' => str_repeat('Sea view room requested, ', 2).'DENIZ']);
+        $companion = DB::table('pms_profiles')->insertGetId(['property_id' => $this->property, 'type' => 'individual', 'display_name' => 'Akkaya, Melike',
+            'last_name' => 'Akkaya', 'first_name' => 'Melike', 'title' => 'Bayan', 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('pms_reservation_guests')->insert(['reservation_id' => $res->id, 'profile_id' => $companion, 'role' => 'accompanying', 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('pms_guest_messages')->insert(['property_id' => $this->property, 'reservation_id' => $res->id, 'message' => 'Call reception', 'created_at' => now(), 'updated_at' => now()]);
+
+        $list = $this->send('01', 'FO_FI_RES_QUERY', ['1102']);
+        $this->assertSame('2', $list->fields[1]);
+        $this->assertStringStartsWith('1102   YILMAZ, AHMET Bay', $list->fields[3]);
+        $this->assertSame($res->id.'/'.$companion, trim($list->fields[5]));
+        $this->assertStringStartsWith('1102   AKKAYA, MELIKE Bayan', $list->fields[6]);
+        $this->assertSame('2', $this->send('02', 'FO_FI_RES_QUERY', ['akka'])->fields[1]);   // refakatçinin soyadıyla da bulunur
+
+        $guest = $this->send('03', 'FO_FI_GST_DETAIL', [str_pad($res->id.'/'.$companion, 30)]);
+        $this->assertSame('Name           :    AKKAYA, MELIKE Bayan', rtrim($guest->fields[1]));
+        $main = $this->send('04', 'FO_FI_GST_DETAIL', [str_pad((string) $res->id, 30)]);
+        $this->assertSame('Country        :    Turkey', rtrim($main->fields[6]));
+        $this->assertSame('Language       :    T', rtrim($main->fields[9]));
+
+        $detail = $this->send('05', 'FO_FI_RES_DETAIL', [str_pad((string) $res->id, 30)]);
+        $this->assertSame('Remarks 2      :    DENIZ', rtrim($detail->fields[6]));
+        $this->assertSame('Messages       :    1', rtrim($detail->fields[10]));
     }
 
     public function test_room_charge_dialog_posts_to_folio_by_department_codes(): void

@@ -8,6 +8,7 @@ use App\Domain\Cashiering\Services\PostingService;
 use App\Domain\Core\Models\Property;
 use App\Domain\Pos\Models\Outlet;
 use App\Domain\Rates\Models\TransactionCode;
+use App\Domain\Profiles\Models\Profile;
 use App\Domain\Reservations\Models\Reservation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -84,13 +85,17 @@ class MessageHandler
 
     // ---------------------------------------------------------------- sorgular
 
+    /**
+     * Kasadaki "Select Guest Entry" listesi: odadaki her misafir bir satır (ana misafir ve refakatçiler, paylaşılan odada
+     * diğer rezervasyonlar). Satır kimliği "rezervasyon no" ya da refakatçi için "rezervasyon no/profil no".
+     */
     private function resList(int $propertyId, Frame $frame): Frame
     {
-        $rows = $this->inHouse($propertyId, trim($frame->field(0)));
+        $rows = $this->guestRows($this->inHouse($propertyId, trim($frame->field(0))));
         $fields = [str_pad('Room   Name                           Arrival/Departure     Payment', 82), (string) $rows->count()];
-        foreach ($rows->take(20) as $r) {
-            $fields[] = str_pad((string) $r->id, 30);
-            $fields[] = str_pad(str_pad((string) $r->room?->number, 7).str_pad(Str::limit(self::ascii($r->profile?->display_name), 30, ''), 31)
+        foreach ($rows->take(20) as [$id, $r, $profile]) {
+            $fields[] = str_pad($id, 30);
+            $fields[] = str_pad(str_pad((string) $r->room?->number, 7).str_pad(Str::limit(self::guestName($profile), 30, ''), 31)
                 .strtoupper($r->arrival_date->format('d-M-y')).' / '.strtoupper($r->departure_date->format('d-M-y')), 82);
             $fields[] = ' L';
         }
@@ -98,40 +103,103 @@ class MessageHandler
         return $frame->reply('FO_87_RES_LIST', $fields);
     }
 
+    /** "Reservation Detail" penceresi (Simphony: Reservation Details). */
     private function resDetail(int $propertyId, Frame $frame): Frame
     {
-        $r = $this->reservation($propertyId, $frame->field(0));
+        [$r, $profile] = $this->selected($propertyId, $frame->field(0));
         if (! $r) {
             return $frame->reply('FO_87_IFC_ERROR', ['Reservation not found']);
         }
         $group = $r->group_profile_id ? DB::table('pms_profiles')->where('id', $r->group_profile_id)->value('display_name') : '';
+        $remarks = self::ascii(preg_replace('/\s+/', ' ', (string) $r->guest_comments));
         $lines = [
-            'Name' => $r->profile?->display_name, 'Arrival' => $r->arrival_date->format('d.m.Y'), 'Departure' => $r->departure_date->format('d.m.Y'),
-            'Payment Method' => '', 'Remarks 1' => Str::limit((string) $r->guest_comments, 50, ''), 'Remarks 2' => '',
+            'Name' => self::guestName($profile), 'Arrival' => $r->arrival_date->format('d.m.Y'), 'Departure' => $r->departure_date->format('d.m.Y'),
+            'Payment Method' => '', 'Remarks 1' => mb_substr($remarks, 0, 50), 'Remarks 2' => mb_substr($remarks, 50, 50),
             'Adults / Kids' => $r->adults.' / '.$r->children, 'Group' => $group, 'Ratecode' => $r->rateCode?->code,
-            'Messages' => '0',
+            'Messages' => (string) DB::table('pms_guest_messages')->where('reservation_id', $r->id)->whereNull('delivered_at')->count(),
         ];
 
         return $frame->reply('FO_87_RES_DETAIL', ['10', ...self::labelled($lines)]);
     }
 
+    /** "Guest Profile" penceresi (Simphony: Guest Details). */
     private function guestDetail(int $propertyId, Frame $frame): Frame
     {
-        $r = $this->reservation($propertyId, $frame->field(0));
+        [$r, $p] = $this->selected($propertyId, $frame->field(0));
         if (! $r) {
             return $frame->reply('FO_87_IFC_ERROR', ['Guest not found']);
         }
-        $p = $r->profile;
         $address = $p?->addresses()->orderByDesc('is_primary')->first();
         $comm = fn (string $type) => $p?->communications()->where('type', $type)->value('value');
+        $country = $address?->country_code ?? $p?->nationality_code;
         $lines = [
-            'Name' => $p?->display_name, 'Address 1' => $address?->line1, 'Address 2' => $address?->line2,
-            'ZIP / City' => trim(($address?->postal_code ?? '').' / '.($address?->city ?? '')), 'State' => $address?->state,
-            'Country' => $address?->country_code ?? $p?->nationality_code, 'Phone' => $comm('phone') ?? $comm('mobile'), 'E-Mail' => $comm('email'),
-            'Language' => $p?->language_code, 'VIP' => $p?->vip_level_id,
+            'Name' => self::guestName($p), 'Address 1' => $address?->line1, 'Address 2' => $address?->line2,
+            'ZIP / City' => ($address?->postal_code ?? '').' / '.($address?->city ?? ''), 'State' => $address?->state,
+            'Country' => $country ? (DB::table('pms_countries')->where('code', $country)->value('name_en') ?? $country) : '',
+            'Phone' => $comm('phone') ?? $comm('mobile'), 'E-Mail' => $comm('email'),
+            'Language' => self::languageLetter($p?->language_code),
+            'VIP' => $p?->vip_level_id ? DB::table('pms_vip_levels')->where('id', $p->vip_level_id)->value('code') : '',
         ];
 
         return $frame->reply('FO_87_GST_DETAIL', ['10', ...self::labelled($lines)]);
+    }
+
+    /**
+     * Rezervasyonlar → kasadaki misafir satırları: [kimlik, rezervasyon, profil].
+     *
+     * @param  Collection<int, Reservation>  $reservations
+     * @return Collection<int, array{0: string, 1: Reservation, 2: ?Profile}>
+     */
+    private function guestRows(Collection $reservations): Collection
+    {
+        return $reservations->flatMap(function (Reservation $r) {
+            $rows = [[(string) $r->id, $r, $r->profile]];
+            $companions = Profile::query()->join('pms_reservation_guests as g', 'g.profile_id', '=', 'pms_profiles.id')
+                ->where('g.reservation_id', $r->id)->where('g.profile_id', '!=', $r->profile_id)->whereNull('g.checked_out_at')
+                ->orderBy('g.id')->get(['pms_profiles.*']);
+            foreach ($companions as $companion) {
+                $rows[] = [$r->id.'/'.$companion->id, $r, $companion];
+            }
+
+            return $rows;
+        })->values();
+    }
+
+    /** Kasadan gelen satır kimliği → [rezervasyon, profil]; "12/34" refakatçi misafirdir. */
+    private function selected(int $propertyId, string $id): array
+    {
+        [$resId, $profileId] = array_pad(explode('/', trim($id), 2), 2, null);
+        $r = $this->reservation($propertyId, (string) $resId);
+        if (! $r) {
+            return [null, null];
+        }
+        $profile = $profileId && DB::table('pms_reservation_guests')->where('reservation_id', $r->id)->where('profile_id', (int) $profileId)->exists()
+            ? Profile::find((int) $profileId) : $r->profile;
+
+        return [$r, $profile];
+    }
+
+    /** Fidelio adı: "SOYAD, AD Unvan" (ör. "OZCAN, MURAT SERDAR Bay"). */
+    public static function guestName(?Profile $p): string
+    {
+        if (! $p) {
+            return '';
+        }
+        $name = $p->last_name || $p->first_name
+            ? trim(mb_strtoupper((string) $p->last_name, 'UTF-8').($p->first_name ? ', '.mb_strtoupper($p->first_name, 'UTF-8') : ''))
+            : mb_strtoupper((string) $p->display_name, 'UTF-8');
+
+        return self::ascii(trim($name.' '.($p->title ?? '')));
+    }
+
+    /** Fidelio dil kodu tek harf: T Türkçe, E İngilizce, G Almanca, R Rusça … */
+    public static function languageLetter(?string $code): string
+    {
+        return match ($code) {
+            null, '' => '',
+            'de' => 'G',
+            default => strtoupper($code[0]),
+        };
     }
 
     // ---------------------------------------------------------------- oda hesabı ve ödemeler
@@ -333,10 +401,13 @@ class MessageHandler
         }
 
         return Reservation::where('pms_reservations.property_id', $propertyId)->where('status', 'in_house')
-            ->with(['room:id,number', 'profile:id,display_name,last_name', 'rateCode:id,code'])
+            ->with(['room:id,number', 'profile', 'rateCode:id,code'])
             ->when(ctype_digit($input),
                 fn ($q) => $q->whereHas('room', fn ($r) => $r->where('number', $input)),
-                fn ($q) => $q->whereHas('profile', fn ($p) => $p->where(fn ($w) => $w->where('last_name', 'like', $input.'%')->orWhere('display_name', 'like', $input.'%'))))
+                fn ($q) => $q->where(fn ($any) => $any
+                    ->whereHas('profile', fn ($p) => $p->where(fn ($w) => $w->where('last_name', 'like', $input.'%')->orWhere('display_name', 'like', $input.'%')))
+                    ->orWhereIn('pms_reservations.id', DB::table('pms_reservation_guests as g')->join('pms_profiles as gp', 'gp.id', '=', 'g.profile_id')
+                        ->where(fn ($w) => $w->where('gp.last_name', 'like', $input.'%')->orWhere('gp.display_name', 'like', $input.'%'))->select('g.reservation_id'))))
             ->orderBy('id')->get();
     }
 

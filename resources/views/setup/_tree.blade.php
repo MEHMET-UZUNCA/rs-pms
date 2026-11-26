@@ -7,6 +7,7 @@
     <span class="is-soon">{{ __('pms.menu.taxes') }}</span>
     <span class="is-soon">{{ __('pms.setup.payment_types') }}</span>
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.reservation') }}</div>
+    @can('permission', 'setup.options')<a href="{{ route('setup.options.reservation') }}" @class(['is-current' => request()->routeIs('setup.options.*')])>{{ __('pms.options.title') }}</a>@endcan
     <span class="is-soon">{{ __('pms.setup.rate_codes') }}</span>
     <span class="is-soon">{{ __('pms.setup.room_types') }}</span>
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.system') }}</div>

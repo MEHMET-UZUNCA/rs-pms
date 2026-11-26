@@ -14,7 +14,7 @@ return [
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
         'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
-        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'reservation_options' => 'Reservation Options', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
         'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Housekeeping',
         'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
         'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
@@ -239,5 +239,17 @@ return [
         'tabs' => 'Tabs', 'windows' => 'Folio windows', 'period' => 'Previous / next period', 'reservation_card' => 'Reservation Card',
         'setup_lists' => 'Setup lists (Outlets, Department Codes, Users, Roles)', 'forms' => 'Edit windows',
         'browser_note' => 'Ctrl+N, Ctrl+T and Ctrl+W are reserved by the browser and may not reach the program; use Alt+Shift+N for New Reservation, or Ctrl+N in the Reservation Navigator.',
+    ],
+
+    'options' => [
+        'title' => 'Reservation Options', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Reservation options saved.',
+        'check_in_time' => 'Default Check In Time', 'check_out_time' => 'Default Check Out Time', 'day_use_check_in_time' => 'Day use Default Check In Time',
+        'day_use_check_out_time' => 'Day use Default Check Out Time', 'status_after_check_in' => 'Room Status after Check In',
+        'status_after_check_out' => 'Room Status after Check Out', 'status_after_audit_occupied' => 'Room Status after N/A if occupied',
+        'status_after_no_show' => 'Room Status after No Show', 'status' => ['none' => 'No Action', 'dirty' => 'Dirty', 'clean' => 'Clean', 'inspected' => 'Inspected'],
+        'queue_rooms' => 'Queue Rooms Handling', 'meal_plan' => 'Meal plan functionality', 'meal_defaults' => 'Meal Plan defaults',
+        'meals_first_day' => 'First day', 'meals_departure_day' => 'Departure day', 'meals_day_use' => 'Day use reservations',
+        'meals' => ['breakfast' => 'Breakfast', 'lunch' => 'Lunch', 'dinner' => 'Dinner'],
+        'meal_hint' => 'Used for the daily meal counts (kitchen forecast): which meals of a board are counted on the arrival day, the departure day and for day use.',
     ],
 ];

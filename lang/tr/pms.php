@@ -14,7 +14,7 @@ return [
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
         'rate_query' => 'Fiyat Sorgulama', 'block_reservation' => 'Blok / Allotman', 'arrivals' => 'Gelecekler', 'in_house' => 'İçeridekiler',
-        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
+        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'reservation_options' => 'Rezervasyon seçenekleri', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
         'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Kat Hizmetleri',
         'attendants' => 'Görev Dağıtımı', 'discrepant_rooms' => 'Uyuşmazlıklar', 'profile_navigator' => 'Profil Navigatörü',
         'conference_diary' => 'Konferans Günlüğü', 'events' => 'Etkinlikler', 'night_audit' => 'Gece Kapanışı', 'logbook' => 'Vardiya Defteri',
@@ -239,5 +239,17 @@ return [
         'tabs' => 'Sekmeler', 'windows' => 'Folyo pencereleri', 'period' => 'Önceki / sonraki dönem', 'reservation_card' => 'Rezervasyon kartı',
         'setup_lists' => 'Ayar listeleri (Outlet, Departman kodu, Kullanıcı, Rol)', 'forms' => 'Düzenleme pencereleri',
         'browser_note' => 'Ctrl+N, Ctrl+T ve Ctrl+W tarayıcıya ayrılmıştır ve programa ulaşmayabilir; yeni rezervasyon için Alt+Shift+N ya da navigatörde Ctrl+N kullanın.',
+    ],
+
+    'options' => [
+        'title' => 'Rezervasyon seçenekleri', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Rezervasyon seçenekleri kaydedildi.',
+        'check_in_time' => 'Varsayılan giriş saati', 'check_out_time' => 'Varsayılan çıkış saati', 'day_use_check_in_time' => 'Günübirlik giriş saati',
+        'day_use_check_out_time' => 'Günübirlik çıkış saati', 'status_after_check_in' => 'Girişten sonra oda durumu',
+        'status_after_check_out' => 'Çıkıştan sonra oda durumu', 'status_after_audit_occupied' => 'Gece kapanışında dolu oda durumu',
+        'status_after_no_show' => 'No Show sonrası oda durumu', 'status' => ['none' => 'Değişmez', 'dirty' => 'Kirli (Dirty)', 'clean' => 'Temiz (Clean)', 'inspected' => 'Kontrol edildi (Inspected)'],
+        'queue_rooms' => 'Bekleyen odalar (Queue Rooms)', 'meal_plan' => 'Yemek planı (Meal Plan)', 'meal_defaults' => 'Yemek planı varsayılanları',
+        'meals_first_day' => 'Giriş günü', 'meals_departure_day' => 'Çıkış günü', 'meals_day_use' => 'Günübirlik rezervasyon',
+        'meals' => ['breakfast' => 'Kahvaltı', 'lunch' => 'Öğle', 'dinner' => 'Akşam'],
+        'meal_hint' => 'Günlük öğün sayılarında (mutfak tahmini) kullanılır: pansiyonun hangi öğünleri giriş günü, çıkış günü ve günübirlikte sayılır.',
     ],
 ];
