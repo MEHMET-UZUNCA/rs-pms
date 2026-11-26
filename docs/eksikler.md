@@ -67,6 +67,12 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 - Yazı tipleri şablondaki gibi (Century Gothic, Century, Calibri, Times New Roman); Windows'ta birebir görünür, bu yazı tipleri olmayan bilgisayarda en yakın yazı tipi kullanılır.
 - E-postayla gönderme yapıldı; SMTP bilgilerini otel sunucudaki .env'e girecek (MAIL_HOST, MAIL_PORT, MAIL_SCHEME, MAIL_USERNAME, MAIL_PASSWORD, MAIL_FROM_ADDRESS). Girilene kadar "Send by e-mail" kapalı.
 
+## Menü kapsamı (otelin kullandıkları, 26.11.2026)
+
+- Reservation / Front Desk: New Financial Account (yapıldı), Lost & Found, Messages + Locator, Traces, Queue Rooms, Room Blocking; Group / Block / Waitlist / Quick Reservation kullanımı sorulacak.
+- Rooms Management: Housekeeping (kayıtlı aramalar, alt durum çubuğu eklenecek), Out of Order, Room History, House Status. **Attendants ve Maintenance alınmayacak.**
+- Diğer Financial Account grupları (PM Accounts dışında) otelden bekleniyor.
+
 ## Yapılacak ekranlar ve işler (sırayla)
 
 1. ~~Rezervasyon Kartı~~ yapıldı (Ctrl+1, 3, 5, 9) — kalan sekmeler: Ctrl+2 envanter, Ctrl+4 paketler, Ctrl+6 özellikler, Ctrl+7 kredi kartı, Ctrl+8 sabit ücretler, Ctrl+0 yemek planı; iptal ve paylaşım (share)

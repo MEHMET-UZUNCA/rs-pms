@@ -99,7 +99,11 @@
 
         <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @can('permission', 'reservations.edit')
-                <a href="{{ route('reservations.create') }}" class="btn btn-side" data-hotkey="ctrl+n alt+n">{{ __('pms.common.new') }} <span class="kbd ml-auto">Ctrl+N</span></a>
+                @if ($isFa && Gate::allows('permission', 'cashiering.accounts'))
+                    <a href="{{ route('accounts.create') }}" class="btn btn-side" data-hotkey="ctrl+n alt+n">{{ __('pms.fa.new') }} <span class="kbd ml-auto">Ctrl+N</span></a>
+                @else
+    <a href="{{ route('reservations.create') }}" class="btn btn-side" data-hotkey="ctrl+n alt+n">{{ __('pms.common.new') }} <span class="kbd ml-auto">Ctrl+N</span></a>
+                @endif
             @endcan
             @can('permission', 'reservations.edit')
                 <a class="btn btn-side" data-needs-selection="res-grid" data-action="edit" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Enter</span></a>

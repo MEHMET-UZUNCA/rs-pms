@@ -19,6 +19,8 @@ class Folio extends Model
     {
         return [
             'balance' => 'decimal:2',
+            'credit_limit' => 'decimal:2',
+            'no_post' => 'boolean',
             'opened_business_date' => DateOnly::class,
             'closed_business_date' => DateOnly::class,
             'valid_from' => DateOnly::class,

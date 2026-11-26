@@ -14,7 +14,7 @@ return [
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
         'rate_query' => 'Fiyat Sorgulama', 'block_reservation' => 'Blok / Allotman', 'arrivals' => 'Gelecekler', 'in_house' => 'İçeridekiler',
-        'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
+        'new_financial_account' => 'Yeni hesap (PM)', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
         'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Oda Durumu',
         'attendants' => 'Görev Dağıtımı', 'discrepant_rooms' => 'Uyuşmazlıklar', 'profile_navigator' => 'Profil Navigatörü',
         'conference_diary' => 'Konferans Günlüğü', 'events' => 'Etkinlikler', 'night_audit' => 'Gece Kapanışı', 'logbook' => 'Vardiya Defteri',
@@ -223,5 +223,13 @@ return [
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
         'perm' => ['setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+    ],
+
+    'fa' => [
+        'new_title' => 'Yeni hesap (PM)', 'edit_title' => ':number hesabı', 'subtitle' => 'Rezervasyonsuz hesap (PM hesabı)',
+        'new' => 'Yeni hesap', 'edit' => 'Hesabı düzenle', 'group' => 'Grup', 'date_range' => 'Tarih aralığı', 'valid_from' => 'Başlangıç', 'valid_until' => 'Bitiş',
+        'profile' => 'Profil', 'number' => 'Hesap numarası', 'number_hint' => 'Boş bırakılırsa sıradaki numara verilir.', 'market' => 'Pazar',
+        'credit_limit' => 'Kredi limiti', 'source' => 'Kaynak kodu', 'currency' => 'Sözleşme para birimi', 'billing_info' => 'Fatura bilgisi', 'remarks' => 'Notlar',
+        'no_post' => 'Harcama yazılmaz (No Post)', 'no_post_hint' => '(yalnız ödeme)', 'err_no_post' => ':number hesabı "No Post"; harcama yazılamaz.',
     ],
 ];

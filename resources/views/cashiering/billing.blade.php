@@ -119,6 +119,9 @@
                     <button class="btn btn-side" data-hotkey="alt+o">{{ __('pms.billing.check_out') }} <span class="kbd ml-auto">Alt+O</span></button>
                 </form>
             @endif
+            @if (! $reservation && $folio && Gate::allows('permission', 'cashiering.accounts'))
+                <a href="{{ route('accounts.edit', $folio) }}" class="btn btn-side mt-3" data-hotkey="alt+a">{{ __('pms.fa.edit') }} <span class="kbd ml-auto">Alt+A</span></a>
+            @endif
             <a href="{{ route('reservations.navigator', $reservation ? ['secili' => $reservation->id] : ['f' => 'fa']) }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </div>

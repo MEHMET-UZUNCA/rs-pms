@@ -34,4 +34,41 @@ class FolioService
             ]);
         });
     }
+
+    /**
+     * Rezervasyonsuz hesap (Fidelio "New Financial Account", PM hesabı) açma / düzenleme.
+     * Numara verilmezse sıradaki folyo numarası alınır. Başlangıç tarihi iş gününden sonraysa hesap "beklenen" olur
+     * (actual_from boş); gece kapanışı o gün açar ya da durdurur (NightAuditAnswers: expected_accounts).
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function saveAccount(int $propertyId, array $data, ?Folio $folio, ?int $userId): Folio
+    {
+        return DB::transaction(function () use ($propertyId, $data, $folio, $userId) {
+            $bd = Property::query()->findOrFail($propertyId)->current_business_date->toDateString();
+            $number = trim((string) ($data['folio_number'] ?? ''));
+            unset($data['folio_number']);
+
+            if ($folio) {
+                if ($number !== '' && $number !== $folio->folio_number) {
+                    $data['folio_number'] = $number;
+                }
+                if (! $folio->actual_from && (! $data['valid_from'] || $data['valid_from'] <= $bd)) {
+                    $data['actual_from'] = $bd;
+                }
+                $folio->update($data);
+
+                return $folio->fresh();
+            }
+
+            $from = $data['valid_from'] ?: $bd;
+            $data['valid_from'] = $from;
+
+            return Folio::create($data + [
+                'property_id' => $propertyId, 'folio_number' => $number !== '' ? $number : $this->numbers->next($propertyId, 'folio'),
+                'type' => 'house_account', 'window' => 1, 'status' => 'open',
+                'actual_from' => $from <= $bd ? $bd : null, 'opened_business_date' => $bd, 'opened_by' => $userId,
+            ]);
+        });
+    }
 }

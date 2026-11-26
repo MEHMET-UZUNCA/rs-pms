@@ -14,7 +14,7 @@ return [
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
         'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
-        'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'new_financial_account' => 'New Financial Account', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
         'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Room Status',
         'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
         'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
@@ -223,5 +223,13 @@ return [
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
         'perm' => ['setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+    ],
+
+    'fa' => [
+        'new_title' => 'New Financial Account', 'edit_title' => 'Financial Account :number', 'subtitle' => 'Account without reservation (PM account)',
+        'new' => 'New Account', 'edit' => 'Edit Account', 'group' => 'Group', 'date_range' => 'Date Range', 'valid_from' => 'Valid from', 'valid_until' => 'Valid until',
+        'profile' => 'Profile', 'number' => 'Account Number', 'number_hint' => 'Empty: next number is given automatically.', 'market' => 'Market',
+        'credit_limit' => 'Limit Value', 'source' => 'Source Code', 'currency' => 'Contracted Curr.', 'billing_info' => 'Billing Info', 'remarks' => 'Remarks',
+        'no_post' => 'No Post', 'no_post_hint' => '(no charges, payments only)', 'err_no_post' => 'Account :number is set to No Post; charges cannot be posted.',
     ],
 ];

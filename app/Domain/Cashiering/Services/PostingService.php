@@ -32,6 +32,9 @@ class PostingService
         if (in_array($code->type, ['payment', 'deposit'], true)) {
             throw new PostingException("{$code->code} bir ödeme kodu; harcama olarak kaydedilemez.");
         }
+        if ($folio->no_post) {
+            throw new PostingException(__('pms.fa.err_no_post', ['number' => $folio->folio_number]));
+        }
 
         return $this->write($folio, $code, round($amount * $quantity, 2), $quantity, $description, array_merge(['kind' => 'charge'], $attributes));
     }

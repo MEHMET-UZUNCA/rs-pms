@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
+use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
@@ -81,6 +82,14 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::put('/{outlet}', [OutletController::class, 'update'])->name('update');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
         Route::post('/{outlet}/tasi/{direction}', [OutletController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
+    });
+
+    // Ön Büro → New Financial Account (PM hesabı)
+    Route::middleware('permission:cashiering.accounts')->prefix('hesaplar')->name('accounts.')->group(function () {
+        Route::get('/yeni', [FinancialAccountController::class, 'create'])->name('create');
+        Route::post('/', [FinancialAccountController::class, 'store'])->name('store');
+        Route::get('/{folio}/duzenle', [FinancialAccountController::class, 'edit'])->name('edit');
+        Route::put('/{folio}', [FinancialAccountController::class, 'update'])->name('update');
     });
 
     // Ayarlar → Sistem → Kullanıcılar ve Roller
