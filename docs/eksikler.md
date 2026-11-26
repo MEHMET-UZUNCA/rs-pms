@@ -65,7 +65,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 - Şablondaki üç yazım düzeltmesi ("Reservation Number", "Booked By", "Giriş Saati") otel tarafından onaylandı.
 - Yazı tipleri şablondaki gibi (Century Gothic, Century, Calibri, Times New Roman); Windows'ta birebir görünür, bu yazı tipleri olmayan bilgisayarda en yakın yazı tipi kullanılır.
-- Mektubun e-postayla gönderilmesi (SMTP bilgisi gerekir) sonraki adım; şimdilik yazdır / PDF'e kaydet.
+- E-postayla gönderme yapıldı; SMTP bilgilerini otel sunucudaki .env'e girecek (MAIL_HOST, MAIL_PORT, MAIL_SCHEME, MAIL_USERNAME, MAIL_PASSWORD, MAIL_FROM_ADDRESS). Girilene kadar "Send by e-mail" kapalı.
 
 ## Yapılacak ekranlar ve işler (sırayla)
 

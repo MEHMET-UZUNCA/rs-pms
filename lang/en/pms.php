@@ -88,6 +88,8 @@ return [
     ],
 
     'res' => [
+        'letter_email' => 'Guest e-mail', 'letter_send' => 'Send by e-mail', 'letter_sent' => 'Confirmation letter sent to :email.', 'letter_failed' => 'The e-mail could not be sent. Check the SMTP settings.',
+        'letter_no_smtp' => 'E-mail is not set up yet (SMTP settings in .env).', 'letter_last' => 'Last sent :date to :email (:user)',
         'letter' => 'Confirmation Letter', 'print' => 'Print',
         'navigator' => 'Reservation Navigator', 'name' => 'Name', 'room' => 'Room', 'conf_no' => 'Conf. No.', 'company_agent' => 'Company / Agent',
         'arrival' => 'Arrival', 'departure' => 'Departure', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'All statuses',

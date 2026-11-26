@@ -3,85 +3,80 @@
 namespace App\Http\Controllers\Reservations;
 
 use App\Domain\Core\Models\Property;
-use App\Domain\Profiles\Models\Profile;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\ConfirmationLetterBuilder;
 use App\Http\Controllers\Controller;
+use App\Mail\ConfirmationLetterMail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 /**
  * Rezervasyon onay mektubu (Reservation Confirmation Letter).
- * Şablon: Confirmation_Letter_EN.pdf / Confirmation_Letter_TR.pdf — A4, tarayıcıdan yazdırılır / PDF'e kaydedilir.
+ * Şablon: Confirmation_Letter_EN.pdf / Confirmation_Letter_TR.pdf — A4, tarayıcıdan yazdırılır / PDF'e kaydedilir ya da e-postayla gönderilir.
  */
 class ConfirmationLetterController extends Controller
 {
-    public const LANGUAGES = ['en', 'tr'];
+    public const LANGUAGES = ConfirmationLetterBuilder::LANGUAGES;
+
+    public function __construct(private readonly ConfirmationLetterBuilder $letters) {}
 
     public function show(Request $request, Reservation $reservation): View
     {
-        abort_unless((int) $reservation->property_id === (int) app(Property::class)->id, 404);
-        $reservation->load(['profile', 'roomType', 'nightRows']);
+        $this->authorizeProperty($reservation);
+        $lang = $this->letters->language($reservation, $request->query('dil'));
 
-        $lang = $request->query('dil');
-        if (! in_array($lang, self::LANGUAGES, true)) {
-            $lang = $reservation->profile?->language_code === 'tr' ? 'tr' : 'en';
-        }
-
-        return view('reservations.confirmation-letter', [
-            'r' => $reservation,
-            'lang' => $lang,
-            'guest' => $this->guestName($reservation->profile),
-            'rate' => $this->rate($reservation),
-            'guests' => $this->guests($reservation, $lang),
-            'bookedBy' => $this->bookedBy($reservation),
+        return view('reservations.confirmation-letter', $this->letters->build($reservation, $lang) + [
+            'email' => $this->letters->guestEmail($reservation),
+            'sent' => DB::table('pms_reservation_letters as l')->leftJoin('users as u', 'u.id', '=', 'l.sent_by')
+                ->where('l.reservation_id', $reservation->id)->where('l.type', 'confirmation')->orderByDesc('l.id')
+                ->first(['l.email', 'l.language', 'l.sent_at', 'u.username']),
+            'mailReady' => self::mailConfigured(),
         ]);
     }
 
-    private function guestName(?Profile $profile): string
+    public function send(Request $request, Reservation $reservation): RedirectResponse
     {
-        if (! $profile) {
-            return '';
-        }
-        $name = trim(implode(' ', array_filter([$profile->title, $profile->first_name, $profile->last_name])));
+        $this->authorizeProperty($reservation);
+        $data = $request->validate(['email' => ['required', 'email:rfc', 'max:150'], 'dil' => ['required', 'in:'.implode(',', self::LANGUAGES)]]);
+        $back = redirect()->route('reservations.letter', [$reservation, 'dil' => $data['dil']]);
 
-        return $profile->first_name || $profile->last_name ? $name : (string) $profile->display_name;
+        if (! self::mailConfigured()) {
+            return $back->with('error', __('pms.res.letter_no_smtp'));
+        }
+
+        try {
+            Mail::to($data['email'])->send(new ConfirmationLetterMail($this->letters->build($reservation, $data['dil'])));
+        } catch (Throwable $e) {
+            Log::warning('Onay mektubu gönderilemedi', ['reservation' => $reservation->id, 'error' => $e->getMessage()]);
+
+            return $back->with('error', __('pms.res.letter_failed'));
+        }
+
+        DB::table('pms_reservation_letters')->insert([
+            'reservation_id' => $reservation->id, 'type' => 'confirmation', 'language' => $data['dil'], 'email' => $data['email'],
+            'sent_by' => $request->user()->id, 'sent_at' => now(), 'created_at' => now(), 'updated_at' => now(),
+        ]);
+
+        return $back->with('status', __('pms.res.letter_sent', ['email' => $data['email']]));
     }
 
-    /** Gecelik fiyat: bütün geceler aynıysa tek tutar, değilse en düşük – en yüksek. */
-    private function rate(Reservation $r): string
+    /** SMTP seçilmiş ama sunucu ya da gönderen adresi girilmemişse e-posta gönderilmez (.env: MAIL_HOST, MAIL_FROM_ADDRESS). */
+    public static function mailConfigured(): bool
     {
-        $amounts = $r->nightRows->pluck('amount')->map(fn ($a) => (float) $a)->unique()->sort()->values();
-        if ($amounts->isEmpty()) {
-            return '';
+        if ((string) config('mail.default') !== 'smtp') {
+            return true;
         }
-        $fmt = fn (float $a) => number_format($a, 2, ',', '.');
-        $text = $amounts->count() === 1 ? $fmt($amounts[0]) : $fmt($amounts->first()).' – '.$fmt($amounts->last());
 
-        return $text.' '.$r->currency_code;
+        return filled(config('mail.mailers.smtp.host')) && filled(config('mail.from.address'));
     }
 
-    private function guests(Reservation $r, string $lang): string
+    private function authorizeProperty(Reservation $reservation): void
     {
-        $parts = [trans_choice('letter.adults', $r->adults, [], $lang)];
-        if ($r->children > 0) {
-            $parts[] = trans_choice('letter.children', $r->children, [], $lang);
-        }
-        if ($r->infants > 0) {
-            $parts[] = trans_choice('letter.infants', $r->infants, [], $lang);
-        }
-
-        return implode(', ', $parts);
-    }
-
-    /** Acenta, yoksa şirket, yoksa rezervasyonu yapan kişi. */
-    private function bookedBy(Reservation $r): string
-    {
-        foreach ([$r->agent_profile_id, $r->company_profile_id] as $id) {
-            if ($id && ($name = Profile::whereKey($id)->value('display_name'))) {
-                return $name;
-            }
-        }
-
-        return (string) $r->booker_name;
+        abort_unless((int) $reservation->property_id === (int) app(Property::class)->id, 404);
     }
 }

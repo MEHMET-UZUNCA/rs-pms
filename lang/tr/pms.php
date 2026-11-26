@@ -88,6 +88,8 @@ return [
     ],
 
     'res' => [
+        'letter_email' => 'Misafir e-postası', 'letter_send' => 'E-postayla gönder', 'letter_sent' => 'Onay mektubu :email adresine gönderildi.', 'letter_failed' => 'E-posta gönderilemedi. SMTP ayarlarını kontrol edin.',
+        'letter_no_smtp' => 'E-posta henüz ayarlanmadı (.env içindeki SMTP ayarları).', 'letter_last' => 'Son gönderim :date, :email (:user)',
         'letter' => 'Onay Mektubu', 'print' => 'Yazdır',
         'navigator' => 'Rezervasyon Navigatörü', 'name' => 'Ad', 'room' => 'Oda', 'conf_no' => 'Rez. no', 'company_agent' => 'Şirket / Acente',
         'arrival' => 'Geliş', 'departure' => 'Çıkış', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'Tüm durumlar',

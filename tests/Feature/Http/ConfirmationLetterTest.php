@@ -5,7 +5,9 @@ namespace Tests\Feature\Http;
 use App\Domain\Reservations\Models\Reservation;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
+use App\Mail\ConfirmationLetterMail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Tests\Feature\Domain\DomainTestCase;
 
 class ConfirmationLetterTest extends DomainTestCase
@@ -93,5 +95,46 @@ class ConfirmationLetterTest extends DomainTestCase
         DB::table('pms_reservations')->where('id', $r->id)->update(['property_id' => $other]);
 
         $this->actingAs($this->user)->get("/rezervasyon/{$r->id}/onay-mektubu")->assertNotFound();
+    }
+
+    public function test_letter_is_sent_by_email_and_logged(): void
+    {
+        Mail::fake();
+        $r = $this->guestReservation('Johnson');
+        DB::table('pms_profile_communications')->insert(['profile_id' => $r->profile_id, 'type' => 'email', 'value' => 'mark@example.com', 'is_primary' => true, 'created_at' => now(), 'updated_at' => now()]);
+
+        $this->actingAs($this->user)->get("/rezervasyon/{$r->id}/onay-mektubu")->assertOk()
+            ->assertSee('value="mark@example.com"', false)->assertSee('Send by e-mail');
+
+        $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/onay-mektubu", ['email' => 'mark@example.com', 'dil' => 'tr'])
+            ->assertRedirect(route('reservations.letter', [$r, 'dil' => 'tr']))->assertSessionHas('status');
+
+        Mail::assertSent(ConfirmationLetterMail::class, function (ConfirmationLetterMail $mail) use ($r) {
+            $html = $mail->render();
+
+            return $mail->hasTo('mark@example.com') && $mail->letter['lang'] === 'tr'
+                && str_contains($html, 'Rezervasyon Numarası') && str_contains($html, $r->confirmation_number)
+                && $mail->envelope()->subject === 'Rezervasyon Onayı – Rocks Hotel & Casino ('.$r->confirmation_number.')';
+        });
+        $log = DB::table('pms_reservation_letters')->where('reservation_id', $r->id)->first();
+        $this->assertSame(['mark@example.com', 'tr', $this->user->id], [$log->email, $log->language, (int) $log->sent_by]);
+        $this->actingAs($this->user)->get("/rezervasyon/{$r->id}/onay-mektubu")->assertSee('Last sent');
+    }
+
+    public function test_email_is_not_sent_without_smtp_settings_or_with_bad_address(): void
+    {
+        Mail::fake();
+        $r = $this->guestReservation('Johnson');
+        config(['mail.default' => 'smtp', 'mail.mailers.smtp.host' => '', 'mail.from.address' => '']);
+
+        $this->actingAs($this->user)->get("/rezervasyon/{$r->id}/onay-mektubu")->assertOk()->assertSee('E-mail is not set up yet', false);
+        $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/onay-mektubu", ['email' => 'mark@example.com', 'dil' => 'en'])
+            ->assertSessionHas('error', 'E-mail is not set up yet (SMTP settings in .env).');
+
+        config(['mail.mailers.smtp.host' => 'smtp.example.com', 'mail.from.address' => 'reservation@example.com']);
+        $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/onay-mektubu", ['email' => 'not-an-email', 'dil' => 'en'])->assertSessionHasErrors('email');
+
+        Mail::assertNothingSent();
+        $this->assertSame(0, DB::table('pms_reservation_letters')->count());
     }
 }

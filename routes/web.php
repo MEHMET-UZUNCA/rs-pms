@@ -64,6 +64,7 @@ Route::middleware(['auth', 'property'])->group(function () {
         });
         Route::get('/{reservation}/ozet', [NavigatorController::class, 'summary'])->name('summary');
         Route::get('/{reservation}/onay-mektubu', [ConfirmationLetterController::class, 'show'])->name('letter');
+        Route::post('/{reservation}/onay-mektubu', [ConfirmationLetterController::class, 'send'])->middleware('permission:reservations.edit')->name('letter-send');
         Route::get('/hesap/{folio}/ozet', [NavigatorController::class, 'folioSummary'])->name('folio-summary');
         Route::post('/{reservation}/giris', [NavigatorController::class, 'checkIn'])->middleware('permission:reservations.checkin')->name('check-in');
     });

@@ -2,6 +2,7 @@
 
 // Onay mektubu metinleri — Confirmation_Letter_EN.pdf şablonuyla aynı.
 return [
+    'subject' => 'Reservation Confirmation – Rocks Hotel & Casino (:number)',
     'title_1' => 'Reservation',
     'title_2' => 'Confirmation Letter',
     'hotel_line' => 'Rocks Hotel&Casino, Girne - Kordon Boyu, Girne - 9000 Girne',

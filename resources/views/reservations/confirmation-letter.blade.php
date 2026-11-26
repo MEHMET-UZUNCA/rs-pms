@@ -61,9 +61,16 @@
         .bar a, .bar button { padding: 4px 12px; border: 1px solid #777; border-radius: 3px; background: #444; color: #fff; text-decoration: none; cursor: pointer; font: inherit; }
         .bar a.on { background: #b3a486; border-color: #b3a486; color: #000; }
         .bar kbd { margin-left: 6px; opacity: .7; font-size: 11px; }
+        .bar { flex-wrap: wrap; align-items: center; }
+        .bar form { display: flex; gap: 6px; align-items: center; margin-left: 12px; }
+        .bar input { width: 240px; max-width: 60vw; padding: 4px 8px; border: 1px solid #777; border-radius: 3px; font: inherit; }
+        .bar button:disabled { opacity: .4; cursor: not-allowed; }
+        .bar .note { color: #ccc; font-size: 12px; }
+        .flash { max-width: 210mm; margin: 8px auto 0; padding: 6px 10px; border-radius: 3px; font: 13px system-ui, sans-serif; }
+        .flash.ok { background: #e3f1e5; color: #1e6b2d; } .flash.err { background: #fbe4e4; color: #9b1c1c; }
         @media print {
             body { background: #fff; }
-            .bar { display: none; }
+            .bar, .flash { display: none; }
             .page { margin: 0; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
@@ -76,7 +83,21 @@
     @endforeach
     <button type="button" onclick="window.print()">{{ __('pms.res.print') }} <kbd>Ctrl+P</kbd></button>
     <a href="{{ route('reservations.navigator', ['secili' => $r->id, 'no' => $r->confirmation_number]) }}" data-close>{{ __('pms.common.close') }} <kbd>Esc</kbd></a>
+    @can('permission', 'reservations.edit')
+        <form method="POST" action="{{ route('reservations.letter-send', $r) }}" data-send>
+            @csrf
+            <input type="hidden" name="dil" value="{{ $lang }}">
+            <input type="email" name="email" value="{{ old('email', $email) }}" placeholder="{{ __('pms.res.letter_email') }}" required>
+            <button @disabled(! $mailReady) title="{{ $mailReady ? '' : __('pms.res.letter_no_smtp') }}">{{ __('pms.res.letter_send') }}</button>
+        </form>
+    @endcan
+    @if ($sent)
+        <span class="note">{{ __('pms.res.letter_last', ['date' => \Illuminate\Support\Carbon::parse($sent->sent_at)->format('d.m.Y H:i'), 'email' => $sent->email, 'user' => $sent->username]) }}</span>
+    @endif
 </nav>
+@if (session('status'))<div class="flash ok" role="status">{{ session('status') }}</div>@endif
+@if (session('error'))<div class="flash err" role="alert">{{ session('error') }}</div>@endif
+@if ($errors->any())<div class="flash err" role="alert">{{ $errors->first() }}</div>@endif
 
 <main class="page">
     <img class="header" src="{{ $img('header.png') }}" alt="Rocks Hotel &amp; Casino">
