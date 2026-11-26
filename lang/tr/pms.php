@@ -202,4 +202,26 @@ return [
         'dc_number_unique' => 'Bu numarayla bir departman kodu zaten var.',
         'payment_kind_required' => 'Ödeme kodu için ödeme türü seçilmeli.',
     ],
+
+    'users' => [
+        'title' => 'Kullanıcılar', 'subtitle' => 'Kullanıcı hesapları, roller ve geçici şifreler', 'username' => 'Kullanıcı adı', 'initials' => 'Baş harfler',
+        'title_field' => 'Unvan', 'email' => 'E-posta', 'role' => 'Rol', 'last_login' => 'Son giriş', 'must_change' => 'Şifre değiştirmeli',
+        'new_title' => 'Yeni kullanıcı', 'edit_title' => ':name kullanıcısını düzenle', 'reset_password' => 'Şifre',
+        'reset_confirm' => 'Seçili kullanıcıya yeni geçici şifre verilsin mi? Eski şifre artık çalışmaz.',
+        'temp_password' => ':username için geçici şifre:', 'temp_password_hint' => 'Yalnız bir kez gösterilir. Kullanıcıya verin; ilk girişte değiştirmek zorunda.',
+        'new_hint' => 'Kaydedince geçici şifre üretilir ve bir kez gösterilir. Kullanıcı ilk girişte değiştirmek zorunda.',
+        'err_username' => 'Kullanıcı adında yalnız harf, rakam, nokta, tire ve alt çizgi olabilir.',
+        'err_self_inactive' => 'Kendi hesabınızı pasif yapamazsınız.', 'err_self_role' => 'Kendinize Kullanıcılar ve Roller yetkisi olmayan bir rol veremezsiniz.',
+    ],
+
+    'roles' => [
+        'title' => 'Roller', 'subtitle' => 'Kullanıcı grupları ve yetkileri', 'permissions' => 'Yetkiler', 'users' => 'Aktif kullanıcı',
+        'new_title' => 'Yeni rol', 'edit_title' => ':name rolünü düzenle', 'select_all' => 'Tümünü seç',
+        'hint' => 'Bu rolün yetkilerini işaretleyin. Değişiklik bu roldeki bütün kullanıcılara bir sonraki ekranda uygulanır.',
+        'delete_confirm' => 'Seçili rol silinsin mi? Kullanıcıya verilmiş rol silinemez.',
+        'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
+        'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
+        'groups' => ['setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
+        'perm' => ['setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+    ],
 ];

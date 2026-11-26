@@ -125,6 +125,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/13-onay-mektubu-en.png` | Navigatörde ya da rezervasyon kartında `Alt+L`; Confirmation_Letter_EN şablonu, alanlar rezervasyondan; `Ctrl+P` ile yazdır / PDF'e kaydet |
 | `goruntuler/13-onay-mektubu-tr.png` | Aynı mektup Türkçe (üst çubukta EN / TR; dil verilmezse misafir profilinin dili) |
 
+## 14 — Kullanıcılar ve Roller (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/14-kullanicilar-01-liste-gecici-sifre.png` | Ayarlar → Kullanıcılar: yeni kullanıcı kaydedildi, geçici şifre bir kez gösteriliyor; Alt+P yeni şifre, Alt+R roller |
+| `goruntuler/14-kullanicilar-02-rol-yetkileri.png` | Rol düzenleme: yetkiler modüllere göre gruplu, grup başında tümünü seç |
+
 ## Taslakları yerelde açmak
 
 ```bash

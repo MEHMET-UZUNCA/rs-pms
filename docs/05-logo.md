@@ -39,8 +39,24 @@ Otelde **Logo Tiger** kullanılıyor. Seçenekler (tercih sırasıyla):
 
 PMS tarafındaki tasarım üçünde de aynıdır (`pms_logo_export_*`); yalnız gönderici sınıf değişir.
 
+**Otelin Logo lisansları (Kurulu Lisanslar ekranı, 26.11.2026; ürün anahtarları depoya konmaz):**
+
+| Ürün | Yükleme |
+|---|---|
+| Tiger Plus Ana Paket | 2015.01.14 |
+| Tiger Plus Kullanıcı Art. +10 | 2015.01.14 |
+| **Tiger Plus LObjects (1 kullanıcı)** | 2015.01.14 |
+| Tiger Plus LEM Paketi (Standart) | 2025.10.02 |
+| Tiger 3 — Tiger Plus'tan geçiş (L) | 2025.10.11 |
+| Tiger 3 LEM Paketi (bedelsiz) | 2025.10.11 |
+
+Sonuç: Ürün Tiger Plus'tan **Tiger 3**'e geçiyor; **LObjects lisansı var** (1 kullanıcı). Bu yüzden aktarım **LObjects** ile yapılır:
+Logo sunucusunda (Windows) küçük bir aktarım servisi LObjects üzerinden fiş ve cari kart yazar, PMS ona fişi gönderir.
+Tiger 3'ün REST servisi de LObjects lisansıyla çalışır; kurulum sırasında REST servisi açılabiliyorsa yöntem 1 (REST) kullanılır,
+açılamıyorsa yöntem 2. LObjects 1 kullanıcılık olduğundan aktarım tek bağlantıdan, sırayla yapılır.
+
 > **Kalan sorular:**
-> - Tiger sürümü ve REST servisi lisansı var mı?
+> - Tiger 3 kurulumu tamamlandı mı, REST servisi (Logo Rest Service) kurulu mu?
 > - Firma / dönem numarası, mahsup fişi tipi, şube/bölüm kodları
 > - Faturayı PMS mi kesecek, Logo mu? (Tasarımda PMS keser, Logo'ya fiş gider.)
 > - Cari kartlar Logo'da mı açılıyor, PMS'ten mi gönderilecek?

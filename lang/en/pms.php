@@ -202,4 +202,26 @@ return [
         'dc_number_unique' => 'A department code with this number already exists.',
         'payment_kind_required' => 'A payment type is required for a payment code.',
     ],
+
+    'users' => [
+        'title' => 'Users', 'subtitle' => 'User accounts, roles and temporary passwords', 'username' => 'Login', 'initials' => 'Initials',
+        'title_field' => 'Title', 'email' => 'E-mail', 'role' => 'Role', 'last_login' => 'Last login', 'must_change' => 'Must change password',
+        'new_title' => 'New User', 'edit_title' => 'Edit User :name', 'reset_password' => 'Password',
+        'reset_confirm' => 'Create a new temporary password for the selected user? The old password stops working.',
+        'temp_password' => 'Temporary password for :username:', 'temp_password_hint' => 'Shown only once. Give it to the user; they must change it at first login.',
+        'new_hint' => 'A temporary password is created and shown once after saving. The user must change it at first login.',
+        'err_username' => 'Login may contain letters, digits, dot, dash and underscore only.',
+        'err_self_inactive' => 'You cannot set your own account inactive.', 'err_self_role' => 'You cannot give yourself a role without the Users and Roles permission.',
+    ],
+
+    'roles' => [
+        'title' => 'Roles', 'subtitle' => 'User groups and their permissions', 'permissions' => 'Permissions', 'users' => 'Active users',
+        'new_title' => 'New Role', 'edit_title' => 'Edit Role :name', 'select_all' => 'Select all',
+        'hint' => 'Tick the permissions of this role. A change applies to every user with this role at their next screen.',
+        'delete_confirm' => 'Delete the selected role? A role given to users cannot be deleted.',
+        'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
+        'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
+        'groups' => ['setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
+        'perm' => ['setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+    ],
 ];

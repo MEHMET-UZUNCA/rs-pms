@@ -11,6 +11,8 @@ use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\OutletController;
+use App\Http\Controllers\Setup\RoleController;
+use App\Http\Controllers\Setup\UserController;
 use App\Http\Controllers\Setup\TransactionCodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -79,6 +81,23 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::put('/{outlet}', [OutletController::class, 'update'])->name('update');
         Route::delete('/{outlet}', [OutletController::class, 'destroy'])->name('destroy');
         Route::post('/{outlet}/tasi/{direction}', [OutletController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
+    });
+
+    // Ayarlar → Sistem → Kullanıcılar ve Roller
+    Route::middleware('permission:setup.users')->prefix('ayarlar')->group(function () {
+        Route::get('/kullanicilar', [UserController::class, 'index'])->name('setup.users.index');
+        Route::get('/kullanicilar/yeni', [UserController::class, 'create'])->name('setup.users.create');
+        Route::post('/kullanicilar', [UserController::class, 'store'])->name('setup.users.store');
+        Route::get('/kullanicilar/{user}/duzenle', [UserController::class, 'edit'])->name('setup.users.edit');
+        Route::put('/kullanicilar/{user}', [UserController::class, 'update'])->name('setup.users.update');
+        Route::post('/kullanicilar/{user}/sifre', [UserController::class, 'resetPassword'])->name('setup.users.password');
+        Route::get('/roller', [RoleController::class, 'index'])->name('setup.roles.index');
+        Route::get('/roller/yeni', [RoleController::class, 'create'])->name('setup.roles.create');
+        Route::post('/roller', [RoleController::class, 'store'])->name('setup.roles.store');
+        Route::get('/roller/{role}/duzenle', [RoleController::class, 'edit'])->whereNumber('role')->name('setup.roles.edit');
+        Route::get('/roller/{role}/kopyala', [RoleController::class, 'copy'])->whereNumber('role')->name('setup.roles.copy');
+        Route::put('/roller/{role}', [RoleController::class, 'update'])->whereNumber('role')->name('setup.roles.update');
+        Route::delete('/roller/{role}', [RoleController::class, 'destroy'])->whereNumber('role')->name('setup.roles.destroy');
     });
 
     // Ayarlar → Kasa → Departman Kodları

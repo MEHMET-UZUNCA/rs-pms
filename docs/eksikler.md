@@ -12,7 +12,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 4b | Simphony satış kalemi (Sales Itemizer) 3, 4, 6, 7, 8 adları — kalem 1 yiyecek, 2 içecek Fidelio kayıtlarından çıkarıldı | Simphony EMC → Descriptors | Az kullanılan kalemlerin departman kodu | Bekleniyor |
 | 4c | Simphony ödeme tipleri (Tender/Media) listesi — en az 131, 231, 401, 402, 404, 601 | Simphony EMC | Ödeme tipi adları ve türleri | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
-| 8 | Logo Tiger: sürüm, REST lisansı, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Bekleniyor |
+| 8 | Logo Tiger: lisanslar alındı (Tiger 3'e geçiş, LObjects var — docs/05-logo.md). Kalan: REST servisi kurulu mu, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Kısmen |
 | 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34. Aday: **1308** (listede YMT "Twin"; 1108 ve 1208 YMF) — Fidelio'da 1308'in tipi teyit edilecek | Fidelio Rooms → 1308 | Oda tipi sayıları | Bekleniyor |
 | 9c | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — Fidelio'da yer değiştirmiş olabilir | Fidelio Rooms | Doğru tip / açıklama | Teyit edilecek |
 | 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
@@ -47,7 +47,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 - 26 Fidelio kullanıcısı `php artisan pms:import-users <dosya>` ile açılır (rastgele geçici şifre, rol, ilk girişte şifre değiştirme zorunlu).
   Kullanıcı listesi ve şifre dosyası depoya konmaz (storage/app/private). Arayüz hesapları, PROTEL, Guest.Selfupdate ve TEST1 açılmadı.
-- Rol yetkileri başlangıç önerisidir; Kullanıcılar ve Roller ekranı yapılınca otelle birlikte gözden geçirilecek.
+- Rol yetkileri başlangıç önerisidir; Ayarlar → Kullanıcılar / Roller ekranından otelle birlikte gözden geçirilecek.
 
 ## Dil
 
@@ -78,4 +78,4 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 7. Logo aktarımı
 8. Fidelio veri aktarımı (PROISV)
 9. Rapor ekranı (Miscellaneous → Reports) — başlangıç seti docs/10-raporlar.md'de (ön büro, oda/kat hizmetleri, doluluk, finans; 19 rapor)
-10. Multiboard (Fidelio Multiboard) — otelin kullandığı görünümün ekran görüntüsü bekleniyor
+10. Multiboard (çoklu pansiyon: RO / BB / HB / FB / AI aynı otelde) — altyapı var (pms_packages board tipleri, fiyat kodu → pansiyon, gece kapanışında pansiyon elemanları ayrı kodlara); kalan: rezervasyonda gece bazında pansiyon ve pansiyon değişikliği, kartta Meal Plan sekmesi, mutfak için günlük öğün sayıları raporu, otelin sattığı pansiyon tipleri ve fiyat kodları bekleniyor
