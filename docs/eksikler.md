@@ -38,6 +38,13 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 
+## Kullanıcılar
+
+- 26 Fidelio kullanıcısı `php artisan pms:import-users <dosya>` ile açılır (rastgele geçici şifre, rol, ilk girişte şifre değiştirme zorunlu).
+  Kullanıcı listesi ve şifre dosyası depoya konmaz (storage/app/private). Arayüz hesapları, PROTEL, Guest.Selfupdate ve TEST1 açılmadı.
+- Fidelio kullanıcı listesinin devamı varsa (ekranda kaydırma çubuğu vardı) gönderilmeli.
+- Rol yetkileri başlangıç önerisidir; Kullanıcılar ve Roller ekranı yapılınca otelle birlikte gözden geçirilecek.
+
 ## Dil
 
 - Servis hata mesajları (ör. "Girişten önce oda atanmalı", outlet/departman kodu kuralları) henüz yalnız Türkçe; dil dosyasına taşınacak.

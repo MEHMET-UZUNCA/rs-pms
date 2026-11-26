@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RequirePasswordChange;
 use App\Http\Middleware\RequirePermission;
 use App\Http\Middleware\SetCurrentProperty;
 use App\Http\Middleware\SetLocale;
@@ -17,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['property' => SetCurrentProperty::class, 'permission' => RequirePermission::class]);
         $middleware->redirectGuestsTo('/giris');
-        $middleware->web(append: [SetLocale::class]);
+        $middleware->web(append: [SetLocale::class, RequirePasswordChange::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

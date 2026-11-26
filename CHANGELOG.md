@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Kullanıcı içe aktarma (pms:import-users): Fidelio kullanıcıları rastgele 12 karakterlik geçici şifre ve Fidelio grubuna karşılık gelen rolle açılır; şifreler kullanıcıların rol ve yetkileriyle birlikte depo dışındaki bir metin dosyasına yazılır (storage/app/private). İlk girişte şifre değiştirme zorunlu (en az 8 karakter, harf ve rakam, eskisinden farklı); kullanıcı adına tıklayarak şifre değiştirme. Kullanıcıya baş harfler ve unvan alanları. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Rocks Hotel'in gerçek odaları Fidelio'dan: 10 oda tipi (EMF, EMT, ESU, EST, ESF, YSF, YST, YMT, YMF, YSU), 155 aktif oda (açıklama, kat, kişi sayısı; süresi bitmiş odalar pasif), A/B blokları, 7 kat, oda özellikleri (Sea View, Mountain View, French/Twin Bed, Non Smoking, Connecting, Engelli) odalara açıklamalarından bağlandı. Fidelio kullanıcı grupları (15) rol olarak; yetkiler başlangıç önerisi. Örnek veri artık gerçek odaları kullanır. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Gece Kapanışı ekranı (Fidelio Night Audit): kapanış öncesi kontrol listesi (engelleyen / uyarı, ilgili rezervasyonlar ve folyo bağlantısı), amir onayıyla geçiş (gerekçe kullanıcı adıyla kaydedilir), F10 ile çalıştırma ve adım durumu, yarıda kalan kapanışa devam, son kapanan günün doluluk / satılan oda / ADR / RevPAR / gelir özeti ve departman kodu bazında gelir, geçmiş. Yetkiler: night_audit.view, night_audit.run, night_audit.override. Örnek veride geçmiş geceler kendi iş gününe yazılır (ADR doğru). Testler SQLite ve MySQL'de geçti. (M.U)

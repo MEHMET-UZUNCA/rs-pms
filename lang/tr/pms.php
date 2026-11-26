@@ -171,6 +171,13 @@ return [
         'run_status' => ['running' => 'Çalışıyor', 'held' => 'Durdu', 'completed' => 'Tamamlandı', 'failed' => 'Hata'], 'items' => ':count kayıt',
     ],
 
+    'password' => [
+        'title' => 'Şifre değiştir', 'current' => 'Mevcut şifre', 'new' => 'Yeni şifre', 'confirm' => 'Yeni şifre (tekrar)',
+        'rules' => 'En az 8 karakter, harf ve rakam içermeli; mevcut şifreden farklı olmalı.', 'save' => 'Şifreyi değiştir',
+        'forced' => 'Hesabınız geçici bir şifreyle açıldı. Devam etmek için kendi şifrenizi belirleyin.', 'changed' => 'Şifreniz değiştirildi.',
+        'menu' => 'Şifre değiştir',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
         'outlet_code_unique' => 'Bu kodla bir outlet zaten var.',

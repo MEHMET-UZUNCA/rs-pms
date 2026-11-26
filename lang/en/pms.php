@@ -171,6 +171,13 @@ return [
         'run_status' => ['running' => 'Running', 'held' => 'Held', 'completed' => 'Completed', 'failed' => 'Failed'], 'items' => ':count items',
     ],
 
+    'password' => [
+        'title' => 'Change Password', 'current' => 'Current password', 'new' => 'New password', 'confirm' => 'New password (again)',
+        'rules' => 'At least 8 characters with letters and numbers; must differ from the current password.', 'save' => 'Change password',
+        'forced' => 'Your account was created with a temporary password. Please set your own password to continue.', 'changed' => 'Your password has been changed.',
+        'menu' => 'Change password',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
         'outlet_code_unique' => 'An outlet with this code already exists.',

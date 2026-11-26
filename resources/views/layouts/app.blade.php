@@ -34,7 +34,7 @@
                         @class(['px-1.5 rounded text-[12px] uppercase', 'bg-brand-600 text-white' => app()->getLocale() === $code, 'hover:text-white' => app()->getLocale() !== $code])>{{ $code }}</button>
                 @endforeach
             </form>
-            <span>{{ $user->name }}</span>
+            <a href="{{ route('password.edit') }}" class="hover:text-white" title="{{ __('pms.password.menu') }}">{{ $user->name }}</a>
             <form method="POST" action="{{ route('logout') }}">@csrf<button class="hover:text-white underline-offset-2 hover:underline">{{ __('pms.common.logout') }}</button></form>
         </div>
     </header>

@@ -45,6 +45,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed          # Rocks Hotel tanımları: 277 departman kodu, 15 outlet, vergiler, roller
 php artisan pms:create-user MU "M.U" kullanici@ornek.com --role=admin   # şifre sorulur
+php artisan pms:import-users storage/app/private/fidelio-users.tsv     # Fidelio kullanıcıları: rastgele şifre, rol, ilk girişte şifre değiştirme
 php artisan db:seed --class=DemoDataSeeder   # isteğe bağlı: örnek odalar ve rezervasyonlar (yalnız geliştirme)
 npm install && npm run build
 php artisan test

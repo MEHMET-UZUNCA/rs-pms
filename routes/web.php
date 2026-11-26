@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
@@ -27,6 +28,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'property'])->group(function () {
     Route::post('/cikis', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/sifre', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/sifre', [PasswordController::class, 'update'])->middleware('throttle:10,1')->name('password.update');
     Route::get('/', HomeController::class)->name('home');
 
     // Çeşitli → Gece Kapanışı (Night Audit)
