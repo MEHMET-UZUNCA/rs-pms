@@ -24,7 +24,7 @@ class LocaleTest extends DomainTestCase
         $this->assertSame('en', $this->user->fresh()->locale);
         $this->actingAs($this->user)->get('/rezervasyon')->assertOk()
             ->assertSee('Reservation Navigator')->assertSee('In House')->assertSee('Arrivals')->assertSee('Departures')
-            ->assertSee('Check In')->assertSee('Business Date')->assertSee('Front Office')->assertSee('Cashiering')->assertSee('Housekeeping')
+            ->assertSee('Check In')->assertSee('Business Date')->assertSee('Front Desk')->assertSee('Cashiering')->assertSee('Rooms Management')->assertSee('Quick Keys')
             ->assertSee('<html lang="en">', false);
         $this->actingAs($this->user)->get('/ayarlar/departman-kodlari')->assertSee('Department Codes')->assertSee('Show Inactive');
     }

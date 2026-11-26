@@ -2,17 +2,7 @@
     $user = auth()->user();
     $businessDate = $currentProperty->current_business_date;
     $can = fn (string $permission) => Gate::allows('permission', $permission);
-    // Fidelio Suite8 ana menüleri (docs/07-arayuz.md §7.1). Hazır olan ekranlar bağlantı, diğerleri sırası gelince açılır.
-    $menus = [
-        'reservation' => [['reservation_navigator', $can('reservations.view') ? route('reservations.navigator') : null], ['quick_reservation', null], ['availability', null], ['rate_query', null], ['block_reservation', null]],
-        'front_office' => [['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null], ['in_house', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['room_rack', $can('reservations.view') ? route('front-office.room-rack') : null], ['new_financial_account', $can('cashiering.accounts') ? route('accounts.create') : null], ['house_status', null]],
-        'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null], ['accounts_receivable', null]],
-        'housekeeping' => [['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null], ['attendants', null], ['discrepant_rooms', null]],
-        'profiles' => [['profile_navigator', null]],
-        'conference' => [['conference_diary', null], ['events', null]],
-        'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['logbook', null], ['reports', null]],
-        'setup' => [['outlets', $can('setup.outlets') ? route('setup.outlets.index') : null], ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null], ['taxes', null], ['users', $can('setup.users') ? route('setup.users.index') : null]],
-    ];
+    $menus = \App\Support\Menu::items();
 @endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
@@ -39,13 +29,15 @@
         </div>
     </header>
 
-    <nav class="flex items-center gap-0.5 px-2 h-8 bg-panel border-b border-line shrink-0 overflow-x-auto" aria-label="Menu">
+    <nav class="relative z-40 flex flex-wrap items-center gap-0.5 px-2 min-h-8 bg-panel border-b border-line shrink-0" aria-label="Menu">
         @foreach ($menus as $menu => $items)
             <div class="menu-root relative">
                 <div class="menu-item whitespace-nowrap" role="button" tabindex="0">{{ __('pms.menu.'.$menu) }}</div>
                 <div class="menu-drop">
-                    @foreach ($items as [$label, $url])
-                        @if ($url)<a href="{{ $url }}">{{ __('pms.menu.'.$label) }}</a>@else<span title="{{ __('pms.menu.coming_soon') }}">{{ __('pms.menu.'.$label) }}</span>@endif
+                    @foreach ($items as $item)
+                        @php [$label, $url] = $item; $keys = $item[2] ?? null; @endphp
+                        @if ($url)<a href="{{ $url }}" class="flex gap-6">{{ __('pms.menu.'.$label) }}@if ($keys)<span class="ml-auto text-muted text-[12px]">{{ $keys }}</span>@endif</a>
+                        @else<span title="{{ __('pms.menu.coming_soon') }}" class="flex gap-6">{{ __('pms.menu.'.$label) }}@if ($keys)<span class="ml-auto text-[12px]">{{ $keys }}</span>@endif</span>@endif
                     @endforeach
                 </div>
             </div>
@@ -53,9 +45,10 @@
     </nav>
 
     {{-- Fidelio genel kısayolları: her ekrandan çalışır --}}
-    @if ($can('reservations.view'))
-        <a href="{{ route('front-office.room-rack') }}" data-hotkey="ctrl+l" data-hotkey-global hidden aria-hidden="true" tabindex="-1"></a>
-    @endif
+    @foreach (\App\Support\QuickKeys::global() as $quick)
+        @if ($quick['url'])<a href="{{ $quick['url'] }}" data-hotkey="{{ $quick['hotkey'] }}" data-hotkey-global hidden aria-hidden="true" tabindex="-1"></a>@endif
+    @endforeach
+    <a href="{{ route('shortcuts') }}" data-hotkey="f1" data-hotkey-global hidden aria-hidden="true" tabindex="-1"></a>
 
     <main class="flex-1 min-h-0 p-3 flex flex-col gap-2">
         @if (session('status'))<div class="flash flash-ok" role="status">{{ session('status') }}</div>@endif

@@ -10,12 +10,12 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
-        'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Kat Hizmetleri',
+        'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
         'rate_query' => 'Fiyat Sorgulama', 'block_reservation' => 'Blok / Allotman', 'arrivals' => 'Gelecekler', 'in_house' => 'İçeridekiler',
-        'new_financial_account' => 'Yeni hesap (PM)', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
-        'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Oda Durumu',
+        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
+        'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Kat Hizmetleri',
         'attendants' => 'Görev Dağıtımı', 'discrepant_rooms' => 'Uyuşmazlıklar', 'profile_navigator' => 'Profil Navigatörü',
         'conference_diary' => 'Konferans Günlüğü', 'events' => 'Etkinlikler', 'night_audit' => 'Gece Kapanışı', 'logbook' => 'Vardiya Defteri',
         'reports' => 'Raporlar', 'outlets' => "Outlet'ler", 'department_codes' => 'Departman Kodları', 'taxes' => 'Vergiler', 'users' => 'Kullanıcılar',
@@ -231,5 +231,13 @@ return [
         'profile' => 'Profil', 'number' => 'Hesap numarası', 'number_hint' => 'Boş bırakılırsa sıradaki numara verilir.', 'market' => 'Pazar',
         'credit_limit' => 'Kredi limiti', 'source' => 'Kaynak kodu', 'currency' => 'Sözleşme para birimi', 'billing_info' => 'Fatura bilgisi', 'remarks' => 'Notlar',
         'no_post' => 'Harcama yazılmaz (No Post)', 'no_post_hint' => '(yalnız ödeme)', 'err_no_post' => ':number hesabı "No Post"; harcama yazılamaz.',
+    ],
+
+    'keys' => [
+        'title' => 'Kısayollar', 'subtitle' => 'Genel kısayollar her ekranda, ekran kısayolları o ekranda çalışır',
+        'global_hint' => 'Her ekrandan çalışır.', 'move' => 'Yukarı / aşağı taşı', 'select_row' => 'Satır seç', 'filters' => 'Süzgeçler',
+        'tabs' => 'Sekmeler', 'windows' => 'Folyo pencereleri', 'period' => 'Önceki / sonraki dönem', 'reservation_card' => 'Rezervasyon kartı',
+        'setup_lists' => 'Ayar listeleri (Outlet, Departman kodu, Kullanıcı, Rol)', 'forms' => 'Düzenleme pencereleri',
+        'browser_note' => 'Ctrl+N, Ctrl+T ve Ctrl+W tarayıcıya ayrılmıştır ve programa ulaşmayabilir; yeni rezervasyon için Alt+Shift+N ya da navigatörde Ctrl+N kullanın.',
     ],
 ];

@@ -19,9 +19,9 @@ function keyName(e) {
     const parts = [];
     if (e.ctrlKey) parts.push('ctrl');
     if (e.altKey) parts.push('alt');
-    if (e.shiftKey && e.key.length > 1) parts.push('shift');
+    if (e.shiftKey && (e.key.length > 1 || e.ctrlKey || e.altKey)) parts.push('shift');
     let key = e.key.toLowerCase();
-    if (e.altKey && e.code?.startsWith('Key')) key = e.code.slice(3).toLowerCase(); // Alt+harf: klavye düzeninden bağımsız
+    if ((e.altKey || e.ctrlKey) && e.code?.startsWith('Key')) key = e.code.slice(3).toLowerCase(); // Alt/Ctrl+harf: klavye düzeninden bağımsız (Türkçe ı/i)
     if (e.code?.startsWith('Digit') && (e.altKey || e.ctrlKey)) key = e.code.slice(5);
     parts.push(key === ' ' ? 'space' : key);
     return parts.join('+');
@@ -29,9 +29,11 @@ function keyName(e) {
 
 document.addEventListener('keydown', (e) => {
     const name = keyName(e);
-    const target = [...document.querySelectorAll('[data-hotkey]')].find((el) =>
-        el.dataset.hotkey.split(' ').includes(name) && !el.disabled && (el.offsetParent !== null || el.hasAttribute('data-hotkey-global')));
+    const matches = [...document.querySelectorAll('[data-hotkey]')].filter((el) => el.dataset.hotkey.split(' ').includes(name) && !el.disabled);
+    // Önce ekrandaki görünür düğme, yoksa genel kısayol (Quick Keys)
+    const target = matches.find((el) => el.offsetParent !== null && !el.hasAttribute('data-hotkey-global')) ?? matches.find((el) => el.hasAttribute('data-hotkey-global'));
     if (!target) return;
+    if (name === 'ctrl+a' && isTyping(document.activeElement) && target.hasAttribute('data-hotkey-global')) return; // yazarken Ctrl+A: tümünü seç
     const plain = !e.altKey && !e.ctrlKey && !['escape', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12'].includes(name);
     if (plain && isTyping(document.activeElement)) return; // Delete/Enter yazarken alana aittir
     if (name === 'escape' && document.querySelector('.menu-root.is-open')) return;

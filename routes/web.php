@@ -84,6 +84,9 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/{outlet}/tasi/{direction}', [OutletController::class, 'move'])->whereIn('direction', ['up', 'down'])->name('move');
     });
 
+    // Quick Keys → All Shortcuts
+    Route::view('/kisayollar', 'shortcuts')->name('shortcuts');
+
     // Ön Büro → New Financial Account (PM hesabı)
     Route::middleware('permission:cashiering.accounts')->prefix('hesaplar')->name('accounts.')->group(function () {
         Route::get('/yeni', [FinancialAccountController::class, 'create'])->name('create');

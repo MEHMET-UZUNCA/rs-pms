@@ -10,12 +10,12 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
-        'reservation' => 'Reservation', 'front_office' => 'Front Office', 'cashiering' => 'Cashiering', 'housekeeping' => 'Housekeeping',
+        'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
         'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
-        'new_financial_account' => 'New Financial Account', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
-        'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Room Status',
+        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Housekeeping',
         'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
         'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
         'reports' => 'Reports', 'outlets' => 'Outlets', 'department_codes' => 'Department Codes', 'taxes' => 'Taxes', 'users' => 'Users',
@@ -231,5 +231,13 @@ return [
         'profile' => 'Profile', 'number' => 'Account Number', 'number_hint' => 'Empty: next number is given automatically.', 'market' => 'Market',
         'credit_limit' => 'Limit Value', 'source' => 'Source Code', 'currency' => 'Contracted Curr.', 'billing_info' => 'Billing Info', 'remarks' => 'Remarks',
         'no_post' => 'No Post', 'no_post_hint' => '(no charges, payments only)', 'err_no_post' => 'Account :number is set to No Post; charges cannot be posted.',
+    ],
+
+    'keys' => [
+        'title' => 'Shortcuts', 'subtitle' => 'Quick Keys work on every screen; screen keys work on that screen',
+        'global_hint' => 'Work from every screen.', 'move' => 'Move up / down', 'select_row' => 'Select row', 'filters' => 'Filters',
+        'tabs' => 'Tabs', 'windows' => 'Folio windows', 'period' => 'Previous / next period', 'reservation_card' => 'Reservation Card',
+        'setup_lists' => 'Setup lists (Outlets, Department Codes, Users, Roles)', 'forms' => 'Edit windows',
+        'browser_note' => 'Ctrl+N, Ctrl+T and Ctrl+W are reserved by the browser and may not reach the program; use Alt+Shift+N for New Reservation, or Ctrl+N in the Reservation Navigator.',
     ],
 ];

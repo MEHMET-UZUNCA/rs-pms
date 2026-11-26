@@ -132,6 +132,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/14-kullanicilar-01-liste-gecici-sifre.png` | Ayarlar → Kullanıcılar: yeni kullanıcı kaydedildi, geçici şifre bir kez gösteriliyor; Alt+P yeni şifre, Alt+R roller |
 | `goruntuler/14-kullanicilar-02-rol-yetkileri.png` | Rol düzenleme: yetkiler modüllere göre gruplu, grup başında tümünü seç |
 
+## 15 — Kısayollar (Quick Keys, gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/15-kisayollar-01-ekran.png` | F1: genel kısayollar ve ekranlara özel tuşlar |
+| `goruntuler/15-kisayollar-02-menu.png` | Quick Keys menüsü; henüz olmayan ekranlar soluk |
+
 ## Taslakları yerelde açmak
 
 ```bash

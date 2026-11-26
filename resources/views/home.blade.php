@@ -5,10 +5,12 @@
     <div class="win-title">{{ __('pms.common.home') }}</div>
     <div class="p-4 text-muted">
         <p>{{ __('pms.common.available_screens') }}</p>
-        <ul class="list-disc ml-5 mt-2 text-ink">
-            @can('permission', 'reservations.view')<li><a class="text-brand-600 hover:underline" href="{{ route('reservations.navigator') }}">{{ __('pms.menu.reservation') }} → {{ __('pms.menu.reservation_navigator') }}</a></li>@endcan
-            @can('permission', 'setup.outlets')<li><a class="text-brand-600 hover:underline" href="{{ route('setup.outlets.index') }}">{{ __('pms.menu.setup') }} → {{ __('pms.menu.outlets') }}</a></li>@endcan
-            @can('permission', 'setup.transaction_codes')<li><a class="text-brand-600 hover:underline" href="{{ route('setup.transaction-codes.index') }}">{{ __('pms.menu.setup') }} → {{ __('pms.menu.department_codes') }}</a></li>@endcan
+        <ul class="list-disc ml-5 mt-2 text-ink" data-available-screens>
+            @foreach (\App\Support\Menu::items() as $menu => $items)
+                @foreach ($items as $item)
+                    @if ($item[1] && $menu !== 'quick_keys')<li><a class="text-brand-600 hover:underline" href="{{ $item[1] }}">{{ __('pms.menu.'.$menu) }} → {{ __('pms.menu.'.$item[0]) }}</a></li>@endif
+                @endforeach
+            @endforeach
         </ul>
     </div>
 </div>
