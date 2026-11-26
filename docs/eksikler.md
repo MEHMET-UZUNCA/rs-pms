@@ -77,7 +77,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 - Reservation / Front Desk: New Financial Account (yapıldı), Lost & Found (yapıldı), Traces, Queue Rooms, Room Blocking; Group / Block / Waitlist / Quick Reservation kullanımı sorulacak. **Messages + Locator kullanılmayacak** (otel kararı); Simphony kasası mesaj sorduğunda "mesaj yok" cevabı alır.
 - Lost & Found eşya grupları ve ortak alanlar başlangıç listesi; otelin kendi listesi gelirse değiştirilecek (şimdilik pms_reason_codes: lost_found_group, public_place).
-- Rooms Management: Housekeeping (kayıtlı aramalar, alt durum çubuğu eklenecek), Out of Order, Room History, House Status. **Attendants ve Maintenance alınmayacak.**
+- Rooms Management: House Status (yapıldı); kalan: Housekeeping (kayıtlı aramalar, alt durum çubuğu), Out of Order listesi, Room History. **Attendants ve Maintenance alınmayacak.**
 - Diğer Financial Account grupları (PM Accounts dışında) otelden bekleniyor.
 
 ## Yapılacak ekranlar ve işler (sırayla)

@@ -311,4 +311,17 @@ return [
         'err_resolved' => 'This item is closed (returned or disposed).', 'err_match_kinds' => 'Select one lost and one found item.',
         'err_match_status' => 'Only open items can be matched.', 'err_not_matched' => 'This item is not matched.', 'err_delete' => 'A matched or closed item cannot be deleted.',
     ],
+
+    'hs' => [
+        'title' => 'House Status', 'total' => 'Total', 'rooms' => 'Rooms', 'pax' => 'Pax', 'children' => 'Children', 'total_number' => 'Total Number', 'total_to_sell' => 'Total to sell',
+        'movement' => 'Movement', 'expected_arrivals' => 'Expected Arrivals', 'actual_arrivals' => 'Actual Arrivals', 'arrival_rooms_assigned' => 'Arrival Rooms assigned',
+        'expected_departures' => 'Expected Departures', 'actual_departures' => 'Actual Departures', 'day_rooms' => 'Day Rooms', 'walk_ins' => 'Walk Ins',
+        'same_day_reservations' => 'Same Day Reservations', 'room_moves' => 'Room Moves', 'early_departures' => 'Early Departures', 'current_occupancy' => 'Current Occupancy',
+        'add_children' => 'Add Children to Pax', 'include_day_use' => 'Include Day Use Reservations', 'housekeeping' => 'Housekeeping', 'occupied' => 'Occupied', 'vacant' => 'Vacant',
+        'clean_rooms' => 'Clean Rooms', 'dirty_rooms' => 'Dirty Rooms', 'out_of_order' => 'Out of Order', 'out_of_service' => 'Out of Service', 'rooms_in_queue' => 'Rooms in Queue',
+        'end_of_day' => 'End of Day', 'adr_gross' => 'Average Room Rate gross', 'adr_net' => 'Average Room Rate net', 'per_person' => 'Per person',
+        'available_tonight' => 'Available Tonight', 'allotments' => 'Allotments', 'groups' => 'Groups', 'group_and_allotment' => 'Group and Allotment', 'individuals' => 'Individuals',
+        'in_house_tonight' => 'In House Tonight', 'adr_hint' => 'Average rate of tonight\'s paying rooms (complimentary and house use excluded); second column per person.',
+        'drill' => 'Show the list', 'next_update' => 'Time to next update:', 'refresh' => 'Refresh',
+    ],
 ];

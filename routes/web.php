@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
+use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
@@ -90,6 +91,9 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Quick Keys → All Shortcuts
     Route::view('/kisayollar', 'shortcuts')->name('shortcuts');
+
+    // Rooms Management → House Status (Ctrl+H)
+    Route::get('/house-status', HouseStatusController::class)->name('front-office.house-status');
 
     // Front Desk → Lost & Found
     Route::middleware('permission:front_office.lost_found')->prefix('kayip-esya')->name('lost-found.')->group(function () {

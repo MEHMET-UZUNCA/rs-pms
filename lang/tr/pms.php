@@ -311,4 +311,17 @@ return [
         'err_resolved' => 'Bu eşya kapanmış (teslim ya da imha).', 'err_match_kinds' => 'Bir kayıp ve bir bulunan eşya seçin.',
         'err_match_status' => 'Yalnız açık eşyalar eşleştirilebilir.', 'err_not_matched' => 'Bu eşya eşleşmemiş.', 'err_delete' => 'Eşleşmiş ya da kapanmış eşya silinemez.',
     ],
+
+    'hs' => [
+        'title' => 'Otel durumu (House Status)', 'total' => 'Toplam', 'rooms' => 'Oda', 'pax' => 'Kişi', 'children' => 'Çocuk', 'total_number' => 'Toplam oda', 'total_to_sell' => 'Satılabilir oda',
+        'movement' => 'Hareket', 'expected_arrivals' => 'Beklenen girişler', 'actual_arrivals' => 'Gerçekleşen girişler', 'arrival_rooms_assigned' => 'Odası atanmış girişler',
+        'expected_departures' => 'Beklenen çıkışlar', 'actual_departures' => 'Gerçekleşen çıkışlar', 'day_rooms' => 'Günübirlik', 'walk_ins' => 'Walk-in',
+        'same_day_reservations' => 'Aynı gün rezervasyon', 'room_moves' => 'Oda değişiklikleri', 'early_departures' => 'Erken çıkışlar', 'current_occupancy' => 'Şu anki doluluk',
+        'add_children' => 'Çocukları kişiye ekle', 'include_day_use' => 'Günübirlikler dahil', 'housekeeping' => 'Kat hizmetleri', 'occupied' => 'Dolu', 'vacant' => 'Boş',
+        'clean_rooms' => 'Temiz odalar', 'dirty_rooms' => 'Kirli odalar', 'out_of_order' => 'Arızalı (OOO)', 'out_of_service' => 'Hizmet dışı (OOS)', 'rooms_in_queue' => 'Bekleyen odalar (Queue)',
+        'end_of_day' => 'Gün sonu', 'adr_gross' => 'Ortalama oda fiyatı (brüt)', 'adr_net' => 'Ortalama oda fiyatı (net)', 'per_person' => 'Kişi başı',
+        'available_tonight' => 'Bu gece boş', 'allotments' => 'Kontenjan (Allotment)', 'groups' => 'Gruplar', 'group_and_allotment' => 'Grup ve kontenjan', 'individuals' => 'Bireysel',
+        'in_house_tonight' => 'Bu gece içeride', 'adr_hint' => 'Bu gece ücretli odaların ortalaması (ücretsiz ve otel kullanımı hariç); ikinci sütun kişi başı.',
+        'drill' => 'Listeyi göster', 'next_update' => 'Sonraki yenileme:', 'refresh' => 'Yenile',
+    ],
 ];

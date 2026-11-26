@@ -34,7 +34,8 @@ class Menu
             'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null]],
             'housekeeping' => [
                 ['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null],
-                ['out_of_order', null], ['room_history', null], ['house_status', null],
+                ['out_of_order', null], ['room_history', null],
+                ['house_status', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ],
             'profiles' => [['profile_navigator', null]],
             'quick_keys' => array_merge(array_map(fn ($k) => [$k['label'], $k['url'], $k['display']], QuickKeys::global()), [['all_shortcuts', route('shortcuts'), 'F1']]),

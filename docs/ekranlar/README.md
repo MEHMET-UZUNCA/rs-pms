@@ -161,6 +161,12 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/18-lost-found-01-liste.png` | Kayıp ve bulunan listeleri, süzgeçler, seçili eşyaların geçmişi |
 | `goruntuler/18-lost-found-02-eslesme.png` | Eşleşen kayıp ↔ bulunan; teslim, imha, eşleşmeyi kaldır, not |
 
+## 19 — House Status (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/19-house-status.png` | Ctrl+H: toplam, hareket, kat hizmetleri, gün sonu — Fidelio penceresiyle aynı bölümler |
+
 ## Taslakları yerelde açmak
 
 ```bash

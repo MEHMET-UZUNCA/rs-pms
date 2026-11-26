@@ -21,7 +21,7 @@ class QuickKeys
         $keys = [
             ['arrivals', 'ctrl+a', 'Ctrl+A', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null],
             ['billing', 'ctrl+b', 'Ctrl+B', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null],
-            ['house_status', 'ctrl+h', 'Ctrl+H', null],
+            ['house_status', 'ctrl+h', 'Ctrl+H', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ['in_house', 'ctrl+i', 'Ctrl+I', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null],
             ['new_reservation', 'ctrl+n alt+shift+n', 'Ctrl+N', $can('reservations.edit') ? route('reservations.create') : null],
             ['reports', 'ctrl+shift+r', 'Ctrl+Shift+R', null],
