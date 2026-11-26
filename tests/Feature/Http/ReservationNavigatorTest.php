@@ -34,8 +34,8 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->assertSame(6, Reservation::where('status', 'in_house')->count());
         $this->assertSame(2, Reservation::where('status', 'checked_out')->count());
         $this->assertSame(1, Reservation::where('status', 'cancelled')->count());
-        $this->assertSame('occupied', DB::table('pms_rooms')->where('number', '101')->value('fo_status'));
-        $this->assertSame('dirty', DB::table('pms_rooms')->where('number', '103')->value('hk_status'));   // çıkış yapan odası kirli
+        $this->assertSame('occupied', DB::table('pms_rooms')->where('number', '1102')->value('fo_status'));
+        $this->assertSame('dirty', DB::table('pms_rooms')->where('number', '1107')->value('hk_status'));   // çıkış yapan odası kirli
         $this->assertSame(3 * 4200 + 850.0, (float) $this->res('Yılmaz')->folios()->sum('balance'));
     }
 
@@ -56,7 +56,7 @@ class ReservationNavigatorTest extends DomainTestCase
     public function test_query_fields_search_all_statuses(): void
     {
         $this->actingAs($this->user)->get('/rezervasyon?ad=ayd')->assertSee('Aydın, Burak')->assertSee('Cancelled');
-        $this->actingAs($this->user)->get('/rezervasyon?oda=201')->assertSee('Ivanova, Elena')->assertDontSee('Yılmaz, Ahmet');
+        $this->actingAs($this->user)->get('/rezervasyon?oda=1104')->assertSee('Ivanova, Elena')->assertDontSee('Yılmaz, Ahmet');
         $this->actingAs($this->user)->get('/rezervasyon?firma=holding')->assertSee('Smith, John')->assertSee('Wilson, James')->assertDontSee('Ivanova');
         $this->actingAs($this->user)->get('/rezervasyon?gelis=%2B5')->assertSee('Schmidt, Anna')->assertSee('06.12.2026')->assertDontSee('Şahin, Elif');
         $no = $this->res('Petrov')->confirmation_number;
@@ -67,7 +67,7 @@ class ReservationNavigatorTest extends DomainTestCase
     {
         $smith = $this->res('Smith');
         $this->actingAs($this->user)->get("/rezervasyon/{$smith->id}/ozet")->assertOk()
-            ->assertSee('john.smith@example.com')->assertSee('Örnek Holding A.Ş.')->assertSee('window 1')->assertSee('102');
+            ->assertSee('john.smith@example.com')->assertSee('Örnek Holding A.Ş.')->assertSee('window 1')->assertSee('1103');
 
         $fa = DB::table('pms_folios')->where('folio_number', 'FA-DEMO-1')->value('id');
         $this->actingAs($this->user)->get("/rezervasyon/hesap/{$fa}/ozet")->assertOk()->assertSee('Otopark (örnek)')->assertSee('300,00');

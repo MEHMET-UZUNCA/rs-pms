@@ -25,13 +25,13 @@ class RoomRackTest extends DomainTestCase
     {
         $html = $this->actingAs($this->user)->get('/oda-plani')->assertOk()->getContent();
         $this->assertStringContainsString('Room Rack', $html);
-        $this->assertSame(24, substr_count($html, 'data-room="'));
+        $this->assertSame(155, substr_count($html, 'data-room="'));   // Rocks Hotel aktif odaları
         $this->assertStringContainsString('01.12', $html);
         $this->assertStringContainsString('<br>14.12', $html);   // 14 gün
         $this->assertStringNotContainsString('<br>15.12', $html);
-        $this->assertStringContainsString('Yılmaz, Ahmet', $html);   // 101 içeride
+        $this->assertStringContainsString('Yılmaz, Ahmet', $html);   // 1102 içeride
         $this->assertStringContainsString('data-kind="in_house"', $html);
-        $this->assertStringContainsString('data-kind="confirmed"', $html);   // 104 Öztürk, bugün gelecek
+        $this->assertStringContainsString('data-kind="confirmed"', $html);   // 1108 Öztürk, bugün gelecek
         $this->assertStringContainsString('rounded-l-none', $html);   // başlangıçtan önce başlayan konaklama
         $this->assertStringContainsString('data-hotkey="ctrl+l"', $html);
     }
@@ -41,16 +41,16 @@ class RoomRackTest extends DomainTestCase
         $this->actingAs($this->user)->get('/oda-plani?gun=7')->assertSee('<br>07.12', false)->assertDontSee('<br>08.12', false);
         $this->actingAs($this->user)->get('/oda-plani?gun=30&bas=%2B7')->assertSee('<br>08.12', false)->assertSee('<br>06.01', false)->assertDontSee('<br>07.12', false);
 
-        $suite = DB::table('pms_room_types')->where('code', 'SUI')->value('id');
+        $suite = DB::table('pms_room_types')->where('code', 'YSU')->value('id');
         $html = $this->actingAs($this->user)->get("/oda-plani?tip={$suite}")->getContent();
-        $this->assertSame(4, substr_count($html, 'data-room="'));
-        $this->assertStringContainsString('Johnson, Mark', $html);   // 302, bugün geliyor (301 Cohen bugün çıkıyor: çıkış günü planda yok)
+        $this->assertSame(9, substr_count($html, 'data-room="'));
+        $this->assertStringContainsString('Johnson, Mark', $html);   // 1121, bugün geliyor (1112 Cohen bugün çıkıyor: çıkış günü planda yok)
         $this->assertStringNotContainsString('Yılmaz, Ahmet', $html);
     }
 
     public function test_outage_and_daily_summary(): void
     {
-        $room = DB::table('pms_rooms')->where('number', '108')->value('id');
+        $room = DB::table('pms_rooms')->where('number', '1111')->value('id');
         $reason = DB::table('pms_reason_codes')->insertGetId(['property_id' => $this->property, 'category' => 'outage', 'code' => 'AC', 'name' => 'Klima']);
         DB::table('pms_room_outages')->insert(['property_id' => $this->property, 'room_id' => $room, 'type' => 'OOO', 'date_from' => '2026-12-02',
             'date_to' => '2026-12-05', 'reason_code_id' => $reason, 'note' => 'Klima arızası']);
@@ -58,8 +58,8 @@ class RoomRackTest extends DomainTestCase
         $html = $this->actingAs($this->user)->get('/oda-plani')->getContent();
         $this->assertStringContainsString('data-kind="ooo"', $html);
         $this->assertStringContainsString('OOO · Klima arızası', $html);
-        // Bu gece: 4 içeride (Cohen ve Smith bugün çıkıyor) + 2 odalı gelen = 6 dolu (%25); 2 gelen odasız (Petrov, Levi)
-        $this->assertMatchesRegularExpression('/tabular-nums">6<span class="text-muted"> · 25%/', preg_replace('/\s+/', ' ', $html));
+        // Bu gece: 4 içeride (Cohen ve Smith bugün çıkıyor) + 2 odalı gelen = 6 dolu (155 odanın %4'ü); 2 gelen odasız (Petrov, Levi)
+        $this->assertMatchesRegularExpression('/tabular-nums">6<span class="text-muted"> · 4%/', preg_replace('/\s+/', ' ', $html));
         $this->assertMatchesRegularExpression('/text-danger font-semibold">2</', preg_replace('/\s+/', ' ', $html));
     }
 }

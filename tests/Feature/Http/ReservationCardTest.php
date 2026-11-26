@@ -32,7 +32,7 @@ class ReservationCardTest extends DomainTestCase
         return array_merge([
             'last_name' => 'Kara', 'first_name' => 'Deniz', 'nationality_code' => 'TR', 'phone' => '+90 533 000 00 99', 'email' => 'deniz@example.com',
             'arrival_date' => '+3', 'departure_date' => '+6', 'adults' => 2, 'children' => 1,
-            'room_type_id' => $this->id('pms_room_types', 'DBL'), 'rate_code_id' => $this->id('pms_rate_codes', 'BAR'), 'manual_amount' => '4500',
+            'room_type_id' => $this->id('pms_room_types', 'YMF'), 'rate_code_id' => $this->id('pms_rate_codes', 'BAR'), 'manual_amount' => '4500',
             'reservation_type_id' => $this->id('pms_reservation_types', 'GTD'), 'market_segment_id' => $this->id('pms_market_segments', 'IND'),
             'source_code_id' => $this->id('pms_source_codes', 'DIR'), 'guarantee_type' => 'credit_card', 'room_charges_allowed' => '1',
             'guest_comments' => 'Deniz manzaralı oda istiyor',
@@ -83,8 +83,8 @@ class ReservationCardTest extends DomainTestCase
 
     public function test_edit_changes_dates_room_and_rate_keeping_rules(): void
     {
-        $r = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, 4 gece, FAM, oda yok
-        $room = DB::table('pms_rooms')->where('number', '402')->value('id');
+        $r = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, 4 gece, ESU, oda yok
+        $room = DB::table('pms_rooms')->where('number', '2509')->value('id');
         $this->actingAs($this->user)->put("/rezervasyon/{$r->id}", $this->payload([
             'arrival_date' => $r->arrival_date->format('d.m.Y'), 'departure_date' => $r->arrival_date->addDays(5)->format('d.m.Y'),
             'room_type_id' => $r->room_type_id, 'room_id' => $room, 'adults' => 2, 'children' => 2, 'manual_amount' => '7000',
@@ -97,7 +97,7 @@ class ReservationCardTest extends DomainTestCase
         $this->assertSame(35000.0, (float) $r->total_room_amount);
 
         // Dolu odaya atama kuralı servisten gelir
-        $occupied = DB::table('pms_rooms')->where('number', '401')->value('id');   // Müller içeride
+        $occupied = DB::table('pms_rooms')->where('number', '2410')->value('id');   // Müller içeride
         $this->actingAs($this->user)->put("/rezervasyon/{$r->id}", $this->payload([
             'arrival_date' => $r->arrival_date->format('d.m.Y'), 'departure_date' => $r->departure_date->format('d.m.Y'), 'room_type_id' => $r->room_type_id, 'room_id' => $occupied,
         ]))->assertSessionHasErrors('reservation');

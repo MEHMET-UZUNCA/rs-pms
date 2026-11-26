@@ -117,8 +117,8 @@ class ReservationAndNightAuditTest extends DomainTestCase
         $this->assertSame('2026-12-02', DB::table('pms_properties')->where('id', $this->property)->value('current_business_date'));
         $stats = DB::table('pms_daily_statistics')->where('business_date', '2026-12-01')->where('dimension', 'total')->first();
         $this->assertSame(1, (int) $stats->rooms_sold);
-        $this->assertSame(3, (int) $stats->rooms_available);
-        $this->assertSame(33.33, (float) $stats->occupancy_pct);
+        $this->assertSame(155 + 3, (int) $stats->rooms_available);   // Rocks Hotel'in 155 aktif odası + testin 3 odası
+        $this->assertSame(0.63, (float) $stats->occupancy_pct);
         $this->assertNotNull(DB::table('pms_night_audit_runs')->where('business_date', '2026-12-01')->value('report_pack'));
 
         // 2. gece de kapanır (iş günü 02.12 → 03.12); aynı gece ikinci kez yazılmaz

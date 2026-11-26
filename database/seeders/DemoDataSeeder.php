@@ -15,7 +15,7 @@ use RuntimeException;
 /**
  * GELİŞTİRME / EĞİTİM için örnek veri: oda tipleri, odalar, fiyat kodları, profiller ve farklı durumlarda rezervasyonlar
  * (içeride, bugün gelecek, bugün gidecek, çıkış yapmış, ileri tarihli, iptal) ve rezervasyonsuz hesaplar.
- * Gerçek Rocks Hotel verisi değildir; canlı sistemde çalışmaz. Kullanım: php artisan db:seed --class=DemoDataSeeder
+ * Misafirler ve rezervasyonlar gerçek değildir (odalar ve kodlar gerçek Rocks Hotel tanımlarıdır); canlı sistemde çalışmaz. Kullanım: php artisan db:seed --class=DemoDataSeeder
  * Rezervasyonlar gerçek servislerle açılır (onay no, gece fiyatı, oda atama, giriş, folyo, kayıt, çıkış).
  */
 class DemoDataSeeder extends Seeder
@@ -29,20 +29,8 @@ class DemoDataSeeder extends Seeder
         $bd = CarbonImmutable::parse(DB::table('pms_properties')->where('id', $p)->value('current_business_date'));
         $now = now();
 
-        // Oda tipleri ve odalar
-        $types = [];
-        foreach ([['DBL', 'Double', 2, 1], ['TWN', 'Twin', 2, 2], ['SUI', 'Suit', 3, 3], ['FAM', 'Aile odası', 4, 4]] as [$code, $name, $beds, $sort]) {
-            DB::table('pms_room_types')->updateOrInsert(['property_id' => $p, 'code' => $code], ['name' => $name, 'beds' => $beds, 'sort' => $sort, 'updated_at' => $now]);
-            $types[$code] = (int) DB::table('pms_room_types')->where('property_id', $p)->where('code', $code)->value('id');
-        }
-        foreach ([1 => ['DBL', 8], 2 => ['TWN', 8], 3 => ['SUI', 4], 4 => ['FAM', 4]] as $floor => [$type, $count]) {
-            DB::table('pms_floors')->updateOrInsert(['property_id' => $p, 'code' => (string) $floor], ['name' => "{$floor}. kat", 'updated_at' => $now]);
-            $floorId = DB::table('pms_floors')->where('property_id', $p)->where('code', (string) $floor)->value('id');
-            for ($i = 1; $i <= $count; $i++) {
-                DB::table('pms_rooms')->updateOrInsert(['property_id' => $p, 'number' => $floor.str_pad((string) $i, 2, '0', STR_PAD_LEFT)],
-                    ['room_type_id' => $types[$type], 'floor_id' => $floorId, 'updated_at' => $now]);
-            }
-        }
+        // Odalar ve oda tipleri gerçek Rocks Hotel tanımlarıdır (RocksHotelReferenceSeeder: Fidelio Room Types / Rooms).
+        $types = DB::table('pms_room_types')->where('property_id', $p)->pluck('id', 'code')->map(fn ($id) => (int) $id)->all();
 
         // Kodlar
         $id = fn (string $table, string $code, array $values) => DB::table($table)->updateOrInsert(['property_id' => $p, 'code' => $code], $values + ['updated_at' => $now])
@@ -92,16 +80,16 @@ class DemoDataSeeder extends Seeder
 
         $stays = [
             // [geliş farkı, gece, oda, tip, fiyat kodu, fiyat, misafir, ek]
-            [-3, 5, '101', 'DBL', 'BAR', 4200, $guest('Yılmaz', 'Ahmet', 'TR', ['phone' => '+90 533 000 00 11']), []],
-            [-2, 2, '102', 'DBL', 'CORP', 3800, $guest('Smith', 'John', 'GB', ['email' => 'john.smith@example.com']), ['company' => $company, 'seg' => 'COR']],
-            [-1, 4, '201', 'TWN', 'TA-HB', 5100, $guest('Ivanova', 'Elena', 'RU'), ['agent' => $agent, 'seg' => 'TA', 'adults' => 2, 'child' => 1]],
-            [-4, 4, '301', 'SUI', 'CASINO', 0, $guest('Cohen', 'David', 'IL'), ['company' => $casino, 'seg' => 'CAS', 'adults' => 1, 'note' => 'Casino misafiri — oda ücretsiz']],
-            [-1, 3, '202', 'TWN', 'BAR', 4600, $guest('Demir', 'Ayşe', 'TR'), []],
-            [-2, 6, '401', 'FAM', 'TA-HB', 7400, $guest('Müller', 'Thomas', 'DE'), ['agent' => $agent, 'seg' => 'TA', 'adults' => 2, 'child' => 2]],
+            [-3, 5, '1102', 'YMF', 'BAR', 4200, $guest('Yılmaz', 'Ahmet', 'TR', ['phone' => '+90 533 000 00 11']), []],
+            [-2, 2, '1103', 'YMF', 'CORP', 3800, $guest('Smith', 'John', 'GB', ['email' => 'john.smith@example.com']), ['company' => $company, 'seg' => 'COR']],
+            [-1, 4, '1104', 'YMT', 'TA-HB', 5100, $guest('Ivanova', 'Elena', 'RU'), ['agent' => $agent, 'seg' => 'TA', 'adults' => 2, 'child' => 1]],
+            [-4, 4, '1112', 'YSU', 'CASINO', 0, $guest('Cohen', 'David', 'IL'), ['company' => $casino, 'seg' => 'CAS', 'adults' => 1, 'note' => 'Casino misafiri — oda ücretsiz']],
+            [-1, 3, '1105', 'YMT', 'BAR', 4600, $guest('Demir', 'Ayşe', 'TR'), []],
+            [-2, 6, '2410', 'ESU', 'TA-HB', 7400, $guest('Müller', 'Thomas', 'DE'), ['agent' => $agent, 'seg' => 'TA', 'adults' => 2, 'child' => 2]],
         ];
         $checkouts = [
-            [-3, 3, '103', 'DBL', 'BAR', 4200, $guest('Kaya', 'Mehmet', 'TR'), []],
-            [-2, 2, '203', 'TWN', 'CORP', 3800, $guest('Brown', 'Emma', 'GB'), ['company' => $company, 'seg' => 'COR']],
+            [-3, 3, '1107', 'YMF', 'BAR', 4200, $guest('Kaya', 'Mehmet', 'TR'), []],
+            [-2, 2, '1106', 'YMT', 'CORP', 3800, $guest('Brown', 'Emma', 'GB'), ['company' => $company, 'seg' => 'COR']],
         ];
 
         // Geçmiş geliş günlerinde giriş: iş günü geçici olarak o güne alınır (yalnız örnek veri için).
@@ -134,14 +122,14 @@ class DemoDataSeeder extends Seeder
 
         // Bugün gelecekler (ikisinin odası atanmış) ve ileri tarihliler
         $arrivals = [
-            [0, 3, '104', 'DBL', 'BAR', 4200, $guest('Öztürk', 'Zeynep', 'TR'), []],
-            [0, 2, '302', 'SUI', 'CORP', 6900, $guest('Johnson', 'Mark', 'GB'), ['company' => $company, 'seg' => 'COR']],
-            [0, 5, null, 'TWN', 'TA-HB', 5100, $guest('Petrov', 'Sergei', 'RU'), ['agent' => $agent, 'seg' => 'TA']],
-            [0, 1, null, 'DBL', 'CASINO', 0, $guest('Levi', 'Noa', 'IL'), ['company' => $casino, 'seg' => 'CAS', 'adults' => 1]],
-            [2, 4, null, 'FAM', 'BAR', 7400, $guest('Arslan', 'Can', 'TR'), ['adults' => 2, 'child' => 2]],
-            [5, 7, null, 'DBL', 'TA-HB', 5100, $guest('Schmidt', 'Anna', 'DE'), ['agent' => $agent, 'seg' => 'TA']],
-            [9, 3, null, 'SUI', 'CORP', 6900, $guest('Wilson', 'James', 'GB'), ['company' => $company, 'seg' => 'COR', 'option' => true]],
-            [14, 2, null, 'TWN', 'BAR', 4600, $guest('Şahin', 'Elif', 'TR'), []],
+            [0, 3, '1108', 'YMF', 'BAR', 4200, $guest('Öztürk', 'Zeynep', 'TR'), []],
+            [0, 2, '1121', 'YSU', 'CORP', 6900, $guest('Johnson', 'Mark', 'GB'), ['company' => $company, 'seg' => 'COR']],
+            [0, 5, null, 'YMT', 'TA-HB', 5100, $guest('Petrov', 'Sergei', 'RU'), ['agent' => $agent, 'seg' => 'TA']],
+            [0, 1, null, 'YMF', 'CASINO', 0, $guest('Levi', 'Noa', 'IL'), ['company' => $casino, 'seg' => 'CAS', 'adults' => 1]],
+            [2, 4, null, 'ESU', 'BAR', 7400, $guest('Arslan', 'Can', 'TR'), ['adults' => 2, 'child' => 2]],
+            [5, 7, null, 'YMF', 'TA-HB', 5100, $guest('Schmidt', 'Anna', 'DE'), ['agent' => $agent, 'seg' => 'TA']],
+            [9, 3, null, 'YSU', 'CORP', 6900, $guest('Wilson', 'James', 'GB'), ['company' => $company, 'seg' => 'COR', 'option' => true]],
+            [14, 2, null, 'YMT', 'BAR', 4600, $guest('Şahin', 'Elif', 'TR'), []],
         ];
         foreach ($arrivals as [$offset, $nights, $roomNo, $type, $rate, $price, $g, $extra]) {
             $arr = $bd->addDays($offset);
@@ -150,7 +138,7 @@ class DemoDataSeeder extends Seeder
                 $reservations->assignRoom($r, $rooms[$roomNo]);
             }
         }
-        $cancelled = $make(['guest' => $guest('Aydın', 'Burak', 'TR'), 'type' => 'DBL', 'rate' => 'BAR', 'price' => 4200, 'arr' => $bd->addDays(3), 'dep' => $bd->addDays(5)]);
+        $cancelled = $make(['guest' => $guest('Aydın', 'Burak', 'TR'), 'type' => 'YMF', 'rate' => 'BAR', 'price' => 4200, 'arr' => $bd->addDays(3), 'dep' => $bd->addDays(5)]);
         $reservations->cancel($cancelled, $cancelReason);
 
         // Rezervasyonsuz hesaplar (Financial Account): biri açık, biri yarın açılacak

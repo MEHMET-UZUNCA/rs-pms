@@ -13,7 +13,8 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 4c | Simphony ödeme tipleri (Tender/Media) listesi — en az 131, 231, 401, 402, 404, 601 | Simphony EMC | Ödeme tipi adları ve türleri | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
 | 8 | Logo Tiger: sürüm, REST lisansı, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Bekleniyor |
-| 9 | Rocks Hotel oda tipleri ve oda listesi (Fidelio YCAT/YRMS) | Fidelio | Gerçek oda tanımları (şu an yalnız örnek veri var) | Bekleniyor |
+| 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34 — bir odanın tipi teyit edilecek | Fidelio | Oda tipi sayıları | Bekleniyor |
+| 9a | Oda blokları: 1xxx = A BLOK, 2xxx = B BLOK varsayıldı | Fidelio Rooms → Section | Blok ataması | Teyit edilecek |
 | 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
 | 10 | Fiyat kodları ve sezon fiyatları | Fidelio | Gerçek fiyat tanımları | Bekleniyor |
 
@@ -32,7 +33,8 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | PROISV kayıtları 24.11.2026 | Satış kalemi 1/2 → FOOD/BVRG, ödeme tipi → sanal oda + ödeme kodu (docs/simphony-protokol.md §8) |
 | IFC8 ayar dosyası SPH.XML | docs/simphony-protokol.md §7 (parolalar depoya konmadı) |
 | IFC8 logu M87POS_SPH_IFC1 (26–27.06) ve canlı IFC8 ekranı | docs/simphony-protokol.md — protokolün tamamı |
-| Fidelio Room Sections (A BLOK, B BLOK) | Oda blokları — oda listesiyle birlikte yüklenecek |
+| Fidelio Room Sections, Room Types, Rooms, Room Features | database/data/fidelio/room-types.tsv, rooms.tsv, room-features.tsv — 10 tip, 155 aktif oda, özellikler odalara bağlı |
+| Fidelio User Groups (15 grup) | Roller; yetkiler başlangıç önerisi (seeder) |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 

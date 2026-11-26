@@ -13,7 +13,7 @@ use Tests\Feature\Domain\DomainTestCase;
 
 /**
  * Mesajlar gerçek IFC8 logundaki biçimdedir (docs/simphony-protokol.md); adlar ve numaralar değiştirilmiştir.
- * Örnek veri: oda 101 Yılmaz (içeride), 401 Müller (içeride), Rocks Patisserie RVC 15, Cafe Rocks RVC 3.
+ * Örnek veri: oda 1102 Yılmaz (içeride), 2410 Müller (içeride), Rocks Patisserie RVC 15, Cafe Rocks RVC 3.
  */
 class SimphonyProtocolTest extends DomainTestCase
 {
@@ -68,12 +68,12 @@ class SimphonyProtocolTest extends DomainTestCase
     {
         $this->assertSame('FO_87_VERSION', $this->send('01', 'FO_FI_VERSION', ['FOUX2 19.1.5', '10.05.23', 'Micros Systems Inc. Columbia MD USA'])->type);
 
-        $list = $this->send('02', 'FO_FI_RES_QUERY', ['101']);
+        $list = $this->send('02', 'FO_FI_RES_QUERY', ['1102']);
         $this->assertSame('FO_87_RES_LIST', $list->type);
         $this->assertSame('1', $list->fields[1]);
         $id = trim($list->fields[2]);
-        $this->assertSame((string) Reservation::whereHas('room', fn ($q) => $q->where('number', '101'))->value('id'), $id);
-        $this->assertStringStartsWith('101    Yilmaz, Ahmet', $list->fields[3]);   // ASCII'ye çevrilmiş
+        $this->assertSame((string) Reservation::whereHas('room', fn ($q) => $q->where('number', '1102'))->value('id'), $id);
+        $this->assertStringStartsWith('1102   Yilmaz, Ahmet', $list->fields[3]);   // ASCII'ye çevrilmiş
         $this->assertSame(' L', $list->fields[4]);
 
         $detail = $this->send('03', 'FO_FI_RES_DETAIL', [str_pad($id, 30)]);
@@ -88,18 +88,18 @@ class SimphonyProtocolTest extends DomainTestCase
 
     public function test_room_charge_dialog_posts_to_folio_by_department_codes(): void
     {
-        $res = Reservation::whereHas('room', fn ($q) => $q->where('number', '101'))->firstOrFail();
+        $res = Reservation::whereHas('room', fn ($q) => $q->where('number', '1102'))->firstOrFail();
         $before = (float) $res->folios()->sum('balance');
 
         // 1) Misafir arama → seçim listesi
-        $sel = $this->send('01', 'IFC_CHG_PST', ['101', '601']);
+        $sel = $this->send('01', 'IFC_CHG_PST', ['1102', '601']);
         $this->assertSame('IFC_GST_SEL', $sel->type);
-        $this->assertSame(['101', 'IFC_CHG_PST', '1'], array_slice($sel->fields, 0, 3));
-        $this->assertSame(str_pad('101/YILMAZ', 40), $sel->fields[3]);
+        $this->assertSame(['1102', 'IFC_CHG_PST', '1'], array_slice($sel->fields, 0, 3));
+        $this->assertSame(str_pad('1102/YILMAZ', 40), $sel->fields[3]);
 
         // 2) Seçilen misafire kayıt: Rocks Patisserie (RVC 15) — 670 TL satış, 70 TL indirim → 600 TL
-        $post = $this->send('02', 'IFC_CHG_PST', ['101', str_pad('101/YILMAZ', 40), 'S1', '601', ...self::body([1 => 670], [1 => -70], '3013', 15, '600.00')]);
-        $this->assertSame(['N', 'P', str_pad('101/YILMAZ', 30), '600.00', (string) $res->id], $post->fields);
+        $post = $this->send('02', 'IFC_CHG_PST', ['1102', str_pad('1102/YILMAZ', 40), 'S1', '601', ...self::body([1 => 670], [1 => -70], '3013', 15, '600.00')]);
+        $this->assertSame(['N', 'P', str_pad('1102/YILMAZ', 30), '600.00', (string) $res->id], $post->fields);
 
         $postings = DB::table('pms_postings as p')->join('pms_transaction_codes as tc', 'tc.id', '=', 'p.transaction_code_id')
             ->where('p.source', 'simphony')->orderBy('p.id')->get(['tc.code', 'p.amount', 'p.reference', 'p.tax_amount']);
@@ -116,7 +116,7 @@ class SimphonyProtocolTest extends DomainTestCase
 
     public function test_retransmit_and_duplicate_do_not_post_twice(): void
     {
-        $args = ['101', str_pad('101/YILMAZ', 40), 'S1', '601', ...self::body([2 => 180], [], '4013', 4, '180.00')];
+        $args = ['1102', str_pad('1102/YILMAZ', 40), 'S1', '601', ...self::body([2 => 180], [], '4013', 4, '180.00')];
         $first = $this->send('07', 'IFC_CHG_PST', $args);
         $again = $this->send('07', 'IFC_CHG_PST', $args, retransmit: true);    // Simphony tekrarı (R)
         $dup = $this->send('08', 'IFC_CHG_PST', $args);                        // aynı ödeme yeni sıra no ile
@@ -130,11 +130,11 @@ class SimphonyProtocolTest extends DomainTestCase
     {
         $this->assertSame(['N', 'D', str_pad('Guest not found', 30)], $this->send('01', 'IFC_CHG_PST', ['999', '601'])->fields);
 
-        $wrong = $this->send('02', 'IFC_CHG_PST', ['101', str_pad('101/BASKA', 40), 'S1', '601', ...self::body([1 => 100], [], '5001', 3, '100.00')]);
+        $wrong = $this->send('02', 'IFC_CHG_PST', ['1102', str_pad('1102/BASKA', 40), 'S1', '601', ...self::body([1 => 100], [], '5001', 3, '100.00')]);
         $this->assertSame('D', $wrong->fields[1]);
 
-        Reservation::whereHas('room', fn ($q) => $q->where('number', '401'))->update(['room_charges_allowed' => false]);
-        $noPost = $this->send('03', 'IFC_CHG_PST', ['401', str_pad('401/MULLER', 40), 'S1', '601', ...self::body([1 => 100], [], '5002', 3, '100.00')]);
+        Reservation::whereHas('room', fn ($q) => $q->where('number', '2410'))->update(['room_charges_allowed' => false]);
+        $noPost = $this->send('03', 'IFC_CHG_PST', ['2410', str_pad('2410/MULLER', 40), 'S1', '601', ...self::body([1 => 100], [], '5002', 3, '100.00')]);
         $this->assertSame(['N', 'D', str_pad('No post allowed', 30)], $noPost->fields);
         $this->assertSame(['room_not_found', 'no_post'], DB::table('pms_pos_postings')->orderBy('id')->pluck('reject_reason')->all());
         $this->assertSame(0, DB::table('pms_postings')->where('source', 'simphony')->count());
@@ -168,7 +168,7 @@ class SimphonyProtocolTest extends DomainTestCase
     public function test_split_payment_is_prorated_and_messages_are_logged(): void
     {
         // 1.000 TL'lik çekin 400 TL'si oda hesabına (bölünmüş ödeme)
-        $this->send('01', 'IFC_CHG_PST', ['101', str_pad('101/YILMAZ', 40), 'S1', '601', ...self::body([1 => 600, 2 => 400], [], '6001', 3, '400.00')]);
+        $this->send('01', 'IFC_CHG_PST', ['1102', str_pad('1102/YILMAZ', 40), 'S1', '601', ...self::body([1 => 600, 2 => 400], [], '6001', 3, '400.00')]);
         $amounts = DB::table('pms_postings')->where('source', 'simphony')->orderBy('id')->pluck('amount')->map(fn ($a) => (float) $a)->all();
         $this->assertSame([240.0, 160.0], $amounts);
         $this->assertSame(2, DB::table('pms_pos_messages')->count());   // gelen + giden

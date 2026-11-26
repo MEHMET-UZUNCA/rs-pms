@@ -1,0 +1,12 @@
+# Rocks Hotel — Fidelio Suite8 "Room Types" (ekran görüntüsünden). Kod, açıklama, oda sayısı (Quantity), kişi sayısı (No. of Persons)
+Code	Description	Quantity	Persons
+EMF	Superior,Dağ,French	26	2
+EMT	Superior,Dağ,Twin	14	2
+ESU	Superior,Suite	4	3
+EST	Superior,Deniz,Twin	8	2
+ESF	Superior,Deniz,French	12	2
+YSF	Deluxe,Deniz,French	21	2
+YST	Deluxe,Deniz,Twin	6	2
+YMT	Deluxe,Dağ,Twin	20	2
+YMF	Deluxe,Dağ,French	35	2
+YSU	Deluxe,Suite	9	2

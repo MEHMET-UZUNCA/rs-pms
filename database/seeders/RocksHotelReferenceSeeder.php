@@ -167,6 +167,56 @@ class RocksHotelReferenceSeeder extends Seeder
             ]);
         }
 
+        // Odalar — Fidelio Room Sections / Room Types / Rooms / Room Features (database/data/fidelio/*.tsv).
+        // Blok: oda numarasının ilk hanesi (1xxx = A BLOK Deluxe, 2xxx = B BLOK Superior) — teyit edilecek.
+        $tsv = function (string $file): array {
+            $rows = [];
+            foreach (file(database_path("data/fidelio/{$file}"), FILE_IGNORE_NEW_LINES) as $i => $line) {
+                if ($line === '' || str_starts_with($line, '#')) {
+                    continue;
+                }
+                $rows[] = explode("\t", $line);
+            }
+            array_shift($rows);   // başlık
+
+            return $rows;
+        };
+        foreach ([['A', 'A BLOK'], ['B', 'B BLOK']] as [$code, $name]) {
+            DB::table('pms_buildings')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'updated_at' => now()]);
+        }
+        $buildings = DB::table('pms_buildings')->where('property_id', $propertyId)->pluck('id', 'code');
+        foreach (range(1, 7) as $floor) {
+            DB::table('pms_floors')->updateOrInsert(['property_id' => $propertyId, 'code' => (string) $floor], ['name' => "{$floor}. kat", 'sort' => $floor, 'updated_at' => now()]);
+        }
+        $floors = DB::table('pms_floors')->where('property_id', $propertyId)->pluck('id', 'code');
+        foreach ($tsv('room-types.tsv') as $i => [$code, $name, $quantity, $persons]) {
+            DB::table('pms_room_types')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], [
+                'name' => $name, 'short_name' => $code, 'max_occupancy' => (int) $persons, 'max_adults' => (int) $persons,
+                'default_adults' => min(2, (int) $persons), 'beds' => (int) $persons, 'sort' => $i + 1, 'is_active' => true, 'updated_at' => now(),
+            ]);
+        }
+        $types = DB::table('pms_room_types')->where('property_id', $propertyId)->pluck('id', 'code');
+        foreach ($tsv('room-features.tsv') as [$code, $name]) {
+            DB::table('pms_room_features')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'updated_at' => now()]);
+        }
+        $features = DB::table('pms_room_features')->where('property_id', $propertyId)->pluck('id', 'code');
+        $featureRules = ['SV' => '/deniz/iu', 'MV' => '/dağ/iu', 'FB' => '/french|frc|fench/iu', 'TB' => '/twin/iu', 'NS' => '/no?n?smk|nonsmoking|nonsmke|nosmk/iu',
+            'CN' => '/\\bcon(n)?\\b|conn/iu', 'EN' => '/engelli/iu'];
+        $today = now()->toDateString();
+        foreach ($tsv('rooms.tsv') as $i => [$number, $floor, $type, $description, $persons, $from, $until]) {
+            DB::table('pms_rooms')->updateOrInsert(['property_id' => $propertyId, 'number' => $number], [
+                'room_type_id' => $types[$type], 'floor_id' => $floors[$floor] ?? null, 'building_id' => $buildings[['1' => 'A', '2' => 'B'][$number[0]] ?? ''] ?? null,
+                'description' => trim($description), 'max_occupancy' => (int) $persons, 'is_accessible' => (bool) preg_match('/engelli/iu', $description),
+                'is_smoking' => false, 'sort' => $i + 1, 'is_active' => $until >= $today && $from <= $today, 'updated_at' => now(),
+            ]);
+            $roomId = DB::table('pms_rooms')->where('property_id', $propertyId)->where('number', $number)->value('id');
+            foreach ($featureRules as $feature => $pattern) {
+                if (preg_match($pattern, $description)) {
+                    DB::table('pms_room_feature_room')->insertOrIgnore(['room_id' => $roomId, 'room_feature_id' => $features[$feature]]);
+                }
+            }
+        }
+
         // Yetkiler ve sistem yöneticisi rolü
         foreach ([['setup.outlets', 'Outlet tanımları', 'setup'], ['setup.transaction_codes', 'Departman kodları', 'setup'],
             ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations'],
@@ -181,6 +231,33 @@ class RocksHotelReferenceSeeder extends Seeder
         $adminRole = (int) DB::table('pms_roles')->where('code', 'admin')->value('id');
         foreach (DB::table('pms_permissions')->pluck('id') as $permissionId) {
             DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $adminRole, 'permission_id' => $permissionId]);
+        }
+
+        // Fidelio "User Groups" → roller. Yetkiler görev tanımına göre BAŞLANGIÇ ÖNERİSİDİR; rol ekranından değiştirilebilir.
+        // Bir role daha önce yetki verilmişse seeder ona dokunmaz (ekrandan yapılan değişiklik korunur).
+        $front = ['reservations.view', 'reservations.edit', 'reservations.checkin', 'reservations.checkout', 'cashiering.billing', 'cashiering.post'];
+        $all = DB::table('pms_permissions')->pluck('code')->all();
+        $groups = [
+            'SUP' => ['Supervisor', $all], 'IT1' => ['IT Manager', $all],
+            'FOM' => ['Front Office Manager', array_merge($front, ['cashiering.reverse', 'night_audit.view', 'night_audit.run', 'night_audit.override', 'setup.outlets', 'setup.transaction_codes'])],
+            'FOS' => ['Front Office Supervisor', array_merge($front, ['cashiering.reverse', 'night_audit.view', 'night_audit.run', 'night_audit.override'])],
+            'FOA' => ['Front Office Agent', $front], 'FOG' => ['Front Office Guest Relations', ['reservations.view', 'reservations.edit']],
+            'HKS' => ['Housekeeping Supervisor', ['reservations.view']], 'REA' => ['Reservations Agent', ['reservations.view', 'reservations.edit']],
+            'RPT' => ['Reports Access Only', ['reservations.view', 'night_audit.view']], 'GMH' => ['Management', ['reservations.view', 'cashiering.billing', 'night_audit.view']],
+            'SLM' => ['Sales Manager', ['reservations.view', 'reservations.edit']],
+            'ACC' => ['Accounting', ['reservations.view', 'cashiering.billing', 'cashiering.post', 'cashiering.reverse', 'night_audit.view', 'setup.transaction_codes']],
+            'AUD' => ['Night Auditor', array_merge($front, ['cashiering.reverse', 'night_audit.view', 'night_audit.run', 'night_audit.override'])],
+            'IFC' => ['Fidelio Interface Group', []], 'SPA' => ['Spa Reception', ['reservations.view', 'cashiering.billing', 'cashiering.post']],
+        ];
+        $permissionIds = DB::table('pms_permissions')->pluck('id', 'code');
+        foreach ($groups as $code => [$name, $permissions]) {
+            DB::table('pms_roles')->updateOrInsert(['code' => $code], ['name' => $name, 'updated_at' => now()]);
+            $roleId = (int) DB::table('pms_roles')->where('code', $code)->value('id');
+            if (! DB::table('pms_role_permissions')->where('role_id', $roleId)->exists()) {
+                foreach (array_unique($permissions) as $permission) {
+                    DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds[$permission]]);
+                }
+            }
         }
 
         // Fidelio "Tax Details" (Rocks Hotel&Casino, Girne). Oran formülden alınır; Fidelio'daki ad bazı satırlarda formülle

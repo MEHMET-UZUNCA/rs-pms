@@ -22,7 +22,7 @@ class BillingScreenTest extends DomainTestCase
         $this->user = User::create(['username' => 'KASA', 'name' => 'Kasa', 'email' => 'kasa@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $this->user->id, 'property_id' => $this->property,
             'role_id' => DB::table('pms_roles')->where('code', 'admin')->value('id')]);
-        $this->res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();   // 101, içeride, 13.450
+        $this->res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();   // 1102, içeride, 13.450
     }
 
     private function balance(int $window = 1): float
@@ -88,7 +88,7 @@ class BillingScreenTest extends DomainTestCase
         $this->actingAs($this->user)->post('/folyo/odeme', ['reservation_id' => $this->res->id, 'payment_code_id' => $cash, 'amount' => '13450']);
         $this->actingAs($this->user)->post("/folyo/rezervasyon/{$this->res->id}/cikis")->assertRedirect(route('reservations.navigator', ['f' => 'cikmis']));
         $this->assertSame('checked_out', $this->res->fresh()->status);
-        $this->assertSame('dirty', DB::table('pms_rooms')->where('number', '101')->value('hk_status'));
+        $this->assertSame('dirty', DB::table('pms_rooms')->where('number', '1102')->value('hk_status'));
     }
 
     public function test_financial_account_billing_and_permissions(): void

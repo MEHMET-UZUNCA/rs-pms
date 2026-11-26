@@ -1,0 +1,164 @@
+# Rocks Hotel — Fidelio Suite8 "Rooms" (ekran görüntülerinden). Geçerlilik bitmiş odalar (1310, 1311, 8885–8888) pasif yüklenir.
+# 1323'ün 07.06.2018 tarihli eski "Standart,suite" kaydı alınmadı (aynı numaranın güncel kaydı var).
+Room	Floor	Type	Description	Persons	ValidFrom	ValidUntil
+1101	1	YMT	Deluxe,Dağ,Triple 38m²-R	3	1990-01-01	2050-01-01
+1102	1	YMF	Deluxe,Dağ,French 30m²-L	2	1990-01-01	2050-01-01
+1103	1	YMF	Deluxe, Dağ,French 30m²-R	2	1990-01-01	2050-01-01
+1104	1	YMT	Deluxe,Dağ,Twin 30m²-L	2	1990-01-01	2050-01-01
+1105	1	YMT	Deluxe, Dağ,Twin 30m²-R	2	1990-01-01	2050-01-01
+1106	1	YMT	Deluxe,Dağ,Twin 30m²-L	2	1990-01-01	2050-01-01
+1107	1	YMF	Deluxe,Dağ,French 30m²-R	2	1990-01-01	2050-01-01
+1108	1	YMF	Deluxe,Dağ,French Bed 30m²-R	2	1990-01-01	2050-01-01
+1109	1	YMT	Deluxe,Dağ,Twin 30m²-L	2	1990-01-01	2050-01-01
+1110	1	YMT	Deluxe,Dağ,Twin 30m²-R	2	1990-01-01	2050-01-01
+1111	1	YMF	Deluxe,Dağ,French 30m²-L	2	1990-01-01	2050-01-01
+1112	1	YSU	Deluxe,Suite 30m²+30m²	2	1990-01-01	2050-01-01
+1113	1	YST	Deluxe,Deniz,Twin Bed 30m²-R	2	1990-01-01	2050-01-01
+1114	1	YSF	Deluxe,Deniz,French 30m²-L	2	1990-01-01	2050-01-01
+1115	1	YSF	Deluxe,Deniz,French 30m²-R	2	1990-01-01	2050-01-01
+1116	1	YSF	Deluxe,Deniz,French Bed 30m²-L	2	1990-01-01	2050-01-01
+1117	1	YSF	Deluxe,Deniz,French 30m²-R	2	1990-01-01	2050-01-01
+1118	1	YSF	Deluxe,Deniz,French Bed 30m²-L	2	1990-01-01	2050-01-01
+1119	1	YSF	Deluxe,Deniz,French Bed 30m²-R	2	1990-01-01	2050-01-01
+1120	1	YST	Deluxe,Deniz,Twin Bed 30m²-L	2	1990-01-01	2050-01-01
+1121	1	YSU	Deluxe,Suite 27m²+15m²	2	1990-01-01	2050-01-01
+1122	1	YSF	Deluxe,Deniz,French Bed 30m²-R	2	1990-01-01	2050-01-01
+1123	1	YSU	Deluxe,Suit 32m²+18m²	2	1990-01-01	2050-01-01
+1124	1	YMF	Deluxe,Dağ,French 30m²-R	2	1990-01-01	2050-01-01
+1125	1	YMT	Deluxe,Dağ,Twin 30m²-L	2	1990-01-01	2050-01-01
+1126	1	YMF	Deluxe,Dağ,Fench Bed 22m²-R	2	1990-01-01	2050-01-01
+1127	1	YMF	Deluxe,Dağ,French 27m²-L	2	1990-01-01	2050-01-01
+1128	1	YMF	Deluxe,Dağ,French 27m²-L	2	1990-01-01	2050-01-01
+1129	1	YMF	Deluxe,Dağ,French 1129m²-R	2	1990-01-01	2050-01-01
+1130	1	YMF	Deluxe,Dağ,French 27m²-R	2	1990-01-01	2050-01-01
+1131	1	YMF	Deluxe,Dağ,French,Engelli 32m²	2	1990-01-01	2050-01-01
+1201	2	YMT	Deluxe,Dağ,Twin,Triple,38m²-R	3	1990-01-01	2050-01-01
+1202	2	YMF	Deluxe,Dağ,French,30m²-L	2	1990-01-01	2050-01-01
+1203	2	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1204	2	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1205	2	YMT	Deluxe,Dağ,Twin,30m²-R	2	1990-01-01	2050-01-01
+1206	2	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1207	2	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1208	2	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1209	2	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1210	2	YMT	Deluxe,Dağ,Twin,30m²-R	2	1990-01-01	2050-01-01
+1211	2	YMF	Deluxe,Dağ,French,30m²	2	1990-01-01	2050-01-01
+1212	2	YSU	Deluxe,Suite,30m²+32m²	2	1990-01-01	2050-01-01
+1213	2	YST	Deluxe,Deniz,Twin Bed,30m²-R	2	1990-01-01	2050-01-01
+1214	2	YSF	Deluxe,Deniz,French,30m²-L	2	1990-01-01	2050-01-01
+1215	2	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1216	2	YSF	Deluxe,Deniz,French Bed,30m²-L	2	1990-01-01	2050-01-01
+1217	2	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1218	2	YSF	Deluxe,Deniz,French Bed,30m²-L	2	1990-01-01	2050-01-01
+1219	2	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1220	2	YST	Deluxe,Deniz,Twin,30m²-L	2	1990-01-01	2050-01-01
+1221	2	YSU	Deluxe,Suite,27m²+15m²	2	1990-01-01	2050-01-01
+1222	2	YSF	Deluxe, Deniz, French,30m²-R	2	1990-01-01	2050-01-01
+1223	2	YSU	Deluxe,Suite,32m²+18m²	2	1990-01-01	2050-01-01
+1224	2	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1225	2	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1226	2	YMF	Deluxe,Dağ,French Bed,22m²-R	2	1990-01-01	2050-01-01
+1227	2	YMF	Deluxe,Dağ,French,27m²-L	2	1990-01-01	2050-01-01
+1228	2	YMF	Deluxe,Dağ,French,27m²-L	2	1990-01-01	2050-01-01
+1229	2	YMF	Deluxe,Dağ,French,27m²-R	2	1990-01-01	2050-01-01
+1230	2	YMF	Deluxe,Dağ,French,27m²-R	2	1990-01-01	2050-01-01
+1231	2	YMF	Deluxe,Dağ,French,32m²-L	2	1990-01-01	2050-01-01
+1301	3	YMT	Deluxe,Dağ,Twin,Triple,38m²-R	3	1990-01-01	2050-01-01
+1302	3	YMF	Deluxe,Dağ,French,30m²-L	2	1990-01-01	2050-01-01
+1303	3	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1304	3	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1305	3	YMT	Deluxe,Dağ,Twin,30m²-R	2	1990-01-01	2050-01-01
+1306	3	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1307	3	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1308	3	YMT	Deluxe,Dağ,Twin,30m²-R	2	1990-01-01	2050-01-01
+1309	3	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1310	3	YSU	Deluxe,Suit,144m²	2	1990-01-01	2019-05-29
+1311	3	YST	Deluxe,Deniz,Twin,	2	1990-01-01	2018-12-20
+1312	3	YSU	Deluxe,Suit,144m²	2	1990-01-01	2050-01-01
+1313	3	YST	Deluxe,Deniz,Twin,30m²-R	2	1990-01-01	2050-01-01
+1314	3	YSF	Deluxe,Deniz,French,30m²-L	2	1990-01-01	2050-01-01
+1315	3	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1316	3	YSF	Deluxe,Deniz,French,30m²-L	2	1990-01-01	2050-01-01
+1317	3	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1318	3	YSF	Deluxe,Deniz,French,30m²-L	2	1990-01-01	2050-01-01
+1319	3	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1320	3	YST	Deluxe,Deniz,Twin,30m²-L	2	1990-01-01	2050-01-01
+1321	3	YSU	Deluxe,Suite,27m²+15m²	2	1990-01-01	2050-01-01
+1322	3	YSF	Deluxe,Deniz,French,30m²-R	2	1990-01-01	2050-01-01
+1323	3	YSU	Deluxe,Suit,32m²+18m²	2	2018-08-07	2050-01-01
+1324	3	YMF	Deluxe,Dağ,French,30m²-R	2	1990-01-01	2050-01-01
+1325	3	YMT	Deluxe,Dağ,Twin,30m²-L	2	1990-01-01	2050-01-01
+1326	3	YMF	Deluxe,Dağ,French,22m²-R	2	1990-01-01	2050-01-01
+1327	3	YMF	Deluxe,Dağ,French,27m²-L	2	1990-01-01	2050-01-01
+1328	3	YMF	Deluxe,Dağ,French,27m²-L	2	1990-01-01	2050-01-01
+1329	3	YMF	Deluxe,Dağ,French,27m²-R	2	1990-01-01	2050-01-01
+1330	3	YMF	Deluxe,Dağ,French,27m²-R	2	1990-01-01	2050-01-01
+1331	3	YMF	Deluxe,Dağ,French,32m²-L	2	1990-01-01	2050-01-01
+2201	4	EMT	Superior,Dağ,Twin 32m²	2	1990-01-01	2050-01-01
+2202	4	EMT	Superior,Dağ,Twin 28m²	2	1990-01-01	2050-01-01
+2203	4	EMT	Superior,Dağ,Twin 32m²	2	1990-01-01	2050-01-01
+2204	4	ESF	Superior,Deniz,French 30m²	2	1990-01-01	2050-01-01
+2205	4	EST	Superior,Deniz,Twin 30m²	2	1990-01-01	2050-01-01
+2206	4	ESF	Superior,Deniz,French 28m²	2	1990-01-01	2050-01-01
+2207	4	EST	Superior,Deniz, Conn Twin 30m²	2	1990-01-01	2050-01-01
+2208	4	ESF	Superior,Deniz,Con French 30m²	2	1990-01-01	2050-01-01
+2209	4	EMF	Superior,Kara,French 18m²	2	1990-01-01	2050-01-01
+2210	4	EMF	Superior,Kara,French 20m²	2	1990-01-01	2050-01-01
+2211	4	EMF	Superior,Kara,French 20m²	2	1990-01-01	2050-01-01
+2212	4	EMF	Superior,Kara,Conn French 20m²	2	1990-01-01	2050-01-01
+2213	4	EMT	Superior,Kara,Conn Twin 20m²	2	1990-01-01	2050-01-01
+2214	4	EMF	Superior,Dağ,French 28m²	2	1990-01-01	2050-01-01
+2215	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2216	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2217	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2218	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2219	4	EMF	Superior,Dağ,French 23m²	2	1990-01-01	2050-01-01
+2220	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2221	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2222	4	EMF	Superior,Dağ,French 24m²	2	1990-01-01	2050-01-01
+2301	5	EMT	Superior,Dağ,Twin,32m²	2	1990-01-01	2050-01-01
+2302	5	EMT	Superior,Dağ,Twin,28m²	2	1990-01-01	2050-01-01
+2303	5	EMT	Superior,Dağ,Twin,32m²	2	1990-01-01	2050-01-01
+2304	5	ESF	Superior,Deniz,French,30m²	2	1990-01-01	2050-01-01
+2305	5	EST	Superior,Deniz,Twin,30m²	2	1990-01-01	2050-01-01
+2306	5	ESF	Superior,Deniz,French,28m²	2	1990-01-01	2050-01-01
+2307	5	EST	Superior,Deniz,Twin Conn,30m²	2	1990-01-01	2050-01-01
+2308	5	ESF	Superior,Deniz,French,Conn30m²	2	1990-01-01	2050-01-01
+2309	5	EMF	Superior,Kara,French,18m²	2	1990-01-01	2050-01-01
+2310	5	EMF	Superior,Kara,French,20m²	2	1990-01-01	2050-01-01
+2311	5	EMF	Superior,Kara,French,20m²	2	1990-01-01	2050-01-01
+2312	5	EMF	Superior,Kara,French,Conn 20m²	2	1990-01-01	2050-01-01
+2313	5	EMT	Superior,Kara,Twin,Conn 20m²	2	1990-01-01	2050-01-01
+2314	5	EMF	Superior,Dağ,French,28m²	2	1990-01-01	2050-01-01
+2315	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2316	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2317	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2318	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2319	5	EMF	Superior,Dağ,French,23m²	2	1990-01-01	2050-01-01
+2320	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2321	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2322	5	EMF	Superior,Dağ,French,24m²	2	1990-01-01	2050-01-01
+2401	6	EMT	Superior,Dağ,Twin,NonSmke,32m²	2	1990-01-01	2050-01-01
+2402	6	EMT	Superior,Dağ,Twin,NonSmke,28m²	2	1990-01-01	2050-01-01
+2403	6	EMT	Superior,Dağ,Twin,NoSmk,32m²	2	1990-01-01	2050-01-01
+2404	6	ESF	Superior,Deniz,Twin,Nosmk,30m²	2	1990-01-01	2050-01-01
+2405	6	EST	Superior,Deniz,Frc,NonSmk,30m²	2	1990-01-01	2050-01-01
+2406	6	ESF	Superior,Deniz,Frc,NonSmk,30m²	2	1990-01-01	2050-01-01
+2407	6	EST	Superior,Deniz,Twin,NoSmk,30m²	2	1990-01-01	2050-01-01
+2408	6	ESF	Superior,Deniz,Frc,NonSmk,30m²	2	1990-01-01	2050-01-01
+2409	6	ESU	Superior,suite,NonSmoking,78m²	2	1990-01-01	2050-01-01
+2410	6	ESU	Superior,suite,NonSmoking,93m²	3	1990-01-01	2050-01-01
+2501	7	EMT	Superior,Dağ,Twin 32m²	2	1990-01-01	2050-01-01
+2502	7	EMT	Superior,Dağ,Twin 28m²	2	1990-01-01	2050-01-01
+2503	7	EMT	Superior,Dağ,Twin 32m²	2	1990-01-01	2050-01-01
+2504	7	ESF	Superior,Deniz,French 30m²	2	1990-01-01	2050-01-01
+2505	7	EST	Superior,Deniz,Twin 30m²	2	1990-01-01	2050-01-01
+2506	7	ESF	Superior,Deniz,French 28m²	2	1990-01-01	2050-01-01
+2507	7	EST	Superior,Deniz,Twin 30m²	2	1990-01-01	2050-01-01
+2508	7	ESF	Superior,Deniz,French 30m²	2	1990-01-01	2050-01-01
+2509	7	ESU	Superior,suite 60m²	2	1990-01-01	2050-01-01
+2510	7	ESU	Superior,suite 68m²	2	1990-01-01	2050-01-01
+8885	1	EST	Standart,Deniz,Twin	1	2001-01-01	2010-01-01
+8886	1	EST	Standart,Deniz,Twin	1	2001-01-01	2010-01-01
+8887	1	EST	Standart,Deniz,Twin	1	2001-01-01	2010-01-01
+8888	1	EST	Standart,Deniz,Twin	1	2001-01-01	2010-01-01
