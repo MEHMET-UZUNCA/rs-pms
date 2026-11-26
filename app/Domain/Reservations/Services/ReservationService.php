@@ -310,7 +310,8 @@ class ReservationService
             if (in_array($day->toDateString(), $existing, true)) {
                 continue;
             }
-            $quote = $this->rates->quote($rateCode, (int) $reservation->charge_room_type_id, $day, (int) $reservation->adults, $bands, $extraBeds);
+            $quote = $this->rates->quote($rateCode, (int) $reservation->charge_room_type_id, $day, (int) $reservation->adults, $bands, $extraBeds, 0,
+                $reservation->room_id ? Room::query()->whereKey($reservation->room_id)->value('number') : null);
             $override = $overrides[$day->toDateString()] ?? $manual;
             $amount = $override ?? $quote->amount;
             if ($amount === null) {

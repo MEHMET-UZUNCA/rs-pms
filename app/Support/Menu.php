@@ -44,6 +44,7 @@ class Menu
                 ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null],
                 ['taxes', null],
                 ['exchange_rates', $can('setup.exchange_rates') ? route('setup.exchange.index') : null],
+                ['rate_codes', $can('setup.rates') ? route('setup.rates.index') : null],
                 ['reservation_options', $can('setup.options') ? route('setup.options.reservation') : null],
                 ['users', $can('setup.users') ? route('setup.users.index') : null],
                 ['roles', $can('setup.users') ? route('setup.roles.index') : null],

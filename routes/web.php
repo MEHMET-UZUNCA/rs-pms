@@ -13,6 +13,7 @@ use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\ExchangeRateController;
 use App\Http\Controllers\Setup\OutletController;
+use App\Http\Controllers\Setup\RateCodeController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
 use App\Http\Controllers\Setup\UserController;
@@ -95,6 +96,24 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/', [FinancialAccountController::class, 'store'])->name('store');
         Route::get('/{folio}/duzenle', [FinancialAccountController::class, 'edit'])->name('edit');
         Route::put('/{folio}', [FinancialAccountController::class, 'update'])->name('update');
+    });
+
+    // Ayarlar → Rate Management → Fiyat kodları (Fidelio Rates / Rate Edit)
+    Route::middleware('permission:setup.rates')->prefix('ayarlar/fiyat-kodlari')->name('setup.rates.')->group(function () {
+        Route::get('/', [RateCodeController::class, 'index'])->name('index');
+        Route::get('/yeni', [RateCodeController::class, 'create'])->name('create');
+        Route::post('/', [RateCodeController::class, 'store'])->name('store');
+        Route::get('/{rate}/ozet', [RateCodeController::class, 'summary'])->name('summary');
+        Route::get('/{rate}/duzenle', [RateCodeController::class, 'edit'])->name('edit');
+        Route::post('/{rate}/kopyala', [RateCodeController::class, 'copy'])->name('copy');
+        Route::put('/{rate}', [RateCodeController::class, 'update'])->name('update');
+        Route::delete('/{rate}', [RateCodeController::class, 'destroy'])->name('destroy');
+        Route::get('/{rate}/detay/yeni', [RateCodeController::class, 'detailCreate'])->name('details.create');
+        Route::post('/{rate}/detay', [RateCodeController::class, 'detailStore'])->name('details.store');
+        Route::get('/{rate}/detay/{detail}/duzenle', [RateCodeController::class, 'detailEdit'])->name('details.edit');
+        Route::get('/{rate}/detay/{detail}/kopyala', [RateCodeController::class, 'detailCopy'])->name('details.copy');
+        Route::put('/{rate}/detay/{detail}', [RateCodeController::class, 'detailUpdate'])->name('details.update');
+        Route::delete('/{rate}/detay/{detail}', [RateCodeController::class, 'detailDestroy'])->name('details.destroy');
     });
 
     // Ayarlar → Kasa → Döviz kurları (Fidelio Exchange Rates)

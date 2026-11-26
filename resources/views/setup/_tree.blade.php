@@ -9,8 +9,12 @@
     <span class="is-soon">{{ __('pms.setup.payment_types') }}</span>
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.reservation') }}</div>
     @can('permission', 'setup.options')<a href="{{ route('setup.options.reservation') }}" @class(['is-current' => request()->routeIs('setup.options.*')])>{{ __('pms.options.title') }}</a>@endcan
-    <span class="is-soon">{{ __('pms.setup.rate_codes') }}</span>
     <span class="is-soon">{{ __('pms.setup.room_types') }}</span>
+    <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.rate_management') }}</div>
+    @can('permission', 'setup.rates')<a href="{{ route('setup.rates.index') }}" @class(['is-current' => request()->routeIs('setup.rates.*')])>{{ __('pms.rates.title') }}</a>@else<span class="is-soon">{{ __('pms.rates.title') }}</span>@endcan
+    <span class="is-soon">{{ __('pms.setup.rate_categories') }}</span>
+    <span class="is-soon">{{ __('pms.setup.seasons') }}</span>
+    <span class="is-soon">{{ __('pms.setup.packages') }}</span>
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.system') }}</div>
     @can('permission', 'setup.users')
         <a href="{{ route('setup.users.index') }}" @class(['is-current' => request()->routeIs('setup.users.*')])>{{ __('pms.users.title') }}</a>

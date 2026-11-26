@@ -16,7 +16,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34. Aday: **1308** (listede YMT "Twin"; 1108 ve 1208 YMF) — Fidelio'da 1308'in tipi teyit edilecek | Fidelio Rooms → 1308 | Oda tipi sayıları | Bekleniyor |
 | 9c | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — Fidelio'da yer değiştirmiş olabilir | Fidelio Rooms | Doğru tip / açıklama | Teyit edilecek |
 | 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
-| 10 | Fiyat kodları ve sezon fiyatları | Fidelio | Gerçek fiyat tanımları | Bekleniyor |
+| 10 | Fiyat kodları ve fiyatları: 2027 kodları başlıklarıyla girildi (27COMP, 27IND/A başlıkları tam). Kalan: her kodun Rate sekmesi ve Prices (dönem, oda tipi, kişi fiyatları), 27AGY/A ve 27IND/A'daki %15'in anlamı (bağlı fiyat mı?), CA1/CA2 yaş aralıkları, pansiyon paketlerinin içeriği (Package Link Header: ör. Breakfast PP 17 $, Dinner PP 28 $), 2026 ve diğer kategorilerdeki kodlar | Fidelio Rates | Fiyat hesabı | Kısmen |
 
 ## Alınanlar
 

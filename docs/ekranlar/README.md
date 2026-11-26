@@ -146,6 +146,14 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/16-doviz-kurlari-01-liste.png` | TCMB'den çekilen günün kurları; Rate / Cash Rate (−%5) / Ratecode Rate, banka kurları, kaynak seçimi, Alt+F şimdi çek |
 | `goruntuler/16-doviz-kurlari-02-kural.png` | Döviz kuralı: dayanak kur, kâr payları, otomatik güncelleme ve elle kur |
 
+## 17 — Fiyat kodları (Rates, gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/17-fiyat-kodlari-01-liste.png` | Kategori ağacı (2027 FIYATLARI …), seçili kodun özeti |
+| `goruntuler/17-fiyat-kodlari-02-rate-edit.png` | Rate Edit: başlık alanları ve Rate Details listesi |
+| `goruntuler/17-fiyat-kodlari-03-detay-fiyatlar.png` | Rate Details + Prices: dönem, oda tipleri, odalar, günler; Default/1–4 yetişkin, hafta sonu, CA1/CA2 |
+
 ## Taslakları yerelde açmak
 
 ```bash

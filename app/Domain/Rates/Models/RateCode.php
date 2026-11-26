@@ -24,6 +24,10 @@ class RateCode extends Model
             'is_public' => 'boolean',
             'is_negotiated' => 'boolean',
             'is_active' => 'boolean',
+            'is_fixed_rate' => 'boolean',
+            'is_flat_rate' => 'boolean',
+            'print_rate' => 'boolean',
+            'refresh_exchange_at_checkin' => 'boolean',
             'valid_from' => DateOnly::class,
             'valid_to' => DateOnly::class,
             'derive_value' => 'decimal:2',
@@ -48,5 +52,10 @@ class RateCode extends Model
     public function amounts(): HasMany
     {
         return $this->hasMany(RateAmount::class, 'rate_code_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(RateCategory::class, 'rate_category_id');
     }
 }

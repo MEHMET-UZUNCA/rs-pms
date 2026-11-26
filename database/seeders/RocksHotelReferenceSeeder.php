@@ -231,6 +231,47 @@ class RocksHotelReferenceSeeder extends Seeder
                 'rate_margin_pct' => 0, 'cash_margin_pct' => -5, 'ratecode_margin_pct' => 0, 'is_auto' => true, 'created_at' => now(), 'updated_at' => now()]);
         }
 
+        // Fiyat tanımları (Fidelio Rates, 26.11.2026). Pansiyon tipleri (Board type): No Board = paket yok.
+        foreach ([['BB', 'Breakfast'], ['HBD', 'Half Board Dinner'], ['HBL', 'Half Board Lunch'], ['FB', 'Full Board'], ['ALL', 'All Inclusive']] as $i => [$code, $name]) {
+            DB::table('pms_packages')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'type' => 'board', 'updated_at' => now()]);
+        }
+        // Çocuk yaş kategorileri CA1, CA2 (yaş aralıkları otelden teyit edilecek)
+        foreach ([[1, 0, 6, 'CA1'], [2, 7, 12, 'CA2']] as [$band, $from, $to, $name]) {
+            DB::table('pms_child_age_bands')->insertOrIgnore(['property_id' => $propertyId, 'band' => $band, 'age_from' => $from, 'age_to' => $to, 'name' => $name, 'created_at' => now(), 'updated_at' => now()]);
+        }
+        // Pazar kodları (Fidelio Customer market segment; liste otelden tamamlanacak)
+        foreach ([['IND', 'INDIVIDUAL'], ['WLK', 'WALK IN'], ['FOO', 'FOREIGN EUROPEAN MARKET'], ['FOA', 'FOREIGN MIDDLE EAST'], ['FOB', 'FOREIGN BRITISH MARKET'],
+            ['FOI', 'FOREIGN ISRAIL MARKET'], ['RCK', 'ROCKS HOTEL'], ['CMP', 'COMPLIMENTARY'], ['COG', 'CORPORATE']] as $i => [$code, $name]) {
+            DB::table('pms_market_segments')->insertOrIgnore(['property_id' => $propertyId, 'code' => $code, 'name' => $name, 'sort' => $i + 1, 'created_at' => now(), 'updated_at' => now()]);
+        }
+        foreach ([['DIR', 'DIRECTLY'], ['OC', 'ON CALL'], ['MAI', 'MAILING'], ['DAR', 'Darren Vudali'], ['CRP', 'CORPORATE'], ['PM', 'Pseudo Room'],
+            ['HOT', 'Hotel Staff'], ['EMP', 'CASINO Staff']] as $i => [$code, $name]) {
+            DB::table('pms_source_codes')->insertOrIgnore(['property_id' => $propertyId, 'code' => $code, 'name' => $name, 'sort' => $i + 1, 'created_at' => now(), 'updated_at' => now()]);
+        }
+        $source = fn (string $c) => DB::table('pms_source_codes')->where('property_id', $propertyId)->where('code', $c)->value('id');
+        foreach ([['RACK', 'Rack Rates', 1], ['AGENT', 'Agent Rates', 2], ['Y2026', '2026 FIYATLARI', 3], ['Y2027', '2027 FIYATLARI', 4]] as [$code, $name, $sort]) {
+            DB::table('pms_rate_categories')->updateOrInsert(['property_id' => $propertyId, 'code' => $code], ['name' => $name, 'sort' => $sort, 'updated_at' => now()]);
+        }
+        // 2027 fiyat kodları (başlıklar; fiyatlar otelden gelince girilecek). Ekrandan değiştirilen koda dokunulmaz.
+        $room100 = (int) DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('code', '100')->value('id');
+        $y2027 = (int) DB::table('pms_rate_categories')->where('property_id', $propertyId)->where('code', 'Y2027')->value('id');
+        $segment = fn (string $c) => DB::table('pms_market_segments')->where('property_id', $propertyId)->where('code', $c)->value('id');
+        foreach ([
+            ['27COMP', '2027 COMPLIMENTARY', ['folio_text' => 'COMP', 'default_market_segment_id' => $segment('CMP'), 'complimentary_type' => 'comp',
+                'default_source_code_id' => $source('DIR'),
+                'valid_from' => '2025-01-07', 'valid_to' => '2026-12-31', 'weekend_days' => 127]],
+            ['27PRO', '2027 PROMOSYON', []], ['27AGY', '2027 AGENCY', []], ['27IND', '2027 IND', []], ['27BOOKING', '2027 BOOKING', []],
+            ['27AGY/A', '2027 AGENCY %15', []],
+            ['27IND/A', '2027 IND %15', ['folio_text' => 'HB', 'default_market_segment_id' => $segment('IND'), 'default_source_code_id' => $source('DIR'),
+                'valid_from' => '2024-05-15', 'valid_to' => '2027-12-29', 'weekend_transaction_code_id' => $room100]],
+        ] as $i => [$code, $name, $extra]) {
+            DB::table('pms_rate_codes')->insertOrIgnore(['property_id' => $propertyId, 'code' => $code, 'name' => $name, 'rate_category_id' => $y2027,
+                'currency_code' => 'TRY', 'room_transaction_code_id' => $room100, 'sort' => $i + 1, 'created_at' => now(), 'updated_at' => now()] + $extra);
+            if ($extra) {   // başlığı henüz girilmemiş koda Fidelio'dan alınan alanlar
+                DB::table('pms_rate_codes')->where('property_id', $propertyId)->where('code', $code)->whereNull('folio_text')->update($extra);
+            }
+        }
+
         // OOO / OOS sebepleri — Fidelio "Room Status Reason" listesi gelince değiştirilecek.
         foreach ([['OOO', 'Out of Order'], ['OOS', 'Out of Service']] as [$code, $name]) {
             DB::table('pms_reason_codes')->updateOrInsert(['property_id' => $propertyId, 'category' => 'room_status', 'code' => $code], ['name' => $name, 'is_active' => true, 'updated_at' => now()]);
@@ -246,7 +287,7 @@ class RocksHotelReferenceSeeder extends Seeder
             ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
             ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
             ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping'],
-            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup']] as [$code, $name, $group]) {
+            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup'], ['setup.rates', 'Fiyat kodları', 'setup']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -282,6 +323,11 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach (['SUP', 'IT1', 'FOM'] as $code) {
             if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
                 DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.options']]);
+            }
+        }
+        foreach (['SUP', 'IT1', 'FOM', 'SLM'] as $code) {
+            if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
+                DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.rates']]);
             }
         }
         foreach (['SUP', 'IT1', 'FOM', 'ACC', 'AUD'] as $code) {
