@@ -287,7 +287,7 @@ class RocksHotelReferenceSeeder extends Seeder
             ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
             ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
             ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping'],
-            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup'], ['setup.rates', 'Fiyat kodları', 'setup']] as [$code, $name, $group]) {
+            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup'], ['setup.rates', 'Fiyat kodları', 'setup'], ['front_office.lost_found', 'Kayıp eşya (Lost & Found)', 'front_office']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -333,6 +333,21 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach (['SUP', 'IT1', 'FOM', 'ACC', 'AUD'] as $code) {
             if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
                 DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.exchange_rates']]);
+            }
+        }
+        foreach (['SUP', 'IT1', 'FOM', 'FOS', 'FOA', 'FOG', 'AUD', 'HKS'] as $code) {
+            if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
+                DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['front_office.lost_found']]);
+            }
+        }
+        // Kayıp eşya grupları ve ortak alanlar (başlangıç listesi; otel değiştirebilir)
+        foreach ([['lost_found_group', [['ELEC', 'Elektronik / Electronics'], ['JEWEL', 'Takı, saat / Jewellery, watch'], ['CLOTH', 'Giysi / Clothing'],
+            ['DOC', 'Kimlik, belge / ID, documents'], ['MONEY', 'Para, cüzdan / Money, wallet'], ['KEY', 'Anahtar / Keys'], ['BAG', 'Çanta / Bag'],
+            ['GLASS', 'Gözlük / Glasses'], ['OTHER', 'Diğer / Other']]],
+            ['public_place', [['LOBBY', 'Lobi / Lobby'], ['REST', 'Restoran / Restaurant'], ['BAR', 'Bar'], ['POOL', 'Havuz / Pool'], ['CASINO', 'Casino'],
+            ['SPA', 'Spa'], ['GYM', 'Spor salonu / Gym'], ['BEACH', 'Plaj / Beach'], ['PARK', 'Otopark / Parking'], ['CONF', 'Toplantı salonu / Meeting room']]]] as [$category, $items]) {
+            foreach ($items as [$code, $name]) {
+                DB::table('pms_reason_codes')->insertOrIgnore(['property_id' => $propertyId, 'category' => $category, 'code' => $code, 'name' => $name, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()]);
             }
         }
         // PM hesabı açma: ön büro yönetimi, gece müdürü ve muhasebe

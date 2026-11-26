@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
+use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
@@ -89,6 +90,21 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Quick Keys → All Shortcuts
     Route::view('/kisayollar', 'shortcuts')->name('shortcuts');
+
+    // Front Desk → Lost & Found
+    Route::middleware('permission:front_office.lost_found')->prefix('kayip-esya')->name('lost-found.')->group(function () {
+        Route::get('/', [LostFoundController::class, 'index'])->name('index');
+        Route::get('/yeni/{kind}', [LostFoundController::class, 'create'])->whereIn('kind', ['lost', 'found'])->name('create');
+        Route::post('/yeni/{kind}', [LostFoundController::class, 'store'])->whereIn('kind', ['lost', 'found'])->name('store');
+        Route::post('/eslestir', [LostFoundController::class, 'match'])->name('match');
+        Route::get('/{item}', [LostFoundController::class, 'show'])->whereNumber('item')->name('show');
+        Route::get('/{item}/duzenle', [LostFoundController::class, 'edit'])->whereNumber('item')->name('edit');
+        Route::put('/{item}', [LostFoundController::class, 'update'])->whereNumber('item')->name('update');
+        Route::delete('/{item}', [LostFoundController::class, 'destroy'])->whereNumber('item')->name('destroy');
+        Route::post('/{item}/ayir', [LostFoundController::class, 'unmatch'])->whereNumber('item')->name('unmatch');
+        Route::post('/{item}/kapat', [LostFoundController::class, 'resolve'])->whereNumber('item')->name('resolve');
+        Route::post('/{item}/not', [LostFoundController::class, 'note'])->whereNumber('item')->name('note');
+    });
 
     // Ön Büro → New Financial Account (PM hesabı)
     Route::middleware('permission:cashiering.accounts')->prefix('hesaplar')->name('accounts.')->group(function () {

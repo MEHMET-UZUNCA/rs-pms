@@ -294,4 +294,21 @@ return [
         'all_room_types' => 'Bütün oda tipleri', 'currency_label' => 'Para birimi',
         'days' => ['mon' => 'Pt', 'tue' => 'Sa', 'wed' => 'Ça', 'thu' => 'Pe', 'fri' => 'Cu', 'sat' => 'Ct', 'sun' => 'Pz'], 'days_long' => ['mon' => 'Pazartesi', 'tue' => 'Salı', 'wed' => 'Çarşamba', 'thu' => 'Perşembe', 'fri' => 'Cuma', 'sat' => 'Cumartesi', 'sun' => 'Pazar'],
     ],
+
+    'lf' => [
+        'title' => 'Kayıp eşya (Lost & Found)', 'subtitle' => 'Kayıp ve bulunan eşyalar, eşleştirme, teslim', 'lost_items' => 'Kayıp eşyalar', 'found_items' => 'Bulunan eşyalar',
+        'from' => 'Başlangıç', 'to' => 'Bitiş', 'from_to' => 'Tarih', 'group' => 'Grup', 'item' => 'Eşya', 'room' => 'Oda', 'place' => 'Ortak alan',
+        'lost_by' => 'Kaybeden', 'found_by' => 'Bulan', 'include_matched' => 'Eşleşenler dahil', 'include_resolved' => 'Kapananlar dahil', 'full_text' => 'Metinde ara',
+        'clear_filter' => 'Süzgeci temizle', 'new_lost' => 'Yeni kayıp', 'new_found' => 'Yeni bulunan', 'edit' => 'Eşyayı düzenle', 'number' => 'No', 'when' => 'Tarih', 'time' => 'Saat',
+        'where' => 'Yer', 'status' => 'Durum', 'contact' => 'İletişim', 'storage' => 'Saklama yeri', 'note' => 'Not', 'add_note' => 'Geçmişe not ekle',
+        'match' => 'Eşleştir', 'match_hint' => 'Solda bir kayıp, sağda bir bulunan eşya seçip Eşleştir\'e basın.', 'match_confirm' => 'Seçili kayıp ve bulunan eşyalar eşleştirilsin mi?',
+        'unmatch' => 'Eşleşmeyi kaldır', 'return' => 'Teslim et', 'returned_to' => 'Teslim alan', 'dispose' => 'İmha / bağış', 'return_confirm' => 'Eşya teslim edildi olarak kapatılsın mı?',
+        'dispose_confirm' => 'Eşya imha / bağış olarak kapatılsın mı?', 'action' => 'İşlem', 'entered' => 'Zaman',
+        'statuses' => ['open' => 'Açık', 'matched' => 'Eşleşti', 'returned' => 'Teslim edildi', 'disposed' => 'İmha / bağış', 'stored' => 'Açık'],
+        'actions' => ['reported' => 'Bildirildi', 'found' => 'Bulundu', 'edited' => 'Düzenlendi', 'matched' => 'Eşleştirildi', 'unmatched' => 'Eşleşme kaldırıldı', 'returned' => 'Teslim edildi', 'disposed' => 'İmha / bağış', 'note' => 'Not'],
+        'saved' => ':number kaydedildi.', 'matched' => ':lost ile :found eşleştirildi.', 'unmatched' => 'Eşleşme kaldırıldı.', 'resolved_returned' => 'Eşya teslim edildi.',
+        'resolved_disposed' => 'Eşya imha / bağış olarak kapatıldı.', 'note_added' => 'Not eklendi.',
+        'err_resolved' => 'Bu eşya kapanmış (teslim ya da imha).', 'err_match_kinds' => 'Bir kayıp ve bir bulunan eşya seçin.',
+        'err_match_status' => 'Yalnız açık eşyalar eşleştirilebilir.', 'err_not_matched' => 'Bu eşya eşleşmemiş.', 'err_delete' => 'Eşleşmiş ya da kapanmış eşya silinemez.',
+    ],
 ];

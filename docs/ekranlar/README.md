@@ -154,6 +154,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/17-fiyat-kodlari-02-rate-edit.png` | Rate Edit: başlık alanları ve Rate Details listesi |
 | `goruntuler/17-fiyat-kodlari-03-detay-fiyatlar.png` | Rate Details + Prices: dönem, oda tipleri, odalar, günler; Default/1–4 yetişkin, hafta sonu, CA1/CA2 |
 
+## 18 — Lost & Found (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/18-lost-found-01-liste.png` | Kayıp ve bulunan listeleri, süzgeçler, seçili eşyaların geçmişi |
+| `goruntuler/18-lost-found-02-eslesme.png` | Eşleşen kayıp ↔ bulunan; teslim, imha, eşleşmeyi kaldır, not |
+
 ## Taslakları yerelde açmak
 
 ```bash

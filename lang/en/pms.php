@@ -294,4 +294,21 @@ return [
         'all_room_types' => 'All room types', 'currency_label' => 'Currency',
         'days' => ['mon' => 'Mo', 'tue' => 'Tu', 'wed' => 'We', 'thu' => 'Th', 'fri' => 'Fr', 'sat' => 'Sa', 'sun' => 'Su'], 'days_long' => ['mon' => 'Monday', 'tue' => 'Tuesday', 'wed' => 'Wednesday', 'thu' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday'],
     ],
+
+    'lf' => [
+        'title' => 'Lost & Found Items', 'subtitle' => 'Lost and found items, matching, return', 'lost_items' => 'Lost Items', 'found_items' => 'Found Items',
+        'from' => 'From', 'to' => 'To', 'from_to' => 'From / to', 'group' => 'Group', 'item' => 'Item', 'room' => 'Room', 'place' => 'Public places',
+        'lost_by' => 'Lost By', 'found_by' => 'Found By', 'include_matched' => 'Include matched', 'include_resolved' => 'Include resolved', 'full_text' => 'Full text search',
+        'clear_filter' => 'Clear Filter', 'new_lost' => 'New lost', 'new_found' => 'New found', 'edit' => 'Edit item', 'number' => 'No.', 'when' => 'When', 'time' => 'Time',
+        'where' => 'Where', 'status' => 'Status', 'contact' => 'Contact', 'storage' => 'Stored at', 'note' => 'Note', 'add_note' => 'Add a note to the history',
+        'match' => 'Match', 'match_hint' => 'Select a lost item on the left and a found item on the right, then Match.', 'match_confirm' => 'Match the selected lost and found items?',
+        'unmatch' => 'Unmatch', 'return' => 'Return', 'returned_to' => 'Returned to', 'dispose' => 'Dispose', 'return_confirm' => 'Mark the item as returned?',
+        'dispose_confirm' => 'Mark the item as disposed?', 'action' => 'Action', 'entered' => 'Entered',
+        'statuses' => ['open' => 'Open', 'matched' => 'Matched', 'returned' => 'Returned', 'disposed' => 'Disposed', 'stored' => 'Open'],
+        'actions' => ['reported' => 'Reported', 'found' => 'Found', 'edited' => 'Edited', 'matched' => 'Matched', 'unmatched' => 'Unmatched', 'returned' => 'Returned', 'disposed' => 'Disposed', 'note' => 'Note'],
+        'saved' => 'Item :number saved.', 'matched' => ':lost matched with :found.', 'unmatched' => 'Match removed.', 'resolved_returned' => 'Item returned.',
+        'resolved_disposed' => 'Item disposed.', 'note_added' => 'Note added.',
+        'err_resolved' => 'This item is closed (returned or disposed).', 'err_match_kinds' => 'Select one lost and one found item.',
+        'err_match_status' => 'Only open items can be matched.', 'err_not_matched' => 'This item is not matched.', 'err_delete' => 'A matched or closed item cannot be deleted.',
+    ],
 ];
