@@ -115,7 +115,7 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 
 | Dosya | Ne gösteriyor |
 |---|---|
-| `goruntuler/12-gece-kapanisi-01-kontroller.png` | Kapanış öncesi kontroller: çıkışı yapılmamış misafir (engeller), açık kasa, gelmeyen misafir (uyarı); amir onayı gerekçesi; adımlar |
+| `goruntuler/12-gece-kapanisi-01-kontroller.png` | Kapanış öncesi kontroller (Fidelio sırası, hepsi Stop): çıkışı yapılmamış misafir, gelmeyen misafir, bakiyeli gelmeyen, süresi dolan ve beklenen hesaplar (FA), açık kasa; amir onayı gerekçesi; adımlar; "Answers for Automatic Night Audit" (Stop / Continue) |
 | `goruntuler/12-gece-kapanisi-02-tamamlandi.png` | Kapanış tamamlandı: yeni iş günü, son günün doluluk / ADR / RevPAR / gelir özeti ve departman kodu bazında gelir |
 
 ## 13 — Onay Mektubu (Reservation Confirmation Letter, gerçek uygulama)
