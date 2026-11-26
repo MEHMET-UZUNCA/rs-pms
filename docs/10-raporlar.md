@@ -12,6 +12,7 @@ Fidelio'nun yüzlerce hazır raporu taşınmaz; aşağıdaki başlangıç seti y
 | Elektraweb yardım — Raporlar, Gün Sonu | Rapor grupları: Durum (anlık), Dağılım analizi (geçmiş yılla karşılaştırma), Doluluk grafikleri, Yönetim raporları (doluluk, detaylı doluluk, özet günlük yönetim raporu); gün sonunda üretilen raporların tarihle geri alınması |
 | Elektraweb yardım — Boş Oda Listesi | Süzgeçler: tarih aralığı, oda tipi, özellik, temizlik durumu, kat, manzara; "temiz ve onaylı", "kapalı odalar hariç", "bugün çıkacak dolu odalar hariç" |
 | Elektraweb yardım — Kapalı Oda Listesi, HK Oda İşlemleri, Maid Yönetimi, Ön Kasa | Kapalı odalar Geçmiş / Güncel / İptal; uyuşmazlık raporu; kasa: para birimi ve kullanıcı bazında toplamlar, kasa işlemleri detayı |
+| Fidelio Reports ekranı (fiyat raporları, 26.11.2026) | C4330, P4473, P4333, P4324, P4329, P4341, P4039, P4326, P4375 → aşağıda "Fiyat" |
 | Athena | Bekleniyor (rapor sayfası bağlantısı ya da ekran görüntüsü) |
 
 ## 10.2 Başlangıç rapor seti
@@ -52,6 +53,21 @@ Her rapor: ekranda görme, yazdırma / PDF, Excel (CSV). Tarih girişi Fidelio g
 | FI5 | Cashier Report | Ödemeler: ödeme şekli ve para birimi bazında toplam, kullanıcı bazında kasa | Tarih, kullanıcı |
 | FI6 | Guest Ledger / Open Balances | İçerideki misafirlerin ve hesapların (FA) bakiyeleri | Tarih |
 | FI7 | Tax Report | KDV oranına göre matrah ve vergi | Tarih aralığı |
+
+### Fiyat (Rates) — Fidelio'da kullanılan raporlardan (26.11.2026)
+| # | Fidelio raporu | RS PMS karşılığı | Veri |
+|---|---|---|---|
+| RT1 | C4330 Reservations by rate code (daily), alphabetic | Fiyat koduna göre rezervasyonlar (gün gün) | Gece fiyat satırları (`pms_reservation_nights`) |
+| RT2 | P4473 / C4473 Forecast occupancy and price (date period), Individual/Group | Doluluk ve ortalama fiyat tahmini, bireysel / grup ayrımı | Gece satırları + bloklar |
+| RT3 | P4333 Reservations summary info for A/C/G by Arrival / by Departure date period | Acenta / şirket / grup bazında giriş ya da çıkış tarihine göre özet | Rezervasyon + profil bağlantıları |
+| RT4 | P4324 Rate Discrepancy (In House today / date period / creation date) | Fiyat farkı: gece fiyatı fiyat kodundaki fiyattan farklı olanlar | Elle fiyat (`is_rate_overridden`, `manual_amount`) ile hesaplanan fiyat karşılaştırması |
+| RT5 | P4329 Rate Discrepancy Detailed (In house / Arrival / Departure) | Fiyat farkı ayrıntılı, gece gece | Aynı |
+| RT6 | P4341 Reservation Rate Changes | Rezervasyonda fiyat değişiklikleri (kim, ne zaman, eski / yeni) | Fiyat değişikliği kaydı gerekiyor (`pms_reservation_rate_changes` — eklenecek) |
+| RT7 | P4039 Guest in House (date period) Rate Distribution | İçerideki misafirlerin fiyat kodu / fiyat dağılımı | Gece satırları |
+| RT8 | P4326 Discount Report for A/C/S (date period) | Acenta / şirket / kaynak bazında indirimler | İndirim kayıtları |
+| RT9 | P4375 Blocks by Room Type and Rate Room Type | Blokların oda tipi ve fiyat oda tipi kırılımı | Bloklar (blok ekranı gelince) |
+
+Not: Fidelio'daki "A/C/G" acenta / şirket / grup, "A/C/S" acenta / şirket / kaynak demektir.
 
 ## 10.3 Ekran
 
