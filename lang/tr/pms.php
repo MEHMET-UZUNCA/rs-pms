@@ -178,6 +178,16 @@ return [
         'menu' => 'Şifre değiştir',
     ],
 
+    'hkscreen' => [
+        'title' => 'Kat Hizmetleri', 'floor' => 'Kat', 'fo' => 'Ön büro durumu', 'hk' => 'Temizlik', 'flag' => 'İşaret', 'service' => 'OOO / OOS',
+        'today' => 'Bugün', 'changed' => 'Değişti', 'arrival' => 'Giriş', 'departure' => 'Çıkış', 'all_blocks' => 'Tüm bloklar',
+        'set_status' => 'Seçili odalara durum ver', 'set_flag' => 'İşaret', 'clear_flag' => 'Temizle', 'release' => 'Kaldır',
+        'from' => 'Başlangıç', 'to' => 'Bitiş', 'note' => 'Not', 'save_outage' => 'Arızalı / hizmet dışı yap', 'select_rooms' => 'En az bir oda seçin.',
+        'updated' => ':count oda güncellendi.', 'outage_saved' => ':count oda arızalı / hizmet dışı yapıldı.', 'released' => 'Oda hizmete açıldı.',
+        'filters' => ['vd' => 'Boş kirli', 'vc' => 'Boş temiz', 'od' => 'Dolu kirli', 'oc' => 'Dolu temiz', 'ins' => 'Kontrol edildi',
+            'arr' => 'Girişler', 'dep' => 'Çıkışlar', 'ooo' => 'OOO / OOS'],
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
         'outlet_code_unique' => 'Bu kodla bir outlet zaten var.',

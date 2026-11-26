@@ -35,6 +35,9 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | IFC8 logu M87POS_SPH_IFC1 (26–27.06) ve canlı IFC8 ekranı | docs/simphony-protokol.md — protokolün tamamı |
 | Fidelio Room Sections, Room Types, Rooms, Room Features | database/data/fidelio/room-types.tsv, rooms.tsv, room-features.tsv — 10 tip, 155 aktif oda, özellikler odalara bağlı |
 | Fidelio User Groups (15 grup) | Roller; yetkiler başlangıç önerisi (seeder) |
+| Fidelio Housekeeping kodları (9) | pms_hk_status_codes: INS, CL, DI, TU (durum), DND, NL, SO, NS, DBL (işaret) |
+| Fidelio Answers for Automatic Night Audit | Gece kapanışı kontrollerine eklenecek (sıradaki iş) |
+| Fidelio Confirmation Letter (EN, TR) | Onay mektubu birebir bu şablonla yapılacak (sıradaki iş) |
 | Oda blokları teyidi | 1xxx = A BLOK, 2xxx = B BLOK — otel onayladı |
 | Fidelio kullanıcı listesi (tamamı) | 26 kullanıcı (pms:import-users) |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
@@ -50,6 +53,11 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 - Servis hata mesajları (ör. "Girişten önce oda atanmalı", outlet/departman kodu kuralları) henüz yalnız Türkçe; dil dosyasına taşınacak.
 - İngilizce terimlerin Fidelio ekranlarıyla birebir aynılığı personelle bir kez gözden geçirilecek (farklı görülen terim lang/en/pms.php'de düzeltilir).
+
+## Kat hizmetleri
+
+- Fidelio "Room Status Reason" listesi (OOO/OOS sebepleri) — şimdilik yalnız "OOO" ve "OOS" genel sebepleri var.
+- Gece kapanışında dolu odaların "Dirty" yapılması (Fidelio ayarı teyit edilecek), kat görevlisi görev dağıtımı ekranı.
 
 ## Yapılacak ekranlar ve işler (sırayla)
 

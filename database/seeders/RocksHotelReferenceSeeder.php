@@ -217,6 +217,18 @@ class RocksHotelReferenceSeeder extends Seeder
             }
         }
 
+        // Fidelio "Housekeeping" kodları: temizlik durumu (oda hk_status'una karşılık) ve işaretler (oda hk_flag).
+        foreach ([['INS', 'Inspected', 'status', 'inspected'], ['CL', 'Clean', 'status', 'clean'], ['DI', 'Dirty', 'status', 'dirty'],
+            ['TU', 'T.U', 'status', 'pickup'], ['DND', 'DND', 'flag', null], ['NL', 'No Luggage', 'flag', null], ['SO', 'Sleep Out', 'flag', null],
+            ['NS', 'No Service', 'flag', null], ['DBL', 'Double Lock', 'flag', null]] as $i => [$code, $name, $kind, $mapsTo]) {
+            DB::table('pms_hk_status_codes')->updateOrInsert(['property_id' => $propertyId, 'code' => $code],
+                ['name' => $name, 'kind' => $kind, 'maps_to' => $mapsTo, 'sort' => $i + 1, 'is_active' => true, 'updated_at' => now()]);
+        }
+        // OOO / OOS sebepleri — Fidelio "Room Status Reason" listesi gelince değiştirilecek.
+        foreach ([['OOO', 'Out of Order'], ['OOS', 'Out of Service']] as [$code, $name]) {
+            DB::table('pms_reason_codes')->updateOrInsert(['property_id' => $propertyId, 'category' => 'room_status', 'code' => $code], ['name' => $name, 'is_active' => true, 'updated_at' => now()]);
+        }
+
         // Yetkiler ve sistem yöneticisi rolü
         foreach ([['setup.outlets', 'Outlet tanımları', 'setup'], ['setup.transaction_codes', 'Departman kodları', 'setup'],
             ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations'],
@@ -224,7 +236,9 @@ class RocksHotelReferenceSeeder extends Seeder
             ['cashiering.billing', 'Folyo görüntüleme', 'cashiering'], ['cashiering.post', 'Kayıt, ödeme ve transfer', 'cashiering'],
             ['cashiering.reverse', 'Düzeltme (ters kayıt)', 'cashiering'],
             ['night_audit.view', 'Gece kapanışı ekranı', 'night_audit'], ['night_audit.run', 'Gece kapanışını çalıştırma', 'night_audit'],
-            ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit']] as [$code, $name, $group]) {
+            ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
+            ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
+            ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -235,14 +249,15 @@ class RocksHotelReferenceSeeder extends Seeder
 
         // Fidelio "User Groups" → roller. Yetkiler görev tanımına göre BAŞLANGIÇ ÖNERİSİDİR; rol ekranından değiştirilebilir.
         // Bir role daha önce yetki verilmişse seeder ona dokunmaz (ekrandan yapılan değişiklik korunur).
-        $front = ['reservations.view', 'reservations.edit', 'reservations.checkin', 'reservations.checkout', 'cashiering.billing', 'cashiering.post'];
+        $front = ['reservations.view', 'reservations.edit', 'reservations.checkin', 'reservations.checkout', 'cashiering.billing', 'cashiering.post',
+            'housekeeping.view', 'housekeeping.status'];
         $all = DB::table('pms_permissions')->pluck('code')->all();
         $groups = [
             'SUP' => ['Supervisor', $all], 'IT1' => ['IT Manager', $all],
             'FOM' => ['Front Office Manager', array_merge($front, ['cashiering.reverse', 'night_audit.view', 'night_audit.run', 'night_audit.override', 'setup.outlets', 'setup.transaction_codes'])],
             'FOS' => ['Front Office Supervisor', array_merge($front, ['cashiering.reverse', 'night_audit.view', 'night_audit.run', 'night_audit.override'])],
             'FOA' => ['Front Office Agent', $front], 'FOG' => ['Front Office Guest Relations', ['reservations.view', 'reservations.edit']],
-            'HKS' => ['Housekeeping Supervisor', ['reservations.view']], 'REA' => ['Reservations Agent', ['reservations.view', 'reservations.edit']],
+            'HKS' => ['Housekeeping Supervisor', ['reservations.view', 'housekeeping.view', 'housekeeping.status', 'housekeeping.outage']], 'REA' => ['Reservations Agent', ['reservations.view', 'reservations.edit']],
             'RPT' => ['Reports Access Only', ['reservations.view', 'night_audit.view']], 'GMH' => ['Management', ['reservations.view', 'cashiering.billing', 'night_audit.view']],
             'SLM' => ['Sales Manager', ['reservations.view', 'reservations.edit']],
             'ACC' => ['Accounting', ['reservations.view', 'cashiering.billing', 'cashiering.post', 'cashiering.reverse', 'night_audit.view', 'setup.transaction_codes']],

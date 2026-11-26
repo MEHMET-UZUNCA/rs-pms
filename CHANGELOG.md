@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Kat Hizmetleri ekranı (Fidelio Housekeeping): Fidelio kodları (INS, CL, DI, TU; DND, NL, SO, NS, DBL) yüklendi; oda listesi (blok/kat, Vacant/Occupied, temizlik durumu, işaret, OOO/OOS, misafir, bugün giriş/çıkış), sayaçlı süzgeçler (Alt+1…8), blok ve kat süzgeci, seçili odalara toplu durum ve işaret, OOO/OOS girişi ve kaldırma (dolu ya da atanmış odaya OOO girilmez, kaldırınca oda kirli), durum geçmişi. Yetkiler: housekeeping.view, housekeeping.status, housekeeping.outage. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Kullanıcı içe aktarma (pms:import-users): Fidelio kullanıcıları rastgele 12 karakterlik geçici şifre ve Fidelio grubuna karşılık gelen rolle açılır; şifreler kullanıcıların rol ve yetkileriyle birlikte depo dışındaki bir metin dosyasına yazılır (storage/app/private). İlk girişte şifre değiştirme zorunlu (en az 8 karakter, harf ve rakam, eskisinden farklı); kullanıcı adına tıklayarak şifre değiştirme. Kullanıcıya baş harfler ve unvan alanları. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Rocks Hotel'in gerçek odaları Fidelio'dan: 10 oda tipi (EMF, EMT, ESU, EST, ESF, YSF, YST, YMT, YMF, YSU), 155 aktif oda (açıklama, kat, kişi sayısı; süresi bitmiş odalar pasif), A/B blokları, 7 kat, oda özellikleri (Sea View, Mountain View, French/Twin Bed, Non Smoking, Connecting, Engelli) odalara açıklamalarından bağlandı. Fidelio kullanıcı grupları (15) rol olarak; yetkiler başlangıç önerisi. Örnek veri artık gerçek odaları kullanır. Testler SQLite ve MySQL'de geçti. (M.U)

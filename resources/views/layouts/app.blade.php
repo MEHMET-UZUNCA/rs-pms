@@ -7,7 +7,7 @@
         'reservation' => [['reservation_navigator', $can('reservations.view') ? route('reservations.navigator') : null], ['quick_reservation', null], ['availability', null], ['rate_query', null], ['block_reservation', null]],
         'front_office' => [['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null], ['in_house', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['room_rack', $can('reservations.view') ? route('front-office.room-rack') : null], ['house_status', null]],
         'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null], ['accounts_receivable', null]],
-        'housekeeping' => [['room_status', null], ['attendants', null], ['discrepant_rooms', null]],
+        'housekeeping' => [['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null], ['attendants', null], ['discrepant_rooms', null]],
         'profiles' => [['profile_navigator', null]],
         'conference' => [['conference_diary', null], ['events', null]],
         'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['logbook', null], ['reports', null]],

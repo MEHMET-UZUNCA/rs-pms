@@ -255,3 +255,8 @@ if (profileSearch) {
         }, 200);
     });
 }
+
+// Tümünü seç (Kat Hizmetleri oda listesi)
+document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
+    all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });
+}));

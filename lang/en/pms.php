@@ -178,6 +178,16 @@ return [
         'menu' => 'Change password',
     ],
 
+    'hkscreen' => [
+        'title' => 'Housekeeping', 'floor' => 'Floor', 'fo' => 'FO Status', 'hk' => 'HK Status', 'flag' => 'Flag', 'service' => 'OOO / OOS',
+        'today' => 'Today', 'changed' => 'Changed', 'arrival' => 'Arrival', 'departure' => 'Departure', 'all_blocks' => 'All sections',
+        'set_status' => 'Set status for selected rooms', 'set_flag' => 'Flag', 'clear_flag' => 'Clear', 'release' => 'Release',
+        'from' => 'From', 'to' => 'Until', 'note' => 'Note', 'save_outage' => 'Put out of order', 'select_rooms' => 'Select at least one room.',
+        'updated' => ':count rooms updated.', 'outage_saved' => ':count rooms out of order / service.', 'released' => 'Room released.',
+        'filters' => ['vd' => 'Vacant Dirty', 'vc' => 'Vacant Clean', 'od' => 'Occupied Dirty', 'oc' => 'Occupied Clean', 'ins' => 'Inspected',
+            'arr' => 'Arrivals', 'dep' => 'Departures', 'ooo' => 'OOO / OOS'],
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
         'outlet_code_unique' => 'An outlet with this code already exists.',

@@ -200,6 +200,15 @@ misafirler **uyarıdır** (kapanışta No Show olur); her kontrolde ilgili rezer
 kontroller → no-show → oda ve paket ücretleri → istatistik ve gelir → iş gününü ilerlet. Yarıda kalan kapanış "devam et" ile kaldığı yerden
 sürer, çift kayıt üretmez. Son kapanan günün doluluk, satılan oda, ADR, RevPAR, oda ve toplam gelir özeti ve departman kodu bazında gelir; geçmiş.
 
+### Kat Hizmetleri — Housekeeping (yapıldı)
+
+Kat Hizmetleri → Oda Durumu. Fidelio kodlarıyla: INS Inspected, CL Clean, DI Dirty, TU T.U (temizlik durumu) ve DND, NL No Luggage,
+SO Sleep Out, NS No Service, DBL Double Lock (işaret). Oda listesi: blok+kat, ön büro durumu (Vacant/Occupied), temizlik durumu, işaret,
+OOO/OOS, içerideki misafir, bugün giriş/çıkış. Sayaçlı süzgeçler `Alt+1 … Alt+8` (Vacant Dirty, Vacant Clean, Occupied Dirty, Occupied Clean,
+Inspected, Arrivals, Departures, OOO/OOS), blok ve kat süzgeci. Odalar işaretlenip sağdaki düğmeyle toplu durum verilir. OOO/OOS: tarih
+aralığı, sebep, not; içeride misafiri ya da o dönemde odası atanmış rezervasyonu olan odaya OOO girilemez; kaldırınca oda kirli döner.
+Her değişiklik oda durum geçmişine yazılır.
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.

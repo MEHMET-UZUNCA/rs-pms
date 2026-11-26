@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
@@ -36,6 +37,14 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::middleware('permission:night_audit.view')->prefix('gece-kapanisi')->name('night-audit.')->group(function () {
         Route::get('/', [NightAuditController::class, 'index'])->name('index');
         Route::post('/', [NightAuditController::class, 'run'])->middleware('permission:night_audit.run')->name('run');
+    });
+
+    // Kat Hizmetleri (Housekeeping)
+    Route::middleware('permission:housekeeping.view')->prefix('kat-hizmetleri')->name('housekeeping.')->group(function () {
+        Route::get('/', [HousekeepingController::class, 'index'])->name('index');
+        Route::post('/durum', [HousekeepingController::class, 'status'])->middleware('permission:housekeeping.status')->name('status');
+        Route::post('/ariza', [HousekeepingController::class, 'outage'])->middleware('permission:housekeeping.outage')->name('outage');
+        Route::post('/ariza/{outage}/kaldir', [HousekeepingController::class, 'release'])->whereNumber('outage')->middleware('permission:housekeeping.outage')->name('release');
     });
 
     // Ön Büro → Oda Planı (Room Rack)
