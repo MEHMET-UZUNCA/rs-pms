@@ -81,6 +81,7 @@ class HousekeepingController extends Controller
             'floors' => DB::table('pms_floors')->where('property_id', $property->id)->orderBy('sort')->get(['id', 'name']),
             'blocks' => DB::table('pms_buildings')->where('property_id', $property->id)->orderBy('code')->get(['id', 'name']),
             'reasons' => DB::table('pms_reason_codes')->where('property_id', $property->id)->where('category', 'room_status')->where('is_active', true)->orderBy('code')->get(['id', 'code', 'name']),
+            'house' => app(\App\Domain\Housekeeping\Services\HouseStatusService::class)->compute($property->id),   // alt durum çubuğu (Fidelio)
         ]);
     }
 

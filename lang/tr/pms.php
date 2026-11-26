@@ -185,6 +185,7 @@ return [
     ],
 
     'hkscreen' => [
+        'bar' => ['to_sell' => 'Satılabilir', 'exp_arr' => 'Bekl. giriş', 'act_arr' => 'Giriş', 'exp_dep' => 'Bekl. çıkış', 'act_dep' => 'Çıkış', 'room_move' => 'Oda değ.', 'curr_occ' => 'Dolu', 'curr_occ_pct' => 'Doluluk %', 'avl_ton' => 'Bu gece boş', 'inh_ton' => 'Bu gece içeride'],
         'title' => 'Kat Hizmetleri', 'floor' => 'Kat', 'fo' => 'Ön büro durumu', 'hk' => 'Temizlik', 'flag' => 'İşaret', 'service' => 'OOO / OOS',
         'today' => 'Bugün', 'changed' => 'Değişti', 'arrival' => 'Giriş', 'departure' => 'Çıkış', 'all_blocks' => 'Tüm bloklar',
         'set_status' => 'Seçili odalara durum ver', 'set_flag' => 'İşaret', 'clear_flag' => 'Temizle', 'release' => 'Kaldır',
@@ -323,5 +324,18 @@ return [
         'available_tonight' => 'Bu gece boş', 'allotments' => 'Kontenjan (Allotment)', 'groups' => 'Gruplar', 'group_and_allotment' => 'Grup ve kontenjan', 'individuals' => 'Bireysel',
         'in_house_tonight' => 'Bu gece içeride', 'adr_hint' => 'Bu gece ücretli odaların ortalaması (ücretsiz ve otel kullanımı hariç); ikinci sütun kişi başı.',
         'drill' => 'Listeyi göster', 'next_update' => 'Sonraki yenileme:', 'refresh' => 'Yenile',
+    ],
+
+    'ooo' => [
+        'title' => 'Arızalı / hizmet dışı odalar', 'tabs' => ['current' => 'Güncel', 'planned' => 'Planlanan', 'past' => 'Geçmiş'], 'all_types' => 'OOO ve OOS',
+        'from' => 'Başlangıç', 'to' => 'Bitiş', 'to_exclusive' => 'Oda açılış tarihi', 'reason' => 'Sebep', 'return_status' => 'Sonraki durum', 'entered_by' => 'Giren',
+        'released' => 'Kaldırıldı', 'release' => 'Kaldır', 'release_confirm' => 'Seçili oda arızalı / hizmet dışı durumundan şimdi çıkarılsın mı?', 'add' => 'Ekle',
+        'hk' => ['dirty' => 'Kirli', 'clean' => 'Temiz', 'inspected' => 'Kontrol edildi', 'pickup' => 'Toplama'],
+    ],
+
+    'history' => [
+        'guests' => 'Bu odada kalanlar', 'nights_here' => 'Bu odada gece', 'revenue' => 'Oda geliri', 'status_changes' => 'Oda durumu değişiklikleri', 'change' => 'Değişiklik',
+        'source' => 'Kaynak', 'flag' => 'İşaret', 'move' => 'Değişiklik', 'now' => 'Şu an', 'fo' => ['vacant' => 'Boş', 'occupied' => 'Dolu'],
+        'not_found' => ':room numaralı oda bulunamadı.', 'hint' => 'Oda numarası girin: kalan misafirler, durum değişiklikleri, arızalar ve oda değişiklikleri görünür.',
     ],
 ];

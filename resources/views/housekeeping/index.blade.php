@@ -96,5 +96,15 @@
             <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </form>
+    @php $hm = $house['movement']; $he = $house['end_of_day']; @endphp
+    <div class="flex flex-wrap gap-x-1 gap-y-1 px-2 py-1 border-t border-line bg-brand-50 text-[12px]" data-status-bar>
+        @foreach ([['to_sell', $house['total']['to_sell']], ['exp_arr', $hm['expected_arrivals']['rooms']], ['act_arr', $hm['actual_arrivals']['rooms']],
+            ['exp_dep', $hm['expected_departures']['rooms']], ['act_dep', $hm['actual_departures']['rooms']], ['room_move', $hm['room_moves']['rooms']],
+            ['curr_occ', $hm['current_occupancy']['rooms']], ['curr_occ_pct', number_format($hm['current_occupancy']['pct'], 2, ',', '.')],
+            ['avl_ton', $he['available_tonight']], ['inh_ton', $he['in_house_tonight']['rooms']]] as [$key, $value])
+            <span class="px-2 py-0.5 rounded border border-line bg-surface">{{ __('pms.hkscreen.bar.'.$key) }}: <b class="tabular-nums" data-bar="{{ $key }}">{{ $value }}</b></span>
+        @endforeach
+        <a href="{{ route('front-office.house-status') }}" class="px-2 py-0.5 text-brand-600 hover:underline">{{ __('pms.hs.title') }} <span class="kbd">Ctrl+H</span></a>
+    </div>
 </div>
 @endsection

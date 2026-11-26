@@ -167,6 +167,14 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 |---|---|
 | `goruntuler/19-house-status.png` | Ctrl+H: toplam, hareket, kat hizmetleri, gün sonu — Fidelio penceresiyle aynı bölümler |
 
+## 20 — Rooms Management (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/20-rooms-01-out-of-order.png` | Out of Order: güncel / planlanan / geçmiş, yeni arıza, kaldır |
+| `goruntuler/20-rooms-02-room-history.png` | Room History: odada kalanlar, durum değişiklikleri, arızalar, oda değişiklikleri |
+| `goruntuler/20-rooms-03-housekeeping-durum-cubugu.png` | Housekeeping ekranının alt durum çubuğu (Fidelio gibi) |
+
 ## Taslakları yerelde açmak
 
 ```bash

@@ -34,7 +34,8 @@ class Menu
             'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null]],
             'housekeeping' => [
                 ['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null],
-                ['out_of_order', null], ['room_history', null],
+                ['out_of_order', $can('housekeeping.view') ? route('rooms.out-of-order') : null],
+                ['room_history', $can('housekeeping.view') || $can('reservations.view') ? route('rooms.history') : null],
                 ['house_status', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ],
             'profiles' => [['profile_navigator', null]],

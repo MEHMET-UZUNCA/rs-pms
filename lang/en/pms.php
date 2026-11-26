@@ -185,6 +185,7 @@ return [
     ],
 
     'hkscreen' => [
+        'bar' => ['to_sell' => 'Rms to sell', 'exp_arr' => 'Exp arr', 'act_arr' => 'Act arr', 'exp_dep' => 'Exp dep', 'act_dep' => 'Act dep', 'room_move' => 'Room move', 'curr_occ' => 'Curr occ', 'curr_occ_pct' => 'Curr occ %', 'avl_ton' => 'Avl ton.', 'inh_ton' => 'Inh ton.'],
         'title' => 'Housekeeping', 'floor' => 'Floor', 'fo' => 'FO Status', 'hk' => 'HK Status', 'flag' => 'Flag', 'service' => 'OOO / OOS',
         'today' => 'Today', 'changed' => 'Changed', 'arrival' => 'Arrival', 'departure' => 'Departure', 'all_blocks' => 'All sections',
         'set_status' => 'Set status for selected rooms', 'set_flag' => 'Flag', 'clear_flag' => 'Clear', 'release' => 'Release',
@@ -323,5 +324,18 @@ return [
         'available_tonight' => 'Available Tonight', 'allotments' => 'Allotments', 'groups' => 'Groups', 'group_and_allotment' => 'Group and Allotment', 'individuals' => 'Individuals',
         'in_house_tonight' => 'In House Tonight', 'adr_hint' => 'Average rate of tonight\'s paying rooms (complimentary and house use excluded); second column per person.',
         'drill' => 'Show the list', 'next_update' => 'Time to next update:', 'refresh' => 'Refresh',
+    ],
+
+    'ooo' => [
+        'title' => 'Out of Order / Out of Service', 'tabs' => ['current' => 'Current', 'planned' => 'Planned', 'past' => 'Past'], 'all_types' => 'OOO and OOS',
+        'from' => 'From', 'to' => 'To', 'to_exclusive' => 'Until (room back)', 'reason' => 'Reason', 'return_status' => 'Status after', 'entered_by' => 'Entered by',
+        'released' => 'Released', 'release' => 'Release', 'release_confirm' => 'Release the selected room from Out of Order / Out of Service now?', 'add' => 'Add',
+        'hk' => ['dirty' => 'Dirty', 'clean' => 'Clean', 'inspected' => 'Inspected', 'pickup' => 'Pick Up'],
+    ],
+
+    'history' => [
+        'guests' => 'Guests in this room', 'nights_here' => 'Nights here', 'revenue' => 'Room revenue', 'status_changes' => 'Room status changes', 'change' => 'Change',
+        'source' => 'Source', 'flag' => 'Flag', 'move' => 'Move', 'now' => 'Now', 'fo' => ['vacant' => 'Vacant', 'occupied' => 'Occupied'],
+        'not_found' => 'Room :room not found.', 'hint' => 'Enter a room number to see its guests, status changes, out of order periods and room moves.',
     ],
 ];

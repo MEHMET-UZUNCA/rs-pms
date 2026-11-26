@@ -9,6 +9,7 @@ use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
+use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\NavigatorController;
@@ -91,6 +92,10 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Quick Keys → All Shortcuts
     Route::view('/kisayollar', 'shortcuts')->name('shortcuts');
+
+    // Rooms Management → Out of Order, Room History
+    Route::get('/arizali-odalar', [RoomsManagementController::class, 'outOfOrder'])->middleware('permission:housekeeping.view')->name('rooms.out-of-order');
+    Route::get('/oda-gecmisi', [RoomsManagementController::class, 'history'])->name('rooms.history');
 
     // Rooms Management → House Status (Ctrl+H)
     Route::get('/house-status', HouseStatusController::class)->name('front-office.house-status');
