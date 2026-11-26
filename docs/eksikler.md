@@ -77,3 +77,5 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 6. ~~Gece kapanışı ekranı~~ yapıldı — kalan: gece raporlarının yazdırılması (PDF), otomatik (zamanlanmış) kapanış, Logo fişinin kapanışta üretilmesi
 7. Logo aktarımı
 8. Fidelio veri aktarımı (PROISV)
+9. Rapor ekranı (Miscellaneous → Reports): rapor ağacı, süzme, tarih, ekranda görme ve yazdırma / PDF — otelin kullandığı rapor listesi bekleniyor
+10. Multiboard (Fidelio Multiboard) — otelin kullandığı görünümün ekran görüntüsü bekleniyor

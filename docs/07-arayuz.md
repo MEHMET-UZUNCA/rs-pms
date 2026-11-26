@@ -2,6 +2,8 @@
 
 **İlke: Personel Fidelio Suite8'den geçerken yeniden öğrenmek zorunda kalmamalı.**
 Bu yüzden ekranların **yerleşimi, adları, sekme sırası ve klavye kısayolları Fidelio Suite8 ile aynıdır.**
+**Birebir kopya değil, benzer:** Otelin kullanmadığı alanlar ve menüler alınmaz (otel kararı, 26.11.2026). Bir ekran yapılırken
+personelin gerçekten kullandığı alanlar sorulur; terimler ve kısayollar Fidelio'daki gibi kalır.
 Görsel olarak (renk, yazı tipi, düzen inceliği) modern ve sade bir web arayüzü kullanılır; QloApps yönetim panelinin liste ve filtre
 ekranları ile Kamra'nın "Bugün" ekranı bu görsel dil için örnektir. Arayüz Türkçedir; RS ONE ile aynı bileşenler (Blade + Tailwind) kullanılır.
 
