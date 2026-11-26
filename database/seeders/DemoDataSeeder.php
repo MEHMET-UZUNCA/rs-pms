@@ -147,6 +147,7 @@ class DemoDataSeeder extends Seeder
             Folio::query()->updateOrCreate(['property_id' => $p, 'folio_number' => $no], [
                 'type' => $type, 'name' => $name, 'window' => 1, 'valid_from' => $from->toDateString(), 'valid_until' => $until->toDateString(),
                 'opened_business_date' => $from->lte($bd) ? $from->toDateString() : $bd->toDateString(),
+                'actual_from' => $from->lte($bd) ? $from->toDateString() : null,
             ]);
         }
         $postings->charge(Folio::query()->where('folio_number', 'FA-DEMO-1')->firstOrFail(), $code('630'), 300, 1, 'Otopark (örnek)');

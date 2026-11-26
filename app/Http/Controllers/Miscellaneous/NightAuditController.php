@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Miscellaneous;
 use App\Domain\Core\Models\Property;
 use App\Domain\NightAudit\Exceptions\NightAuditException;
 use App\Domain\NightAudit\Services\NightAuditService;
+use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ class NightAuditController extends Controller
         return view('miscellaneous.night-audit', [
             'businessDate' => $property->current_business_date,
             'checks' => $this->audit->preview($property->id),
+            'answers' => NightAuditAnswers::get($property->id),
             'runs' => $runs,
             'steps' => $current ? DB::table('pms_night_audit_steps')->where('run_id', $current->id)->orderBy('sequence')->get()->keyBy('code') : collect(),
             'current' => $current,
@@ -62,5 +64,14 @@ class NightAuditController extends Controller
         return redirect()->route('night-audit.index')->with('status', __('pms.audit.completed', [
             'closed' => $closing, 'next' => $property->fresh()->current_business_date->format('d.m.Y'),
         ]));
+    }
+
+    /** Fidelio "Answers for Automatic Night Audit": değiştirilebilen kontrollerin Stop / Continue cevabı. */
+    public function answers(Request $request): RedirectResponse
+    {
+        $data = $request->validate(['answer' => ['required', 'array'], 'answer.*' => ['in:'.implode(',', NightAuditAnswers::ANSWERS)]]);
+        NightAuditAnswers::save(app(Property::class)->id, $data['answer'], $request->user()->id);
+
+        return redirect()->route('night-audit.index')->with('status', __('pms.audit.answers_saved'));
     }
 }

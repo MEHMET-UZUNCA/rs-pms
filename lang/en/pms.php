@@ -157,10 +157,13 @@ return [
 
     'audit' => [
         'title' => 'Night Audit', 'closing' => 'Closing business date :date', 'checks' => 'Pre-audit checks', 'steps' => 'Steps',
-        'check' => ['departures_pending' => 'Departures not checked out', 'open_cashier_shifts' => 'Open cashier shifts', 'arrivals_pending' => 'Expected arrivals not checked in (will become No Show)'],
+        'check' => ['departures_pending' => 'Due out reservations', 'arrivals_pending' => 'Expected reservations (become No Show)', 'no_show_balance' => 'Expected reservations with balance (become No Show)',
+            'due_out_accounts' => 'Due out financial accounts (extended one day)', 'expected_accounts' => 'Expected financial accounts (opened)', 'open_cashier_shifts' => 'Open cashiers'],
+        'answers' => 'Answers for Automatic Night Audit', 'answers_saved' => 'Night audit answers saved.', 'answer' => ['stop' => 'Stop', 'continue' => 'Continue'],
+        'answer_fixed' => 'Always Stop', 'save_answers' => 'Save answers',
         'severity' => ['block' => 'Blocks', 'warn' => 'Warning'], 'none' => 'None', 'override' => 'Supervisor override — reason',
         'override_hint' => 'Required to continue while this check blocks. Recorded with your user name.',
-        'step' => ['checks' => 'Checks', 'no_shows' => 'No shows', 'room_charges' => 'Room and package charges', 'statistics' => 'Statistics and revenue', 'advance_date' => 'Advance business date'],
+        'step' => ['checks' => 'Checks', 'no_shows' => 'No shows', 'accounts' => 'Financial accounts', 'room_charges' => 'Room and package charges', 'statistics' => 'Statistics and revenue', 'advance_date' => 'Advance business date'],
         'step_status' => ['pending' => 'Waiting', 'running' => 'Running', 'done' => 'Done', 'failed' => 'Stopped'],
         'run' => 'Start Night Audit', 'run_confirm' => 'Close business date :date and open the next day?', 'continue' => 'Continue Night Audit',
         'held' => 'Night audit stopped:', 'completed' => 'Business date :closed closed. New business date: :next.',

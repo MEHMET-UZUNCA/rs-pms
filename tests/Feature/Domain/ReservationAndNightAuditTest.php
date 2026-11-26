@@ -8,6 +8,7 @@ use App\Domain\Core\Services\TaxRateService;
 use App\Domain\Inventory\Models\Room;
 use App\Domain\NightAudit\Exceptions\NightAuditException;
 use App\Domain\NightAudit\Services\NightAuditService;
+use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
@@ -106,6 +107,7 @@ class ReservationAndNightAuditTest extends DomainTestCase
         $folio = Folio::query()->where('reservation_id', $res->id)->where('window', 1)->firstOrFail();
 
         $noShow = $this->book('2026-12-01', '2026-12-02');            // gelmeyecek misafir
+        NightAuditAnswers::save($this->property, ['arrivals_pending' => 'continue'], null);   // Fidelio cevabı: Continue → No Show
         app(NightAuditService::class)->run($this->property);
 
         // Oda ücreti: 6000 = 3400 oda + 800 kahvaltı + 1800 akşam yemeği

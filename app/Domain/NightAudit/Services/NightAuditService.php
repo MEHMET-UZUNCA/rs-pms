@@ -6,6 +6,7 @@ use App\Domain\Cashiering\Models\Folio;
 use App\Domain\Cashiering\Services\PostingService;
 use App\Domain\Core\Models\Property;
 use App\Domain\NightAudit\Exceptions\NightAuditException;
+use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Rates\Models\RateCode;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Rates\Services\AvailabilityService;
@@ -17,8 +18,11 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Gece kapanışı (Fidelio Night Audit sırası):
- *  1. Kontroller   — çıkışı geçmiş içerideki misafir (engeller), açık kasa (engeller), gelmeyen misafir (uyarı).
+ *  1. Kontroller   — çıkışı geçmiş içerideki misafir, gelmeyen misafir (bakiyeli / bakiyesiz), süresi dolan ve açılması beklenen
+ *                    hesaplar (FA), açık kasa. Her kontrolün cevabı (Stop / Continue) NightAuditAnswers'ta; Stop olan kontrolde kayıt
+ *                    varsa kapanış durur, amir onayıyla geçilir.
  *  2. No-show      — bugün gelmesi gerekip gelmeyen kesin rezervasyonlar no-show olur.
+ *  2b. Hesaplar    — süresi dolan FA bir gün uzatılır, açılması beklenen FA açılır.
  *  3. Oda ücretleri — içerideki her rezervasyonun bu geceki fiyatı folyoya yazılır; fiyata dahil paket elemanları
  *                    (kahvaltı, akşam yemeği) kendi kodlarına ayrılır, kalan oda koduna yazılır. Ücretsiz/ev kullanımında kayıt yok.
  *  4. İstatistik   — günlük istatistik (toplam ve oda tipi), işlem kodu bazında gelir, defter dengesi.
@@ -27,7 +31,7 @@ use Illuminate\Support\Facades\DB;
  */
 class NightAuditService
 {
-    public const STEPS = ['checks', 'no_shows', 'room_charges', 'statistics', 'advance_date'];
+    public const STEPS = ['checks', 'no_shows', 'accounts', 'room_charges', 'statistics', 'advance_date'];
 
     public function __construct(private readonly PostingService $postings, private readonly AvailabilityService $availability) {}
 
@@ -39,12 +43,36 @@ class NightAuditService
     public function preview(int $propertyId): array
     {
         $bd = Property::query()->findOrFail($propertyId)->current_business_date->toDateString();
-        $res = fn () => Reservation::query()->where('property_id', $propertyId)->with(['profile:id,display_name', 'room:id,number']);
+        $answers = NightAuditAnswers::get($propertyId);
+        $checks = [];
+        foreach ($this->checkQueries($propertyId, $bd) as $code => $query) {
+            $items = $query instanceof \Illuminate\Database\Eloquent\Builder && $query->getModel() instanceof Reservation
+                ? $query->with(['profile:id,display_name', 'room:id,number'])->get() : $query->get();
+            $checks[$code] = ['severity' => NightAuditAnswers::severity($answers[$code]), 'answer' => $answers[$code], 'items' => $items];
+        }
+
+        return $checks;
+    }
+
+    /**
+     * Kontrollerin sorguları (Fidelio "Answers for Automatic Night Audit" sırası).
+     *
+     * @return array<string, \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder>
+     */
+    private function checkQueries(int $propertyId, string $bd): array
+    {
+        $res = fn () => Reservation::query()->where('property_id', $propertyId);
+        $arrivals = fn () => $res()->whereIn('status', ['confirmed', 'tentative'])->where('arrival_date', $bd);
+        $withBalance = fn ($q) => $q->where('balance', '!=', 0);
+        $accounts = fn () => Folio::query()->where('property_id', $propertyId)->whereNull('reservation_id')->where('status', 'open');
 
         return [
-            'departures_pending' => ['severity' => 'block', 'items' => $res()->where('status', 'in_house')->where('departure_date', '<=', $bd)->where('is_day_use', false)->get()],
-            'open_cashier_shifts' => ['severity' => 'block', 'items' => DB::table('pms_cashier_shifts')->where('property_id', $propertyId)->where('status', 'open')->where('business_date', '<=', $bd)->get()],
-            'arrivals_pending' => ['severity' => 'warn', 'items' => $res()->whereIn('status', ['confirmed', 'tentative'])->where('arrival_date', $bd)->get()],
+            'departures_pending' => $res()->where('status', 'in_house')->where('departure_date', '<=', $bd)->where('is_day_use', false),
+            'arrivals_pending' => $arrivals()->whereDoesntHave('folios', $withBalance),
+            'no_show_balance' => $arrivals()->whereHas('folios', $withBalance),
+            'due_out_accounts' => $accounts()->whereNotNull('valid_until')->where('valid_until', '<=', $bd),
+            'expected_accounts' => $accounts()->whereNull('actual_from')->whereNotNull('valid_from')->where('valid_from', '<=', $bd),
+            'open_cashier_shifts' => DB::table('pms_cashier_shifts')->where('property_id', $propertyId)->where('status', 'open')->where('business_date', '<=', $bd),
         ];
     }
 
@@ -74,6 +102,7 @@ class NightAuditService
             $result = match ($step) {
                 'checks' => $this->checks($runId, $property, $bd, $acknowledged),
                 'no_shows' => $this->noShows($property, $bd, $userId),
+                'accounts' => $this->accounts($property, $bd),
                 'room_charges' => $this->roomCharges($property, $bd, $userId),
                 'statistics' => $this->statistics($property, $bd),
                 'advance_date' => $this->advance($property, $bd, $runId, $userId),
@@ -94,14 +123,17 @@ class NightAuditService
     private function checks(int $runId, Property $property, string $bd, array $acknowledged): array
     {
         DB::table('pms_night_audit_checks')->where('run_id', $runId)->delete();
-        $checks = [
-            'departures_pending' => ['block', Reservation::query()->where('property_id', $property->id)->where('status', 'in_house')
-                ->where('departure_date', '<=', $bd)->where('is_day_use', false)->pluck('confirmation_number')->all()],
-            'open_cashier_shifts' => ['block', DB::table('pms_cashier_shifts')->where('property_id', $property->id)->where('status', 'open')
-                ->where('business_date', '<=', $bd)->pluck('id')->all()],
-            'arrivals_pending' => ['warn', Reservation::query()->where('property_id', $property->id)->whereIn('status', ['confirmed', 'tentative'])
-                ->where('arrival_date', $bd)->pluck('confirmation_number')->all()],
-        ];
+        $answers = NightAuditAnswers::get($property->id);
+        $checks = [];
+        foreach ($this->checkQueries($property->id, $bd) as $code => $query) {
+            $model = $query instanceof \Illuminate\Database\Eloquent\Builder ? $query->getModel() : null;
+            $items = match (true) {
+                $model instanceof Reservation => $query->pluck('confirmation_number')->all(),
+                $model instanceof Folio => $query->pluck('folio_number')->all(),
+                default => $query->pluck('id')->all(),
+            };
+            $checks[$code] = [NightAuditAnswers::severity($answers[$code]), $items];
+        }
 
         $blocking = [];
         foreach ($checks as $code => [$severity, $items]) {
@@ -136,6 +168,17 @@ class NightAuditService
         }
 
         return ['no_shows' => $reservations->count()];
+    }
+
+    /** Rezervasyonsuz hesaplar (FA): "continue" cevabında süresi dolan uzatılır, açılması beklenen açılır. */
+    private function accounts(Property $property, string $bd): array
+    {
+        $queries = $this->checkQueries($property->id, $bd);
+        $next = CarbonImmutable::parse($bd)->addDay()->toDateString();
+        $extended = $queries['due_out_accounts']->update(['valid_until' => $next, 'updated_at' => now()]);
+        $activated = $queries['expected_accounts']->update(['actual_from' => $bd, 'updated_at' => now()]);
+
+        return ['extended' => $extended, 'activated' => $activated];
     }
 
     private function roomCharges(Property $property, string $bd, ?int $userId): array

@@ -157,10 +157,13 @@ return [
 
     'audit' => [
         'title' => 'Gece Kapanışı', 'closing' => 'Kapanacak iş günü :date', 'checks' => 'Kapanış öncesi kontroller', 'steps' => 'Adımlar',
-        'check' => ['departures_pending' => 'Çıkışı yapılmamış misafirler', 'open_cashier_shifts' => 'Açık kasa vardiyaları', 'arrivals_pending' => 'Gelmeyen misafirler (No-show olacak)'],
+        'check' => ['departures_pending' => 'Çıkışı yapılmamış misafirler (Due out)', 'arrivals_pending' => 'Gelmeyen misafirler (No Show olur)', 'no_show_balance' => 'Bakiyesi olan gelmeyen misafirler (No Show olur)',
+            'due_out_accounts' => 'Süresi dolan hesaplar (FA, bir gün uzatılır)', 'expected_accounts' => 'Açılması beklenen hesaplar (FA, açılır)', 'open_cashier_shifts' => 'Açık kasalar'],
+        'answers' => 'Otomatik Gece Kapanışı Cevapları', 'answers_saved' => 'Gece kapanışı cevapları kaydedildi.', 'answer' => ['stop' => 'Dur (Stop)', 'continue' => 'Devam (Continue)'],
+        'answer_fixed' => 'Her zaman Dur', 'save_answers' => 'Cevapları kaydet',
         'severity' => ['block' => 'Engeller', 'warn' => 'Uyarı'], 'none' => 'Yok', 'override' => 'Amir onayı — gerekçe',
         'override_hint' => 'Bu kontrol engellerken devam etmek için zorunlu. Kullanıcı adınızla kaydedilir.',
-        'step' => ['checks' => 'Kontroller', 'no_shows' => 'No-show', 'room_charges' => 'Oda ve paket ücretleri', 'statistics' => 'İstatistik ve gelir', 'advance_date' => 'İş gününü ilerlet'],
+        'step' => ['checks' => 'Kontroller', 'no_shows' => 'No-show', 'accounts' => 'Hesaplar (FA)', 'room_charges' => 'Oda ve paket ücretleri', 'statistics' => 'İstatistik ve gelir', 'advance_date' => 'İş gününü ilerlet'],
         'step_status' => ['pending' => 'Bekliyor', 'running' => 'Çalışıyor', 'done' => 'Tamam', 'failed' => 'Durdu'],
         'run' => 'Gece kapanışını başlat', 'run_confirm' => ':date iş günü kapatılıp ertesi gün açılsın mı?', 'continue' => 'Gece kapanışına devam et',
         'held' => 'Gece kapanışı durdu:', 'completed' => ':closed iş günü kapandı. Yeni iş günü: :next.',

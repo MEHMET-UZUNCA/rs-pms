@@ -22,6 +22,8 @@ class Folio extends Model
             'opened_business_date' => DateOnly::class,
             'closed_business_date' => DateOnly::class,
             'valid_from' => DateOnly::class,
+            'actual_from' => DateOnly::class,
+            'actual_until' => DateOnly::class,
             'valid_until' => DateOnly::class,
         ];
     }

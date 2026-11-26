@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Gece kapanışı otomatik cevapları (Fidelio "Answers for Automatic Night Audit"): yeni kontroller — bakiyesi olan gelmeyen misafir, süresi dolan hesaplar (FA), açılması beklenen hesaplar (FA); her kontrolün cevabı Stop / Continue olarak ayarlanır (Rocks'ta hepsi Stop, varsayılan). Stop olan kontrolde kayıt varsa kapanış durur ve amir onayıyla geçilir; Continue'da gelmeyen misafir No Show olur, süresi dolan FA bir gün uzatılır, beklenen FA açılır. Çıkışı yapılmamış misafir ve açık kasa her zaman Stop. Cevaplar gece kapanışı ekranından night_audit.override yetkisiyle değiştirilir. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Onay mektubu (Reservation Confirmation Letter): Rocks Hotel'in EN ve TR şablonlarıyla aynı A4 sayfa (başlık bandı, otel adres satırı, metinler, imza, alt bilgi); misafir adı, rezervasyon numarası, giriş/çıkış tarihi, gece sayısı, oda tipi, kişi sayısı, gecelik fiyat, acenta/şirket ve özel istekler rezervasyondan doldurulur. Navigatörde ve rezervasyon kartında Alt+L; dil EN/TR seçilebilir, verilmezse misafir profilinin dili. Tarayıcıdan yazdırılır ya da PDF'e kaydedilir. Metinler lang/en/letter.php ve lang/tr/letter.php'de. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Kat Hizmetleri ekranı (Fidelio Housekeeping): Fidelio kodları (INS, CL, DI, TU; DND, NL, SO, NS, DBL) yüklendi; oda listesi (blok/kat, Vacant/Occupied, temizlik durumu, işaret, OOO/OOS, misafir, bugün giriş/çıkış), sayaçlı süzgeçler (Alt+1…8), blok ve kat süzgeci, seçili odalara toplu durum ve işaret, OOO/OOS girişi ve kaldırma (dolu ya da atanmış odaya OOO girilmez, kaldırınca oda kirli), durum geçmişi. Yetkiler: housekeeping.view, housekeeping.status, housekeeping.outage. Testler SQLite ve MySQL'de geçti. (M.U)

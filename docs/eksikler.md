@@ -36,8 +36,8 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | Fidelio Room Sections, Room Types, Rooms, Room Features | database/data/fidelio/room-types.tsv, rooms.tsv, room-features.tsv — 10 tip, 155 aktif oda, özellikler odalara bağlı |
 | Fidelio User Groups (15 grup) | Roller; yetkiler başlangıç önerisi (seeder) |
 | Fidelio Housekeeping kodları (9) | pms_hk_status_codes: INS, CL, DI, TU (durum), DND, NL, SO, NS, DBL (işaret) |
-| Fidelio Answers for Automatic Night Audit | Gece kapanışı kontrollerine eklenecek (sıradaki iş) |
-| Fidelio Confirmation Letter (EN, TR) | Onay mektubu birebir bu şablonla yapılacak (sıradaki iş) |
+| Fidelio Answers for Automatic Night Audit | Gece kapanışı kontrolleri ve Stop / Continue cevapları (NightAuditAnswers), hepsi Stop |
+| Fidelio Confirmation Letter (EN, TR) | Onay mektubu (Alt+L), lang/en/letter.php, lang/tr/letter.php |
 | Oda blokları teyidi | 1xxx = A BLOK, 2xxx = B BLOK — otel onayladı |
 | Fidelio kullanıcı listesi (tamamı) | 26 kullanıcı (pms:import-users) |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |

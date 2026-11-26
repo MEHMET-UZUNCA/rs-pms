@@ -23,7 +23,15 @@
                         <b>{{ __('pms.audit.check.'.$code) }}</b>
                         <span class="ml-auto text-muted">{{ $count ? __('pms.audit.items', ['count' => $count]) : __('pms.audit.none') }}</span>
                     </div>
-                    @if ($count && $code !== 'open_cashier_shifts')
+                    @if ($count && in_array($code, ['due_out_accounts', 'expected_accounts'], true))
+                        <table class="grid-table mt-2"><tbody>
+                            @foreach ($check['items'] as $fa)
+                                <tr><td class="w-24 font-semibold">{{ $fa->folio_number }}</td><td>{{ $fa->name }}</td>
+                                    <td class="text-muted">{{ $fa->valid_from?->format('d.m') }}–{{ $fa->valid_until?->format('d.m') }}</td>
+                                    <td class="text-right">@can('permission', 'cashiering.billing')<a class="text-brand-600 hover:underline" href="{{ route('billing.account', $fa) }}">{{ __('pms.res.folio') }}</a>@endcan</td></tr>
+                            @endforeach
+                        </tbody></table>
+                    @elseif ($count && $code !== 'open_cashier_shifts')
                         <table class="grid-table mt-2"><tbody>
                             @foreach ($check['items'] as $r)
                                 <tr><td class="w-14 font-semibold">{{ $r->room?->number }}</td><td>{{ $r->profile?->display_name }}</td>
@@ -52,7 +60,7 @@
                         <span>{{ __('pms.audit.step.'.$step) }}</span>
                         <span class="ml-auto text-[12px] text-muted">{{ __('pms.audit.step_status.'.$status) }}</span>
                     </li>
-                    @if ($s?->error)<li class="text-[12px] text-danger ml-8">{{ $s->error }}</li>@endif
+                    @if ($s?->error)<li class="text-[12px] text-danger ml-8">{{ $step === 'checks' ? collect(explode(', ', $s->error))->map(fn ($c) => \Illuminate\Support\Facades\Lang::has('pms.audit.check.'.$c) ? __('pms.audit.check.'.$c) : $c)->implode(', ') : $s->error }}</li>@endif
                 @endforeach
             </ol>
             @can('permission', 'night_audit.run')
@@ -60,6 +68,27 @@
                     {{ $current && $current->status === 'held' ? __('pms.audit.continue') : __('pms.audit.run') }} <span class="kbd !text-brand-100 !bg-transparent !border-brand-200">F10</span>
                 </button>
             @endcan
+
+            <div class="border-t border-line mt-2 pt-2 flex flex-col gap-1.5" data-answers>
+                <b>{{ __('pms.audit.answers') }}</b>
+                @foreach ($answers as $code => $answer)
+                    <label class="flex items-center gap-2 text-[12px]">
+                        <span class="flex-1">{{ __('pms.audit.check.'.$code) }}</span>
+                        @if (in_array($code, \App\Domain\NightAudit\Support\NightAuditAnswers::FIXED, true) || ! $canOverride)
+                            <span class="shrink-0 text-right font-semibold" style="width: 9rem" title="{{ in_array($code, \App\Domain\NightAudit\Support\NightAuditAnswers::FIXED, true) ? __('pms.audit.answer_fixed') : '' }}">{{ __('pms.audit.answer.'.$answer) }}</span>
+                        @else
+                            <select name="answer[{{ $code }}]" form="na-answers" class="input shrink-0" style="width: 9rem">
+                                @foreach (\App\Domain\NightAudit\Support\NightAuditAnswers::ANSWERS as $option)
+                                    <option value="{{ $option }}" @selected($option === $answer)>{{ __('pms.audit.answer.'.$option) }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+                    </label>
+                @endforeach
+                @if ($canOverride)
+                    <button class="btn justify-center" form="na-answers">{{ __('pms.audit.save_answers') }}</button>
+                @endif
+            </div>
         </section>
       </div>
 
@@ -110,4 +139,7 @@
         <a href="{{ route('home') }}" class="btn ml-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd">Esc</span></a>
     </div>
 </form>
+@if ($canOverride)
+    <form id="na-answers" method="POST" action="{{ route('night-audit.answers') }}" hidden>@csrf @method('PUT')</form>
+@endif
 @endsection

@@ -38,6 +38,7 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::middleware('permission:night_audit.view')->prefix('gece-kapanisi')->name('night-audit.')->group(function () {
         Route::get('/', [NightAuditController::class, 'index'])->name('index');
         Route::post('/', [NightAuditController::class, 'run'])->middleware('permission:night_audit.run')->name('run');
+        Route::put('/cevaplar', [NightAuditController::class, 'answers'])->middleware('permission:night_audit.override')->name('answers');
     });
 
     // Kat Hizmetleri (Housekeeping)
