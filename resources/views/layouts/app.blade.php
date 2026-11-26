@@ -5,7 +5,7 @@
     // Fidelio Suite8 ana menüleri (docs/07-arayuz.md §7.1). Hazır olan ekranlar bağlantı, diğerleri sırası gelince açılır.
     $menus = [
         'reservation' => [['reservation_navigator', $can('reservations.view') ? route('reservations.navigator') : null], ['quick_reservation', null], ['availability', null], ['rate_query', null], ['block_reservation', null]],
-        'front_office' => [['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null], ['in_house', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['room_rack', null], ['house_status', null]],
+        'front_office' => [['arrivals', $can('reservations.view') ? route('reservations.navigator', ['f' => 'gelecek']) : null], ['in_house', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['room_rack', $can('reservations.view') ? route('front-office.room-rack') : null], ['house_status', null]],
         'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null], ['accounts_receivable', null]],
         'housekeeping' => [['room_status', null], ['attendants', null], ['discrepant_rooms', null]],
         'profiles' => [['profile_navigator', null]],
@@ -51,6 +51,11 @@
             </div>
         @endforeach
     </nav>
+
+    {{-- Fidelio genel kısayolları: her ekrandan çalışır --}}
+    @if ($can('reservations.view'))
+        <a href="{{ route('front-office.room-rack') }}" data-hotkey="ctrl+l" data-hotkey-global hidden aria-hidden="true" tabindex="-1"></a>
+    @endif
 
     <main class="flex-1 min-h-0 p-3 flex flex-col gap-2">
         @if (session('status'))<div class="flash flash-ok" role="status">{{ session('status') }}</div>@endif

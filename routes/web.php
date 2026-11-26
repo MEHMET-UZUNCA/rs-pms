@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Cashiering\BillingController;
+use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
@@ -26,6 +27,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'property'])->group(function () {
     Route::post('/cikis', [LoginController::class, 'logout'])->name('logout');
     Route::get('/', HomeController::class)->name('home');
+
+    // Ön Büro → Oda Planı (Room Rack)
+    Route::get('/oda-plani', [RoomRackController::class, 'index'])->middleware('permission:reservations.view')->name('front-office.room-rack');
 
     // Rezervasyon Navigatörü
     Route::middleware('permission:reservations.view')->prefix('rezervasyon')->name('reservations.')->group(function () {

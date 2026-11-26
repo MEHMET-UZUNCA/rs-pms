@@ -147,6 +147,13 @@ return [
         'rate' => 'Fiyat', 'closed' => 'Kapalı', 'net' => 'Net', 'tax' => 'Vergi',
     ],
 
+    'rack' => [
+        'title' => 'Oda Planı', 'days' => ':n gün', 'prev' => 'Önceki', 'next' => 'Sonraki', 'today' => 'İş günü', 'start' => 'Başlangıç',
+        'all_types' => 'Tüm oda tipleri', 'all_floors' => 'Tüm katlar', 'room' => 'Oda', 'occupancy' => 'Dolu', 'unassigned' => 'Odasız',
+        'legend' => ['in_house' => 'İçeride', 'confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'ooo' => 'Arızalı (OOO)', 'oos' => 'Hizmet dışı (OOS)'],
+        'weekdays' => ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'], 'rooms_count' => ':count oda',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
         'outlet_code_unique' => 'Bu kodla bir outlet zaten var.',

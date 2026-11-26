@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Oda Planı (Fidelio Room Rack, Ctrl+L her ekrandan): odalar × günler, rezervasyon çubukları (In House / Expected / Tentative), OOO/OOS dönemleri, oda durum kısaltmaları (VC/VD/OC/OD), günlük doluluk ve odası atanmamış rezervasyon sayısı, 7/14/30 gün, önceki/sonraki dönem (Alt+←/→), oda tipi ve kat süzgeci, çubuktan rezervasyon kartına geçiş. Genel kısayollar için data-hotkey-global. Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Folyo (Fidelio Billing): rezervasyonun 8 penceresi (Alt+1…Alt+8, ihtiyaç olunca açılır) ve rezervasyonsuz hesaplar; kayıt listesi (tarih, kod, açıklama, adet, tutar, vergi, referans, kullanıcı), Alt+P kayıt (KDV dahil birim fiyat × adet; elle kayda kapalı kodlar engellenir), Alt+Y ödeme, Alt+R düzeltme, Alt+T pencereye transfer, Alt+O check-out; düzeltmeleri göster/gizle. Navigatörde Alt+B ile açılır. Yetkiler: cashiering.billing, cashiering.post, cashiering.reverse, reservations.checkout. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Rezervasyon Kartı (Fidelio New / Edit Reservation): Ctrl+1…Ctrl+0 sekmeleri (Rezervasyon, Profiller, Gece fiyatları, Notlar çalışır; diğerleri yerinde), yeni misafir ya da profil arama, Fidelio tarih girişi, oda tipine göre süzülen oda listesi (oda durumuyla), fiyat kodu ve elle fiyat, rezervasyon tipi / segment / kaynak / şirket / acente / garanti / kredi limiti / oda hesabı izni, notlar ve durum geçmişi. Navigatörde Ctrl+N yeni, Enter / çift tık düzenle. Rezervasyon servisine düzenleme metodu (tarih, oda, fiyat, kişi değişikliği; elle fiyatla tarih uzatma). Yetki: reservations.edit. Testler SQLite ve MySQL'de geçti. (M.U)

@@ -30,7 +30,7 @@ function keyName(e) {
 document.addEventListener('keydown', (e) => {
     const name = keyName(e);
     const target = [...document.querySelectorAll('[data-hotkey]')].find((el) =>
-        el.dataset.hotkey.split(' ').includes(name) && !el.disabled && el.offsetParent !== null);
+        el.dataset.hotkey.split(' ').includes(name) && !el.disabled && (el.offsetParent !== null || el.hasAttribute('data-hotkey-global')));
     if (!target) return;
     const plain = !e.altKey && !e.ctrlKey && !['escape', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12'].includes(name);
     if (plain && isTyping(document.activeElement)) return; // Delete/Enter yazarken alana aittir

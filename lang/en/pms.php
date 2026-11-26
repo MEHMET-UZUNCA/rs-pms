@@ -147,6 +147,13 @@ return [
         'rate' => 'Rate', 'closed' => 'Closed', 'net' => 'Net', 'tax' => 'Tax',
     ],
 
+    'rack' => [
+        'title' => 'Room Rack', 'days' => ':n days', 'prev' => 'Previous', 'next' => 'Next', 'today' => 'Business Date', 'start' => 'Start',
+        'all_types' => 'All room types', 'all_floors' => 'All floors', 'room' => 'Room', 'occupancy' => 'Occupied', 'unassigned' => 'Unassigned',
+        'legend' => ['in_house' => 'In House', 'confirmed' => 'Expected', 'tentative' => 'Tentative', 'ooo' => 'Out of Order', 'oos' => 'Out of Service'],
+        'weekdays' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 'rooms_count' => ':count rooms',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
         'outlet_code_unique' => 'An outlet with this code already exists.',

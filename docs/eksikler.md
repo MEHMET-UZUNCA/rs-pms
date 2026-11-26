@@ -47,7 +47,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 2. ~~Simphony dinleyicisi (Enhanced protokol)~~ yapıldı — kalan: SPH.XML'den satış kalemi eşlemeleri, oda dışı ödemelerin FA'ya yazılması, Simphony'de ikinci arayüz kaydı (#102) ile canlı deneme
 3. ~~Folyo (Billing) ekranı~~ yapıldı — kalan: fatura kesme ve yazdırma, folyo bölme (split), yönlendirme kuralları (routing), kasiyer vardiyası, döviz ile ödeme, ödünç/depozito
 4. Vergiler (Tax Details) ekranı ve Departman Kodu Grupları ekranı
-5. Oda Planı (Room Rack)
+5. ~~Oda Planı (Room Rack)~~ yapıldı — kalan: sürükle-bırakla oda değiştirme / uzatma, arıza (OOO/OOS) girişi ekranı
 6. Gece kapanışı ekranı
 7. Logo aktarımı
 8. Fidelio veri aktarımı (PROISV)

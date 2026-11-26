@@ -185,6 +185,13 @@ Navigatörde `Alt+B` (Billing düğmesi) seçili rezervasyonun ya da rezervasyon
 dolu gelir), `Alt+R` düzeltme (ters kayıt; bir kayıt bir kez), `Alt+T` seçili kaydı başka pencereye transfer, `Alt+O` check-out (bakiye sıfır
 olmalı). Düzeltmeler varsayılan gizli, "Show corrections" ile görünür. Elle kayda kapalı kodlar (Allow Manual Post / Disabled in Billing) kullanılamaz.
 
+### Oda Planı — Room Rack (yapıldı)
+
+`Ctrl+L` her ekrandan açar. Odalar × günler; odası atanmış rezervasyonlar çubuk (In House yeşil, Expected mavi, Tentative turuncu),
+arızalı (OOO) ve hizmet dışı (OOS) dönemler gri; dönem başından önce başlayan konaklama "‹" ile. Satırda oda tipi ve durum kısaltması
+(VC, VD, OC, OD). Altta her gün dolu oda / doluluk yüzdesi ve odası atanmamış rezervasyon sayısı. 7 / 14 / 30 gün, `Alt+←` / `Alt+→`
+önceki/sonraki dönem, iş gününe dön, oda tipi ve kat süzgeci. Çubuğa tıklama rezervasyon kartını açar. (Sürükle-bırakla oda değiştirme sonra.)
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.
