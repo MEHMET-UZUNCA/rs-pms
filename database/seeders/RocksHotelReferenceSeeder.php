@@ -168,7 +168,7 @@ class RocksHotelReferenceSeeder extends Seeder
         }
 
         // Odalar — Fidelio Room Sections / Room Types / Rooms / Room Features (database/data/fidelio/*.tsv).
-        // Blok: oda numarasının ilk hanesi (1xxx = A BLOK Deluxe, 2xxx = B BLOK Superior) — teyit edilecek.
+        // Blok: oda numarasının ilk hanesi (1xxx = A BLOK Deluxe, 2xxx = B BLOK Superior) — otel onayladı.
         $tsv = function (string $file): array {
             $rows = [];
             foreach (file(database_path("data/fidelio/{$file}"), FILE_IGNORE_NEW_LINES) as $i => $line) {

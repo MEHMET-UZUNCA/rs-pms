@@ -13,8 +13,8 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 4c | Simphony ödeme tipleri (Tender/Media) listesi — en az 131, 231, 401, 402, 404, 601 | Simphony EMC | Ödeme tipi adları ve türleri | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
 | 8 | Logo Tiger: sürüm, REST lisansı, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Bekleniyor |
-| 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34 — bir odanın tipi teyit edilecek | Fidelio | Oda tipi sayıları | Bekleniyor |
-| 9a | Oda blokları: 1xxx = A BLOK, 2xxx = B BLOK varsayıldı | Fidelio Rooms → Section | Blok ataması | Teyit edilecek |
+| 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34. Aday: **1308** (listede YMT "Twin"; 1108 ve 1208 YMF) — Fidelio'da 1308'in tipi teyit edilecek | Fidelio Rooms → 1308 | Oda tipi sayıları | Bekleniyor |
+| 9c | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — Fidelio'da yer değiştirmiş olabilir | Fidelio Rooms | Doğru tip / açıklama | Teyit edilecek |
 | 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
 | 10 | Fiyat kodları ve sezon fiyatları | Fidelio | Gerçek fiyat tanımları | Bekleniyor |
 
@@ -35,6 +35,8 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | IFC8 logu M87POS_SPH_IFC1 (26–27.06) ve canlı IFC8 ekranı | docs/simphony-protokol.md — protokolün tamamı |
 | Fidelio Room Sections, Room Types, Rooms, Room Features | database/data/fidelio/room-types.tsv, rooms.tsv, room-features.tsv — 10 tip, 155 aktif oda, özellikler odalara bağlı |
 | Fidelio User Groups (15 grup) | Roller; yetkiler başlangıç önerisi (seeder) |
+| Oda blokları teyidi | 1xxx = A BLOK, 2xxx = B BLOK — otel onayladı |
+| Fidelio kullanıcı listesi (tamamı) | 26 kullanıcı (pms:import-users) |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 
@@ -42,7 +44,6 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 - 26 Fidelio kullanıcısı `php artisan pms:import-users <dosya>` ile açılır (rastgele geçici şifre, rol, ilk girişte şifre değiştirme zorunlu).
   Kullanıcı listesi ve şifre dosyası depoya konmaz (storage/app/private). Arayüz hesapları, PROTEL, Guest.Selfupdate ve TEST1 açılmadı.
-- Fidelio kullanıcı listesinin devamı varsa (ekranda kaydırma çubuğu vardı) gönderilmeli.
 - Rol yetkileri başlangıç önerisidir; Kullanıcılar ve Roller ekranı yapılınca otelle birlikte gözden geçirilecek.
 
 ## Dil
