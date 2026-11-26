@@ -192,6 +192,14 @@ arızalı (OOO) ve hizmet dışı (OOS) dönemler gri; dönem başından önce b
 (VC, VD, OC, OD). Altta her gün dolu oda / doluluk yüzdesi ve odası atanmamış rezervasyon sayısı. 7 / 14 / 30 gün, `Alt+←` / `Alt+→`
 önceki/sonraki dönem, iş gününe dön, oda tipi ve kat süzgeci. Çubuğa tıklama rezervasyon kartını açar. (Sürükle-bırakla oda değiştirme sonra.)
 
+### Gece Kapanışı — Night Audit (yapıldı)
+
+Çeşitli → Gece Kapanışı. Kapanış öncesi kontrol listesi: çıkışı yapılmamış misafirler ve açık kasa vardiyaları **engeller**, gelmeyen
+misafirler **uyarıdır** (kapanışta No Show olur); her kontrolde ilgili rezervasyonlar ve folyo bağlantısı. Engel varken yalnız
+`night_audit.override` yetkisi olan kullanıcı gerekçe yazarak geçer (gerekçe kullanıcı adıyla kaydedilir). `F10` başlatır; adımlar:
+kontroller → no-show → oda ve paket ücretleri → istatistik ve gelir → iş gününü ilerlet. Yarıda kalan kapanış "devam et" ile kaldığı yerden
+sürer, çift kayıt üretmez. Son kapanan günün doluluk, satılan oda, ADR, RevPAR, oda ve toplam gelir özeti ve departman kodu bazında gelir; geçmiş.
+
 ### Ayar listeleri (Fidelio "Setup → Configuration" düzeni)
 
 Yapılan ekranlar: **Ayarlar → Outlet'ler**, **Ayarlar → Departman Kodları**. Bütün ayar listeleri aynı düzende olacak.

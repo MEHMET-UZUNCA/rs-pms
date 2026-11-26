@@ -111,6 +111,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/11-oda-plani-01-14-gun.png` | `Ctrl+L` her ekrandan; 14 gün, In House / Expected / OOO çubukları, VC/VD/OC durumları, günlük doluluk ve odasız rezervasyon |
 | `goruntuler/11-oda-plani-02-30-gun.png` | 30 günlük görünüm |
 
+## 12 — Gece Kapanışı (Night Audit, gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/12-gece-kapanisi-01-kontroller.png` | Kapanış öncesi kontroller: çıkışı yapılmamış misafir (engeller), açık kasa, gelmeyen misafir (uyarı); amir onayı gerekçesi; adımlar |
+| `goruntuler/12-gece-kapanisi-02-tamamlandi.png` | Kapanış tamamlandı: yeni iş günü, son günün doluluk / ADR / RevPAR / gelir özeti ve departman kodu bazında gelir |
+
 ## Taslakları yerelde açmak
 
 ```bash

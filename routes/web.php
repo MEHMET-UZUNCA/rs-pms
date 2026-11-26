@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Setup\OutletController;
@@ -27,6 +28,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'property'])->group(function () {
     Route::post('/cikis', [LoginController::class, 'logout'])->name('logout');
     Route::get('/', HomeController::class)->name('home');
+
+    // Çeşitli → Gece Kapanışı (Night Audit)
+    Route::middleware('permission:night_audit.view')->prefix('gece-kapanisi')->name('night-audit.')->group(function () {
+        Route::get('/', [NightAuditController::class, 'index'])->name('index');
+        Route::post('/', [NightAuditController::class, 'run'])->middleware('permission:night_audit.run')->name('run');
+    });
 
     // Ön Büro → Oda Planı (Room Rack)
     Route::get('/oda-plani', [RoomRackController::class, 'index'])->middleware('permission:reservations.view')->name('front-office.room-rack');

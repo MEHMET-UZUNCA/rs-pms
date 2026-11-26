@@ -117,9 +117,12 @@ class DemoDataSeeder extends Seeder
 
         foreach ($inHouse as [$r, $price, $nightsSoFar]) {
             $folio = Folio::query()->where('reservation_id', $r->id)->where('window', 1)->firstOrFail();
-            if ($price > 0) {
-                $postings->charge($folio, $code('100'), $price * $nightsSoFar, 1, 'Oda ücreti (örnek)');
+            // Geçmiş her gece kendi iş gününde yazılır (gerçek gece kapanışındaki gibi), istatistik ve ADR doğru çıksın.
+            for ($n = 0; $price > 0 && $n < $nightsSoFar; $n++) {
+                $setBd(CarbonImmutable::parse($r->arrival_date)->addDays($n));
+                $postings->charge($folio, $code('100'), $price, 1, 'Oda ücreti (örnek)');
             }
+            $setBd($bd);
             $postings->charge($folio, $code('320'), 850, 1, 'Cafe Rocks (örnek)');
         }
         // Bugün çıkış yapanlar: ödeme alınır, çıkış yapılır

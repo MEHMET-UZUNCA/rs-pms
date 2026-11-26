@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Gece Kapanışı ekranı (Fidelio Night Audit): kapanış öncesi kontrol listesi (engelleyen / uyarı, ilgili rezervasyonlar ve folyo bağlantısı), amir onayıyla geçiş (gerekçe kullanıcı adıyla kaydedilir), F10 ile çalıştırma ve adım durumu, yarıda kalan kapanışa devam, son kapanan günün doluluk / satılan oda / ADR / RevPAR / gelir özeti ve departman kodu bazında gelir, geçmiş. Yetkiler: night_audit.view, night_audit.run, night_audit.override. Örnek veride geçmiş geceler kendi iş gününe yazılır (ADR doğru). Testler SQLite ve MySQL'de geçti. (M.U)
+
 - Oda Planı (Fidelio Room Rack, Ctrl+L her ekrandan): odalar × günler, rezervasyon çubukları (In House / Expected / Tentative), OOO/OOS dönemleri, oda durum kısaltmaları (VC/VD/OC/OD), günlük doluluk ve odası atanmamış rezervasyon sayısı, 7/14/30 gün, önceki/sonraki dönem (Alt+←/→), oda tipi ve kat süzgeci, çubuktan rezervasyon kartına geçiş. Genel kısayollar için data-hotkey-global. Testler SQLite ve MySQL'de geçti. (M.U)
 
 - Folyo (Fidelio Billing): rezervasyonun 8 penceresi (Alt+1…Alt+8, ihtiyaç olunca açılır) ve rezervasyonsuz hesaplar; kayıt listesi (tarih, kod, açıklama, adet, tutar, vergi, referans, kullanıcı), Alt+P kayıt (KDV dahil birim fiyat × adet; elle kayda kapalı kodlar engellenir), Alt+Y ödeme, Alt+R düzeltme, Alt+T pencereye transfer, Alt+O check-out; düzeltmeleri göster/gizle. Navigatörde Alt+B ile açılır. Yetkiler: cashiering.billing, cashiering.post, cashiering.reverse, reservations.checkout. Testler SQLite ve MySQL'de geçti. (M.U)

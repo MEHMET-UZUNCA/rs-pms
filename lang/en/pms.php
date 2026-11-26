@@ -154,6 +154,23 @@ return [
         'weekdays' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 'rooms_count' => ':count rooms',
     ],
 
+    'audit' => [
+        'title' => 'Night Audit', 'closing' => 'Closing business date :date', 'checks' => 'Pre-audit checks', 'steps' => 'Steps',
+        'check' => ['departures_pending' => 'Departures not checked out', 'open_cashier_shifts' => 'Open cashier shifts', 'arrivals_pending' => 'Expected arrivals not checked in (will become No Show)'],
+        'severity' => ['block' => 'Blocks', 'warn' => 'Warning'], 'none' => 'None', 'override' => 'Supervisor override — reason',
+        'override_hint' => 'Required to continue while this check blocks. Recorded with your user name.',
+        'step' => ['checks' => 'Checks', 'no_shows' => 'No shows', 'room_charges' => 'Room and package charges', 'statistics' => 'Statistics and revenue', 'advance_date' => 'Advance business date'],
+        'step_status' => ['pending' => 'Waiting', 'running' => 'Running', 'done' => 'Done', 'failed' => 'Stopped'],
+        'run' => 'Start Night Audit', 'run_confirm' => 'Close business date :date and open the next day?', 'continue' => 'Continue Night Audit',
+        'held' => 'Night audit stopped:', 'completed' => 'Business date :closed closed. New business date: :next.',
+        'no_override' => 'You are not allowed to override night audit checks.',
+        'last' => 'Last closed day :date', 'occupancy' => 'Occupancy', 'rooms_sold' => 'Rooms sold', 'adr' => 'Average rate (ADR)', 'revpar' => 'RevPAR',
+        'room_revenue' => 'Room revenue', 'total_revenue' => 'Total revenue', 'arrivals' => 'Arrivals', 'departures' => 'Departures', 'no_shows' => 'No shows',
+        'revenue_by_code' => 'Revenue by department code', 'postings' => 'Postings', 'net' => 'Net', 'tax' => 'Tax', 'gross' => 'Gross',
+        'history' => 'History', 'date' => 'Business date', 'status' => 'Status', 'started' => 'Started', 'finished' => 'Finished', 'user' => 'User',
+        'run_status' => ['running' => 'Running', 'held' => 'Held', 'completed' => 'Completed', 'failed' => 'Failed'], 'items' => ':count items',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'The code may only contain letters, numbers, dashes and underscores.',
         'outlet_code_unique' => 'An outlet with this code already exists.',

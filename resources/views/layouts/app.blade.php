@@ -10,7 +10,7 @@
         'housekeeping' => [['room_status', null], ['attendants', null], ['discrepant_rooms', null]],
         'profiles' => [['profile_navigator', null]],
         'conference' => [['conference_diary', null], ['events', null]],
-        'miscellaneous' => [['night_audit', null], ['logbook', null], ['reports', null]],
+        'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['logbook', null], ['reports', null]],
         'setup' => [['outlets', $can('setup.outlets') ? route('setup.outlets.index') : null], ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null], ['taxes', null], ['users', null]],
     ];
 @endphp

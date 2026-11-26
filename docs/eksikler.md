@@ -11,8 +11,6 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 3 | Spa (513), Kuaför (640), 560/561 VAT Discount, 781 Package, 798 Deposit Retain kod pencereleri → "Tax" kutusu | Fidelio | Şimdilik %5 verildi, teyit | Bekleniyor |
 | 4b | Simphony satış kalemi (Sales Itemizer) 3, 4, 6, 7, 8 adları — kalem 1 yiyecek, 2 içecek Fidelio kayıtlarından çıkarıldı | Simphony EMC → Descriptors | Az kullanılan kalemlerin departman kodu | Bekleniyor |
 | 4c | Simphony ödeme tipleri (Tender/Media) listesi — en az 131, 231, 401, 402, 404, 601 | Simphony EMC | Ödeme tipi adları ve türleri | Bekleniyor |
-| 5 | Simphony Sales Itemizers (1–16) ve Tax Rates listesi | Simphony EMC | Satış kalemi → departman kodu eşlemesi (ör. Cafe Rocks itemizer 1 → 320) | Bekleniyor |
-| 6 | IFC8'deki RVC → departman kodu eşlemesi | IFC8 yapılandırması | RVC numarasının "#" mı "RVC ID" mi olduğunu teyit | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
 | 8 | Logo Tiger: sürüm, REST lisansı, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Bekleniyor |
 | 9 | Rocks Hotel oda tipleri ve oda listesi (Fidelio YCAT/YRMS) | Fidelio | Gerçek oda tanımları (şu an yalnız örnek veri var) | Bekleniyor |
@@ -30,9 +28,11 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | Simphony RVC listesi (17 RVC) | Outlet'ler, docs/04-simphony.md §4.4 |
 | Simphony Interfaces #101 General / Options / Service Host | docs/04-simphony.md §4.1 — Enhanced protokol (ISL MF_ENH), TCP 192.168.200.11:5010 |
 | ORACLE_Micros_Simphony_Enh_IFC_19.1.4 paketi (ayar dosyası; ISL'ler şifreli) | docs/04-simphony.md §4.1 |
+| RVC numarası teyidi | Simphony mesajında SalesOutlet = EMC "#" (15 = Rocks Patisserie) |
 | PROISV kayıtları 24.11.2026 | Satış kalemi 1/2 → FOOD/BVRG, ödeme tipi → sanal oda + ödeme kodu (docs/simphony-protokol.md §8) |
 | IFC8 ayar dosyası SPH.XML | docs/simphony-protokol.md §7 (parolalar depoya konmadı) |
 | IFC8 logu M87POS_SPH_IFC1 (26–27.06) ve canlı IFC8 ekranı | docs/simphony-protokol.md — protokolün tamamı |
+| Fidelio Room Sections (A BLOK, B BLOK) | Oda blokları — oda listesiyle birlikte yüklenecek |
 | Interfaces #101 Options 12–13 (tam liste) | docs/04-simphony.md §4.1 |
 | Extension Application ONBURO + misafir penceresi HTML'i | docs/04-simphony.md §4.1 — misafir listesi ve detay cevap biçimi |
 
@@ -48,6 +48,6 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 3. ~~Folyo (Billing) ekranı~~ yapıldı — kalan: fatura kesme ve yazdırma, folyo bölme (split), yönlendirme kuralları (routing), kasiyer vardiyası, döviz ile ödeme, ödünç/depozito
 4. Vergiler (Tax Details) ekranı ve Departman Kodu Grupları ekranı
 5. ~~Oda Planı (Room Rack)~~ yapıldı — kalan: sürükle-bırakla oda değiştirme / uzatma, arıza (OOO/OOS) girişi ekranı
-6. Gece kapanışı ekranı
+6. ~~Gece kapanışı ekranı~~ yapıldı — kalan: gece raporlarının yazdırılması (PDF), otomatik (zamanlanmış) kapanış, Logo fişinin kapanışta üretilmesi
 7. Logo aktarımı
 8. Fidelio veri aktarımı (PROISV)

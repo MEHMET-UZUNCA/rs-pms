@@ -154,6 +154,23 @@ return [
         'weekdays' => ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'], 'rooms_count' => ':count oda',
     ],
 
+    'audit' => [
+        'title' => 'Gece Kapanışı', 'closing' => 'Kapanacak iş günü :date', 'checks' => 'Kapanış öncesi kontroller', 'steps' => 'Adımlar',
+        'check' => ['departures_pending' => 'Çıkışı yapılmamış misafirler', 'open_cashier_shifts' => 'Açık kasa vardiyaları', 'arrivals_pending' => 'Gelmeyen misafirler (No-show olacak)'],
+        'severity' => ['block' => 'Engeller', 'warn' => 'Uyarı'], 'none' => 'Yok', 'override' => 'Amir onayı — gerekçe',
+        'override_hint' => 'Bu kontrol engellerken devam etmek için zorunlu. Kullanıcı adınızla kaydedilir.',
+        'step' => ['checks' => 'Kontroller', 'no_shows' => 'No-show', 'room_charges' => 'Oda ve paket ücretleri', 'statistics' => 'İstatistik ve gelir', 'advance_date' => 'İş gününü ilerlet'],
+        'step_status' => ['pending' => 'Bekliyor', 'running' => 'Çalışıyor', 'done' => 'Tamam', 'failed' => 'Durdu'],
+        'run' => 'Gece kapanışını başlat', 'run_confirm' => ':date iş günü kapatılıp ertesi gün açılsın mı?', 'continue' => 'Gece kapanışına devam et',
+        'held' => 'Gece kapanışı durdu:', 'completed' => ':closed iş günü kapandı. Yeni iş günü: :next.',
+        'no_override' => 'Gece kapanışı kontrollerini geçme yetkiniz yok.',
+        'last' => 'Son kapanan gün :date', 'occupancy' => 'Doluluk', 'rooms_sold' => 'Satılan oda', 'adr' => 'Ortalama fiyat (ADR)', 'revpar' => 'RevPAR',
+        'room_revenue' => 'Oda geliri', 'total_revenue' => 'Toplam gelir', 'arrivals' => 'Giriş', 'departures' => 'Çıkış', 'no_shows' => 'No-show',
+        'revenue_by_code' => 'Departman kodu bazında gelir', 'postings' => 'Kayıt', 'net' => 'Net', 'tax' => 'Vergi', 'gross' => 'Brüt',
+        'history' => 'Geçmiş', 'date' => 'İş günü', 'status' => 'Durum', 'started' => 'Başladı', 'finished' => 'Bitti', 'user' => 'Kullanıcı',
+        'run_status' => ['running' => 'Çalışıyor', 'held' => 'Durdu', 'completed' => 'Tamamlandı', 'failed' => 'Hata'], 'items' => ':count kayıt',
+    ],
+
     'validation' => [
         'outlet_code_regex' => 'Kod yalnız harf, rakam, tire ve alt çizgi içerebilir.',
         'outlet_code_unique' => 'Bu kodla bir outlet zaten var.',

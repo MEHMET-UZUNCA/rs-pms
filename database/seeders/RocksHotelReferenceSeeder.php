@@ -172,7 +172,9 @@ class RocksHotelReferenceSeeder extends Seeder
             ['reservations.view', 'Rezervasyon Navigatörü', 'reservations'], ['reservations.checkin', 'Giriş (check-in)', 'reservations'],
             ['reservations.edit', 'Rezervasyon açma ve düzenleme', 'reservations'], ['reservations.checkout', 'Çıkış (check-out)', 'reservations'],
             ['cashiering.billing', 'Folyo görüntüleme', 'cashiering'], ['cashiering.post', 'Kayıt, ödeme ve transfer', 'cashiering'],
-            ['cashiering.reverse', 'Düzeltme (ters kayıt)', 'cashiering']] as [$code, $name, $group]) {
+            ['cashiering.reverse', 'Düzeltme (ters kayıt)', 'cashiering'],
+            ['night_audit.view', 'Gece kapanışı ekranı', 'night_audit'], ['night_audit.run', 'Gece kapanışını çalıştırma', 'night_audit'],
+            ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);

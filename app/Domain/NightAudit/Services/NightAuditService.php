@@ -12,6 +12,7 @@ use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Models\ReservationNight;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -29,6 +30,23 @@ class NightAuditService
     public const STEPS = ['checks', 'no_shows', 'room_charges', 'statistics', 'advance_date'];
 
     public function __construct(private readonly PostingService $postings, private readonly AvailabilityService $availability) {}
+
+    /**
+     * Kapanış öncesi kontrol listesi (çalıştırmadan): ekranda gösterilir. Her kontrol: önem (block/warn) ve ilgili rezervasyonlar.
+     *
+     * @return array<string, array{severity:string, items:Collection}>
+     */
+    public function preview(int $propertyId): array
+    {
+        $bd = Property::query()->findOrFail($propertyId)->current_business_date->toDateString();
+        $res = fn () => Reservation::query()->where('property_id', $propertyId)->with(['profile:id,display_name', 'room:id,number']);
+
+        return [
+            'departures_pending' => ['severity' => 'block', 'items' => $res()->where('status', 'in_house')->where('departure_date', '<=', $bd)->where('is_day_use', false)->get()],
+            'open_cashier_shifts' => ['severity' => 'block', 'items' => DB::table('pms_cashier_shifts')->where('property_id', $propertyId)->where('status', 'open')->where('business_date', '<=', $bd)->get()],
+            'arrivals_pending' => ['severity' => 'warn', 'items' => $res()->whereIn('status', ['confirmed', 'tentative'])->where('arrival_date', $bd)->get()],
+        ];
+    }
 
     public function run(int $propertyId, ?int $userId = null, array $acknowledged = []): int
     {
