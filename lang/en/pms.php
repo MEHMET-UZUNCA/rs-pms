@@ -574,4 +574,11 @@ Müller, Anna
         'statuses' => ['pending' => 'Waiting', 'paid' => 'Paid', 'cancelled' => 'Cancelled'], 'overdue' => 'overdue', 'mark_paid' => 'Paid',
         'hint' => 'A deposit payment posted on the folio with a deposit code (992) marks the oldest waiting request as paid. Overdue requests are listed in the navigator under "Deposit due".',
     ],
+    'kvkk' => [
+        'title' => 'Personal data (KVKK)', 'retention' => 'Keep guest data for (years)', 'retention_hint' => 'Profiles whose last stay is older are anonymised on the 1st of every month (0 = off). Reservations, folios and invoices stay; only the personal data is removed.',
+        'button' => 'Anonymise (KVKK)', 'button_hint' => 'Delete the personal data of this guest on request; stays and invoices are kept.',
+        'confirm' => 'Delete the personal data of :name permanently? Name, contact, address, documents and card are removed; this cannot be undone.',
+        'done' => 'The personal data was deleted; the profile remains as "Anonymous".', 'only_individual' => 'Only guest (individual) profiles can be anonymised.',
+        'has_active' => 'The guest has a current or future reservation; anonymise after check-out.',
+    ],
 ];

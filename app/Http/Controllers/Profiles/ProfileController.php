@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Profiles;
 
 use App\Domain\Core\Models\Property;
 use App\Domain\Profiles\Models\Profile;
+use App\Domain\Profiles\Services\ProfileAnonymizer;
 use App\Domain\Profiles\Services\ProfileMergeService;
 use App\Domain\Profiles\Services\ProfileService;
 use App\Http\Controllers\Controller;
@@ -212,6 +213,19 @@ class ProfileController extends Controller
 
         return redirect()->route('profiles.index', ['tur' => $keep->type, 'ad' => $keep->display_name])->with('selected', $keep->id)
             ->with('status', __('pms.merge.done', ['drop' => $drop->display_name, 'keep' => $keep->display_name]));
+    }
+
+    /** KVKK: misafirin talebiyle kişisel bilgileri silinir, kayıt "Anonim" olarak kalır. */
+    public function anonymize(Request $request, Profile $profile, ProfileAnonymizer $anonymizer): RedirectResponse
+    {
+        $this->own($profile);
+        try {
+            $anonymizer->anonymize($profile, $request->user()->id);
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('profiles.index', ['tur' => 'individual'])->with('status', __('pms.kvkk.done'));
     }
 
     private function own(Profile $profile): void

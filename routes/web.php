@@ -142,6 +142,7 @@ Route::middleware(['auth', 'property'])->group(function () {
             Route::put('/{profile}', [ProfileController::class, 'update'])->whereNumber('profile')->name('update');
             Route::get('/{profile}/birlestir', [ProfileController::class, 'mergeForm'])->whereNumber('profile')->name('merge-form');
             Route::post('/{profile}/birlestir', [ProfileController::class, 'merge'])->whereNumber('profile')->name('merge');
+            Route::post('/{profile}/anonim', [ProfileController::class, 'anonymize'])->whereNumber('profile')->name('anonymize');
         });
     });
 

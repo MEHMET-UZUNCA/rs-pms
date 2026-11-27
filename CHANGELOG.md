@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Kişisel veri (KVKK / KKTC 89/2007): profil kartında "Anonimleştir (KVKK)" — misafirin talebiyle ad, iletişim, adres, kimlik belgeleri, kart ve kişisel alanlar silinir, profil "Anonim #no" olarak kalır; rezervasyon, folyo, fatura ve istatistik korunur; güncel / ileri rezervasyonu olan anonimleştirilemez; değişiklik kaydındaki eski değerler de temizlenir. Rezervasyon seçeneklerinde saklama süresi (yıl); `pms:anonymize-profiles` (--dry-run, --years) her ayın 1'inde süresi dolanları anonimleştirir (0 = kapalı). (M.U)
+
 - Depozito / ön ödeme takibi: rezervasyon kartı Credit Card sekmesinde depozito istekleri (son tarih, tutar, döviz); folyoya depozito koduyla (992) ödeme atılınca en eski bekleyen istek kendiliğinden "ödendi" olur, elle ödendi / iptal de yapılır; rezervasyonda bekleyen toplam ve en yakın son tarih tutulur; navigatörde "Depozitosu geciken" görünümü; değişiklik kaydına yazılır. (M.U)
 
 - Servis hata mesajları dil dosyasında (pms.err, 63 mesaj): rezervasyon, folyo, kasa, kat hizmetleri, gece kapanışı, outlet, departman kodu, vergi, kur, blok ve sabit ücret kuralları artık arayüz diline göre İngilizce ya da Türkçe. Yeni test: iki dil dosyasının anahtarları eşit olmalı. (Simphony protokol hataları yalnız loga yazıldığı için Türkçe kaldı.) (M.U)

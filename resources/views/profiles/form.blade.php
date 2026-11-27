@@ -153,8 +153,14 @@
         @if ($profile->exists)
             <span>{{ __('pms.prof.created_at') }}: {{ $profile->created_at?->format('d.m.Y H:i') }}</span>
         @endif
+        @if ($profile->exists && $individual && $profile->last_name !== 'Anonim')
+            <button form="anonymize-form" class="btn" title="{{ __('pms.kvkk.button_hint') }}">{{ __('pms.kvkk.button') }}</button>
+        @endif
         <button class="btn btn-primary ml-auto" data-hotkey="f10 ctrl+enter">{{ __('pms.common.ok') }} <span class="kbd !text-brand-100 !bg-transparent !border-brand-200">F10</span></button>
         <a href="{{ route('profiles.index', ['tur' => $profile->type, 'secili' => $profile->id]) }}" class="btn" data-hotkey="escape">{{ __('pms.common.cancel') }} <span class="kbd">Esc</span></a>
     </div>
 </form>
+@if ($profile->exists && $individual)
+    <form method="POST" action="{{ route('profiles.anonymize', $profile) }}" id="anonymize-form" hidden data-confirm="{{ __('pms.kvkk.confirm', ['name' => $profile->display_name]) }}">@csrf</form>
+@endif
 @endsection

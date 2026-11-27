@@ -31,6 +31,7 @@ class ReservationOptions
         'status_after_no_show' => 'none',            // Room Status after No Show
         'dirty_room_check_in' => 'warn',             // kirli odaya giriş (Elektraweb parametresi): allow / warn / block
         // Web sitesinden gelen rezervasyonlar (Web API POST /reservations): kodlar boşsa web rezervasyonu kapalıdır
+        'privacy_retention_years' => 0,              // KVKK: son konaklaması bu kadar yıldan eski misafir profili her ay anonimleştirilir (0 = kapalı)
         'web_reservation_type' => null, 'web_market' => null, 'web_source' => null, 'web_status' => 'confirmed',
         'market_code_mandatory' => true,
         'queue_rooms' => true,                       // Queue Rooms Handling

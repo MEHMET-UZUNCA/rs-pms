@@ -574,4 +574,11 @@ Kaya, Ayşe
         'statuses' => ['pending' => 'Bekleniyor', 'paid' => 'Ödendi', 'cancelled' => 'İptal'], 'overdue' => 'gecikti', 'mark_paid' => 'Ödendi',
         'hint' => 'Folyoya depozito koduyla (992) ödeme atılınca en eski bekleyen istek ödendi olur. Son tarihi geçenler navigatörde "Depozitosu geciken" görünümündedir.',
     ],
+    'kvkk' => [
+        'title' => 'Kişisel veri (KVKK)', 'retention' => 'Misafir verisi saklama süresi (yıl)', 'retention_hint' => 'Son konaklaması bundan eski profiller her ayın 1\'inde anonimleştirilir (0 = kapalı). Rezervasyon, folyo ve faturalar kalır; yalnız kişisel bilgiler silinir.',
+        'button' => 'Anonimleştir (KVKK)', 'button_hint' => 'Misafirin talebiyle kişisel bilgilerini siler; konaklama ve faturalar kalır.',
+        'confirm' => ':name kişisel bilgileri kalıcı olarak silinsin mi? Ad, iletişim, adres, belgeler ve kart silinir; geri alınamaz.',
+        'done' => 'Kişisel bilgiler silindi; profil "Anonim" olarak kaldı.', 'only_individual' => 'Yalnız misafir (bireysel) profili anonimleştirilir.',
+        'has_active' => 'Misafirin güncel ya da ileri tarihli rezervasyonu var; çıkıştan sonra anonimleştirin.',
+    ],
 ];

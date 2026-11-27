@@ -33,8 +33,10 @@ class ReservationOptionsController extends Controller
             'dirty_room_check_in' => ['required', Rule::in(ReservationOptions::DIRTY_CHECK_IN)],
             'web_reservation_type' => ['nullable', 'string', 'max:10'], 'web_market' => ['nullable', 'string', 'max:10'], 'web_source' => ['nullable', 'string', 'max:10'],
             'web_status' => ['nullable', Rule::in(['confirmed', 'tentative'])],
+            'privacy_retention_years' => ['nullable', 'integer', 'between:0,30'],
         ]);
         $data['web_status'] ??= 'confirmed';
+        $data['privacy_retention_years'] = (int) ($data['privacy_retention_years'] ?? 0);
         foreach (['queue_rooms', 'meal_plan'] as $flag) {
             $data[$flag] = $request->boolean($flag);
         }

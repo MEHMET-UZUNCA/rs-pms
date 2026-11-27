@@ -35,6 +35,10 @@
                     <select id="{{ $key }}" name="{{ $key }}" class="input"><option value="">—</option>
                         @foreach ($list as $c)<option value="{{ $c->code }}" @selected($v($key) === $c->code)>{{ $c->code }} {{ $c->name }}</option>@endforeach</select>
                 @endforeach
+                <b class="col-span-2 mt-2">{{ __('pms.kvkk.title') }}</b>
+                <label class="field-label !mb-0" for="privacy_retention_years">{{ __('pms.kvkk.retention') }}</label>
+                <input id="privacy_retention_years" name="privacy_retention_years" type="number" min="0" max="30" value="{{ $v('privacy_retention_years') }}" class="input">
+                <p class="col-span-2 text-[12.5px] text-muted">{{ __('pms.kvkk.retention_hint') }}</p>
                 <label class="field-label !mb-0" for="web_status">{{ __('pms.options.web_status') }}</label>
                 <select id="web_status" name="web_status" class="input">@foreach (['confirmed', 'tentative'] as $st)<option value="{{ $st }}" @selected($v('web_status') === $st)>{{ __('pms.res.statuses.'.$st) }}</option>@endforeach</select>
             </section>
