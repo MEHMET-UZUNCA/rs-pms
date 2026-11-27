@@ -394,4 +394,22 @@ return [
         'no_audit' => 'No night audit has been closed yet.', 'list_arrivals' => 'Arrivals today', 'list_departures' => 'Departures today', 'pax_short' => 'Pax',
         'queued' => 'Queue', 'overdue' => 'Overdue',
     ],
+    'block' => [
+        'title' => 'Blocks and Groups', 'subtitle' => 'Group reservations and allotments', 'filters' => ['active' => 'Current', 'past' => 'Past', 'cancelled' => 'Cancelled'],
+        'search_hint' => 'Code, name or agent', 'types' => ['group' => 'Group', 'allotment' => 'Allotment'],
+        'statuses' => ['tentative' => 'Tentative', 'definite' => 'Definite', 'cancelled' => 'Cancelled'],
+        'new_group' => 'New group', 'new_allotment' => 'New allotment', 'open' => 'Open', 'agent' => 'Agent / company', 'start' => 'Arrival', 'end' => 'Departure',
+        'cutoff' => 'Cut-off date', 'contract' => 'Contract no.', 'notes' => 'Notes', 'allotted' => 'Allotted', 'picked_up' => 'Picked up', 'remaining' => 'Remaining',
+        'rooms_per_night' => 'Rooms per night', 'rooms_hint' => 'Number of rooms for each night of the block, by room type.', 'rooms' => 'Rooms',
+        'no_rooms' => 'No rooms allotted yet.', 'master' => 'Master account', 'no_master' => 'not opened yet (Route to master opens it)',
+        'pick_up' => 'Create reservations from the block', 'rooming_list' => 'Rooming list (one guest per line, optional)',
+        'rooming_hint' => "Smith, John
+Müller, Anna
+(empty: reservations are opened with the group name)", 'create_reservations' => 'Create reservations',
+        'members' => 'Reservations in the block', 'auto_assign' => 'Assign rooms', 'route_master' => 'Route to master', 'unroute' => 'Remove routing',
+        'select_all' => 'Select all', 'billing' => 'Room and board charges', 'to_master' => 'Master account', 'own_folio' => 'Guest folio', 'no_members' => 'No reservations yet.',
+        'picked' => ':count reservations created.', 'assigned' => ':count rooms assigned.', 'no_room_for' => 'No free room for: :list', 'checked_in' => ':count reservations checked in.',
+        'routed' => 'Room and board charges of :count reservations go to master account :folio.', 'unrouted' => 'Routing removed from :count reservations.',
+        'select_members' => 'Select at least one reservation.',
+    ],
 ];

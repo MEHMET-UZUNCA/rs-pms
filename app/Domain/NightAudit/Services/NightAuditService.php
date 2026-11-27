@@ -200,7 +200,8 @@ class NightAuditService
 
                 continue;
             }
-            $folio = Folio::query()->where('reservation_id', $reservation->id)->where('window', 1)->where('status', 'open')->firstOrFail();
+            $folio = $this->routedFolio($reservation->id, $bd)
+                ?? Folio::query()->where('reservation_id', $reservation->id)->where('window', 1)->where('status', 'open')->firstOrFail();
             $rateCode = RateCode::query()->with('package.elements', 'roomTransactionCode')->findOrFail($night->rate_code_id);
             $key = "audit:{$bd}:{$night->id}";
             $common = ['source' => 'night_audit', 'posted_by' => $userId, 'stay_date' => $bd, 'reservation_night_id' => $night->id, 'market_segment_id' => $night->market_segment_id];
@@ -234,6 +235,20 @@ class NightAuditService
 
         // Fixed Charges: o geceye düşen sabit ücretler (otopark, ek yatak …)
         return ['room_charges_posted' => $count, 'amount_posted' => round($total, 2)] + app(FixedChargeService::class)->postForDate($property->id, $bd, $userId);
+    }
+
+    /**
+     * Oda ve pansiyon ücretinin yönlendirildiği hesap (Routing): rezervasyonun etkin, tarihi uyan, tüm kodları kapsayan
+     * (kod / grup boş) "folio" kuralı — ör. grup üyelerinin ücretleri grup ana hesabına. Hesap kapalıysa yönlendirilmez.
+     */
+    private function routedFolio(int $reservationId, string $bd): ?Folio
+    {
+        $target = DB::table('pms_routing_rules')->where('source_reservation_id', $reservationId)->where('is_active', true)->where('target_type', 'folio')
+            ->whereNull('transaction_code_id')->whereNull('transaction_code_group_id')
+            ->where(fn ($q) => $q->whereNull('date_from')->orWhere('date_from', '<=', $bd))->where(fn ($q) => $q->whereNull('date_to')->orWhere('date_to', '>=', $bd))
+            ->orderByDesc('id')->value('target_folio_id');
+
+        return $target ? Folio::query()->whereKey($target)->where('status', 'open')->first() : null;
     }
 
     private function statistics(Property $property, string $bd): array

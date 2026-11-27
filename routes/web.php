@@ -14,6 +14,7 @@ use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Profiles\ProfileController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
+use App\Http\Controllers\Reservations\BlockController;
 use App\Http\Controllers\Reservations\FixedChargeController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
@@ -118,6 +119,20 @@ Route::middleware(['auth', 'property'])->group(function () {
     });
 
     // Multiboard: pansiyon değişikliği ve öğün sayıları
+    // Reservation → Block / Group Reservation
+    Route::middleware('permission:reservations.view')->prefix('bloklar')->name('blocks.')->group(function () {
+        Route::get('/', [BlockController::class, 'index'])->name('index');
+        Route::get('/{block}', [BlockController::class, 'show'])->whereNumber('block')->name('show');
+        Route::middleware('permission:reservations.edit')->group(function () {
+            Route::get('/yeni', [BlockController::class, 'create'])->name('create');
+            Route::post('/', [BlockController::class, 'store'])->name('store');
+            Route::get('/{block}/duzenle', [BlockController::class, 'edit'])->whereNumber('block')->name('edit');
+            Route::put('/{block}', [BlockController::class, 'update'])->whereNumber('block')->name('update');
+            Route::post('/{block}/rezervasyonlar', [BlockController::class, 'pickUp'])->whereNumber('block')->name('pick-up');
+            Route::post('/{block}/islem', [BlockController::class, 'bulk'])->whereNumber('block')->name('bulk');
+        });
+    });
+
     Route::post('/rezervasyon/{reservation}/sabit-ucret', [FixedChargeController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.fixed-charges.store');
     Route::delete('/rezervasyon/{reservation}/sabit-ucret/{charge}', [FixedChargeController::class, 'destroy'])->whereNumber(['reservation', 'charge'])->middleware('permission:reservations.edit')->name('reservations.fixed-charges.destroy');
     Route::post('/rezervasyon/{reservation}/pansiyon', [MealPlanController::class, 'change'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.board');

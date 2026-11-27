@@ -394,4 +394,22 @@ return [
         'no_audit' => 'Henüz gece kapanışı yapılmadı.', 'list_arrivals' => 'Bugün gelecekler', 'list_departures' => 'Bugün çıkacaklar', 'pax_short' => 'Kişi',
         'queued' => 'Kuyrukta', 'overdue' => 'Gecikmiş',
     ],
+    'block' => [
+        'title' => 'Bloklar ve Gruplar', 'subtitle' => 'Grup rezervasyonları ve kontenjanlar', 'filters' => ['active' => 'Güncel', 'past' => 'Geçmiş', 'cancelled' => 'İptal'],
+        'search_hint' => 'Kod, ad ya da acenta', 'types' => ['group' => 'Grup', 'allotment' => 'Kontenjan'],
+        'statuses' => ['tentative' => 'Opsiyonlu', 'definite' => 'Kesin', 'cancelled' => 'İptal'],
+        'new_group' => 'Yeni grup', 'new_allotment' => 'Yeni kontenjan', 'open' => 'Aç', 'agent' => 'Acenta / şirket', 'start' => 'Geliş', 'end' => 'Çıkış',
+        'cutoff' => 'Opsiyon tarihi', 'contract' => 'Sözleşme no', 'notes' => 'Notlar', 'allotted' => 'Kota', 'picked_up' => 'Alınan', 'remaining' => 'Kalan',
+        'rooms_per_night' => 'Gecelik oda sayısı', 'rooms_hint' => 'Bloğun her gecesi için oda tipine göre oda sayısı.', 'rooms' => 'Oda',
+        'no_rooms' => 'Henüz oda kotası yok.', 'master' => 'Ana hesap', 'no_master' => 'henüz açılmadı (Ana hesaba yönlendir açar)',
+        'pick_up' => 'Bloktan rezervasyon aç', 'rooming_list' => 'İsim listesi (her satıra bir misafir, isteğe bağlı)',
+        'rooming_hint' => "Yılmaz, Ahmet
+Kaya, Ayşe
+(boşsa rezervasyonlar grup adıyla açılır)", 'create_reservations' => 'Rezervasyonları aç',
+        'members' => 'Bloktaki rezervasyonlar', 'auto_assign' => 'Oda ata', 'route_master' => 'Ana hesaba yönlendir', 'unroute' => 'Yönlendirmeyi kaldır',
+        'select_all' => 'Tümünü seç', 'billing' => 'Oda ve pansiyon ücreti', 'to_master' => 'Ana hesap', 'own_folio' => 'Misafir folyosu', 'no_members' => 'Henüz rezervasyon yok.',
+        'picked' => ':count rezervasyon açıldı.', 'assigned' => ':count odaya atama yapıldı.', 'no_room_for' => 'Boş oda bulunamadı: :list', 'checked_in' => ':count rezervasyona giriş yapıldı.',
+        'routed' => ':count rezervasyonun oda ve pansiyon ücreti :folio ana hesabına yazılacak.', 'unrouted' => ':count rezervasyonun yönlendirmesi kaldırıldı.',
+        'select_members' => 'En az bir rezervasyon seçin.',
+    ],
 ];

@@ -58,6 +58,9 @@
                     </div>
                 @else
                     <div class="text-[15px] font-semibold">{{ $r->profile?->display_name }} <span class="text-muted font-normal">{{ $r->profile?->nationality_code }}</span></div>
+                    @if ($r->block_id && ($blk = \App\Domain\Reservations\Models\Block::find($r->block_id)))
+                        <div class="text-[12px]">{{ __('pms.block.types.'.$blk->type) }}: <a class="text-brand-600 hover:underline font-semibold" href="{{ route('blocks.show', $blk) }}">{{ $blk->code }} · {{ $blk->name }}</a></div>
+                    @endif
                     @if ($r->profile?->status === 'blacklisted')
                         <div class="flash flash-error !py-1" role="alert"><b>{{ __('pms.prof.statuses.blacklisted') }}:</b> {{ $r->profile->blacklist_reason }}</div>
                     @endif
