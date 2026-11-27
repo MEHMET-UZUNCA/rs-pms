@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
+use App\Http\Controllers\Profiles\ProfileController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
@@ -101,6 +102,18 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Rooms Management → House Status (Ctrl+H)
     Route::get('/house-status', HouseStatusController::class)->name('front-office.house-status');
+
+    // Customer Relation → Profiles (Profil Navigatörü)
+    Route::middleware('permission:profiles.view')->prefix('profiller')->name('profiles.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/{profile}/ozet', [ProfileController::class, 'summary'])->whereNumber('profile')->name('summary');
+        Route::middleware('permission:profiles.edit')->group(function () {
+            Route::get('/yeni/{type}', [ProfileController::class, 'create'])->name('create');
+            Route::post('/yeni/{type}', [ProfileController::class, 'store'])->name('store');
+            Route::get('/{profile}/duzenle', [ProfileController::class, 'edit'])->whereNumber('profile')->name('edit');
+            Route::put('/{profile}', [ProfileController::class, 'update'])->whereNumber('profile')->name('update');
+        });
+    });
 
     // Multiboard: pansiyon değişikliği ve öğün sayıları
     Route::post('/rezervasyon/{reservation}/pansiyon', [MealPlanController::class, 'change'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.board');

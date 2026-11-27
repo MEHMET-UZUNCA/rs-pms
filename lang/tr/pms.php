@@ -222,8 +222,8 @@ return [
         'delete_confirm' => 'Seçili rol silinsin mi? Kullanıcıya verilmiş rol silinemez.',
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
-        'groups' => ['setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
+        'perm' => ['cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -353,5 +353,20 @@ return [
         'price_hint' => 'Seçili gecelerin pansiyonu değişir (öğün sayıları buna göre). Oda fiyatı değişmez; pansiyon farkı varsa ayrıca kayıt atın.',
         'rule_hint' => 'Giriş günü, çıkış günü ve günübirlik öğünleri Ayarlar → Rezervasyon seçenekleri (yemek planı varsayılanları) ile belirlenir.',
         'err_status' => 'İptal, no-show ya da çıkış yapmış rezervasyonun pansiyonu değiştirilemez.', 'err_board' => 'Bilinmeyen pansiyon tipi.',
+    ],
+
+    'prof' => [
+        'title' => 'Profiller', 'subtitle' => 'Misafirler, şirketler, acentalar, kaynaklar ve gruplar',
+        'types' => ['individual' => 'Bireysel', 'company' => 'Şirket', 'travel_agent' => 'Acenta', 'source' => 'Kaynak', 'group' => 'Grup'],
+        'new_individual' => 'Yeni misafir profili', 'new_company' => 'Yeni şirket profili', 'new_travel_agent' => 'Yeni acenta profili', 'new_source' => 'Yeni kaynak profili', 'new_group' => 'Yeni grup profili',
+        'name' => 'Ad', 'name_hint' => 'Ad, vergi no ya da IATA', 'city' => 'Şehir', 'phone_email' => 'Telefon / e-posta', 'nationality' => 'Uyruk', 'language' => 'Dil',
+        'tax_number' => 'Vergi no', 'tax_office' => 'Vergi dairesi', 'phone' => 'Telefon', 'mobile' => 'Cep', 'email' => 'E-posta', 'stays' => 'Konaklama', 'last_stay' => 'Son konaklama',
+        'identity' => 'Profil', 'last_name' => 'Soyad', 'first_name' => 'Ad', 'title_field' => 'Unvan', 'gender' => 'Cinsiyet',
+        'genders' => ['male' => 'Erkek', 'female' => 'Kadın', 'other' => 'Diğer'], 'salutation' => 'Hitap', 'birth_date' => 'Doğum tarihi', 'occupation' => 'Meslek',
+        'id_number' => 'Kimlik / pasaport no', 'company_name' => 'Firma adı', 'commission' => 'Komisyon', 'default_rate' => 'Varsayılan fiyat kodu',
+        'contact' => 'İletişim ve adres', 'address' => 'Adres', 'zip' => 'Posta kodu', 'state' => 'İl / eyalet', 'country' => 'Ülke', 'privacy' => 'Gizlilik ve durum',
+        'marketing_consent' => 'Pazarlama izni', 'no_mailing' => 'Posta gönderme', 'no_emailing' => 'E-posta gönderme', 'store_private_data' => 'Kişisel veriyi sakla',
+        'statuses' => ['active' => 'Aktif', 'inactive' => 'Pasif', 'blacklisted' => 'Kara liste'], 'blacklist_reason' => 'Kara liste nedeni',
+        'history' => 'Konaklama geçmişi', 'no_history' => 'Henüz rezervasyon yok.',
     ],
 ];

@@ -188,6 +188,13 @@ Fidelio ayar listesi düzeni: solda ayar ağacı, ortada hızlı arama + liste, 
 | `goruntuler/22-multiboard-01-ogun-sayilari.png` | Öğün sayıları: gün gün kahvaltı / öğle / akşam, pansiyona göre oda-gece |
 | `goruntuler/22-multiboard-02-meal-plan-sekmesi.png` | Rezervasyon kartı Meal Plan (Ctrl+0): gece gece pansiyon, pansiyon değiştirme |
 
+## 23 — Profiller (gerçek uygulama)
+
+| Dosya | Ne gösteriyor |
+|---|---|
+| `goruntuler/23-profiller-01-navigator.png` | Ctrl+P: tür sekmeleri, arama, seçili profilin özeti ve konaklama geçmişi |
+| `goruntuler/23-profiller-02-profil-karti.png` | Profil kartı: kimlik, iletişim ve adres, gizlilik ve durum |
+
 ## Taslakları yerelde açmak
 
 ```bash

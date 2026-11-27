@@ -26,6 +26,8 @@ class Profile extends Model
             'no_emailing' => 'boolean',
             'store_private_data' => 'boolean',
             'merged_at' => 'datetime',
+            'commission_pct' => 'decimal:2',
+            'marketing_consent_at' => 'datetime',
         ];
     }
 

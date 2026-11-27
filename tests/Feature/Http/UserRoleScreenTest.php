@@ -140,6 +140,29 @@ class UserRoleScreenTest extends DomainTestCase
             ->assertSessionHasErrors('permissions');
     }
 
+    public function test_every_permission_and_group_has_a_name_in_both_languages(): void
+    {
+        foreach (['en', 'tr'] as $locale) {
+            app()->setLocale($locale);
+            foreach (DB::table('pms_permissions')->get() as $p) {
+                $key = 'pms.roles.perm.'.str_replace('.', '_', $p->code);
+                $this->assertNotSame($key, __($key), "{$locale}: {$p->code}");
+                $this->assertNotSame('pms.roles.groups.'.$p->group, __('pms.roles.groups.'.$p->group), "{$locale}: {$p->group}");
+            }
+        }
+    }
+
+    public function test_fresh_install_gives_later_permissions_to_roles(): void
+    {
+        $has = fn (string $role, string $permission) => DB::table('pms_role_permissions as rp')->join('pms_roles as r', 'r.id', '=', 'rp.role_id')
+            ->join('pms_permissions as p', 'p.id', '=', 'rp.permission_id')->where('r.code', $role)->where('p.code', $permission)->exists();
+        foreach ([['FOA', 'front_office.lost_found'], ['FOA', 'profiles.edit'], ['ACC', 'cashiering.accounts'], ['ACC', 'profiles.view'],
+            ['FOM', 'setup.rates'], ['FOM', 'setup.exchange_rates'], ['FOM', 'setup.options'], ['SUP', 'setup.users'], ['HKS', 'front_office.lost_found']] as [$role, $permission]) {
+            $this->assertTrue($has($role, $permission), "{$role} → {$permission}");
+        }
+        $this->assertFalse($has('HKS', 'profiles.view'));
+    }
+
     public function test_screens_need_permission(): void
     {
         $clerk = $this->makeUser('AYSE', 'FOA');

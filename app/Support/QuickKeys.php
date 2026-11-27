@@ -24,6 +24,7 @@ class QuickKeys
             ['house_status', 'ctrl+h', 'Ctrl+H', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ['in_house', 'ctrl+i', 'Ctrl+I', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null],
             ['new_reservation', 'ctrl+n alt+shift+n', 'Ctrl+N', $can('reservations.edit') ? route('reservations.create') : null],
+            ['profiles', 'ctrl+p', 'Ctrl+P', $can('profiles.view') ? route('profiles.index') : null],
             ['reports', 'ctrl+shift+r', 'Ctrl+Shift+R', null],
             ['room_rack', 'ctrl+l', 'Ctrl+L', $can('reservations.view') ? route('front-office.room-rack') : null],
             ['update_reservation', 'ctrl+u', 'Ctrl+U', $can('reservations.view') ? route('reservations.navigator') : null],

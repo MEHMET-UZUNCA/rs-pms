@@ -39,7 +39,7 @@ class Menu
                 ['room_history', $can('housekeeping.view') || $can('reservations.view') ? route('rooms.history') : null],
                 ['house_status', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ],
-            'profiles' => [['profile_navigator', null]],
+            'profiles' => [['profile_navigator', $can('profiles.view') ? route('profiles.index') : null]],
             'quick_keys' => array_merge(array_map(fn ($k) => [$k['label'], $k['url'], $k['display']], QuickKeys::global()), [['all_shortcuts', route('shortcuts'), 'F1']]),
             'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['reports', null]],
             'setup' => [

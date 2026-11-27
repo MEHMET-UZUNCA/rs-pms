@@ -222,8 +222,8 @@ return [
         'delete_confirm' => 'Delete the selected role? A role given to users cannot be deleted.',
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
-        'groups' => ['setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
+        'perm' => ['cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -353,5 +353,20 @@ return [
         'price_hint' => 'The board of the selected nights changes (meal counts follow). The room price does not change; post a supplement if the board costs more.',
         'rule_hint' => 'Arrival day, departure day and day use meals follow Setup → Reservation Options (Meal Plan defaults).',
         'err_status' => 'The board of a cancelled, no-show or checked-out reservation cannot be changed.', 'err_board' => 'Unknown board type.',
+    ],
+
+    'prof' => [
+        'title' => 'Profiles', 'subtitle' => 'Guests, companies, travel agents, sources and groups',
+        'types' => ['individual' => 'Individual', 'company' => 'Company', 'travel_agent' => 'Travel Agent', 'source' => 'Source', 'group' => 'Group'],
+        'new_individual' => 'New Individual Profile', 'new_company' => 'New Company Profile', 'new_travel_agent' => 'New Travel Agent Profile', 'new_source' => 'New Source Profile', 'new_group' => 'New Group Profile',
+        'name' => 'Name', 'name_hint' => 'Name, tax no. or IATA', 'city' => 'City', 'phone_email' => 'Phone / e-mail', 'nationality' => 'Nationality', 'language' => 'Language',
+        'tax_number' => 'Tax number', 'tax_office' => 'Tax office', 'phone' => 'Phone', 'mobile' => 'Mobile', 'email' => 'E-mail', 'stays' => 'Stays', 'last_stay' => 'Last stay',
+        'identity' => 'Profile', 'last_name' => 'Last name', 'first_name' => 'First name', 'title_field' => 'Title', 'gender' => 'Gender',
+        'genders' => ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'], 'salutation' => 'Salutation', 'birth_date' => 'Birth date', 'occupation' => 'Occupation',
+        'id_number' => 'ID / passport no.', 'company_name' => 'Company name', 'commission' => 'Commission', 'default_rate' => 'Default rate code',
+        'contact' => 'Contact and address', 'address' => 'Address', 'zip' => 'ZIP', 'state' => 'State', 'country' => 'Country', 'privacy' => 'Privacy and status',
+        'marketing_consent' => 'Marketing consent', 'no_mailing' => 'No mailing', 'no_emailing' => 'No e-mailing', 'store_private_data' => 'Store private data',
+        'statuses' => ['active' => 'Active', 'inactive' => 'Inactive', 'blacklisted' => 'Blacklisted'], 'blacklist_reason' => 'Blacklist reason',
+        'history' => 'Stay history', 'no_history' => 'No reservations yet.',
     ],
 ];
