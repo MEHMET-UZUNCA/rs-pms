@@ -57,7 +57,7 @@ class ReservationOptionsTest extends DomainTestCase
 
         $this->actingAs($this->user)->put('/ayarlar/rezervasyon-secenekleri', [
             'check_in_time' => '15:00', 'check_out_time' => '11:00', 'day_use_check_in_time' => '10:00', 'day_use_check_out_time' => '18:00',
-            'status_after_check_in' => 'none', 'status_after_check_out' => 'dirty', 'status_after_audit_occupied' => 'none', 'status_after_no_show' => 'none',
+            'status_after_check_in' => 'none', 'status_after_check_out' => 'dirty', 'status_after_audit_occupied' => 'none', 'status_after_no_show' => 'none', 'dirty_room_check_in' => 'block',
             'queue_rooms' => '1', 'meal_plan' => '1', 'meals_first_day' => ['dinner' => '1'],
         ])->assertRedirect()->assertSessionHasNoErrors();
 
