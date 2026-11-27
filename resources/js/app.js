@@ -29,7 +29,8 @@ function keyName(e) {
 
 document.addEventListener('keydown', (e) => {
     const name = keyName(e);
-    const matches = [...document.querySelectorAll('[data-hotkey]')].filter((el) => el.dataset.hotkey.split(' ').includes(name) && !el.disabled);
+    const modal = document.querySelector('[data-modal]:not([hidden])');   // açık pencere varken yalnız onun kısayolları
+    const matches = [...(modal ?? document).querySelectorAll('[data-hotkey]')].filter((el) => el.dataset.hotkey.split(' ').includes(name) && !el.disabled);
     // Önce ekrandaki görünür düğme, yoksa genel kısayol (Quick Keys)
     const target = matches.find((el) => el.offsetParent !== null && !el.hasAttribute('data-hotkey-global')) ?? matches.find((el) => el.hasAttribute('data-hotkey-global'));
     if (!target) return;
@@ -40,6 +41,26 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     target.focus?.();
     target.click();
+});
+
+// Pencere (data-modal): data-modal-open="id" açar, data-modal-close kapatır; açılınca [data-autofocus] odaklanır.
+// select[data-submit-on-enter]: Enter ya da çift tık formu gönderir (ör. Select Profile Type).
+document.addEventListener('click', (e) => {
+    const open = e.target.closest('[data-modal-open]');
+    if (open) {
+        const modal = document.getElementById(open.dataset.modalOpen);
+        modal.hidden = false;
+        modal.querySelector('[data-autofocus]')?.focus();
+    }
+    const close = e.target.closest('[data-modal-close]');
+    if (close) close.closest('[data-modal]').hidden = true;
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.matches?.('select[data-submit-on-enter]')) { e.preventDefault(); e.target.form.requestSubmit(); }
+});
+document.addEventListener('dblclick', (e) => {
+    const select = e.target.closest('select[data-submit-on-enter]');
+    if (select) select.form.requestSubmit();
 });
 
 // Menü çubuğu

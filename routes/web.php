@@ -108,6 +108,7 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/{profile}/ozet', [ProfileController::class, 'summary'])->whereNumber('profile')->name('summary');
         Route::middleware('permission:profiles.edit')->group(function () {
+            Route::get('/yeni', [ProfileController::class, 'choose'])->name('choose');
             Route::get('/yeni/{type}', [ProfileController::class, 'create'])->name('create');
             Route::post('/yeni/{type}', [ProfileController::class, 'store'])->name('store');
             Route::get('/{profile}/duzenle', [ProfileController::class, 'edit'])->whereNumber('profile')->name('edit');

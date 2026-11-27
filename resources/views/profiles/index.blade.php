@@ -46,11 +46,28 @@
         </section>
         <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @if ($canEdit)
-                <a href="{{ route('profiles.create', $type) }}" class="btn btn-side" data-hotkey="alt+n insert">{{ __('pms.common.new') }} <span class="kbd ml-auto">Alt+N</span></a>
+                <button type="button" class="btn btn-side" data-modal-open="profile-type-dialog" data-hotkey="alt+n insert">{{ __('pms.common.new') }} <span class="kbd ml-auto">Alt+N</span></button>
                 <a class="btn btn-side" data-needs-selection="profile-grid" data-action="edit" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Enter</span></a>
             @endif
             <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </div>
 </div>
+@if ($canEdit)
+{{-- Fidelio "Select Profile Type": yeni profilden önce tip seçilir (↑/↓, Enter ya da çift tık) --}}
+<div id="profile-type-dialog" data-modal hidden class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <form method="GET" action="{{ route('profiles.choose') }}" class="win w-80 max-w-full" role="dialog" aria-modal="true" aria-labelledby="profile-type-title">
+        <div class="win-title"><span id="profile-type-title">{{ __('pms.prof.select_type') }}</span></div>
+        <div class="p-3 flex gap-3">
+            <select name="tur" size="{{ count($types) }}" class="input !h-auto flex-1" data-submit-on-enter data-autofocus aria-label="{{ __('pms.prof.type') }}">
+                @foreach ($types as $t)<option value="{{ $t }}" @selected($type === $t)>{{ __('pms.prof.types.'.$t) }}</option>@endforeach
+            </select>
+            <div class="flex flex-col gap-1.5 w-24">
+                <button class="btn btn-primary">{{ __('pms.common.ok') }}</button>
+                <button type="button" class="btn mt-auto" data-modal-close data-hotkey="escape">{{ __('pms.common.cancel') }}</button>
+            </div>
+        </div>
+    </form>
+</div>
+@endif
 @endsection

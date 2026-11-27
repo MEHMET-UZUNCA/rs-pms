@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Profil kartı Fidelio'daki kullanılan alanlara göre: Yeni (Alt+N) önce Select Profile Type penceresi; kart tek sayfada Fidelio Profile + More Fields alanları — pozisyon, departman, mektup hitabı, doğum yeri, evlilik yıldönümü yeni; Active? kutusu; kimlik belgeleri (Personal Documents: pasaport, kimlik, KKTC / TC kimlik, ehliyet; numara şifreli saklanır). Kullanılmayan alanlar (meslek, pazarlama izni, kara liste nedeni) karttan kaldırıldı; eski kara liste kayıtları korunur. Ekranlarda açılan pencereler için genel yapı (data-modal). Migration: pms_profiles.position, department. (M.U)
+
 - Simphony satış kalemleri (Sales Itemizers) otelden alındı: 1 Yiyecek, 2 İçecek, 3 Alkollü içecek, 4 Diğer, 5 Tobacco, 6 Spa, 7 Laundry, 8 Kuaför. Her outlet için departman kodu eşlemesi: yiyecek → FOOD, içecek ve alkollü içecek → BVRG, diğer → outlet'in Other kodu, tobacco 470 (Byblos 720), spa 513, laundry 510, kuaför 640. Test eklendi. (M.U)
 
 - Oda durumu kuralları otel teyidine göre: oda yalnız check-out'ta ve oda değişiminde (eski oda) Dirty olur; girişte ve gece kapanışında kat durumu değişmez (Rezervasyon seçenekleri varsayılanları "No Action"). Oda değişiminde durum değişim saati de yazılır. 1308 = YMT teyit edildi; teyit bekleyen kayıtlar docs/eksikler.md'de ayrı "Teyit edilecekler" bölümünde. (M.U)

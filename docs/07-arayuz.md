@@ -161,7 +161,7 @@ Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidel
 | Housekeeping / Attendants | Kat Hizmetleri | Oda durum panosu, görev dağıtımı, telefon ekranı |
 | Discrepant Rooms | Uyuşmazlıklar | Skip / sleep / kişi sayısı |
 | Night Audit | Gece Kapanışı | Kontrol listesi, adım adım ilerleme, raporlar |
-| Profiles | Profil Navigatörü | Bireysel, şirket, acente, kaynak, grup; birleştirme |
+| Profiles | Profil Navigatörü | Bireysel, şirket, acente, kaynak, grup; birleştirme. Yeni (`Alt+N`): önce *Select Profile Type* penceresi (↑/↓, Enter). Profil kartı tek sayfa: Fidelio'nun Profile ve More Fields sekmelerinden yalnız kullanılan alanlar (soyad, ad, pozisyon, departman, dil, unvan, hitap, mektup hitabı, adres, cep / telefon / e-posta, Active?, doğum tarihi / yeri, cinsiyet, uyruk; No Mailing, No E-Mailing, Save Profile, pazar segmenti, fiyat kodu, VIP, evlilik yıldönümü, kimlik belgeleri). Vendor, Meeting Planner, Booker, Contact tipleri ve kullanılmayan alanlar alınmadı. |
 | Block Reservation | Blok / Allotman | Blok başlığı, gün × tip tablosu, rooming list, release |
 | Conference Diary | Konferans Günlüğü | Salon × saat çizelgesi, sürükle-bırak etkinlik |
 | Logbook | Vardiya Defteri | Departman notları, okundu bilgisi |

@@ -72,6 +72,15 @@ class ProfileController extends Controller
         ]);
     }
 
+    /** Select Profile Type penceresinden: seçilen tipte yeni profil. */
+    public function choose(Request $request): RedirectResponse
+    {
+        $type = (string) $request->query('tur');
+        abort_unless(in_array($type, ProfileService::TYPES, true), 404);
+
+        return redirect()->route('profiles.create', $type);
+    }
+
     public function create(string $type): View
     {
         abort_unless(in_array($type, ProfileService::TYPES, true), 404);
@@ -103,32 +112,48 @@ class ProfileController extends Controller
     private function save(Request $request, string $type, ?Profile $profile): RedirectResponse
     {
         $p = app(Property::class);
-        $raw = trim((string) $request->input('birth_date'));
-        $request->merge(['birth_date' => $raw === '' ? null : (BusinessDateInput::parse($raw, $p->current_business_date->toImmutable())?->toDateString() ?? 'x'),
+        $today = $p->current_business_date->toImmutable();
+        $date = function (string $field) use ($request, $today) {
+            $raw = trim((string) $request->input($field));
+
+            return $raw === '' ? null : (BusinessDateInput::parse($raw, $today)?->toDateString() ?? 'x');
+        };
+        $request->merge(['birth_date' => $date('birth_date'), 'wedding_date' => $date('wedding_date'),
             'commission_pct' => str_replace(',', '.', (string) $request->input('commission_pct')) ?: null]);
         $own = fn (string $table) => Rule::exists($table, 'id')->where('property_id', $p->id);
         $individual = $type === 'individual';
         $data = $request->validate([
             'last_name' => [$individual ? 'required' : 'nullable', 'string', 'max:100'], 'first_name' => ['nullable', 'string', 'max:100'],
             'company_name' => [$individual ? 'nullable' : 'required', 'string', 'max:200'],
-            'title' => ['nullable', 'string', 'max:20'], 'salutation' => ['nullable', 'string', 'max:30'], 'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
-            'birth_date' => ['nullable', 'date', 'before:today'], 'occupation' => ['nullable', 'string', 'max:100'],
+            'position' => ['nullable', 'string', 'max:100'], 'department' => ['nullable', 'string', 'max:100'],
+            'title' => ['nullable', 'string', 'max:20'], 'salutation' => ['nullable', 'string', 'max:30'], 'letter_greeting' => ['nullable', 'string', 'max:60'],
+            'gender' => ['nullable', Rule::in(['male', 'female'])],
+            'birth_date' => ['nullable', 'date', 'before:today'], 'birth_place' => ['nullable', 'string', 'max:100'], 'wedding_date' => ['nullable', 'date'],
             'nationality_code' => ['nullable', Rule::exists('pms_countries', 'code')], 'language_code' => ['nullable', 'string', 'size:2'],
             'vip_level_id' => ['nullable', 'integer', $own('pms_vip_levels')],
             'tax_office' => ['nullable', 'string', 'max:100'], 'tax_number' => ['nullable', 'string', 'max:30'], 'iata_code' => ['nullable', 'string', 'max:20'],
             'commission_pct' => ['nullable', 'numeric', 'between:0,100'],
             'default_market_segment_id' => ['nullable', 'integer', $own('pms_market_segments')], 'default_source_code_id' => ['nullable', 'integer', $own('pms_source_codes')],
             'default_rate_code_id' => ['nullable', 'integer', $own('pms_rate_codes')],
-            'status' => ['required', Rule::in(['active', 'inactive', 'blacklisted'])], 'blacklist_reason' => ['nullable', 'required_if:status,blacklisted', 'string', 'max:500'],
             'phone' => ['nullable', 'string', 'max:40'], 'mobile' => ['nullable', 'string', 'max:40'], 'email' => ['nullable', 'email', 'max:190'],
             'address.line1' => ['nullable', 'string', 'max:200'], 'address.line2' => ['nullable', 'string', 'max:200'], 'address.postal_code' => ['nullable', 'string', 'max:15'],
             'address.city' => ['nullable', 'string', 'max:100'], 'address.state' => ['nullable', 'string', 'max:60'], 'address.country_code' => ['nullable', Rule::exists('pms_countries', 'code')],
+            'documents' => ['nullable', 'array', 'max:10'], 'documents.*.id' => ['nullable', 'integer'],
+            'documents.*.type' => ['nullable', 'required_with:documents.*.number', Rule::in(ProfileService::DOCUMENT_TYPES)],
+            'documents.*.number' => ['nullable', 'string', 'max:40'],
         ], [], [
             'last_name' => __('pms.prof.last_name'), 'company_name' => __('pms.prof.company_name'), 'birth_date' => __('pms.prof.birth_date'), 'email' => __('pms.users.email'),
-            'blacklist_reason' => __('pms.prof.blacklist_reason'),
+            'wedding_date' => __('pms.prof.wedding_date'), 'documents.*.type' => __('pms.prof.doc_type'),
         ]);
-        foreach (['marketing_consent', 'no_mailing', 'no_emailing', 'store_private_data'] as $flag) {
+        foreach (['no_mailing', 'no_emailing', 'store_private_data'] as $flag) {
             $data[$flag] = $request->boolean($flag);
+        }
+        // Active? kutusu; kara listedeki profil aktif kaldıkça kara listede kalır (eski kayıtlar)
+        $data['status'] = $request->boolean('active') ? ($profile?->status === 'blacklisted' ? 'blacklisted' : 'active') : 'inactive';
+        if ($request->boolean('documents_sent')) {   // formda belge tablosu var: listede olmayanlar silinir
+            $data['documents'] = array_values($data['documents'] ?? []);
+        } else {
+            unset($data['documents']);
         }
         $data['type'] = $type;
 
@@ -143,7 +168,7 @@ class ProfileController extends Controller
         $list = fn (string $table, string $order = 'code') => DB::table($table)->where('property_id', $p)->whereNull('deleted_at')->orderBy($order)->get(['id', 'code', 'name']);
 
         return view('profiles.form', [
-            'profile' => $profile, 'address' => $profile->exists ? ($profile->addresses->firstWhere('is_primary', true) ?? $profile->addresses->first()) : null,
+            'profile' => $profile, 'documents' => $profile->exists ? $this->profiles->documents($profile) : [], 'address' => $profile->exists ? ($profile->addresses->firstWhere('is_primary', true) ?? $profile->addresses->first()) : null,
             'comm' => fn (string $type) => $profile->exists ? $profile->communications->where('type', $type)->sortByDesc('is_primary')->first()?->value : null,
             'countries' => DB::table('pms_countries')->orderBy(app()->getLocale() === 'tr' ? 'name_tr' : 'name_en')->get(['code', 'name_en', 'name_tr']),
             'vips' => DB::table('pms_vip_levels')->where('property_id', $p)->orderBy('code')->get(['id', 'code', 'name']),

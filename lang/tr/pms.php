@@ -367,6 +367,11 @@ return [
         'contact' => 'İletişim ve adres', 'address' => 'Adres', 'zip' => 'Posta kodu', 'state' => 'İl / eyalet', 'country' => 'Ülke', 'privacy' => 'Gizlilik ve durum',
         'marketing_consent' => 'Pazarlama izni', 'no_mailing' => 'Posta gönderme', 'no_emailing' => 'E-posta gönderme', 'store_private_data' => 'Kişisel veriyi sakla',
         'statuses' => ['active' => 'Aktif', 'inactive' => 'Pasif', 'blacklisted' => 'Kara liste'], 'blacklist_reason' => 'Kara liste nedeni',
+        'select_type' => 'Profil tipi seçin', 'type' => 'Tip', 'position' => 'Pozisyon', 'department' => 'Departman', 'letter_greeting' => 'Mektup hitabı',
+        'communication' => 'İletişim', 'active' => 'Aktif', 'birthday_place' => 'Doğum tarihi / yeri', 'birth_place' => 'Doğum yeri', 'more_fields' => 'Diğer bilgiler',
+        'vip_code' => 'VIP kodu', 'wedding_date' => 'Evlilik yıldönümü', 'documents' => 'Kimlik belgeleri', 'doc_type' => 'Belge', 'doc_number' => 'Numara',
+        'doc_types' => ['passport' => 'Pasaport', 'id_card' => 'Kimlik kartı', 'kktc_id' => 'KKTC kimlik', 'tc_id' => 'TC kimlik', 'driving_license' => 'Ehliyet'],
+        'created_at' => 'Oluşturma',
         'history' => 'Konaklama geçmişi', 'no_history' => 'Henüz rezervasyon yok.',
     ],
 ];

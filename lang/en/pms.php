@@ -367,6 +367,11 @@ return [
         'contact' => 'Contact and address', 'address' => 'Address', 'zip' => 'ZIP', 'state' => 'State', 'country' => 'Country', 'privacy' => 'Privacy and status',
         'marketing_consent' => 'Marketing consent', 'no_mailing' => 'No mailing', 'no_emailing' => 'No e-mailing', 'store_private_data' => 'Store private data',
         'statuses' => ['active' => 'Active', 'inactive' => 'Inactive', 'blacklisted' => 'Blacklisted'], 'blacklist_reason' => 'Blacklist reason',
+        'select_type' => 'Select Profile Type', 'type' => 'Type', 'position' => 'Position', 'department' => 'Department', 'letter_greeting' => 'Letter greeting',
+        'communication' => 'Communication', 'active' => 'Active?', 'birthday_place' => 'Birthday / Place', 'birth_place' => 'Place of birth', 'more_fields' => 'More Fields',
+        'vip_code' => 'VIP Code', 'wedding_date' => 'Wedding day', 'documents' => 'Personal Documents', 'doc_type' => 'Type', 'doc_number' => 'Number',
+        'doc_types' => ['passport' => 'Passport', 'id_card' => 'ID card', 'kktc_id' => 'TRNC ID card', 'tc_id' => 'Turkish ID card', 'driving_license' => 'Driving licence'],
+        'created_at' => 'Created',
         'history' => 'Stay history', 'no_history' => 'No reservations yet.',
     ],
 ];
