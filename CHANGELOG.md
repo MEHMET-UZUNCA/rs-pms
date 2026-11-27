@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Web sitesinden rezervasyon (Web API v1.1): POST /api/v1/reservations (fiyat PMS'te hesaplanır, müsaitlik ve fiyat kodu kuralları denetlenir, external_reference ile tekrar denemede aynı rezervasyon döner, aynı e-postalı profil yeniden kullanılır), GET /api/v1/reservations/{onay no}?last_name= (durum), POST …/cancel (giriş gününden önce iptal). Kodlar Ayarlar → Rezervasyon seçenekleri → Web sitesi rezervasyonları (rezervasyon tipi, pazar, kaynak, kesin / opsiyon); boşken kapalı (503). Navigatörde "Web (7 gün)" görünümü. docs/11-web-api.md §11.5. (M.U)
+
 - Misafir istekleri ve şikâyetler (Front Desk → Guest Requests; Elektraweb görev yönetimi): oda numarasıyla kayıt (odadaki içerideki misafir ve rezervasyon kendiliğinden bağlanır) ya da serbest (lobi vb.); tür (istek / şikâyet), sorumlu departman (ön büro, kat hizmetleri, teknik servis, yiyecek içecek, concierge, spa, misafir ilişkileri, güvenlik), öncelik, son gün ve saat. Sekmeler: Açık, Gecikmiş, Benim açtıklarım, Kapanan (7 gün), Hepsi; departman süzgeci. Alt panelde işlem: Başla, Tamamlandı, İptal, Yeniden aç (notla), not ekle; bütün geçmiş kullanıcı ve saatle. Son saati geçen açık işler kırmızı, üst çubukta "n geciken istek" uyarısı. Yeni yetki front_office.requests. Fidelio Messages / Locator değildir. Migration: pms_traces alanları, pms_trace_logs. (M.U)
 
 - Oda planı: hızlı kayıt (Elektraweb Oda Planı) — içerideki misafirin çubuk menüsünde "Hızlı kayıt" (P): departman kodu, tutar, adet, açıklama; folyoya gitmeden 1. pencereye yazılır (vergi, vardiya, yetki kuralları folyodaki gibi). Oda tipine göre gruplama (Alt+T): odalar tip sırasıyla, her tipin başında ad ve oda sayısı. (M.U)

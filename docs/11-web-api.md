@@ -121,14 +121,65 @@ Anahtar yoksa ya da kapatılmışsa cevap `401 {"error": "unauthorized"}`.
 | 422 | Parametre hatalı (tarih, kişi sayısı, 30 geceden uzun, geçmiş tarih) | `{"message": "...", "errors": {...}}` ya da `{"error": "validation", "message": "..."}` |
 | 429 | Hız sınırı aşıldı | Laravel standart cevabı |
 
-## 11.5 Sırada (v1.1)
+## 11.5 Rezervasyon (v1.1)
+
+Ön koşul: **Ayarlar → Rezervasyon seçenekleri → Web sitesi rezervasyonları**'nda rezervasyon tipi, pazar ve kaynak kodu seçilir
+(ör. GTD / IND / DIR ya da otelin web kodları). Seçili değilse uçlar `503 {"error": "not_configured"}` döner.
+Yeni web rezervasyonunun durumu aynı ekrandan: kesin (`confirmed`) ya da opsiyon (`tentative`). Ön büro web'den gelenleri
+**Navigatör → Web (7 gün)** görünümünde görür.
+
+### POST /api/v1/reservations
+
+```json
+{
+  "external_reference": "W-1001",
+  "arrival": "2027-03-10", "departure": "2027-03-13",
+  "adults": 2, "children": [9],
+  "room_type": "YMF", "rate_code": "27IND",
+  "guest": { "last_name": "Weber", "first_name": "Anna", "email": "anna@example.com", "phone": "+49 151 000 000", "nationality": "DE", "language": "de" },
+  "eta": "18:30", "comments": "Sea view if possible"
+}
+```
+
+Cevap `201`:
+
+```json
+{ "data": { "confirmation_number": "000123", "status": "confirmed", "external_reference": "W-1001", "arrival": "2027-03-10", "departure": "2027-03-13",
+  "nights": 3, "room_type": "YMF", "rate_code": "27IND", "adults": 2, "children": 1, "currency": "EUR", "total": 1920.00, "guest": "Weber, Anna",
+  "cancellation_number": null } }
+```
+
+- **Fiyat PMS'te hesaplanır**; web'in tutarı gönderilmez / kullanılmaz. `total` PMS'in kesin tutarıdır, web sitesi bunu gösterir.
+- `external_reference` web sitesinin kendi rezervasyon numarasıdır; aynı numarayla tekrar gelirse yeni rezervasyon açılmaz, aynısı `200`
+  ve `"duplicate": true` ile döner (bağlantı koparsa web sitesi güvenle yeniden dener).
+- Aynı e-postayla kayıtlı bireysel profil varsa o kullanılır, yoksa yeni profil açılır.
+- Kurallar: oda tipi online satılabilir, fiyat kodu "Online / Web" işaretli ve aktif, kişi sayısı oda kapasitesi içinde, geçmiş tarih ve 30 geceden uzun olamaz,
+  oda tipinde müsait oda olmalı, her gece fiyatı bulunmalı.
+
+### GET /api/v1/reservations/{onay no}?last_name=Weber
+
+Rezervasyonun güncel durumu (aynı biçim). Soyad eşleşmezse ya da rezervasyon web'den gelmemişse `404`.
+
+### POST /api/v1/reservations/{onay no}/cancel
+
+Gövde: `{"last_name": "Weber"}`. Giriş gününden önce iptal edilir (iptal nedeni "Misafir iptal etti", iptal numarası verilir).
+Giriş günü ve sonrasında `409 {"error": "too_late"}` — otel iptal eder.
+
+### Hatalar (rezervasyon)
+
+| Kod | Ne zaman |
+|---|---|
+| 409 `not_available` | Oda tipi o tarihlerde dolu |
+| 409 `no_rate` | Gecelerden birinde fiyat yok |
+| 409 `too_late` | İptal giriş günü ya da sonrasında |
+| 422 | Alan hatası, bilinmeyen oda tipi / fiyat kodu, geçmiş tarih, kapasite |
+| 503 `not_configured` | Web rezervasyon kodları ayarlanmamış |
+
+Hız sınırı: rezervasyon açma ve iptal için dakikada 30 istek.
+
+## 11.6 Sırada
 
 | Uç | Ne yapacak | Not |
 |---|---|---|
-| `POST /api/v1/reservations` | Web'den rezervasyon: misafir bilgisi, oda tipi, fiyat kodu, tarihler; PMS onay numarası döner | Ödeme (sanal POS) bilgisi otelin kararına göre; fiyat PMS'te yeniden hesaplanır, web'in gönderdiği tutara güvenilmez |
-| `GET /api/v1/reservations/{onay no}` | Rezervasyon durumu | Misafirin soyadıyla birlikte sorgulanır |
-| `POST /api/v1/reservations/{onay no}/cancel` | İptal | İptal kuralları fiyat koduna göre |
 | `GET /api/v1/calendar` | Ay takvimi: gün gün en düşük fiyat ve müsaitlik | Web sitesinin takvim görünümü için |
-
-Web rezervasyonları PMS'te **kaynak kodu** (ör. `WEB`) ve **pazar kodu** ile işaretlenir; Fidelio'daki "Acceptable Reservations"
-gibi onay bekleyen listeye düşmesi isteniyorsa ayar olarak eklenir.
+| Ödeme | Sanal POS ön provizyon / ödeme bilgisi | Otelin kararına göre; kart bilgisi PMS'e gelmez, yalnız ödeme sağlayıcısının işlem numarası |

@@ -82,4 +82,49 @@ class WebApiTest extends DomainTestCase
         $this->assertEqualsWithDelta(1240 * 55.3967, $rate['total_base_currency'], 0.05);
         $this->assertSame('TRY', $rate['base_currency']);
     }
+
+    public function test_web_reservation_create_idempotent_status_and_cancel(): void
+    {
+        $post = fn (array $body) => $this->withHeader('Authorization', 'Bearer '.$this->token)->postJson('/api/v1/reservations', $body);
+        $body = ['external_reference' => 'W-1001', 'arrival' => '2027-03-10', 'departure' => '2027-03-13', 'adults' => 2, 'room_type' => 'YMF', 'rate_code' => '27IND',
+            'guest' => ['last_name' => 'Weber', 'first_name' => 'Anna', 'email' => 'Anna@Example.com', 'phone' => '+49 151 000 000', 'nationality' => 'DE'], 'comments' => 'Sea view if possible', 'eta' => '18:30'];
+
+        // Ayar yokken kapalı
+        $post($body)->assertStatus(503);
+        \App\Domain\Reservations\Support\ReservationOptions::save($this->property, ['web_reservation_type' => 'GTD', 'web_market' => 'IND', 'web_source' => 'DIR'], null);
+
+        $res = $post($body)->assertCreated()->json('data');
+        $this->assertSame(['confirmed', 'YMF', '27IND', 3, 'W-1001', 'Weber, Anna'], [$res['status'], $res['room_type'], $res['rate_code'], $res['nights'], $res['external_reference'], $res['guest']]);
+        $this->assertEqualsWithDelta(3 * 640, $res['total'], 0.01);   // fiyat PMS'te hesaplanır
+        $r = \App\Domain\Reservations\Models\Reservation::where('confirmation_number', $res['confirmation_number'])->firstOrFail();
+        $this->assertSame(['WEB:W-1001', 'Sea view if possible', '18:30'], [$r->external_reference, $r->guest_comments, substr((string) $r->eta, 0, 5)]);
+        $this->assertSame('anna@example.com', DB::table('pms_profile_communications')->where('profile_id', $r->profile_id)->where('type', 'email')->value('value_normalized'));
+
+        // Aynı referans: aynı rezervasyon (tekrar oluşmaz); aynı e-posta: aynı profil
+        $again = $post($body)->assertOk()->json();
+        $this->assertTrue($again['duplicate']);
+        $this->assertSame($res['confirmation_number'], $again['data']['confirmation_number']);
+        $second = $post(array_merge($body, ['external_reference' => 'W-1002', 'arrival' => '2027-04-01', 'departure' => '2027-04-03']))->assertCreated()->json('data');
+        $this->assertSame((int) $r->profile_id, (int) \App\Domain\Reservations\Models\Reservation::where('confirmation_number', $second['confirmation_number'])->value('profile_id'));
+
+        // Kurallar
+        $post(array_merge($body, ['external_reference' => 'X1', 'room_type' => 'ESU']))->assertStatus(409);   // fiyatı yok
+        $post(array_merge($body, ['external_reference' => 'X2', 'rate_code' => 'TA-HB']))->assertStatus(422);   // online değil
+        $post(array_merge($body, ['external_reference' => 'X3', 'arrival' => '2026-11-01', 'departure' => '2026-11-03']))->assertStatus(422);
+        $post(['external_reference' => 'X4'])->assertStatus(422);
+
+        // Durum ve iptal (soyadla)
+        $get = fn (string $no, string $last) => $this->withHeader('Authorization', 'Bearer '.$this->token)->getJson("/api/v1/reservations/{$no}?last_name={$last}");
+        $get($res['confirmation_number'], 'weber')->assertOk()->assertJsonPath('data.status', 'confirmed');
+        $get($res['confirmation_number'], 'other')->assertNotFound();
+        $this->withHeader('Authorization', 'Bearer '.$this->token)->postJson("/api/v1/reservations/{$res['confirmation_number']}/cancel", ['last_name' => 'Weber'])
+            ->assertOk()->assertJsonPath('data.status', 'cancelled');
+        $this->assertNotNull($r->fresh()->cancellation_number);
+
+        // Ön büroda Web görünümü
+        $user = \App\Models\User::create(['username' => 'ON', 'name' => 'Ön', 'email' => 'on@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
+        DB::table('pms_user_properties')->insert(['user_id' => $user->id, 'property_id' => $this->property, 'role_id' => DB::table('pms_roles')->where('code', 'FOA')->value('id')]);
+        $this->withoutVite();
+        $this->actingAs($user)->get('/rezervasyon?f=web')->assertOk()->assertSee('Weber, Anna');
+    }
 }

@@ -22,7 +22,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 10 | Cari hesap, kasa takibi, çek/senet vade | Kasiyer vardiyası ve kasa kapanışı (sayılan / fark, rapor); PM hesapları | Var | Cari ve çek/senet Logo'da kalır |
 | 11 | E-Fatura / E-Arşiv | — | Gerek yok | KKTC'de GİB e-fatura yok; fatura Logo'dan |
 | 12 | Kat hizmetleri: temizlik durumu, minibar, arıza bildirimi | Housekeeping, OOO/OOS, House Status, Lost & Found; minibar Simphony RVC 5 | Var | Kat görevlisine oda dağıtımı (Attendants) otel kullanmıyor |
-| 13 | Online rezervasyon motoru, kanal yönetimi; gelen rezervasyon ön büroda | Web API v1 (fiyat, müsaitlik); web sitesi ayrı proje | Kısmen | Web'den **rezervasyon yazma** API'si ve ön büroda "yeni web rezervasyonları" listesi; kanal yöneticisi tabloları hazır, bağlantı sonra |
+| 13 | Online rezervasyon motoru, kanal yönetimi; gelen rezervasyon ön büroda | Web API: müsaitlik, fiyat, rezervasyon açma / durum / iptal; ön büroda "Web (7 gün)" görünümü | Var | Rezervasyon motoru web projesinde; kanal yöneticisi bağlantısı sonra |
 | 14 | Görev yönetimi: misafir istek / şikâyeti görev olur, süre aşımında yöneticiye bildirim | Misafir istekleri: departman, son saat, öncelik, durum ve geçmiş; geciken işler üst çubukta | Var | |
 | 15 | Kimlik / pasaport okuma (web kamerası) | Profilde kimlik belgeleri (şifreli); PROISV görünümleri (polis bildirimi) | Kısmen | Kimlik okuyucu donanımı seçilince bağlanır |
 | 16 | Online check-in | — | Yok | Web projesiyle birlikte (misafir bilgileri ve belge önceden) |

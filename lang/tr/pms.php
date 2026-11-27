@@ -108,7 +108,7 @@ return [
         'room_charges_open' => 'Oda hesabı açık', 'room_charges_closed' => 'Oda hesabı kapalı', 'none' => '—', 'no_folio' => 'yok',
         'fa_number' => 'Hesap no', 'validity' => 'Geçerlilik', 'open' => 'Açık', 'closed' => 'Kapalı', 'last_postings' => 'Son kayıtlar',
         'business_date_title' => 'İş günü :date',
-        'filters' => ['bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
+        'filters' => ['web' => 'Web (7 gün)', 'bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
             'ileri' => 'İleri tarihli', 'fa' => 'İçerideki FA', 'fa-acilacak' => 'Bugün açılacak FA', 'fa-kapanacak' => 'Bugün kapanacak FA',
             'fa-kapali' => 'Kapanmış FA', 'fa-ileri' => 'İleri tarihli FA'],
         'statuses' => ['confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'waitlist' => 'Bekleme listesi', 'in_house' => 'İçeride',
@@ -255,6 +255,7 @@ return [
     ],
 
     'options' => [
+        'web_title' => 'Web sitesi rezervasyonları', 'web_hint' => 'Otelin web sitesinden (Web API) gelen rezervasyonlara verilen kodlar. Bunlar boşken web rezervasyonu kapalıdır.', 'web_reservation_type' => 'Rezervasyon tipi', 'web_market' => 'Pazar segmenti', 'web_source' => 'Kaynak kodu', 'web_status' => 'Yeni web rezervasyonunun durumu',
         'dirty_room_check_in' => 'Kirli odaya giriş', 'dirty' => ['allow' => 'İzin ver', 'warn' => 'Uyararak izin ver', 'block' => 'İzin verme'],
         'title' => 'Rezervasyon seçenekleri', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Rezervasyon seçenekleri kaydedildi.',
         'check_in_time' => 'Varsayılan giriş saati', 'check_out_time' => 'Varsayılan çıkış saati', 'day_use_check_in_time' => 'Günübirlik giriş saati',

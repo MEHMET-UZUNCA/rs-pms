@@ -27,6 +27,17 @@
                     @foreach (\App\Domain\Reservations\Support\ReservationOptions::DIRTY_CHECK_IN as $o)<option value="{{ $o }}" @selected($v('dirty_room_check_in') === $o)>{{ __('pms.options.dirty.'.$o) }}</option>@endforeach
                 </select>
             </section>
+            <section class="win !min-h-fit p-3 grid grid-cols-[minmax(0,1fr)_14rem] items-center gap-x-3 gap-y-2 content-start">
+                <b class="col-span-2">{{ __('pms.options.web_title') }}</b>
+                <p class="col-span-2 text-[12.5px] text-muted">{{ __('pms.options.web_hint') }}</p>
+                @foreach (['web_reservation_type' => $resTypes, 'web_market' => $markets, 'web_source' => $sources] as $key => $list)
+                    <label class="field-label !mb-0" for="{{ $key }}">{{ __('pms.options.'.$key) }}</label>
+                    <select id="{{ $key }}" name="{{ $key }}" class="input"><option value="">—</option>
+                        @foreach ($list as $c)<option value="{{ $c->code }}" @selected($v($key) === $c->code)>{{ $c->code }} {{ $c->name }}</option>@endforeach</select>
+                @endforeach
+                <label class="field-label !mb-0" for="web_status">{{ __('pms.options.web_status') }}</label>
+                <select id="web_status" name="web_status" class="input">@foreach (['confirmed', 'tentative'] as $st)<option value="{{ $st }}" @selected($v('web_status') === $st)>{{ __('pms.res.statuses.'.$st) }}</option>@endforeach</select>
+            </section>
             <section class="win !min-h-fit p-3 flex flex-col gap-2">
                 @foreach (['queue_rooms', 'meal_plan'] as $flag)
                     <label class="flex items-center gap-2"><input type="hidden" name="{{ $flag }}" value="0"><input type="checkbox" name="{{ $flag }}" value="1" @checked($v($flag))> {{ __('pms.options.'.$flag) }}</label>

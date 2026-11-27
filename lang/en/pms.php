@@ -108,7 +108,7 @@ return [
         'room_charges_open' => 'Room charges allowed', 'room_charges_closed' => 'Room charges blocked', 'none' => '—', 'no_folio' => 'none',
         'fa_number' => 'Account No.', 'validity' => 'Validity', 'open' => 'Open', 'closed' => 'Closed', 'last_postings' => 'Last postings',
         'business_date_title' => 'Business Date :date',
-        'filters' => ['bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
+        'filters' => ['web' => 'Web (7 days)', 'bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
             'fa' => 'FA In House', 'fa-acilacak' => 'FA Arrivals', 'fa-kapanacak' => 'FA Departures', 'fa-kapali' => 'FA Checked Out', 'fa-ileri' => 'FA Future'],
         'statuses' => ['confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
             'checked_out' => 'Checked Out', 'cancelled' => 'Cancelled', 'no_show' => 'No Show'],
@@ -255,6 +255,7 @@ return [
     ],
 
     'options' => [
+        'web_title' => 'Web site reservations', 'web_hint' => 'Codes given to reservations made on the hotel web site (Web API). Web reservations are closed while these are empty.', 'web_reservation_type' => 'Reservation type', 'web_market' => 'Market segment', 'web_source' => 'Source code', 'web_status' => 'Status of new web reservations',
         'dirty_room_check_in' => 'Check in to a dirty room', 'dirty' => ['allow' => 'Allow', 'warn' => 'Allow with warning', 'block' => 'Do not allow'],
         'title' => 'Reservation Options', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Reservation options saved.',
         'check_in_time' => 'Default Check In Time', 'check_out_time' => 'Default Check Out Time', 'day_use_check_in_time' => 'Day use Default Check In Time',

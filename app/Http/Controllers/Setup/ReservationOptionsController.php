@@ -15,7 +15,11 @@ class ReservationOptionsController extends Controller
 {
     public function edit(): View
     {
-        return view('setup.options.reservation', ['options' => ReservationOptions::get(app(Property::class)->id)]);
+        $p = app(Property::class)->id;
+        $codes = fn (string $table) => \Illuminate\Support\Facades\DB::table($table)->where('property_id', $p)->whereNull('deleted_at')->orderBy('code')->get(['code', 'name']);
+
+        return view('setup.options.reservation', ['options' => ReservationOptions::get($p),
+            'resTypes' => $codes('pms_reservation_types'), 'markets' => $codes('pms_market_segments'), 'sources' => $codes('pms_source_codes')]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -26,7 +30,10 @@ class ReservationOptionsController extends Controller
             'check_in_time' => $time, 'check_out_time' => $time, 'day_use_check_in_time' => $time, 'day_use_check_out_time' => $time,
             'status_after_check_in' => $status, 'status_after_check_out' => $status, 'status_after_audit_occupied' => $status, 'status_after_no_show' => $status,
             'dirty_room_check_in' => ['required', Rule::in(ReservationOptions::DIRTY_CHECK_IN)],
+            'web_reservation_type' => ['nullable', 'string', 'max:10'], 'web_market' => ['nullable', 'string', 'max:10'], 'web_source' => ['nullable', 'string', 'max:10'],
+            'web_status' => ['nullable', Rule::in(['confirmed', 'tentative'])],
         ]);
+        $data['web_status'] ??= 'confirmed';
         foreach (['queue_rooms', 'meal_plan'] as $flag) {
             $data[$flag] = $request->boolean($flag);
         }
