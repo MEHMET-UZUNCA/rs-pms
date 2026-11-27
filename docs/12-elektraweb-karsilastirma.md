@@ -16,7 +16,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 4 | Oda blokaj / oda planı: sürükle-bırak ile oda ve tarih değişimi, sürükleyerek rezervasyon açma | Room Rack: sürükle-bırak ile oda / tarih değişimi, kenardan uzatma, boş hücrelerden yeni rezervasyon | Var | |
 | 5 | Oda planından çıkmadan tahsilat, folyo, check-out | Oda planında çubuk menüsü: kart, folyo / ödeme, giriş, çıkış | Var | |
 | 6 | Oda durumları temizlik ve doluluğa göre renkli | Housekeeping ve Room Rack renkli | Var | |
-| 7 | Profil eşleştirme, mükerrer profil bulma ve birleştirme | Profil arama; tabloda merged_into_id hazır | Kısmen | **Profil birleştirme** (Fidelio Merge): aynı ad / doğum tarihi / belge no / e-posta ile aday listesi, rezervasyon ve geçmiş tek profile taşınır |
+| 7 | Profil eşleştirme, mükerrer profil bulma ve birleştirme | Profil birleştirme (aday bulma: ad, doğum tarihi, iletişim, belge; bütün bağlantılar taşınır) | Var | |
 | 8 | Folyo: ödeme, posting, faturalama aynı ekranda | Billing: kayıt, ödeme, düzeltme, aktarma, 8 pencere, check-out; folyo yazdırma, fatura kesme ve yazdırma | Var | Faturanın Logo'ya aktarımı Logo entegrasyonuyla |
 | 9 | Birden fazla para biriminde işlem | Dövizli ödeme (nakitte Cash Rate, diğerinde Posting Rate), döviz tutarı ve kur kayıtta | Var | |
 | 10 | Cari hesap, kasa takibi, çek/senet vade | Kasiyer vardiyası ve kasa kapanışı (sayılan / fark, rapor); PM hesapları | Var | Cari ve çek/senet Logo'da kalır |
@@ -27,10 +27,10 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 15 | Kimlik / pasaport okuma (web kamerası) | Profilde kimlik belgeleri (şifreli); PROISV görünümleri (polis bildirimi) | Kısmen | Kimlik okuyucu donanımı seçilince bağlanır |
 | 16 | Online check-in | — | Yok | Web projesiyle birlikte (misafir bilgileri ve belge önceden) |
 | 17 | Mobil uygulama (oda durumu, görev, arıza sahadan) | Ekranlar telefonda çalışır (duyarlı) | Kısmen | Kat hizmetleri için telefona uygun sade ekran |
-| 18 | Oda değişimi: boş oda listesi + **değişim nedeni**, Oda Değişim Listesi | Oda değişimi var (eski oda Dirty), Room History'de görünür | Kısmen | **Değişim nedeni** kodları ve günlük **Oda değişim listesi** |
+| 18 | Oda değişimi: boş oda listesi + değişim nedeni, Oda Değişim Listesi | Oda değişim nedeni (kart), Room Moves listesi (neden sonradan da girilir) | Var | |
 | 19 | Grup rezervasyonu, çoklu seçimle toplu check-in, grup folyo yönlendirme | Bloklar ve Gruplar ekranı: kota, isim listesiyle rezervasyon, otomatik oda atama, toplu giriş, ana hesaba yönlendirme | Var | **Grup / blok rezervasyon**: bir grup altında çok oda, toplu oda atama, toplu check-in / check-out, ana folyoya yönlendirme (routing) |
 | 20 | Geç çıkış (Late C/Out) saati | ETA / ETD kartta, Late C/O işareti kartta ve navigatörde | Var | Ücret kasadan kayıtla ya da Fixed Charge ile |
-| 21 | Kirli odaya check-in yapılamaz (parametre) | Dolu odaya giriş engelli; kirli odaya izin var | Kısmen | Rezervasyon seçeneklerine "Kirli odaya giriş: izin ver / uyar / engelle" |
+| 21 | Kirli odaya check-in yapılamaz (parametre) | Rezervasyon seçenekleri: kirli odaya giriş izin ver / uyar / engelle | Var | |
 | 22 | Rezervasyon kartı sekmeleri (Misafirler, Fiyatlandır, Folyo, Diğer) | Kart: Rezervasyon, Profiller, Fiyatlar, Notlar, Meal Plan; Folyo Alt+B | Kısmen | Fixed Charges yapıldı (gece kapanışında otomatik). Boş sekmeler: Inventory, Packages, Features, Credit Card |
 
 ## Önerilen sıra
@@ -40,6 +40,6 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 3. ~~Grup / blok rezervasyon ve routing (#19)~~ — yapıldı. Sonra: toplu çıkış, kotanın gece gece düzenlenmesi, opsiyon tarihinde otomatik bırakma (release).
 4. ~~Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3)~~ — yapıldı.
 5. ~~Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10)~~ — yapıldı.
-6. Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21).
+6. ~~Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21)~~ — yapıldı.
 7. Misafir istekleri / şikâyetler (#14).
 8. Web rezervasyon yazma API'si, online check-in, kimlik okuyucu (#13, #15, #16) — web projesi ve donanımla birlikte.

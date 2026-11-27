@@ -122,6 +122,8 @@ Route::middleware(['auth', 'property'])->group(function () {
             Route::post('/yeni/{type}', [ProfileController::class, 'store'])->name('store');
             Route::get('/{profile}/duzenle', [ProfileController::class, 'edit'])->whereNumber('profile')->name('edit');
             Route::put('/{profile}', [ProfileController::class, 'update'])->whereNumber('profile')->name('update');
+            Route::get('/{profile}/birlestir', [ProfileController::class, 'mergeForm'])->whereNumber('profile')->name('merge-form');
+            Route::post('/{profile}/birlestir', [ProfileController::class, 'merge'])->whereNumber('profile')->name('merge');
         });
     });
 

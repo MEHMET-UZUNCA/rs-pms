@@ -30,7 +30,7 @@
                     <tbody>
                     @foreach ($rows as $pr)
                         @php $addr = $pr->addresses->first(); $c = fn ($t) => $pr->communications->where('type', $t)->sortByDesc('is_primary')->first()?->value; $st = $stays[$pr->id] ?? null; @endphp
-                        <tr data-id="{{ $pr->id }}" data-url-detail="{{ route('profiles.summary', $pr) }}" @if ($canEdit) data-url-edit="{{ route('profiles.edit', $pr) }}" @endif @class(['is-inactive' => $pr->status === 'inactive'])>
+                        <tr data-id="{{ $pr->id }}" data-url-detail="{{ route('profiles.summary', $pr) }}" @if ($canEdit) data-url-edit="{{ route('profiles.edit', $pr) }}" data-url-merge="{{ route('profiles.merge-form', $pr) }}" @endif @class(['is-inactive' => $pr->status === 'inactive'])>
                             <td class="font-semibold">{{ $pr->display_name }}@if ($pr->title) <span class="font-normal text-muted">{{ $pr->title }}</span>@endif</td>
                             @if ($type === 'individual')<td>{{ $pr->nationality_code }}</td><td>{{ strtoupper((string) $pr->language_code) }}</td>@else<td>{{ $pr->tax_number }}</td><td>{{ $pr->iata_code }}</td>@endif
                             <td>{{ $addr?->city }}</td><td>{{ $c('mobile') ?? $c('phone') }}</td><td>{{ $c('email') }}</td>
@@ -48,6 +48,7 @@
             @if ($canEdit)
                 <button type="button" class="btn btn-side" data-modal-open="profile-type-dialog" data-hotkey="alt+n insert">{{ __('pms.common.new') }} <span class="kbd ml-auto">Alt+N</span></button>
                 <a class="btn btn-side" data-needs-selection="profile-grid" data-action="edit" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Enter</span></a>
+                <a class="btn btn-side" data-needs-selection="profile-grid" data-action="merge" data-hotkey="alt+m">{{ __('pms.merge.button') }} <span class="kbd ml-auto">Alt+M</span></a>
             @endif
             <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>

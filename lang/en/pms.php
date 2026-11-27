@@ -449,4 +449,12 @@ Müller, Anna
         'title' => 'Room Moves', 'reason' => 'Room change reason', 'reason_hint' => 'Used when the room of an in-house guest changes', 'from_room' => 'From room', 'to_room' => 'To room',
         'user' => 'User', 'none' => 'No room moves in this period.', 'saved' => 'Reason saved.', 'type_changed' => 'type changed',
     ],
+    'merge' => [
+        'title' => 'Merge Profiles', 'button' => 'Merge', 'search' => 'Find another profile by name', 'candidates' => 'Possible duplicates',
+        'hint' => 'Reservations, folios, invoices and history of the merged profile move to the kept profile; missing contact details, addresses and documents are added, empty fields are filled. The merged profile is hidden and points to the kept one.',
+        'match' => 'Match', 'reasons' => ['name' => 'same name', 'birth_date' => 'last name + birth date', 'contact' => 'same phone / e-mail', 'document' => 'same ID document', 'search' => 'search'],
+        'into_this' => 'Keep this profile', 'into_other' => 'Keep the other', 'none' => 'No possible duplicates found. Search by name.',
+        'confirm' => 'Merge ":drop" into ":keep"? This cannot be undone.', 'done' => ':drop was merged into :keep.',
+        'same' => 'A profile cannot be merged with itself.', 'type' => 'Only profiles of the same type can be merged.', 'already' => 'One of the profiles is already merged.',
+    ],
 ];

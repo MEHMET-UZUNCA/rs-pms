@@ -132,4 +132,37 @@ class ProfileScreenTest extends DomainTestCase
         $this->actingAs($acc)->get('/profiller/yeni/individual')->assertForbidden();
         $this->actingAs($this->makeUser('HKS'))->get('/profiller')->assertForbidden();
     }
+
+    public function test_merge_duplicate_profiles(): void
+    {
+        $yilmaz = Profile::where('last_name', 'Yılmaz')->firstOrFail();   // içeride, rezervasyonu var
+        $this->actingAs($this->user)->post('/profiller/yeni/individual', ['last_name' => 'Yılmaz', 'first_name' => 'Ahmet', 'active' => '1', 'email' => 'ahmet@example.com',
+            'birth_date' => '01.02.1975', 'language_code' => 'en', 'documents_sent' => '1', 'documents' => [['type' => 'passport', 'number' => 'P123']]])->assertSessionHasNoErrors();
+        $dup = Profile::where('last_name', 'Yılmaz')->where('id', '!=', $yilmaz->id)->firstOrFail();
+        $folio = DB::table('pms_folios')->whereNotNull('reservation_id')->value('id');
+        DB::table('pms_folios')->where('id', $folio)->update(['payee_profile_id' => $dup->id]);
+
+        $html = $this->actingAs($this->user)->get("/profiller/{$yilmaz->id}/birlestir")->assertOk()->getContent();
+        $this->assertStringContainsString('Possible duplicates', $html);
+        $this->assertStringContainsString('#'.$dup->id, $html);
+        $this->assertStringContainsString('same name', $html);
+
+        $resCount = DB::table('pms_reservations')->where('profile_id', $yilmaz->id)->count();
+        $this->actingAs($this->user)->post("/profiller/{$yilmaz->id}/birlestir", ['other_id' => $dup->id, 'keep' => 'this'])->assertRedirect()->assertSessionHas('status');
+
+        $dup->refresh();
+        $yilmaz->refresh();
+        $this->assertSame([(int) $yilmaz->id, 'merged'], [(int) $dup->merged_into_id, $dup->status]);
+        $this->assertSame('1975-02-01', $yilmaz->birth_date->toDateString());   // boş alan dolduruldu
+        $this->assertSame($yilmaz->id, (int) DB::table('pms_profile_communications')->where('value', 'ahmet@example.com')->value('profile_id'));
+        $this->assertSame($yilmaz->id, (int) DB::table('pms_profile_identities')->where('document_type', 'passport')->value('profile_id'));
+        $this->assertSame($yilmaz->id, (int) DB::table('pms_folios')->where('id', $folio)->value('payee_profile_id'));
+        $this->assertSame($resCount, DB::table('pms_reservations')->where('profile_id', $yilmaz->id)->count());
+        $this->actingAs($this->user)->get('/profiller?ad=Yılmaz')->assertDontSee('#'.$dup->id);
+
+        // Tekrar ya da farklı tip birleştirilemez
+        $this->actingAs($this->user)->post("/profiller/{$yilmaz->id}/birlestir", ['other_id' => $dup->id, 'keep' => 'this'])->assertSessionHas('error');
+        $company = Profile::where('type', 'company')->firstOrFail();
+        $this->actingAs($this->user)->post("/profiller/{$yilmaz->id}/birlestir", ['other_id' => $company->id, 'keep' => 'this'])->assertSessionHas('error');
+    }
 }

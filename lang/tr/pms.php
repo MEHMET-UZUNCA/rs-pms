@@ -449,4 +449,12 @@ Kaya, Ayşe
         'title' => 'Oda Değişimleri', 'reason' => 'Oda değişim nedeni', 'reason_hint' => 'İçerideki misafirin odası değişirken kullanılır', 'from_room' => 'Eski oda', 'to_room' => 'Yeni oda',
         'user' => 'Kullanıcı', 'none' => 'Bu dönemde oda değişimi yok.', 'saved' => 'Neden kaydedildi.', 'type_changed' => 'tip değişti',
     ],
+    'merge' => [
+        'title' => 'Profil Birleştir', 'button' => 'Birleştir', 'search' => 'Başka bir profili adla bul', 'candidates' => 'Olası mükerrer profiller',
+        'hint' => 'Birleşen profilin rezervasyonları, folyoları, faturaları ve geçmişi kalan profile taşınır; eksik iletişim, adres ve belgeler eklenir, boş alanlar doldurulur. Birleşen profil gizlenir ve kalan profili gösterir.',
+        'match' => 'Eşleşme', 'reasons' => ['name' => 'aynı ad', 'birth_date' => 'soyad + doğum tarihi', 'contact' => 'aynı telefon / e-posta', 'document' => 'aynı kimlik belgesi', 'search' => 'arama'],
+        'into_this' => 'Bu profil kalsın', 'into_other' => 'Diğeri kalsın', 'none' => 'Olası mükerrer profil bulunamadı. Adla arayın.',
+        'confirm' => '":drop" profili ":keep" profiline birleştirilsin mi? Geri alınamaz.', 'done' => ':drop profili :keep profiline birleştirildi.',
+        'same' => 'Profil kendisiyle birleştirilemez.', 'type' => 'Yalnız aynı tipteki profiller birleştirilir.', 'already' => 'Profillerden biri zaten birleştirilmiş.',
+    ],
 ];

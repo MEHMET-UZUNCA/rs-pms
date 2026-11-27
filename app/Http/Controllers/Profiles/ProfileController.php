@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Profiles;
 
 use App\Domain\Core\Models\Property;
 use App\Domain\Profiles\Models\Profile;
+use App\Domain\Profiles\Services\ProfileMergeService;
 use App\Domain\Profiles\Services\ProfileService;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
@@ -178,6 +179,37 @@ class ProfileController extends Controller
             'vips' => DB::table('pms_vip_levels')->where('property_id', $p)->orderBy('code')->get(['id', 'code', 'name']),
             'segments' => $list('pms_market_segments', 'sort'), 'sources' => $list('pms_source_codes', 'sort'), 'rates' => $list('pms_rate_codes'),
         ]);
+    }
+
+    /** Birleştir (Fidelio Merge): aday profiller (aynı ad, doğum tarihi, iletişim, belge) ya da adla aranan profil. */
+    public function mergeForm(Request $request, Profile $profile, ProfileMergeService $merge): View
+    {
+        $this->own($profile);
+        abort_if((bool) $profile->merged_into_id, 404);
+        $q = trim((string) $request->query('ara', ''));
+
+        return view('profiles.merge', [
+            'profile' => $profile->load(['addresses', 'communications']), 'candidates' => $merge->candidates($profile), 'q' => $q,
+            'found' => $q === '' ? collect() : Profile::query()->where('property_id', $profile->property_id)->where('type', $profile->type)->where('id', '!=', $profile->id)
+                ->whereNull('merged_into_id')->where('display_name', 'like', '%'.str_replace(['%', '_'], ['\%', '\_'], $q).'%')->orderBy('display_name')->limit(30)
+                ->get(['id', 'display_name', 'birth_date', 'nationality_code']),
+        ]);
+    }
+
+    public function merge(Request $request, Profile $profile, ProfileMergeService $merge): RedirectResponse
+    {
+        $this->own($profile);
+        $data = $request->validate(['other_id' => ['required', 'integer'], 'keep' => ['required', Rule::in(['this', 'other'])]]);
+        $other = Profile::query()->where('property_id', $profile->property_id)->findOrFail($data['other_id']);
+        [$keep, $drop] = $data['keep'] === 'this' ? [$profile, $other] : [$other, $profile];
+        try {
+            $merge->merge($keep, $drop, $request->user()->id);
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('profiles.index', ['tur' => $keep->type, 'ad' => $keep->display_name])->with('selected', $keep->id)
+            ->with('status', __('pms.merge.done', ['drop' => $drop->display_name, 'keep' => $keep->display_name]));
     }
 
     private function own(Profile $profile): void
