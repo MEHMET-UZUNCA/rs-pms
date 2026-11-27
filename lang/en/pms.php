@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'guest_requests' => 'Guest Requests',
         'room_moves' => 'Room Moves',
         'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
@@ -234,7 +235,7 @@ return [
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'perm' => ['front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -462,4 +463,18 @@ Müller, Anna
     ],
     'rowmenu' => ['card' => 'Reservation card', 'room' => 'Assign room', 'checkin' => 'Check in', 'folio' => 'Folio / payment', 'checkout' => 'Check out',
         'letter' => 'Confirmation letter', 'navigator' => 'Open in navigator'],
+    'req' => [
+        'title' => 'Guest Requests', 'subtitle' => 'Requests and complaints by department, with due time and history',
+        'tabs' => ['open' => 'Open', 'overdue' => 'Overdue', 'mine' => 'Opened by me', 'done' => 'Closed (7 days)', 'all' => 'All'],
+        'all_departments' => 'All departments', 'department' => 'Department', 'due' => 'Due time', 'due_date' => 'Due date', 'kind' => 'Type', 'guest' => 'Guest',
+        'message' => 'Request / complaint', 'by' => 'User', 'late' => 'late', 'high' => 'High priority', 'normal' => 'Normal', 'priority' => 'Priority',
+        'kinds' => ['request' => 'Request', 'complaint' => 'Complaint'],
+        'departments' => ['front_office' => 'Front office', 'housekeeping' => 'Housekeeping', 'technical' => 'Technical service', 'fnb' => 'Food & beverage',
+            'concierge' => 'Concierge', 'spa' => 'Spa', 'guest_relations' => 'Guest relations', 'security' => 'Security'],
+        'statuses' => ['open' => 'Open', 'in_progress' => 'In progress', 'done' => 'Done', 'cancelled' => 'Cancelled'],
+        'none' => 'No requests.', 'new' => 'New request / complaint', 'guest_hint' => 'Filled from the in-house guest of the room if empty',
+        'created' => 'Request saved.', 'status_saved' => 'Status: :status.', 'note_saved' => 'Note added.', 'note' => 'Note', 'note_hint' => 'Note (optional)', 'add_note' => 'Add a note',
+        'start' => 'Start', 'complete' => 'Done', 'cancel' => 'Cancel request', 'reopen' => 'Reopen', 'closed' => 'This request is closed; reopen it first.',
+        'no_room' => 'Room :room not found.', 'badge' => ':count late requests',
+    ],
 ];

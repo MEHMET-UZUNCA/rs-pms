@@ -23,7 +23,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 11 | E-Fatura / E-Arşiv | — | Gerek yok | KKTC'de GİB e-fatura yok; fatura Logo'dan |
 | 12 | Kat hizmetleri: temizlik durumu, minibar, arıza bildirimi | Housekeeping, OOO/OOS, House Status, Lost & Found; minibar Simphony RVC 5 | Var | Kat görevlisine oda dağıtımı (Attendants) otel kullanmıyor |
 | 13 | Online rezervasyon motoru, kanal yönetimi; gelen rezervasyon ön büroda | Web API v1 (fiyat, müsaitlik); web sitesi ayrı proje | Kısmen | Web'den **rezervasyon yazma** API'si ve ön büroda "yeni web rezervasyonları" listesi; kanal yöneticisi tabloları hazır, bağlantı sonra |
-| 14 | Görev yönetimi: misafir istek / şikâyeti görev olur, süre aşımında yöneticiye bildirim | — | Yok | **Misafir istekleri / şikâyetler (Traces)**: oda, departman, son saat, durum; geciken görev üst çubukta uyarı |
+| 14 | Görev yönetimi: misafir istek / şikâyeti görev olur, süre aşımında yöneticiye bildirim | Misafir istekleri: departman, son saat, öncelik, durum ve geçmiş; geciken işler üst çubukta | Var | |
 | 15 | Kimlik / pasaport okuma (web kamerası) | Profilde kimlik belgeleri (şifreli); PROISV görünümleri (polis bildirimi) | Kısmen | Kimlik okuyucu donanımı seçilince bağlanır |
 | 16 | Online check-in | — | Yok | Web projesiyle birlikte (misafir bilgileri ve belge önceden) |
 | 17 | Mobil uygulama (oda durumu, görev, arıza sahadan) | Ekranlar telefonda çalışır (duyarlı) | Kısmen | Kat hizmetleri için telefona uygun sade ekran |
@@ -41,5 +41,5 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 4. ~~Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3)~~ — yapıldı.
 5. ~~Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10)~~ — yapıldı.
 6. ~~Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21)~~ — yapıldı.
-7. Misafir istekleri / şikâyetler (#14).
+7. ~~Misafir istekleri / şikâyetler (#14)~~ — yapıldı.
 8. Web rezervasyon yazma API'si, online check-in, kimlik okuyucu (#13, #15, #16) — web projesi ve donanımla birlikte.

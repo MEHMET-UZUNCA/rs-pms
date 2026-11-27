@@ -150,6 +150,7 @@ Chrome/Edge "uygulama olarak yükle") çalıştırılır. Bu modda bütün Fidel
 | Rate Query | Fiyat Sorgulama | Tarih + kişi → fiyat kodları × oda tipleri; paket ve gün tipi takvimi |
 | Billing | Folyo | Alt+F folyo yazdır, Alt+I fatura kes; ödemede döviz seçimi |
 | Close Cashier | Kasa Kapanışı | Açık vardiyanın ödeme toplamları, sayılan tutar, F10 kapat, Alt+R rapor |
+| Guest Requests | Misafir İstekleri | Alt+1–5 sekmeler, Alt+N yeni (F10 kaydet), alt panelde durum ve not |
 | Room Rack | Oda Planı | Odalar × günler; sürükle-bırak oda değiştir, uzat, kısalt; giriş/çıkış, OOO |
 | Floor Plan | Kat Planı | Katlara göre oda kutuları; durum renkleri |
 | Room Search | Oda Arama | Özellik, kat, tip, durum filtreleri |

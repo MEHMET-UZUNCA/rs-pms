@@ -23,6 +23,9 @@
                     {{ __('pms.queue.badge', ['total' => $queue['total'], 'ready' => $queue['ready']]) }}</a>
             @endif
         @endif
+        @if ($can('front_office.requests') && ($lateRequests = app(\App\Domain\FrontOffice\Services\GuestRequestService::class)->overdueCount($currentProperty->id)) > 0)
+            <a href="{{ route('requests.index', ['sekme' => 'overdue']) }}" data-requests-badge class="px-2 rounded text-[12px] bg-danger text-white">{{ __('pms.req.badge', ['count' => $lateRequests]) }}</a>
+        @endif
         <div class="ml-auto flex items-center gap-3 text-brand-100">
             <form method="POST" class="flex items-center gap-1" aria-label="{{ __('pms.language') }}">
                 @csrf

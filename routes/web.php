@@ -9,6 +9,7 @@ use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\QueueController;
+use App\Http\Controllers\FrontOffice\GuestRequestController;
 use App\Http\Controllers\FrontOffice\RoomMoveController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
@@ -69,6 +70,14 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Ön Büro → Oda Planı (Room Rack)
     Route::get('/oda-plani', [RoomRackController::class, 'index'])->middleware('permission:reservations.view')->name('front-office.room-rack');
+    // Front Desk → Guest Requests (istek / şikâyet)
+    Route::middleware('permission:front_office.requests')->prefix('istekler')->name('requests.')->group(function () {
+        Route::get('/', [GuestRequestController::class, 'index'])->name('index');
+        Route::post('/', [GuestRequestController::class, 'store'])->name('store');
+        Route::get('/{trace}', [GuestRequestController::class, 'show'])->whereNumber('trace')->name('show');
+        Route::post('/{trace}/durum', [GuestRequestController::class, 'status'])->whereNumber('trace')->name('status');
+        Route::post('/{trace}/not', [GuestRequestController::class, 'note'])->whereNumber('trace')->name('note');
+    });
     Route::get('/oda-degisimleri', [RoomMoveController::class, 'index'])->middleware('permission:reservations.view')->name('room-moves.index');
     Route::post('/oda-degisimleri/{move}/neden', [RoomMoveController::class, 'reason'])->whereNumber('move')->middleware('permission:reservations.edit')->name('room-moves.reason');
     Route::post('/oda-plani/{reservation}/tasi', [RoomRackController::class, 'move'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('front-office.room-rack.move');

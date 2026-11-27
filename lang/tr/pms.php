@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'guest_requests' => 'Misafir istekleri',
         'room_moves' => 'Oda değişimleri',
         'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
@@ -234,7 +235,7 @@ return [
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'perm' => ['front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -462,4 +463,18 @@ Kaya, Ayşe
     ],
     'rowmenu' => ['card' => 'Rezervasyon kartı', 'room' => 'Oda ata', 'checkin' => 'Giriş yap', 'folio' => 'Folyo / ödeme', 'checkout' => 'Çıkış yap',
         'letter' => 'Onay mektubu', 'navigator' => 'Navigatörde aç'],
+    'req' => [
+        'title' => 'Misafir İstekleri', 'subtitle' => 'Departmana göre istek ve şikâyetler; son saat ve işlem geçmişi',
+        'tabs' => ['open' => 'Açık', 'overdue' => 'Gecikmiş', 'mine' => 'Benim açtıklarım', 'done' => 'Kapanan (7 gün)', 'all' => 'Hepsi'],
+        'all_departments' => 'Bütün departmanlar', 'department' => 'Departman', 'due' => 'Son saat', 'due_date' => 'Son gün', 'kind' => 'Tür', 'guest' => 'Misafir',
+        'message' => 'İstek / şikâyet', 'by' => 'Kullanıcı', 'late' => 'gecikti', 'high' => 'Yüksek öncelik', 'normal' => 'Normal', 'priority' => 'Öncelik',
+        'kinds' => ['request' => 'İstek', 'complaint' => 'Şikâyet'],
+        'departments' => ['front_office' => 'Ön büro', 'housekeeping' => 'Kat hizmetleri', 'technical' => 'Teknik servis', 'fnb' => 'Yiyecek içecek',
+            'concierge' => 'Concierge', 'spa' => 'Spa', 'guest_relations' => 'Misafir ilişkileri', 'security' => 'Güvenlik'],
+        'statuses' => ['open' => 'Açık', 'in_progress' => 'İşlemde', 'done' => 'Tamam', 'cancelled' => 'İptal'],
+        'none' => 'İstek yok.', 'new' => 'Yeni istek / şikâyet', 'guest_hint' => 'Boşsa odadaki misafirden alınır',
+        'created' => 'İstek kaydedildi.', 'status_saved' => 'Durum: :status.', 'note_saved' => 'Not eklendi.', 'note' => 'Not', 'note_hint' => 'Not (isteğe bağlı)', 'add_note' => 'Not ekle',
+        'start' => 'Başla', 'complete' => 'Tamamlandı', 'cancel' => 'İsteği iptal et', 'reopen' => 'Yeniden aç', 'closed' => 'Bu istek kapalı; önce yeniden açın.',
+        'no_room' => ':room numaralı oda bulunamadı.', 'badge' => ':count geciken istek',
+    ],
 ];
