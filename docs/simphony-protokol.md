@@ -83,7 +83,8 @@ SOH <kasa no 9 hane> <arayüz adı 16 hane, "MF_ENH          "> STX FS <sıra 2 
 
 ## 6. Tutar alanları
 
-- Satış kalemi (sales itemizer) 1–16: kullanılanlar 1, 2, 3, 4, 6, 7, 8. Hangi kalemin hangi departman koduna gittiği IFC8 ayarında (`SPH.XML`).
+- Satış kalemi (sales itemizer) 1–16 (Simphony EMC → Descriptors → Sales Itemizers): 1 YIYECEK, 2 ICECEK, 3 ALK.ICECEK, 4 DIGER, 5 TOBACCO, 6 SPA, 7 LAUNDRY, 8 KUAFOR; 9–16 boş. Logda kullanılanlar 1, 2, 3, 4, 6, 7, 8.
+- Departman kodu eşlemesi (RS PMS): 1 → outlet'in FOOD kodu, 2 ve 3 → outlet'in BVRG kodu (Fidelio'da ayrı alkol kodu yok), 4 → outlet'in "Other" kodu (326, 336, 346, 356, 376, 398, 450, 486, 816; yoksa outlet'in varsayılan kodu), 5 → 470 Tobacco (Byblos 720), 6 → 513 Sauna-Massage, 7 → 510 Laundry, 8 → 640 Kuaför. İndirim kalemi aynı kodun düzeltme koduna gider.
 - İndirim kalemleri satış kalemleriyle aynı sırada (FULL_DSVC=1). Servis ücreti logda hiç yok.
 - Vergi: Simphony **VAT** modunda; vergi kalemi 1–63 **vergi dahil matrah** taşır (Oracle belgesi). Logda 1 ve 2 kullanılıyor.
 - Sondaki 8 alan: çek no, çek garsonu, servis dönemi (POSTING_ADD_INFO=0), RVC no (EMC "#", ör. 15 = Rocks Patisserie), kişi, tarih, saat, önceki ödeme.
@@ -122,10 +123,9 @@ SPH.XML'de şifreli veritabanı parolaları vardır; bu dosya depoya konmaz.
 | 401 | 9401 PERSONEL CARI | Aynı (903 City Ledger) |
 | Bölünmüş ödeme | Satış kalemleri ödeme oranında bölünür (640 nakit = 476,28 + 163,72) | Aynı |
 
-Kalem 3, 4, 6, 7, 8 (logda az kullanılan) için Simphony'deki kalem adları gerekiyor; o zamana kadar outlet'in varsayılan koduna yazılır.
+Kalem adları alındı (§6); eşlemesi olmayan kalem outlet'in varsayılan koduna yazılır.
 
 ## 9. Açık noktalar
 
-- Simphony satış kalemi (Sales Itemizer) 3, 4, 6, 7, 8'in adları (EMC → Descriptors) — hangi departman koduna gideceği.
-- Simphony ödeme tipi listesi (131, 231, 401, 402, 404, 601 adları), satış kalemi ve vergi kalemi adları.
+- Simphony ödeme tipi listesi (131, 231, 401, 402, 404, 601 adları) ve vergi kalemi adları.
 - `FO_FI_GST_MESSAGE` / `FO_FI_GST_LOCATOR` başarılı cevap biçimi (logda yalnız "bulunamadı" görüldü) — ilk sürümde aynı hata cevabı verilir.

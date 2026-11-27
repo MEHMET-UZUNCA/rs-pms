@@ -225,7 +225,7 @@ Simphony 18 ──► R&A (Reporting & Analytics) ──(BI API, REST)──► 
 | 1 | EMC *Setup → Interfaces* → PMS arayüzü kaydının **General** ve **Options** sekmelerinin ekran görüntüsü | Simphony EMC | Standart mı Enhanced mı; port, zaman aşımı, 2/9 haneli kasa no, 3/5 haneli RVC, 8 haneli çek no, prorate seçenekleri |
 | 2 | EMC *RVC Parameters → Interfaces* ve oda hesabı ödeme tipinin (*Tender/Media → Options → Interface Options*) ekran görüntüsü | Simphony EMC | Hangi RVC'ler ve ödeme tipleri PMS'e bağlı |
 | 3 | ~~RVC listesi~~ ✓ alındı | EMC *Revenue Centers* | Outlet'lere Simphony RVC no girildi |
-| 4 | Satış toplamı (Sales Itemizer) 1–16 ve vergi (Tax) 1–8 tanımları | EMC *Descriptors → Sales Itemizers*, *Tax Rates* | Yiyecek/içecek/diğer → departman kodu eşlemesi (ör. Cafe Rocks itemizer 1 → 320) |
+| 4 | Satış toplamı (Sales Itemizer) 1–16 ve vergi (Tax) 1–8 tanımları | EMC *Descriptors → Sales Itemizers*, *Tax Rates* | Satış kalemleri alındı (1 YIYECEK … 8 KUAFOR, eşleme docs/simphony-protokol.md §6); vergi kalemi adları bekleniyor |
 | 5 | IFC8'in Simphony tarafı ayarı (sürücü, port) | IFC8 yapılandırması | Bugünkü port ve protokolü teyit |
 | 6 | Reporting & Analytics erişimi var mı? Varsa BI API hesabı (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Satış aktarımı (Akış 2) |
 

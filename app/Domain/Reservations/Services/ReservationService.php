@@ -225,7 +225,7 @@ class ReservationService
                     'reservation_id' => $reservation->id, 'from_room_id' => $previous, 'to_room_id' => $room->id,
                     'business_date' => $from, 'user_id' => $userId, 'created_at' => now(),
                 ]);
-                Room::query()->whereKey($previous)->update(['fo_status' => 'vacant', 'hk_status' => 'dirty', 'current_reservation_id' => null]);
+                Room::query()->whereKey($previous)->update(['fo_status' => 'vacant', 'hk_status' => 'dirty', 'hk_status_changed_at' => now(), 'current_reservation_id' => null]);   // oda değişimi: eski oda Dirty
                 $room->update(['fo_status' => 'occupied', 'current_reservation_id' => $reservation->id]);
             }
 

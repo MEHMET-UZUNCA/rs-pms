@@ -118,17 +118,28 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_outlets')->where('id', $outletId)->update(['default_transaction_code_id' => $codeQuery($codes[0])->value('id')]);
         }
 
-        // Simphony satış kalemi → departman kodu (Fidelio 24.11.2026 kayıtlarından): kalem 1 yiyecek → FOOD kodu, kalem 2 içecek → BVRG kodu.
-        // İndirimler kodun düzeltme koduna (Adjustment Dept) gider. Diğer kalemler (3, 4, 6, 7, 8) Simphony kalem adları gelince eklenecek.
-        $foodBev = ['HABE' => ['395', '544'], 'HIRO' => ['385', '386'], 'CAFE' => ['320', '321'], 'POOL' => ['330', '331'], 'MINI' => ['350', '351'],
-            'RSVC' => ['340', '341'], 'BANQ' => ['370', '371'], 'CASI' => ['670', '680'], 'CTCH' => ['650', '660'], 'ONYX' => ['480', '483'],
-            'BYBL' => ['700', '710'], 'PATI' => ['820', '830'], 'SIRA' => ['490', '493'], 'LYRA' => ['810', '813']];
-        foreach ($foodBev as $outletCode => $codes) {
+        // Simphony satış kalemleri (EMC → Descriptors → Sales Itemizers): 1 YIYECEK, 2 ICECEK, 3 ALK.ICECEK, 4 DIGER, 5 TOBACCO, 6 SPA,
+        // 7 LAUNDRY, 8 KUAFOR. Departman kodu: yiyecek / içecek outlet'in FOOD / BVRG kodu (Fidelio 24.11.2026 kayıtları), alkollü içecek
+        // BVRG koduna (Fidelio'da ayrı alkol kodu yok), diğer outlet'in "Other" koduna (yoksa outlet'in varsayılan kodu), tobacco 470
+        // (Byblos 720), spa 513, laundry 510, kuaför 640. İndirimler kodun düzeltme koduna (Adjustment Dept) gider.
+        $itemizers = [1 => 'Yiyecek', 2 => 'İçecek', 3 => 'Alkollü içecek', 4 => 'Diğer', 5 => 'Tobacco', 6 => 'Spa', 7 => 'Laundry', 8 => 'Kuaför'];
+        // outlet => [yiyecek, içecek, diğer]
+        $outletCodes = ['HABE' => ['395', '544', '398'], 'HIRO' => ['385', '386', '450'], 'CAFE' => ['320', '321', '326'], 'POOL' => ['330', '331', '336'],
+            'MINI' => ['350', '351', '356'], 'RSVC' => ['340', '341', '346'], 'BANQ' => ['370', '371', '376'], 'CASI' => ['670', '680', null],
+            'CTCH' => ['650', '660', null], 'ONYX' => ['480', '483', '486'], 'BYBL' => ['700', '710', null], 'PATI' => ['820', '830', null],
+            'SIRA' => ['490', '493', null], 'LYRA' => ['810', '813', '816'], 'SPA' => [null, null, null], 'LAUN' => [null, null, null], 'KUAF' => [null, null, null]];
+        foreach ($outletCodes as $outletCode => [$food, $bev, $other]) {
             $outletId = (int) DB::table('pms_outlets')->where('property_id', $propertyId)->where('code', $outletCode)->value('id');
+            $codes = [1 => $food, 2 => $bev, 3 => $bev, 4 => $other, 5 => $outletCode === 'BYBL' ? '720' : '470', 6 => '513', 7 => '510', 8 => '640'];
             foreach ($codes as $i => $no) {
-                DB::table('pms_pos_revenue_mappings')->updateOrInsert(
-                    ['property_id' => $propertyId, 'outlet_id' => $outletId, 'source_type' => 'sales_itemizer', 'source_code' => (string) ($i + 1)],
-                    ['source_name' => $i === 0 ? 'Yiyecek' : 'İçecek', 'transaction_code_id' => $codeQuery($no)->value('id'), 'updated_at' => now()]);
+                $key = ['property_id' => $propertyId, 'outlet_id' => $outletId, 'source_type' => 'sales_itemizer', 'source_code' => (string) $i];
+                if ($no === null) {   // eşleme yok: outlet'in varsayılan koduna yazılır
+                    DB::table('pms_pos_revenue_mappings')->where($key)->delete();
+
+                    continue;
+                }
+                DB::table('pms_pos_revenue_mappings')->updateOrInsert($key,
+                    ['source_name' => $itemizers[$i], 'transaction_code_id' => $codeQuery($no)->value('id'), 'updated_at' => now()]);
             }
         }
 

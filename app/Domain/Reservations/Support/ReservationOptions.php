@@ -19,9 +19,11 @@ class ReservationOptions
     public const DEFAULTS = [
         'check_in_time' => '14:00', 'check_out_time' => '12:00',
         'day_use_check_in_time' => '14:00', 'day_use_check_out_time' => '18:00',
-        'status_after_check_in' => 'dirty',          // Room Status after Check In
+        // Rocks (otel teyidi): oda yalnız check-out'ta (ve oda değişiminde eski oda) Dirty olur; girişte ve gece kapanışında
+        // kat durumu değişmez, onu housekeeping / resepsiyon değiştirir.
+        'status_after_check_in' => 'none',           // Room Status after Check In
         'status_after_check_out' => 'dirty',         // Room Status after Check Out
-        'status_after_audit_occupied' => 'dirty',    // Room Status after N/A if occupied
+        'status_after_audit_occupied' => 'none',     // Room Status after N/A if occupied
         'status_after_no_show' => 'none',            // Room Status after No Show
         'market_code_mandatory' => true,
         'queue_rooms' => true,                       // Queue Rooms Handling

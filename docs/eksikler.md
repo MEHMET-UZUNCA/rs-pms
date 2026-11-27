@@ -6,17 +6,27 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 
 | # | Ne | Nereden | Ne için | Durum |
 |---|---|---|---|---|
-| 1 | Department Code Groups ve Main Groups ekranları (grup adları 15, 16, 20, 30, 40, 50, 55, 60, 75, 80, 90, 95) | Fidelio | Grup adları şimdilik geçici (10, 11 = Room Revenue alındı) | Bekleniyor |
+| 1 | Department Code Groups ve Main Groups ekranları (grup adları 15, 16, 20, 30, 40, 50, 55, 60, 75, 80, 90, 95) | Fidelio | Yalnız raporlarda grup başlığı olarak görünür, hesaplamayı etkilemez; raporlara geçince istenecek, şimdilik geçici adlar kalır | Ertelendi |
 | 2 | P4556 raporunun diğer sayfaları (VAT 0 %, VAT 1 %, VAT 10 %, VAT 20 %) | Fidelio raporu | Spa, kuaför, VAT Discount, paket kodlarının vergisini teyit | Bekleniyor |
 | 3 | Spa (513), Kuaför (640), 560/561 VAT Discount, 781 Package, 798 Deposit Retain kod pencereleri → "Tax" kutusu | Fidelio | Şimdilik %5 verildi, teyit | Bekleniyor |
-| 4b | Simphony satış kalemi (Sales Itemizer) 3, 4, 6, 7, 8 adları — kalem 1 yiyecek, 2 içecek Fidelio kayıtlarından çıkarıldı | Simphony EMC → Descriptors | Az kullanılan kalemlerin departman kodu | Bekleniyor |
 | 4c | Simphony ödeme tipleri (Tender/Media) listesi — en az 131, 231, 401, 402, 404, 601 | Simphony EMC | Ödeme tipi adları ve türleri | Bekleniyor |
 | 7 | Reporting & Analytics BI API erişimi (kurum kodu, API kullanıcısı) | Simphony yetkili servisi | Bütün satışların aktarımı | Bekleniyor |
 | 8 | Logo Tiger: lisanslar alındı (Tiger 3'e geçiş, LObjects var — docs/05-logo.md). Kalan: REST servisi kurulu mu, firma/dönem no, hesap planı eşlemesi | Muhasebe / Logo | Logo aktarımı | Kısmen |
-| 9 | Oda sayısı farkı: Room Types ekranında YMT 20 / YMF 35, oda listesinde YMT 21 / YMF 34. Aday: **1308** (listede YMT "Twin"; 1108 ve 1208 YMF) — Fidelio'da 1308'in tipi teyit edilecek | Fidelio Rooms → 1308 | Oda tipi sayıları | Bekleniyor |
-| 9c | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — Fidelio'da yer değiştirmiş olabilir | Fidelio Rooms | Doğru tip / açıklama | Teyit edilecek |
+| 9 | Oda sayısı farkı (YMT 20 / YMF 35 ↔ 21 / 34): otel **1308 = YMT** dedi, kayıt böyle kalır | Otel | Oda tipi sayıları | Tamam |
 | 9b | Rezervasyon tipleri, pazar segmentleri, kaynak kodları (Fidelio listeleri) | Fidelio | Kartta seçilen kodlar Fidelio ile aynı olsun (şu an yalnız örnek veride var) | Bekleniyor |
 | 10 | Fiyat kodları ve fiyatları: 2027 kodları başlıklarıyla girildi (27COMP, 27IND/A başlıkları tam). Kalan: her kodun Rate sekmesi ve Prices (dönem, oda tipi, kişi fiyatları), 27AGY/A ve 27IND/A'daki %15'in anlamı (bağlı fiyat mı?), CA1/CA2 yaş aralıkları, pansiyon paketlerinin içeriği (Package Link Header: ör. Breakfast PP 17 $, Dinner PP 28 $), 2026 ve diğer kategorilerdeki kodlar | Fidelio Rates | Fiyat hesabı | Kısmen |
+
+## Teyit edilecekler
+
+Kayıtta tutarsız görünen, otelde Fidelio'ya bakılıp doğrulanacak bilgiler. Doğrulanınca satır "Alınanlar"a taşınır.
+
+| # | Ne | Şu anki kayıt | Nereden bakılır |
+|---|---|---|---|
+| T1 | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — yer değiştirmiş olabilir | 2404 ESF, 2405 EST (Fidelio'daki gibi) | Fidelio Rooms → 2404, 2405 ya da odaya bakarak |
+| T2 | KKTC Merkez Bankası kur adresi geliştirme ortamından açılmıyor | Varsayılan kaynak TCMB | KKTC MB okuyucusu yazılınca otel sunucusunda `php artisan pms:fetch-exchange-rates` denemesi |
+| T3 | Simphony satış kalemi → departman kodu eşlemesi kalem adlarından kuruldu (3 alkollü → BVRG, 4 diğer → outlet Other, 5 → 470, 6 → 513, 7 → 510, 8 → 640). Fidelio IFC8 ayarı (SPH.XML / IFC8 Configuration → Sales) ile karşılaştırılmalı | docs/simphony-protokol.md §6 | IFC8 ekranı ya da ilk gün Fidelio ile yan yana kayıt |
+
+Çözülenler: 1308 = YMT (otel teyidi), oda durumu kuralları (yalnız check-out ve oda değişimi Dirty).
 
 ## Alınanlar
 
@@ -27,6 +37,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 | 100 Room / 107 Room Supplement kod pencereleri | Tarihli vergi, Adjustment Dept, grup adı "Room Revenue" |
 | P4556 VAT 5 % ve VAT 16 % sayfaları | 510 Laundry, 520 Transfer %16; oda/pansiyon/outlet %5 doğrulandı |
 | Simphony RVC listesi (17 RVC) | Outlet'ler, docs/04-simphony.md §4.4 |
+| Simphony Sales Itemizers 1–8 (YIYECEK, ICECEK, ALK.ICECEK, DIGER, TOBACCO, SPA, LAUNDRY, KUAFOR) | Seeder satış kalemi eşlemesi, docs/simphony-protokol.md §6 |
 | Simphony Interfaces #101 General / Options / Service Host | docs/04-simphony.md §4.1 — Enhanced protokol (ISL MF_ENH), TCP 192.168.200.11:5010 |
 | ORACLE_Micros_Simphony_Enh_IFC_19.1.4 paketi (ayar dosyası; ISL'ler şifreli) | docs/04-simphony.md §4.1 |
 | RVC numarası teyidi | Simphony mesajında SalesOutlet = EMC "#" (15 = Rocks Patisserie) |
@@ -57,8 +68,7 @@ Bekleyen her şey burada tutulur; bilgi gelince satır "Tamam" olur ve ilgili be
 ## Kat hizmetleri
 
 - Fidelio "Room Status Reason" listesi (OOO/OOS sebepleri) — şimdilik yalnız "OOO" ve "OOS" genel sebepleri var.
-- Fidelio ayarı (Global Settings → Reservation 1): girişte, çıkışta ve gece kapanışında dolu odada oda **Dirty**, no-show'da değişmez. Otel önce "gece kapanışı değiştirmez" demişti; ayar Dirty gösterdiği için Fidelio ayarı uygulandı, Ayarlar → Rezervasyon seçeneklerinden "Değişmez" yapılabilir — teyit edilecek.
-- Check-out'ta oda Dirty olur, oda değişikliğinde eski oda Dirty olur — uygulama böyle; otel "emin değilim" dedi, Fidelio'daki davranış teyit edilecek.
+- Oda durumu (otel teyidi): oda yalnız **check-out'ta** ve **oda değişiminde (eski oda)** Dirty olur. Girişte, gece kapanışında ve no-show'da kat durumu değişmez; onu housekeeping / resepsiyon değiştirir. Varsayılanlar buna göre; Ayarlar → Rezervasyon seçeneklerinden değiştirilebilir.
 - Kat görevlisi görev dağıtımı ekranı.
 
 ## Döviz kurları

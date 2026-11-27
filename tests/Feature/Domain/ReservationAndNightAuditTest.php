@@ -143,6 +143,24 @@ class ReservationAndNightAuditTest extends DomainTestCase
         $this->assertSame('vacant', $this->room()->fo_status);
     }
 
+    public function test_only_check_out_and_room_move_make_rooms_dirty(): void
+    {
+        Room::query()->whereIn('number', ['DBL1', 'DBL2'])->update(['hk_status' => 'inspected']);
+        $res = $this->book();
+        $this->reservations->assignRoom($res, $this->room());
+        $res = $this->reservations->checkIn($res->fresh());
+        $this->assertSame('inspected', $this->room()->hk_status);              // giriş kat durumunu değiştirmez
+
+        app(NightAuditService::class)->run($this->property);
+        $this->assertSame('inspected', $this->room()->hk_status);              // gece kapanışı da değiştirmez
+
+        $this->reservations->assignRoom($res->fresh(), $this->room('DBL2'));   // oda değişimi
+        $this->assertSame('dirty', $this->room()->hk_status);                  // eski oda Dirty
+        $this->assertSame('vacant', $this->room()->fo_status);
+        $this->assertSame('inspected', $this->room('DBL2')->hk_status);
+        $this->assertSame('occupied', $this->room('DBL2')->fo_status);
+    }
+
     public function test_night_audit_is_held_when_a_departure_is_still_in_house(): void
     {
         $res = $this->book('2026-12-01', '2026-12-02');

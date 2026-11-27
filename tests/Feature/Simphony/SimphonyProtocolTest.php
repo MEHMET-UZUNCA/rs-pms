@@ -193,6 +193,24 @@ class SimphonyProtocolTest extends DomainTestCase
         $this->assertSame((int) DB::table('pms_outlets')->where('code', 'KUAF')->value('id'), (int) DB::table('pms_pos_postings')->orderByDesc('id')->value('outlet_id'));
     }
 
+    public function test_sales_itemizers_go_to_their_department_codes(): void
+    {
+        // Simphony satış kalemleri: 1 YIYECEK, 2 ICECEK, 3 ALK.ICECEK, 4 DIGER, 5 TOBACCO, 6 SPA, 7 LAUNDRY, 8 KUAFOR
+        $codes = function (string $check) {
+            return DB::table('pms_postings as p')->join('pms_transaction_codes as tc', 'tc.id', '=', 'p.transaction_code_id')
+                ->join('pms_pos_postings as pp', 'pp.id', '=', 'p.pos_posting_id')->where('pp.check_number', $check)
+                ->where('p.amount', '>', 0)->groupBy('tc.code')->orderBy('tc.code')->selectRaw('tc.code, SUM(p.amount) AS total')->pluck('total', 'code')->map(fn ($a) => (float) $a)->all();
+        };
+        $this->send('01', 'IFC_CHG_PST', [' ', ' ', '131', ...self::body([1 => 100, 2 => 50, 3 => 80, 4 => 20, 5 => 30], [], '7001', 4, '280.00')]);   // Pool Bar
+        $this->assertSame(['330' => 100.0, '331' => 130.0, '336' => 20.0, '470' => 30.0], $codes('7001'));
+
+        $this->send('02', 'IFC_CHG_PST', [' ', ' ', '131', ...self::body([6 => 500, 7 => 60, 8 => 90], [], '7002', 8, '650.00')]);           // Spa Center
+        $this->assertSame(['510' => 60.0, '513' => 500.0, '640' => 90.0], $codes('7002'));
+
+        $this->send('03', 'IFC_CHG_PST', [' ', ' ', '131', ...self::body([4 => 40], [], '7003', 12, '40.00')]);                              // Catch: "Other" kodu yok
+        $this->assertSame(['650' => 40.0], $codes('7003'));
+    }
+
     public function test_split_payment_is_prorated_and_messages_are_logged(): void
     {
         // 1.000 TL'lik çekin 400 TL'si oda hesabına (bölünmüş ödeme)
