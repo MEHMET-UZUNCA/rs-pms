@@ -104,4 +104,27 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->assertNull(BusinessDateInput::parse('31.02.2026', $bd));
         $this->assertNull(BusinessDateInput::parse('abc', $bd));
     }
+
+    public function test_cancel_from_navigator_with_reason(): void
+    {
+        $res = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, gelecek
+        $inHouse = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();
+        $html = $this->actingAs($this->user)->get('/rezervasyon?f=ileri')->assertOk()->getContent();
+        $this->assertStringContainsString('id="cancel-dialog"', $html);
+        $this->assertStringContainsString('data-url-cancel="'.route('reservations.cancel', $res).'"', $html);
+        $this->assertStringNotContainsString('data-url-cancel="'.route('reservations.cancel', $inHouse).'"', $this->actingAs($this->user)->get('/rezervasyon?f=iceride')->getContent());
+
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/iptal", [])->assertSessionHasErrors('reason_code_id');
+        $reason = DB::table('pms_reason_codes')->where('property_id', $this->property)->where('category', 'cancellation')->value('id');
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/iptal", ['reason_code_id' => $reason])->assertSessionHas('status');
+        $res->refresh();
+        $this->assertSame(['cancelled', (int) $reason], [$res->status, (int) $res->cancel_reason_code_id]);
+        $this->assertNotNull($res->cancellation_number);
+        $this->assertSame(0, $res->nightRows()->where('status', 'expected')->count());
+        $this->assertSame('cancelled', DB::table('pms_reservation_status_logs')->where('reservation_id', $res->id)->orderByDesc('id')->value('to_status'));
+
+        // İçerideki rezervasyon iptal edilemez
+        $this->actingAs($this->user)->post("/rezervasyon/{$inHouse->id}/iptal", ['reason_code_id' => $reason])->assertSessionHas('error');
+        $this->assertSame('in_house', $inHouse->fresh()->status);
+    }
 }

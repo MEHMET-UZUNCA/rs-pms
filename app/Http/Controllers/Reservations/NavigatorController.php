@@ -58,6 +58,8 @@ class NavigatorController extends Controller
                 'gelis' => $arrival?->format('d.m.Y') ?? (string) $request->query('gelis'), 'cikis' => $departure?->format('d.m.Y') ?? (string) $request->query('cikis'),
             ],
             'selected' => (int) $request->query('secili', session('selected', 0)),
+            'cancelReasons' => DB::table('pms_reason_codes')->where('property_id', $property->id)->where('category', 'cancellation')
+                ->where('is_active', true)->orderBy('code')->get(['id', 'code', 'name']),
         ]);
     }
 
@@ -102,6 +104,22 @@ class NavigatorController extends Controller
         }
 
         return $back;
+    }
+
+    /** Rezervasyon iptali (Fidelio Cancel): neden zorunlu; iptal numarası verilir, oda ve geceler boşalır, durum geçmişine yazılır. */
+    public function cancel(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
+    {
+        $this->authorizeProperty($reservation->property_id);
+        $data = $request->validate(['reason_code_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('pms_reason_codes', 'id')
+            ->where('property_id', $reservation->property_id)->where('category', 'cancellation')]], [], ['reason_code_id' => __('pms.res.cancel_reason')]);
+        try {
+            $reservation = $service->cancel($reservation, (int) $data['reason_code_id'], $request->user()->id);
+        } catch (ReservationException $e) {
+            return back()->with('error', $e->getMessage())->with('selected', $reservation->id);
+        }
+
+        return back()->with('status', __('pms.res.cancelled_ok', ['name' => $reservation->profile?->display_name, 'no' => $reservation->cancellation_number]))
+            ->with('selected', $reservation->id);
     }
 
     private function reservations(int $propertyId, ?string $filter, CarbonImmutable $bd, Request $request, ?CarbonImmutable $arrival, ?CarbonImmutable $departure)

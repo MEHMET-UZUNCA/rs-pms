@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Rezervasyon iptali navigatörden (Alt+X): seçili gelmemiş rezervasyon için pencere, iptal nedeni zorunlu (Misafir, Acenta, Tarih değişti, Fiyat, Mükerrer, Otel iptali, Diğer); iptal numarası verilir, oda ve geceler boşalır, durum geçmişine nedenle yazılır. Önceden soluk "yakında" etiketiydi. (M.U)
+
 - Profil birleştirme (Profiles → Alt+M): olası mükerrer profiller (aynı ad, soyad + doğum tarihi, aynı telefon / e-posta, aynı kimlik belgesi) ya da adla aranan profil; hangi profilin kalacağı seçilir, onay sorulur. Bütün bağlantılar (rezervasyonlar — misafir / şirket / acenta / kaynak / grup, bloklar, folyo ödeyeni, faturalar, kayıtlar ve diğer bütün tablolardaki profil bağlantıları) kalan profile taşınır; eksik iletişim, adres ve belgeler eklenir, boş alanlar doldurulur; kara liste korunur. Birleşen profil "merged" olur, merged_into_id ile kalanı gösterir, listelerde görünmez. (M.U)
 
 - Kirli odaya giriş ayarı (Rezervasyon seçenekleri): izin ver / uyararak izin ver (varsayılan) / izin verme. "İzin verme"de kirli ya da Pick Up odaya giriş yapılamaz (navigatör, oda planı, toplu grup girişi); "uyar"da giriş yapılır, uyarı çıkar. (M.U)

@@ -2,6 +2,7 @@
 @section('title', __('pms.res.navigator'))
 @section('content')
 @php
+    $canCancel = Gate::allows('permission', 'reservations.edit');
     $badge = fn (string $s) => match ($s) {
         'in_house' => 'bg-ok/15 text-ok', 'confirmed' => 'bg-brand-100 text-brand-700', 'tentative', 'waitlist' => 'bg-amber-100 text-amber-800',
         'cancelled', 'no_show' => 'bg-danger/10 text-danger', default => 'bg-surface text-muted',
@@ -70,6 +71,7 @@
                             <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan data-url-letter="{{ route('reservations.letter', $r) }}"
                                 @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
+                                @if ($canCancel && in_array($r->status, ['inquiry', 'tentative', 'confirmed', 'waitlist'], true)) data-url-cancel="{{ route('reservations.cancel', $r) }}" @endif
                                 @if (in_array($r->status, ['confirmed', 'tentative'], true) && $r->arrival_date?->isSameDay($businessDate) && ! $r->queued_at) data-url-queue="{{ route('queue.add', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
                                 <td class="font-semibold">{{ $r->room?->number }}</td>
@@ -123,9 +125,30 @@
                 <a class="btn btn-side" data-needs-selection="res-grid" data-action="billing" data-hotkey="alt+b">{{ __('pms.res.folio') }} <span class="kbd ml-auto">Alt+B</span></a>
             @endcan
             <a class="btn btn-side" data-needs-selection="res-grid" data-action="letter" data-hotkey="alt+l">{{ __('pms.res.letter') }} <span class="kbd ml-auto">Alt+L</span></a>
-            <span class="btn btn-side opacity-40" title="{{ __('pms.menu.coming_soon') }}">{{ __('pms.res.cancel') }}</span>
+            @if ($canCancel)
+                <button type="button" form="cancel-form" class="btn btn-side" data-needs-selection="res-grid" data-action="cancel" data-modal-open="cancel-dialog" data-hotkey="alt+x">{{ __('pms.res.cancel') }} <span class="kbd ml-auto">Alt+X</span></button>
+            @endif
             <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </div>
 </div>
+@if ($canCancel)
+{{-- Rezervasyon iptali: neden zorunlu --}}
+<div id="cancel-dialog" data-modal hidden class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <form method="POST" id="cancel-form" class="win w-[28rem] max-w-full" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+        @csrf
+        <div class="win-title"><span id="cancel-title">{{ __('pms.res.cancel_title') }}</span></div>
+        <div class="p-3 flex flex-col gap-2">
+            <label><span class="field-label">{{ __('pms.res.cancel_reason') }} *</span>
+                <select name="reason_code_id" class="input" required data-autofocus><option value=""></option>
+                    @foreach ($cancelReasons as $cr)<option value="{{ $cr->id }}">{{ $cr->code }} {{ $cr->name }}</option>@endforeach</select></label>
+            <p class="text-[12px] text-muted">{{ __('pms.res.cancel_hint') }}</p>
+        </div>
+        <div class="flex gap-2 px-3 py-2 border-t border-line">
+            <button class="btn btn-primary ml-auto">{{ __('pms.res.cancel') }}</button>
+            <button type="button" class="btn" data-modal-close data-hotkey="escape">{{ __('pms.common.close') }}</button>
+        </div>
+    </form>
+</div>
+@endif
 @endsection

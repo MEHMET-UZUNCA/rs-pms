@@ -89,6 +89,7 @@ return [
     ],
 
     'res' => [
+        'cancel_reason' => 'Cancellation reason', 'cancel_title' => 'Cancel Reservation', 'cancel_confirm' => 'Cancel the selected reservation?', 'cancel_hint' => 'Only reservations that have not arrived can be cancelled. The room is released and a cancellation number is given.', 'cancelled_ok' => ':name — reservation cancelled, cancellation no. :no.',
         'dirty_blocked' => 'Room :room is dirty; check-in is not allowed until housekeeping sets it clean.', 'dirty_warning' => 'Note: room :room is still dirty.',
         'letter_email' => 'Guest e-mail', 'letter_send' => 'Send by e-mail', 'letter_sent' => 'Confirmation letter sent to :email.', 'letter_failed' => 'The e-mail could not be sent. Check the SMTP settings.',
         'letter_no_smtp' => 'E-mail is not set up yet (SMTP settings in .env).', 'letter_last' => 'Last sent :date to :email (:user)',

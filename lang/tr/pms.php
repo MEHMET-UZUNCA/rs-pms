@@ -89,6 +89,7 @@ return [
     ],
 
     'res' => [
+        'cancel_reason' => 'İptal nedeni', 'cancel_title' => 'Rezervasyon İptali', 'cancel_confirm' => 'Seçili rezervasyon iptal edilsin mi?', 'cancel_hint' => 'Yalnız gelmemiş rezervasyonlar iptal edilir. Oda boşalır, iptal numarası verilir.', 'cancelled_ok' => ':name — rezervasyon iptal edildi, iptal no :no.',
         'dirty_blocked' => ':room numaralı oda kirli; kat hizmetleri temiz yapana kadar giriş yapılamaz.', 'dirty_warning' => 'Dikkat: :room numaralı oda hâlâ kirli.',
         'letter_email' => 'Misafir e-postası', 'letter_send' => 'E-postayla gönder', 'letter_sent' => 'Onay mektubu :email adresine gönderildi.', 'letter_failed' => 'E-posta gönderilemedi. SMTP ayarlarını kontrol edin.',
         'letter_no_smtp' => 'E-posta henüz ayarlanmadı (.env içindeki SMTP ayarları).', 'letter_last' => 'Son gönderim :date, :email (:user)',

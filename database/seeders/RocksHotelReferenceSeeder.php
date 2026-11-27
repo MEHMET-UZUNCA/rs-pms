@@ -386,7 +386,9 @@ class RocksHotelReferenceSeeder extends Seeder
             ['public_place', [['LOBBY', 'Lobi / Lobby'], ['REST', 'Restoran / Restaurant'], ['BAR', 'Bar'], ['POOL', 'Havuz / Pool'], ['CASINO', 'Casino'],
             ['SPA', 'Spa'], ['GYM', 'Spor salonu / Gym'], ['BEACH', 'Plaj / Beach'], ['PARK', 'Otopark / Parking'], ['CONF', 'Toplantı salonu / Meeting room']]],
             ['room_move', [['GUEST', 'Misafir isteği / Guest request'], ['UPG', 'Upgrade'], ['MAINT', 'Arıza / Maintenance'], ['NOISE', 'Gürültü / Noise'],
-            ['HOTEL', 'Otel kararı / Hotel decision'], ['OTHER', 'Diğer / Other']]]] as [$category, $items]) {
+            ['HOTEL', 'Otel kararı / Hotel decision'], ['OTHER', 'Diğer / Other']]],
+            ['cancellation', [['GUEST', 'Misafir iptal etti / Guest cancelled'], ['AGENT', 'Acenta iptali / Agent cancelled'], ['DATE', 'Tarih değişti / Change of dates'],
+            ['PRICE', 'Fiyat / Price'], ['DUP', 'Mükerrer rezervasyon / Duplicate'], ['HOTEL', 'Otel iptali / Cancelled by hotel'], ['OTHER', 'Diğer / Other']]]] as [$category, $items]) {
             foreach ($items as [$code, $name]) {
                 DB::table('pms_reason_codes')->insertOrIgnore(['property_id' => $propertyId, 'category' => $category, 'code' => $code, 'name' => $name, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()]);
             }
