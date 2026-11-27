@@ -161,4 +161,33 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->assertCount(10, explode('</th>', $m[1], -1));
         $this->actingAs($this->user)->post('/rezervasyon/tercihler', ['cols' => ['nope']])->assertSessionHasErrors('cols.0');
     }
+
+    public function test_reinstate_and_undo_check_in(): void
+    {
+        $res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, gelecek
+        $nights = $res->nightRows()->count();
+        $reason = DB::table('pms_reason_codes')->where('property_id', $this->property)->where('category', 'cancellation')->value('id');
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/iptal", ['reason_code_id' => $reason])->assertSessionHas('status');
+        $this->assertStringContainsString('data-url-reinstate="'.route('reservations.reinstate', $res).'"', $this->actingAs($this->user)->get('/rezervasyon?f=iptal')->getContent());
+
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/geri-al")->assertSessionHas('status');
+        $res->refresh();
+        $this->assertSame(['confirmed', null, $nights], [$res->status, $res->cancelled_at, $res->nightRows()->where('status', 'expected')->count()]);
+        $this->assertSame(['cancelled', 'confirmed'], DB::table('pms_reservation_status_logs')->where('reservation_id', $res->id)->orderByDesc('id')->limit(2)->pluck('to_status')->reverse()->values()->all());
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/geri-al")->assertSessionHas('error');   // zaten kesin
+
+        // Undo check-in: bugün giriş yapan, folyosunda kayıt yok
+        $ozturk = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Öztürk'))->firstOrFail();   // bugün gelecek, oda 1108
+        $this->actingAs($this->user)->post("/rezervasyon/{$ozturk->id}/giris")->assertSessionHas('status');
+        $this->assertSame('in_house', $ozturk->fresh()->status);
+        $this->assertStringContainsString('data-url-undo="', $this->actingAs($this->user)->get('/rezervasyon?f=iceride')->getContent());
+        $this->actingAs($this->user)->post("/rezervasyon/{$ozturk->id}/giris-geri-al")->assertSessionHas('status');
+        $ozturk->refresh();
+        $this->assertSame(['confirmed', null], [$ozturk->status, $ozturk->check_in_business_date]);
+        $this->assertSame('vacant', DB::table('pms_rooms')->where('id', $ozturk->room_id)->value('fo_status'));
+
+        // Kayıt atılmışsa geri alınamaz
+        $yilmaz = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();
+        $this->actingAs($this->user)->post("/rezervasyon/{$yilmaz->id}/giris-geri-al")->assertSessionHas('error');
+    }
 }

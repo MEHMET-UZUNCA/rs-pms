@@ -142,6 +142,28 @@ class NavigatorController extends Controller
         return back()->with('status', __('pms.res.columns_saved'));
     }
 
+    public function reinstate(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
+    {
+        return $this->act($reservation, fn () => $service->reinstate($reservation, $request->user()->id), 'pms.res.reinstated');
+    }
+
+    public function undoCheckIn(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
+    {
+        return $this->act($reservation, fn () => $service->undoCheckIn($reservation, $request->user()->id), 'pms.res.check_in_undone');
+    }
+
+    private function act(Reservation $reservation, \Closure $action, string $message): RedirectResponse
+    {
+        $this->authorizeProperty($reservation->property_id);
+        try {
+            $action();
+        } catch (ReservationException $e) {
+            return back()->with('error', $e->getMessage())->with('selected', $reservation->id);
+        }
+
+        return back()->with('status', __($message, ['name' => $reservation->profile?->display_name, 'no' => $reservation->confirmation_number]))->with('selected', $reservation->id);
+    }
+
     /** Rezervasyon iptali (Fidelio Cancel): neden zorunlu; iptal numarası verilir, oda ve geceler boşalır, durum geçmişine yazılır. */
     public function cancel(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
     {

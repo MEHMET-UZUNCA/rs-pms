@@ -71,6 +71,8 @@
                                 @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
                                 @if ($r->status === 'in_house' && $r->departure_date?->lte($businessDate) && Gate::allows('permission', 'cashiering.billing')) data-url-checkout="{{ route('billing.reservation', $r) }}" @endif
+                                @if ($canCancel && in_array($r->status, ['cancelled', 'no_show'], true)) data-url-reinstate="{{ route('reservations.reinstate', $r) }}" @endif
+                                @if ($r->status === 'in_house' && $r->check_in_business_date?->isSameDay($businessDate) && Gate::allows('permission', 'reservations.checkin')) data-url-undo="{{ route('reservations.undo-check-in', $r) }}" @endif
                                 @if ($canCancel && in_array($r->status, ['inquiry', 'tentative', 'confirmed', 'waitlist'], true)) data-url-cancel="{{ route('reservations.cancel', $r) }}" @endif
                                 @if (in_array($r->status, ['confirmed', 'tentative'], true) && $r->arrival_date?->isSameDay($businessDate) && ! $r->queued_at) data-url-queue="{{ route('queue.add', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
@@ -134,6 +136,14 @@
                 <a class="btn btn-side" data-needs-selection="res-grid" data-action="checkout" data-hotkey="alt+o">{{ __('pms.billing.check_out') }} <span class="kbd ml-auto">Alt+O</span></a>
             @endcan
             <a class="btn btn-side" data-needs-selection="res-grid" data-action="letter" data-hotkey="alt+l">{{ __('pms.res.letter') }} <span class="kbd ml-auto">Alt+L</span></a>
+            @if ($canCancel)
+                <form method="POST" data-confirm="{{ __('pms.res.reinstate_confirm') }}">@csrf
+                    <button class="btn btn-side w-full" data-needs-selection="res-grid" data-action="reinstate" data-hotkey="alt+i">{{ __('pms.res.reinstate') }} <span class="kbd ml-auto">Alt+I</span></button></form>
+            @endif
+            @can('permission', 'reservations.checkin')
+                <form method="POST" data-confirm="{{ __('pms.res.undo_confirm') }}">@csrf
+                    <button class="btn btn-side w-full" data-needs-selection="res-grid" data-action="undo" data-hotkey="alt+u">{{ __('pms.res.undo_check_in') }} <span class="kbd ml-auto">Alt+U</span></button></form>
+            @endcan
             @if ($canCancel)
                 <button type="button" form="cancel-form" class="btn btn-side" data-needs-selection="res-grid" data-action="cancel" data-modal-open="cancel-dialog" data-hotkey="alt+x">{{ __('pms.res.cancel') }} <span class="kbd ml-auto">Alt+X</span></button>
             @endif

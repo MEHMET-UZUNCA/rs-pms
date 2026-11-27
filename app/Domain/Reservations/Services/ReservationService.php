@@ -194,6 +194,62 @@ class ReservationService
         });
     }
 
+    /**
+     * Reinstate (Fidelio): iptal edilmiş ya da no-show rezervasyonu geri alır. Geliş tarihi geçmişse bugüne çekilir (çıkış bugünden sonra olmalı);
+     * geceler yeniden kurulur (elle fiyatlar korunur), önceki durumuna (kesin / opsiyon) döner, oda atanmamış olarak kalır.
+     */
+    public function reinstate(Reservation $reservation, ?int $userId = null): Reservation
+    {
+        return DB::transaction(function () use ($reservation, $userId) {
+            if (! in_array($reservation->status, ['cancelled', 'no_show'], true)) {
+                throw new ReservationException(__('pms.res.err_reinstate_status'));
+            }
+            $bd = Property::query()->findOrFail($reservation->property_id)->current_business_date->toImmutable();
+            $arrival = $reservation->arrival_date->toImmutable()->max($bd);
+            if ($reservation->departure_date->toImmutable()->lte($arrival)) {
+                throw new ReservationException(__('pms.res.err_reinstate_dates'));
+            }
+            $previous = DB::table('pms_reservation_status_logs')->where('reservation_id', $reservation->id)->whereNotIn('to_status', ['cancelled', 'no_show'])
+                ->orderByDesc('id')->value('to_status');
+            $status = in_array($previous, ['tentative', 'waitlist', 'inquiry'], true) ? $previous : 'confirmed';
+            $from = $reservation->status;
+            $kept = $reservation->nightRows()->where('is_overridden', true)->get()->mapWithKeys(fn ($n) => [$n->stay_date->toDateString() => (float) $n->amount])->all();
+            $reservation->nightRows()->whereIn('status', ['cancelled', 'expected'])->delete();
+            $reservation->update(['status' => $status, 'cancelled_at' => null, 'cancelled_by' => null, 'cancel_reason_code_id' => null, 'no_show_at' => null,
+                'arrival_date' => $arrival->toDateString(), 'nights' => $arrival->diffInDays($reservation->departure_date), 'updated_by' => $userId]);
+            $bands = [1 => $reservation->child_band_1, 2 => $reservation->child_band_2, 3 => $reservation->child_band_3];
+            $this->buildNights($reservation->fresh(), $bands, (int) $reservation->extra_beds, null, $kept);
+            $this->log($reservation, $from, $status, $userId);
+            $this->refreshAvailability($reservation, $arrival, $reservation->departure_date);
+
+            return $reservation->fresh(['nightRows']);
+        });
+    }
+
+    /**
+     * Undo Check-in (Fidelio): yanlış girişi geri alır — yalnız giriş günü içinde ve folyolarda kayıt yoksa. Rezervasyon kesine döner,
+     * oda boşalır (kat durumu değişmez).
+     */
+    public function undoCheckIn(Reservation $reservation, ?int $userId = null): Reservation
+    {
+        return DB::transaction(function () use ($reservation, $userId) {
+            $bd = Property::query()->findOrFail($reservation->property_id)->current_business_date->toDateString();
+            if ($reservation->status !== 'in_house' || substr((string) $reservation->check_in_business_date, 0, 10) !== $bd) {
+                throw new ReservationException(__('pms.res.err_undo_day'));
+            }
+            if (DB::table('pms_postings')->whereIn('folio_id', $reservation->folios()->pluck('id'))->exists()) {
+                throw new ReservationException(__('pms.res.err_undo_postings'));
+            }
+            $reservation->update(['status' => 'confirmed', 'checked_in_at' => null, 'checked_in_by' => null, 'check_in_business_date' => null, 'updated_by' => $userId]);
+            if ($reservation->room_id) {
+                Room::query()->whereKey($reservation->room_id)->where('current_reservation_id', $reservation->id)->update(['fo_status' => 'vacant', 'current_reservation_id' => null]);
+            }
+            $this->log($reservation, 'in_house', 'confirmed', $userId);
+
+            return $reservation->fresh();
+        });
+    }
+
     public function assignRoom(Reservation $reservation, Room $room, ?int $userId = null, ?int $moveReasonId = null): Reservation
     {
         return DB::transaction(function () use ($reservation, $room, $userId, $moveReasonId) {
