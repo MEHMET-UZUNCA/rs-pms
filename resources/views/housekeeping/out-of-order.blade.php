@@ -57,7 +57,7 @@
                 </form>
             @endif
         </section>
-        <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @if ($canEdit)
                 <form method="POST" data-confirm="{{ __('pms.ooo.release_confirm') }}">@csrf
                     <button class="btn btn-side w-full" data-needs-selection="ooo-grid" data-action="release" data-hotkey="alt+r">{{ __('pms.ooo.release') }} <span class="kbd ml-auto">Alt+R</span></button></form>

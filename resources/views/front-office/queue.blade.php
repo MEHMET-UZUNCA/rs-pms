@@ -25,7 +25,7 @@
                 </tbody>
             </table>
         </section>
-        <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @can('permission', 'reservations.checkin')
                 <form method="POST" data-confirm="{{ __('pms.res.check_in_confirm') }}">@csrf
                     <button class="btn btn-side w-full" data-needs-selection="queue-grid" data-action="checkin" data-hotkey="alt+g">{{ __('pms.res.check_in') }} <span class="kbd ml-auto">Alt+G</span></button></form>

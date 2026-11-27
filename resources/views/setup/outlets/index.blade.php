@@ -44,7 +44,7 @@
             </div>
         </section>
 
-        <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             <a href="{{ route('setup.outlets.create') }}" class="btn btn-side" data-hotkey="alt+n insert">{{ __('pms.common.new') }} <span class="kbd ml-auto">Alt+N</span></a>
             <a class="btn btn-side" data-needs-selection="outlet-grid" data-action="edit" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Alt+E</span></a>
             <a class="btn btn-side" data-needs-selection="outlet-grid" data-action="copy" data-hotkey="alt+c">{{ __('pms.common.copy') }} <span class="kbd ml-auto">Alt+C</span></a>

@@ -100,7 +100,7 @@
             </div>
         </section>
 
-        <aside class="w-36 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @can('permission', 'reservations.edit')
                 @if ($isFa && Gate::allows('permission', 'cashiering.accounts'))
                     <a href="{{ route('accounts.create') }}" class="btn btn-side" data-hotkey="ctrl+n alt+n">{{ __('pms.fa.new') }} <span class="kbd ml-auto">Ctrl+N</span></a>

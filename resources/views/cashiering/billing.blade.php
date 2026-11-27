@@ -101,7 +101,7 @@
             @endif
         </section>
 
-        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-44 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @can('permission', 'cashiering.reverse')
                 <form method="POST" data-confirm="{{ __('pms.billing.correction_confirm') }}">
                     @csrf

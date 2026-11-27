@@ -91,7 +91,7 @@
                 </table></div>
             </form>
         </div>
-        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-44 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @if ($canEdit)<a href="{{ route('blocks.edit', $block) }}" class="btn btn-side" data-hotkey="alt+e">{{ __('pms.common.edit') }} <span class="kbd ml-auto">Alt+E</span></a>@endif
             <a href="{{ route('blocks.index') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>

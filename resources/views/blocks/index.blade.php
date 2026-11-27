@@ -38,7 +38,7 @@
                 </table>
             </div>
         </section>
-        <aside class="w-40 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
+        <aside class="w-44 shrink-0 border-l border-line p-2 flex flex-col gap-1.5">
             @if ($canEdit)
                 <a href="{{ route('blocks.create', ['tur' => 'group']) }}" class="btn btn-side" data-hotkey="alt+n insert">{{ __('pms.block.new_group') }} <span class="kbd ml-auto">Alt+N</span></a>
                 <a href="{{ route('blocks.create', ['tur' => 'allotment']) }}" class="btn btn-side" data-hotkey="alt+k">{{ __('pms.block.new_allotment') }} <span class="kbd ml-auto">Alt+K</span></a>

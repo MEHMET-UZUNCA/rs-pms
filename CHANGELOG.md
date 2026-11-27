@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Tipografi ve görsel hiyerarşi (inceleme önerisi): Inter yazı tipi projeye gömülü (sunucuda internet gerekmez; Türkçe karakterler dahil), gövde 14 px, tablolar 13.5 px, etiketler 12.5 px, satır aralığı 1.45; kalınlık azaltıldı (yarı kalın 580, tablolarda ad sütunu ve seçili satır 500), rakamlar tablo hizalı. Pencere başlıkları koyu mavi yerine beyaz zemin + ince marka çizgisi, ikinci bilgi gri. Giriş alanları ve düğmeler 32 px; sağ komut sütunu biraz genişletildi, uzun düğme adları taşmaz. Önce / sonra: docs/ekran/tipografi-*.png. (M.U)
+
 - Rezervasyon iptali navigatörden (Alt+X): seçili gelmemiş rezervasyon için pencere, iptal nedeni zorunlu (Misafir, Acenta, Tarih değişti, Fiyat, Mükerrer, Otel iptali, Diğer); iptal numarası verilir, oda ve geceler boşalır, durum geçmişine nedenle yazılır. Önceden soluk "yakında" etiketiydi. (M.U)
 
 - Profil birleştirme (Profiles → Alt+M): olası mükerrer profiller (aynı ad, soyad + doğum tarihi, aynı telefon / e-posta, aynı kimlik belgesi) ya da adla aranan profil; hangi profilin kalacağı seçilir, onay sorulur. Bütün bağlantılar (rezervasyonlar — misafir / şirket / acenta / kaynak / grup, bloklar, folyo ödeyeni, faturalar, kayıtlar ve diğer bütün tablolardaki profil bağlantıları) kalan profile taşınır; eksik iletişim, adres ve belgeler eklenir, boş alanlar doldurulur; kara liste korunur. Birleşen profil "merged" olur, merged_into_id ile kalanı gösterir, listelerde görünmez. (M.U)

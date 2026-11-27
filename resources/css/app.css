@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,9 +7,13 @@
 /*
  * RS PMS görsel dili: Fidelio Suite8 yerleşimi (menü çubuğu, pencere, ayar listesi, sağda komut düğmeleri, durum çubuğu)
  * sade ve modern renklerle. Renkler token olarak tanımlıdır; ekranlar yalnız bu tokenları kullanır.
+ * Tipografi: Inter (projeye gömülü, internet gerekmez), gövde 14 px, tablolar 13.5 px, etiketler 12.5 px; kalınlık yalnız başlık,
+ * seçili satır, önemli tutar ve birincil düğmede. Rakamlar tablo hizalı (tabular-nums).
  */
 @theme {
-    --font-sans: 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter Variable', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+    --font-weight-semibold: 580;
+    --font-weight-bold: 650;
     --color-brand-50: #eef4fb;
     --color-brand-100: #d9e6f5;
     --color-brand-200: #b3cdea;
@@ -29,22 +34,26 @@
 
 @layer base {
     html, body { height: 100%; }
-    body { background: var(--color-surface); color: var(--color-ink); font-size: 13px; }
+    body { background: var(--color-surface); color: var(--color-ink); font-size: 14px; line-height: 1.45; font-feature-settings: 'cv11', 'ss01'; -webkit-font-smoothing: antialiased; }
+    td, .tabular { font-variant-numeric: tabular-nums; }
     u.hk { text-decoration-thickness: 1px; text-underline-offset: 2px; }
 }
 
 @layer components {
     .win { @apply bg-panel border border-line rounded-md shadow-sm flex flex-col min-h-0; }
-    .win-title { @apply flex items-center justify-between px-3 py-1.5 bg-brand-700 text-white text-[13px] font-semibold rounded-t-md; }
-    .field-label { @apply block text-[12px] text-muted mb-0.5; }
-    .input { @apply w-full h-7 px-2 border border-line rounded bg-white text-[13px] focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500; }
+    /* Pencere başlığı: beyaz zemin, ince marka çizgisi; ikinci bilgi (sağda) gri */
+    .win-title { @apply flex items-center justify-between gap-3 px-3 h-9 bg-panel text-ink text-[14px] font-semibold border-b border-line rounded-t-md shadow-[inset_3px_0_0_var(--color-brand-600)]; }
+    .field-label { @apply block text-[12.5px] text-muted mb-0.5; }
+    .input { @apply w-full h-8 px-2 border border-line rounded bg-white text-[13.5px] focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-500; }
     .input-error { @apply border-danger; }
-    .btn { @apply inline-flex items-center gap-1.5 h-7 px-3 border border-line rounded bg-white text-[13px] text-ink hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:opacity-40 disabled:pointer-events-none whitespace-nowrap; }
-    .btn-primary { @apply bg-brand-600 border-brand-600 text-white hover:bg-brand-700; }
-    .btn-side { @apply w-full justify-start; }
-    .grid-table { @apply w-full border-collapse text-[13px]; }
-    .grid-table th { @apply sticky top-0 z-10 bg-surface text-left font-normal text-muted border-b border-line px-2 py-1 whitespace-nowrap; }
-    .grid-table td { @apply px-2 py-[3px] border-b border-line/60 whitespace-nowrap; }
+    .btn { @apply inline-flex items-center gap-1.5 h-8 px-3 border border-line rounded bg-white text-[13.5px] text-ink hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:opacity-40 disabled:pointer-events-none whitespace-nowrap; }
+    .btn-primary { @apply bg-brand-600 border-brand-600 text-white font-medium hover:bg-brand-700; }
+    .btn-side { @apply w-full justify-start text-[13px] min-w-0 overflow-hidden; }
+    .grid-table { @apply w-full border-collapse text-[13.5px]; }
+    .grid-table th { @apply sticky top-0 z-10 bg-surface text-left font-medium text-[12.5px] text-muted border-b border-line px-2 py-1.5 whitespace-nowrap; }
+    .grid-table td { @apply px-2 py-1 border-b border-line/60 whitespace-nowrap; }
+    .grid-table td.font-semibold, .grid-table td .font-semibold { font-weight: 500; }   /* tabloda ad sütunu: hafif vurgu */
+    .grid-table tbody tr.is-selected td { font-weight: 500; }
     .grid-table tbody tr:nth-child(even) { background: var(--color-row-alt); }
     .grid-table tbody tr[data-id] { @apply cursor-default; }
     .grid-table tbody tr.is-selected { background: var(--color-row-selected); }
@@ -60,8 +69,11 @@
     .tree a { @apply hover:bg-brand-50; }
     .tree a.is-current { @apply bg-row-selected font-semibold; }
     .tree span.is-soon { @apply text-muted/70; }
-    .flash { @apply px-3 py-1.5 rounded border text-[13px]; }
+    .flash { @apply px-3 py-1.5 rounded border text-[13.5px]; }
     .flash-ok { @apply border-ok/30 bg-ok/10 text-ok; }
     .flash-error { @apply border-danger/30 bg-danger/10 text-danger; }
-    .kbd { @apply inline-block px-1 rounded border border-line bg-surface text-[11px] text-muted font-mono; }
+    .kbd { @apply inline-block px-1 rounded border border-line bg-surface text-[11px] leading-4 text-muted font-mono font-normal; }
 }
+
+/* Pencere başlığındaki ikinci bilgi (eskiden koyu zemin için text-brand-100): beyaz başlıkta gri. Katmansız: utility'lerin önüne geçer. */
+.win-title .text-brand-100 { color: var(--color-muted); }
