@@ -441,6 +441,62 @@ if (rack) {
     rack.addEventListener('pointercancel', endDrag);
 }
 
+// Satır işlem menüsü (kontrol paneli): data-row-actions satırına tıkla ya da Enter → menü; harf kısayolları (A oda, G giriş, B folyo, O çıkış, L mektup, N navigatör).
+const rowMenu = document.getElementById('row-menu');
+if (rowMenu) {
+    const POST = ['checkin'];
+    const KEYS = { Enter: 'card', a: 'room', g: 'checkin', b: 'folio', o: 'checkout', l: 'letter', n: 'navigator' };
+    let current = null;
+    const close = () => { rowMenu.hidden = true; current = null; };
+    const run = (row, action) => {
+        const url = JSON.parse(row.dataset.rowActions || '{}')[action];
+        if (!url) return;
+        if (POST.includes(action)) { const f = document.getElementById('row-menu-post'); f.action = url; f.submit(); } else location.href = url;
+    };
+    const open = (row, x, y) => {
+        const actions = JSON.parse(row.dataset.rowActions || '{}');
+        rowMenu.querySelectorAll('[data-menu-action]').forEach((a) => { a.hidden = !actions[a.dataset.menuAction]; });
+        rowMenu.hidden = false;
+        rowMenu.style.left = Math.max(8, Math.min(x, window.innerWidth - rowMenu.offsetWidth - 8)) + 'px';
+        rowMenu.style.top = Math.max(8, Math.min(y, window.innerHeight - rowMenu.offsetHeight - 8)) + 'px';
+        current = row;
+        rowMenu.querySelector('[data-menu-action]:not([hidden])')?.focus();
+    };
+    document.addEventListener('click', (e) => {
+        const item = e.target.closest('#row-menu [data-menu-action]');
+        if (item && current) { e.preventDefault(); const row = current; close(); run(row, item.dataset.menuAction); return; }
+        const row = e.target.closest('[data-row-actions]');
+        if (row && !e.target.closest('a, button')) { open(row, e.clientX, e.clientY); return; }
+        if (!rowMenu.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.altKey) return;
+        const row = current ?? (document.activeElement?.matches?.('[data-row-actions]') ? document.activeElement : null);
+        if (!row) return;
+        if (e.key === 'Escape' && current) { e.preventDefault(); e.stopImmediatePropagation(); close(); row.focus(); return; }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (current) {
+                const items = [...rowMenu.querySelectorAll('[data-menu-action]:not([hidden])')];
+                const i = items.indexOf(document.activeElement);
+                items[(i + (e.key === 'ArrowDown' ? 1 : items.length - 1)) % items.length]?.focus();
+            } else {
+                const rows = [...row.closest('tbody').querySelectorAll('[data-row-actions]')];
+                rows[rows.indexOf(row) + (e.key === 'ArrowDown' ? 1 : -1)]?.focus();
+            }
+            e.preventDefault();
+            return;
+        }
+        const action = KEYS[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+        if (!action) return;
+        if (action === 'card' && current && document.activeElement?.matches('[data-menu-action]')) return;   // menüde Enter: seçili madde
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (action === 'card' && !current) { const r = row.getBoundingClientRect(); open(row, r.left + 40, r.bottom); return; }
+        close();
+        run(row, action);
+    }, true);
+}
+
 // Tümünü seç (Kat Hizmetleri oda listesi)
 document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
     all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });

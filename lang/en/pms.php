@@ -106,7 +106,7 @@ return [
         'room_charges_open' => 'Room charges allowed', 'room_charges_closed' => 'Room charges blocked', 'none' => '—', 'no_folio' => 'none',
         'fa_number' => 'Account No.', 'validity' => 'Validity', 'open' => 'Open', 'closed' => 'Closed', 'last_postings' => 'Last postings',
         'business_date_title' => 'Business Date :date',
-        'filters' => ['iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
+        'filters' => ['bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
             'fa' => 'FA In House', 'fa-acilacak' => 'FA Arrivals', 'fa-kapanacak' => 'FA Departures', 'fa-kapali' => 'FA Checked Out', 'fa-ileri' => 'FA Future'],
         'statuses' => ['confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
             'checked_out' => 'Checked Out', 'cancelled' => 'Cancelled', 'no_show' => 'No Show'],
@@ -458,4 +458,6 @@ Müller, Anna
         'confirm' => 'Merge ":drop" into ":keep"? This cannot be undone.', 'done' => ':drop was merged into :keep.',
         'same' => 'A profile cannot be merged with itself.', 'type' => 'Only profiles of the same type can be merged.', 'already' => 'One of the profiles is already merged.',
     ],
+    'rowmenu' => ['card' => 'Reservation card', 'room' => 'Assign room', 'checkin' => 'Check in', 'folio' => 'Folio / payment', 'checkout' => 'Check out',
+        'letter' => 'Confirmation letter', 'navigator' => 'Open in navigator'],
 ];

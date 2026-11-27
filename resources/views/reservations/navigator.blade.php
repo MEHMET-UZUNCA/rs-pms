@@ -33,10 +33,10 @@
 
     <nav class="flex flex-wrap gap-1.5 px-3 py-2 border-b border-line" aria-label="Filters">
         @foreach (\App\Http\Controllers\Reservations\NavigatorController::FILTERS as $key => [, $hotkey])
-            <a href="{{ route('reservations.navigator', ['f' => $key]) }}" data-hotkey="{{ $hotkey }}"
+            <a href="{{ route('reservations.navigator', ['f' => $key]) }}" @if ($hotkey) data-hotkey="{{ $hotkey }}" @endif
                @class(['inline-flex items-center gap-1.5 h-7 px-3 rounded-full border text-[13px] whitespace-nowrap',
                    'bg-brand-600 border-brand-600 text-white' => $filter === $key, 'bg-white border-line hover:bg-brand-50' => $filter !== $key])>
-                {{ __('pms.res.filters.'.$key) }} <span class="text-[11px] opacity-70">{{ ucfirst(str_replace('alt+', 'Alt+', $hotkey)) }}</span>
+                {{ __('pms.res.filters.'.$key) }} <span class="text-[11px] opacity-70">{{ str_replace(['alt+', 'shift+'], ['Alt+', 'Shift+'], $hotkey) }}</span>
             </a>
         @endforeach
     </nav>
@@ -71,6 +71,7 @@
                             <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan data-url-letter="{{ route('reservations.letter', $r) }}"
                                 @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
+                                @if ($r->status === 'in_house' && $r->departure_date?->lte($businessDate) && Gate::allows('permission', 'cashiering.billing')) data-url-checkout="{{ route('billing.reservation', $r) }}" @endif
                                 @if ($canCancel && in_array($r->status, ['inquiry', 'tentative', 'confirmed', 'waitlist'], true)) data-url-cancel="{{ route('reservations.cancel', $r) }}" @endif
                                 @if (in_array($r->status, ['confirmed', 'tentative'], true) && $r->arrival_date?->isSameDay($businessDate) && ! $r->queued_at) data-url-queue="{{ route('queue.add', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
@@ -123,6 +124,9 @@
             </form>
             @can('permission', 'cashiering.billing')
                 <a class="btn btn-side" data-needs-selection="res-grid" data-action="billing" data-hotkey="alt+b">{{ __('pms.res.folio') }} <span class="kbd ml-auto">Alt+B</span></a>
+            @endcan
+            @can('permission', 'reservations.checkout')
+                <a class="btn btn-side" data-needs-selection="res-grid" data-action="checkout" data-hotkey="alt+o">{{ __('pms.billing.check_out') }} <span class="kbd ml-auto">Alt+O</span></a>
             @endcan
             <a class="btn btn-side" data-needs-selection="res-grid" data-action="letter" data-hotkey="alt+l">{{ __('pms.res.letter') }} <span class="kbd ml-auto">Alt+L</span></a>
             @if ($canCancel)

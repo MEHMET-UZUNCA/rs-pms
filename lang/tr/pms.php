@@ -106,7 +106,7 @@ return [
         'room_charges_open' => 'Oda hesabı açık', 'room_charges_closed' => 'Oda hesabı kapalı', 'none' => '—', 'no_folio' => 'yok',
         'fa_number' => 'Hesap no', 'validity' => 'Geçerlilik', 'open' => 'Açık', 'closed' => 'Kapalı', 'last_postings' => 'Son kayıtlar',
         'business_date_title' => 'İş günü :date',
-        'filters' => ['iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
+        'filters' => ['bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
             'ileri' => 'İleri tarihli', 'fa' => 'İçerideki FA', 'fa-acilacak' => 'Bugün açılacak FA', 'fa-kapanacak' => 'Bugün kapanacak FA',
             'fa-kapali' => 'Kapanmış FA', 'fa-ileri' => 'İleri tarihli FA'],
         'statuses' => ['confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'waitlist' => 'Bekleme listesi', 'in_house' => 'İçeride',
@@ -458,4 +458,6 @@ Kaya, Ayşe
         'confirm' => '":drop" profili ":keep" profiline birleştirilsin mi? Geri alınamaz.', 'done' => ':drop profili :keep profiline birleştirildi.',
         'same' => 'Profil kendisiyle birleştirilemez.', 'type' => 'Yalnız aynı tipteki profiller birleştirilir.', 'already' => 'Profillerden biri zaten birleştirilmiş.',
     ],
+    'rowmenu' => ['card' => 'Rezervasyon kartı', 'room' => 'Oda ata', 'checkin' => 'Giriş yap', 'folio' => 'Folyo / ödeme', 'checkout' => 'Çıkış yap',
+        'letter' => 'Onay mektubu', 'navigator' => 'Navigatörde aç'],
 ];

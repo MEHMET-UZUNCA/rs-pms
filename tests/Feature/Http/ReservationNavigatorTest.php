@@ -127,4 +127,17 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->actingAs($this->user)->post("/rezervasyon/{$inHouse->id}/iptal", ['reason_code_id' => $reason])->assertSessionHas('error');
         $this->assertSame('in_house', $inHouse->fresh()->status);
     }
+
+    public function test_operational_views_tentative_cancelled_no_show(): void
+    {
+        $res = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();
+        $res->update(['status' => 'tentative']);
+        $this->actingAs($this->user)->get('/rezervasyon?f=bekleyen')->assertOk()->assertSee('Arslan, Can')->assertSee('Tentative');
+        $reason = DB::table('pms_reason_codes')->where('property_id', $this->property)->where('category', 'cancellation')->value('id');
+        $this->actingAs($this->user)->post("/rezervasyon/{$res->id}/iptal", ['reason_code_id' => $reason]);
+        $this->actingAs($this->user)->get('/rezervasyon?f=iptal')->assertSee('Arslan, Can');
+        $this->actingAs($this->user)->get('/rezervasyon?f=bekleyen')->assertDontSee('Arslan, Can');
+        $this->actingAs($this->user)->get('/rezervasyon?f=noshow')->assertOk();
+        $this->actingAs($this->user)->get('/rezervasyon?f=gidecek')->assertSee('data-url-checkout=', false);
+    }
 }

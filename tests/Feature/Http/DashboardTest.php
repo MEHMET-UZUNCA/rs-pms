@@ -67,4 +67,20 @@ class DashboardTest extends DomainTestCase
     {
         $this->actingAs($this->user('IFC'))->get('/')->assertOk()->assertDontSee('Front Office Dashboard')->assertSee('data-available-screens', false);
     }
+
+    public function test_dashboard_rows_have_actions(): void
+    {
+        $html = $this->actingAs($this->user('FOA'))->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('id="row-menu"', $html);
+        $arrivals = explode('data-list="departures"', explode('data-list="arrivals"', $html)[1])[0];
+        preg_match_all("/data-row-actions='([^']*)'/", $arrivals, $m);
+        $this->assertNotEmpty($m[1]);
+        $keys = array_keys(json_decode(html_entity_decode($m[1][0]), true));
+        $this->assertContains('card', $keys);
+        $this->assertTrue(in_array('checkin', $keys, true) || in_array('room', $keys, true));   // odası varsa giriş, yoksa oda ata
+        preg_match_all("/data-row-actions='([^']*)'/", explode('data-list="departures"', $html)[1], $d);
+        if ($d[1]) {
+            $this->assertContains('checkout', array_keys(json_decode(html_entity_decode($d[1][0]), true)));
+        }
+    }
 }

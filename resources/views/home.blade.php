@@ -4,6 +4,10 @@
 @php
     $money = fn ($x) => number_format((float) $x, 2, ',', '.');
     $canRes = Gate::allows('permission', 'reservations.view');
+    $canEdit = Gate::allows('permission', 'reservations.edit');
+    $canCheckIn = Gate::allows('permission', 'reservations.checkin');
+    $canBill = Gate::allows('permission', 'cashiering.billing');
+    $canCheckOut = $canBill && Gate::allows('permission', 'reservations.checkout');
 @endphp
 <div class="win flex-1">
     <div class="win-title"><span>{{ $dash ? __('pms.dash.title') : __('pms.common.home') }}</span>
@@ -85,7 +89,19 @@
                             <thead><tr><th>{{ __('pms.prof.name') }}</th><th>{{ __('pms.card.room') }}</th><th>{{ $list === 'arrivals' ? 'ETA' : 'ETD' }}</th><th class="text-right">{{ __('pms.dash.pax_short') }}</th><th></th></tr></thead>
                             <tbody>
                             @forelse ($dash[$list] as $row)
-                                <tr>
+                                @php
+                                    $bdKey = $dash['business_date']->toDateString();
+                                    $actions = array_filter([
+                                        'card' => $canEdit ? route('reservations.edit', $row->id) : null,
+                                        'room' => $canEdit && $list === 'arrivals' && ! $row->room ? route('reservations.edit', $row->id) : null,
+                                        'checkin' => $canCheckIn && $list === 'arrivals' && $row->room ? route('reservations.check-in', $row->id) : null,
+                                        'folio' => $canBill && $list === 'departures' ? route('billing.reservation', $row->id) : null,
+                                        'checkout' => $canCheckOut && $list === 'departures' ? route('billing.reservation', $row->id) : null,
+                                        'letter' => $canRes && $list === 'arrivals' ? route('reservations.letter', $row->id) : null,
+                                        'navigator' => $canRes ? route('reservations.navigator', ['secili' => $row->id, 'no' => $row->confirmation_number]) : null,
+                                    ]);
+                                @endphp
+                                <tr @if ($actions) data-row-actions='@json($actions)' tabindex="0" class="cursor-pointer focus:outline-none focus:bg-row-selected" @endif>
                                     <td class="font-semibold">@if ($canRes)<a class="hover:underline" href="{{ route('reservations.edit', $row->id) }}">{{ $row->display_name }}</a>@else{{ $row->display_name }}@endif
                                         @if ($row->vip) <span class="text-[11px] px-1 rounded bg-warning/20">VIP {{ $row->vip }}</span>@endif
                                         @if ($row->profile_status === 'blacklisted') <span class="text-[11px] text-danger">{{ __('pms.prof.statuses.blacklisted') }}</span>@endif</td>
@@ -105,6 +121,7 @@
                 @endforeach
             </div>
         </div>
+        @include('partials.row-menu')
     @else
         <div class="p-4 text-muted">
             <p>{{ __('pms.common.available_screens') }}</p>

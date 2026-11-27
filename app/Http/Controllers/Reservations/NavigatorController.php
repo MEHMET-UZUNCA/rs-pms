@@ -26,6 +26,7 @@ class NavigatorController extends Controller
     public const FILTERS = [
         'iceride' => ['İçeridekiler', 'alt+1'], 'gelecek' => ['Bugün gelecekler', 'alt+2'], 'gidecek' => ['Bugün gidecekler', 'alt+3'],
         'cikmis' => ['Çıkış yapmış', 'alt+4'], 'ileri' => ['İleri tarihli', 'alt+5'],
+        'bekleyen' => ['Opsiyon / bekleme', ''], 'iptal' => ['İptal', ''], 'noshow' => ['No-show', ''],   // kısayolsuz (Alt+Shift Windows'ta dil değiştirir)
         'fa' => ['İçerideki FA', 'alt+6'], 'fa-acilacak' => ['Bugün açılacak FA', 'alt+7'], 'fa-kapanacak' => ['Bugün kapanacak FA', 'alt+8'],
         'fa-kapali' => ['Kapanmış FA', 'alt+9'], 'fa-ileri' => ['İleri tarihli FA', 'alt+0'],
     ];
@@ -140,6 +141,10 @@ class NavigatorController extends Controller
             ->when($filter === 'cikmis', fn (Builder $q) => $q->where('status', 'checked_out')
                 ->when(! $arrival && ! $departure, fn ($w) => $w->where('check_out_business_date', $day)))
             ->when($filter === 'ileri', fn (Builder $q) => $q->whereIn('status', $active)->where('arrival_date', '>', $day))
+            // Operasyon görünümleri: opsiyon / bekleme listesi (bugün ve sonrası), iptaller (bugün iptal edilen ya da gelişi bugün ve sonrası), son 7 günün no-show'ları
+            ->when($filter === 'bekleyen', fn (Builder $q) => $q->whereIn('status', ['tentative', 'waitlist', 'inquiry'])->where('arrival_date', '>=', $day))
+            ->when($filter === 'iptal', fn (Builder $q) => $q->where('status', 'cancelled')->where(fn ($w) => $w->where('arrival_date', '>=', $day)->orWhereDate('cancelled_at', now()->toDateString())))
+            ->when($filter === 'noshow', fn (Builder $q) => $q->where('status', 'no_show')->where('arrival_date', '>=', $bd->subDays(7)->toDateString()))
             ->when(filled($request->query('ad')), fn (Builder $q) => $q->whereHas('profile', fn ($p) => $p->where(fn ($w) => $w
                 ->where('display_name', 'like', $like($request->query('ad')))->orWhere('last_name', 'like', $like($request->query('ad')))
                 ->orWhere('first_name', 'like', $like($request->query('ad'))))))
