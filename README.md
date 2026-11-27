@@ -22,7 +22,11 @@ Fidelio Suite8'in yerini alacak şekilde tasarlanır; muhasebe **Logo**'da kalı
 | 8 | [Kapsam kontrolü](docs/08-kapsam-kontrolu.md) | Suite8 işlevleri → RS PMS tabloları |
 | 9 | [Kamra karşılaştırması](docs/09-kamra-karsilastirma.md) | Kamra'nın 148 veri tipi → RS PMS tabloları |
 | 10 | [Raporlar](docs/10-raporlar.md) | Rapor ekranı planı ve başlangıç rapor seti |
-| 11 | [Web API](docs/11-web-api.md) | Web sitesinin oda tipi, online fiyat ve müsaitlik okuduğu API |
+| 11 | [Web API](docs/11-web-api.md) | Web sitesinin oda tipi, online fiyat, müsaitlik okuduğu ve rezervasyon açtığı API |
+| 12 | [Elektraweb karşılaştırması](docs/12-elektraweb-karsilastirma.md) | Ön büro ekran ekran karşılaştırma ve eksikler |
+| 13 | [Kabul testi](docs/13-kabul-testi.md) | Ekran genişliği ve klavye testleri |
+| 14 | [Genel kontrol](docs/14-genel-kontrol.md) | Baştan sona kontrol, bulunanlar ve öncelikler |
+| 15 | [Sunucu kurulumu](docs/15-sunucu-kurulum.md) | Canlı kurulum, cron, Supervisor, HTTPS, yedekleme / geri yükleme, güncelleme |
 | — | [Ekran taslakları](docs/ekranlar/README.md) | Görüntüler, videolar ve kaynak dosyalar |
 | — | [Fidelio kolon kolon eşleme](docs/fidelio/kolon-kolon.md) | PROISV 13 view, 391 kolon |
 

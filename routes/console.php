@@ -14,3 +14,7 @@ Schedule::command('pms:fetch-exchange-rates')->dailyAt('15:40')->timezone('Europ
 
 // KVKK: saklama süresi dolan misafir profilleri (Rezervasyon seçeneklerinde süre girilmişse) her ayın 1'inde gece anonimleştirilir
 Schedule::command('pms:anonymize-profiles')->monthlyOn(1, '03:30')->timezone('Asia/Nicosia')->withoutOverlapping();
+
+// Veritabanı yedeği: her gece 04:15 (gece kapanışından sonra) ve gün içinde 4 saatte bir (docs/15-sunucu-kurulum.md)
+Schedule::command('pms:backup')->dailyAt('04:15')->timezone('Asia/Nicosia')->withoutOverlapping();
+Schedule::command('pms:backup --keep=30')->cron('0 8,12,16,20 * * *')->timezone('Asia/Nicosia')->withoutOverlapping();
