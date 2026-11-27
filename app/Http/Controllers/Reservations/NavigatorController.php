@@ -10,6 +10,7 @@ use App\Domain\Reservations\Services\ReservationService;
 use App\Domain\Reservations\Support\ReservationOptions;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
+use App\Support\UserPreferences;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -38,6 +39,22 @@ class NavigatorController extends Controller
 
     private const LIMIT = 500;
 
+    /** Navigatör kolonları (Fidelio grid gibi kullanıcı seçer ve sıralar); varsayılanda gece ve fiyat kodu kapalı (alt panelde var). */
+    public const COLUMNS = ['room', 'guest', 'arrival', 'departure', 'nights', 'room_type', 'rate_code', 'pax', 'company', 'status', 'balance', 'conf_no'];
+
+    public const DEFAULT_COLUMNS = ['room', 'guest', 'arrival', 'departure', 'room_type', 'pax', 'company', 'status', 'balance', 'conf_no'];
+
+    public const PANELS = ['none' => 0, 's' => 'h-32', 'm' => 'h-48', 'l' => 'h-72'];
+
+    /** @return list<string> kullanıcının kolonları (sırayla) */
+    public static function columns(?\App\Models\User $user): array
+    {
+        $saved = UserPreferences::get($user, 'navigator.columns');
+        $cols = is_array($saved) ? array_values(array_intersect($saved, self::COLUMNS)) : [];
+
+        return $cols ?: self::DEFAULT_COLUMNS;
+    }
+
     public function index(Request $request): View
     {
         $property = app(Property::class);
@@ -59,6 +76,7 @@ class NavigatorController extends Controller
                 'gelis' => $arrival?->format('d.m.Y') ?? (string) $request->query('gelis'), 'cikis' => $departure?->format('d.m.Y') ?? (string) $request->query('cikis'),
             ],
             'selected' => (int) $request->query('secili', session('selected', 0)),
+            'columns' => self::columns($request->user()), 'panel' => UserPreferences::get($request->user(), 'navigator.panel', 'm'),
             'cancelReasons' => DB::table('pms_reason_codes')->where('property_id', $property->id)->where('category', 'cancellation')
                 ->where('is_active', true)->orderBy('code')->get(['id', 'code', 'name']),
         ]);
@@ -105,6 +123,21 @@ class NavigatorController extends Controller
         }
 
         return $back;
+    }
+
+    /** Kolon ve alt panel tercihlerini kaydeder (boş liste = varsayılan). */
+    public function preferences(Request $request): RedirectResponse
+    {
+        $data = $request->validate(['cols' => ['nullable', 'array'], 'cols.*' => [\Illuminate\Validation\Rule::in(self::COLUMNS)],
+            'panel' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(self::PANELS))], 'reset' => ['nullable']]);
+        if ($request->boolean('reset')) {
+            UserPreferences::set($request->user(), 'navigator', null);
+        } else {
+            UserPreferences::set($request->user(), 'navigator.columns', array_values(array_unique($data['cols'] ?? [])) ?: null);
+            UserPreferences::set($request->user(), 'navigator.panel', $data['panel'] ?? 'm');
+        }
+
+        return back()->with('status', __('pms.res.columns_saved'));
     }
 
     /** Rezervasyon iptali (Fidelio Cancel): neden zorunlu; iptal numarası verilir, oda ve geceler boşalır, durum geçmişine yazılır. */

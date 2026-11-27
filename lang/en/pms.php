@@ -89,6 +89,7 @@ return [
     ],
 
     'res' => [
+        'columns' => 'Columns', 'columns_hint' => 'Choose and order the columns of the list; saved for your user.', 'columns_saved' => 'Your list settings were saved.', 'columns_reset' => 'Default', 'move_up' => 'Move up', 'move_down' => 'Move down', 'panel' => 'Detail panel', 'panels' => ['none' => 'Hidden', 's' => 'Small', 'm' => 'Medium', 'l' => 'Large'], 'cols' => ['room' => 'Room', 'guest' => 'Guest', 'arrival' => 'Arrival', 'departure' => 'Departure', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'company' => 'Company / Agent', 'status' => 'Status', 'balance' => 'Balance', 'conf_no' => 'Conf. No.'],
         'cancel_reason' => 'Cancellation reason', 'cancel_title' => 'Cancel Reservation', 'cancel_confirm' => 'Cancel the selected reservation?', 'cancel_hint' => 'Only reservations that have not arrived can be cancelled. The room is released and a cancellation number is given.', 'cancelled_ok' => ':name — reservation cancelled, cancellation no. :no.',
         'dirty_blocked' => 'Room :room is dirty; check-in is not allowed until housekeeping sets it clean.', 'dirty_warning' => 'Note: room :room is still dirty.',
         'letter_email' => 'Guest e-mail', 'letter_send' => 'Send by e-mail', 'letter_sent' => 'Confirmation letter sent to :email.', 'letter_failed' => 'The e-mail could not be sent. Check the SMTP settings.',

@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Navigatör kolonları kullanıcıya özel (Fidelio grid gibi): Kolonlar (Alt+K) penceresinde kolon seç / gizle, ↑ ↓ ile sırala, alt panel yüksekliği (gizli / küçük / orta / büyük), Varsayılan. Varsayılanda Gece ve Fiyat kodu kapalı (alt panelde görünür) — dizüstü ekranda yatay kaydırma olmaz. Tercihler users.preferences'ta (migration). (M.U)
+
 - Ön büro aksiyonları: kontrol panelindeki bugün gelecek / çıkacak satırlarına tıklayınca (ya da satırda Enter) işlem menüsü — rezervasyon kartı, oda ata (odası yoksa), giriş G (odası varsa), folyo / ödeme B, çıkış O, onay mektubu L, navigatörde aç N; ↑/↓ satır ve menüde gezinme, Esc kapatır. Navigatörde yeni operasyon görünümleri: Opsiyon / bekleme, İptal (bugün iptal edilen ya da gelişi bugün ve sonrası), No-show (son 7 gün); çıkış günü gelmiş misafir için Check Out düğmesi (Alt+O, folyoya gider). (M.U)
 
 - Tipografi ve görsel hiyerarşi (inceleme önerisi): Inter yazı tipi projeye gömülü (sunucuda internet gerekmez; Türkçe karakterler dahil), gövde 14 px, tablolar 13.5 px, etiketler 12.5 px, satır aralığı 1.45; kalınlık azaltıldı (yarı kalın 580, tablolarda ad sütunu ve seçili satır 500), rakamlar tablo hizalı. Pencere başlıkları koyu mavi yerine beyaz zemin + ince marka çizgisi, ikinci bilgi gri. Giriş alanları ve düğmeler 32 px; sağ komut sütunu biraz genişletildi, uzun düğme adları taşmaz. Önce / sonra: docs/ekran/tipografi-*.png. (M.U)

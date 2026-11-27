@@ -497,6 +497,16 @@ if (rowMenu) {
     }, true);
 }
 
+// Sıralanabilir liste (navigatör kolonları): ↑ / ↓ düğmeleri satırı taşır
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-sortable] [data-move]');
+    if (!btn) return;
+    const li = btn.closest('li');
+    if (btn.dataset.move === 'up' && li.previousElementSibling) li.parentNode.insertBefore(li, li.previousElementSibling);
+    if (btn.dataset.move === 'down' && li.nextElementSibling) li.parentNode.insertBefore(li.nextElementSibling, li);
+    btn.focus();
+});
+
 // Tümünü seç (Kat Hizmetleri oda listesi)
 document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
     all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });

@@ -140,4 +140,25 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->actingAs($this->user)->get('/rezervasyon?f=noshow')->assertOk();
         $this->actingAs($this->user)->get('/rezervasyon?f=gidecek')->assertSee('data-url-checkout=', false);
     }
+
+    public function test_user_column_and_panel_preferences(): void
+    {
+        $html = $this->actingAs($this->user)->get('/rezervasyon')->getContent();
+        $this->assertStringContainsString('id="columns-dialog"', $html);
+        $this->assertStringNotContainsString('<th >Rate Code</th>', $html);
+        preg_match('/<thead><tr>(.*?)<\/tr><\/thead>/s', explode('id="res-grid"', $html)[1], $m);
+        $this->assertSame(['Room', 'Guest', 'Arrival', 'Departure', 'Room Type', 'Pax', 'Company / Agent', 'Status', 'Balance', 'Conf. No.'], array_map('trim', array_map('strip_tags', explode('</th>', trim(str_replace('</th>', '</th>', $m[1])), -1))));
+
+        $this->actingAs($this->user)->post('/rezervasyon/tercihler', ['cols' => ['guest', 'room', 'rate_code', 'balance'], 'panel' => 'none'])->assertSessionHas('status');
+        $html = $this->actingAs($this->user)->get('/rezervasyon')->getContent();
+        preg_match('/<thead><tr>(.*?)<\/tr><\/thead>/s', explode('id="res-grid"', $html)[1], $m);
+        $this->assertSame(['Guest', 'Room', 'Rate Code', 'Balance'], array_map('trim', array_map('strip_tags', explode('</th>', $m[1], -1))));
+        $this->assertMatchesRegularExpression('/id="res-detail"[^>]*hidden/', $html);
+
+        // Başka kullanıcı etkilenmez; varsayılana dönülür
+        $this->actingAs($this->user)->post('/rezervasyon/tercihler', ['reset' => '1']);
+        preg_match('/<thead><tr>(.*?)<\/tr><\/thead>/s', explode('id="res-grid"', $this->actingAs($this->user)->get('/rezervasyon')->getContent())[1], $m);
+        $this->assertCount(10, explode('</th>', $m[1], -1));
+        $this->actingAs($this->user)->post('/rezervasyon/tercihler', ['cols' => ['nope']])->assertSessionHasErrors('cols.0');
+    }
 }

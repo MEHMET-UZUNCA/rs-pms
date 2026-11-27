@@ -63,8 +63,7 @@
                 @else
                     <table class="grid-table" id="res-grid" data-grid data-selected="{{ $selected }}" data-detail-target="#res-detail">
                         <thead><tr>
-                            <th>{{ __('pms.res.room') }}</th><th>{{ __('pms.res.guest') }}</th><th>{{ __('pms.res.arrival') }}</th><th>{{ __('pms.res.departure') }}</th><th class="text-right">{{ __('pms.res.nights') }}</th><th>{{ __('pms.res.room_type') }}</th><th>{{ __('pms.res.rate_code') }}</th>
-                            <th>{{ __('pms.res.pax') }}</th><th>{{ __('pms.res.company_agent') }}</th><th>{{ __('pms.res.status') }}</th><th class="text-right">{{ __('pms.common.balance') }}</th><th>{{ __('pms.res.conf_no') }}</th>
+                            @foreach ($columns as $col)<th @class(['text-right' => in_array($col, ['nights', 'balance'], true)])>{{ __('pms.res.cols.'.$col) }}</th>@endforeach
                         </tr></thead>
                         <tbody>
                         @foreach ($rows as $r)
@@ -75,19 +74,25 @@
                                 @if ($canCancel && in_array($r->status, ['inquiry', 'tentative', 'confirmed', 'waitlist'], true)) data-url-cancel="{{ route('reservations.cancel', $r) }}" @endif
                                 @if (in_array($r->status, ['confirmed', 'tentative'], true) && $r->arrival_date?->isSameDay($businessDate) && ! $r->queued_at) data-url-queue="{{ route('queue.add', $r) }}" @endif
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
-                                <td class="font-semibold">{{ $r->room?->number }}</td>
-                                <td>{{ $r->profile?->display_name }}</td>
-                                <td>{{ $r->arrival_date?->format('d.m.Y') }}</td><td>{{ $r->departure_date?->format('d.m.Y') }}@if ($r->etd && substr((string) $r->etd, 0, 5) > ($coTime ??= \App\Domain\Reservations\Support\ReservationOptions::get($r->property_id)['check_out_time'])) <span class="text-danger font-semibold text-[11px]" title="ETD {{ substr((string) $r->etd, 0, 5) }}">{{ __('pms.card.late_co') }} {{ substr((string) $r->etd, 0, 5) }}</span>@endif</td>
-                                <td class="text-right">{{ $r->nights }}</td>
-                                <td>{{ $r->roomType?->code }}</td><td>{{ $r->rateCode?->code }}</td>
-                                <td>{{ $r->adults }}@if ($r->children)+{{ $r->children }}@endif</td>
-                                <td>{{ $r->agent_name ?? $r->company_name }}</td>
-                                <td><span class="px-2 py-0.5 rounded-full text-[12px] {{ $badge($r->status) }}">{{ __('pms.res.statuses.'.$r->status) }}</span></td>
-                                <td class="text-right tabular-nums">{{ $money($r->balance) }}</td>
-                                <td class="text-muted">{{ $r->confirmation_number }}</td>
+                                @foreach ($columns as $col)
+                                    @switch($col)
+                                        @case('room')<td class="font-semibold">{{ $r->room?->number }}</td>@break
+                                        @case('guest')<td>{{ $r->profile?->display_name }}</td>@break
+                                        @case('arrival')<td>{{ $r->arrival_date?->format('d.m.Y') }}</td>@break
+                                        @case('departure')<td>{{ $r->departure_date?->format('d.m.Y') }}@if ($r->etd && substr((string) $r->etd, 0, 5) > ($coTime ??= \App\Domain\Reservations\Support\ReservationOptions::get($r->property_id)['check_out_time'])) <span class="text-danger font-semibold text-[11px]" title="ETD {{ substr((string) $r->etd, 0, 5) }}">{{ __('pms.card.late_co') }} {{ substr((string) $r->etd, 0, 5) }}</span>@endif</td>@break
+                                        @case('nights')<td class="text-right">{{ $r->nights }}</td>@break
+                                        @case('room_type')<td>{{ $r->roomType?->code }}</td>@break
+                                        @case('rate_code')<td>{{ $r->rateCode?->code }}</td>@break
+                                        @case('pax')<td>{{ $r->adults }}@if ($r->children)+{{ $r->children }}@endif</td>@break
+                                        @case('company')<td>{{ $r->agent_name ?? $r->company_name }}</td>@break
+                                        @case('status')<td><span class="px-2 py-0.5 rounded-full text-[12px] {{ $badge($r->status) }}">{{ __('pms.res.statuses.'.$r->status) }}</span></td>@break
+                                        @case('balance')<td class="text-right tabular-nums">{{ $money($r->balance) }}</td>@break
+                                        @case('conf_no')<td class="text-muted">{{ $r->confirmation_number }}</td>@break
+                                    @endswitch
+                                @endforeach
                             </tr>
                         @endforeach
-                        <tr data-grid-empty @if ($rows->isNotEmpty()) hidden @endif><td colspan="12" class="text-center text-muted py-6">{{ __('pms.common.no_records') }}</td></tr>
+                        <tr data-grid-empty @if ($rows->isNotEmpty()) hidden @endif><td colspan="{{ count($columns) }}" class="text-center text-muted py-6">{{ __('pms.common.no_records') }}</td></tr>
                         </tbody>
                     </table>
                 @endif
@@ -96,7 +101,7 @@
                 <span>{{ __('pms.common.records', ['count' => $rows->count()]) }} @if ($rows->count() >= $limit){{ __('pms.res.limit_hint', ['limit' => $limit]) }}@endif</span>
                 <span class="ml-auto">{{ __('pms.res.keys_hint') }}</span>
             </div>
-            <div id="res-detail" class="border-t border-line min-h-44 max-h-[40%] overflow-auto bg-surface" data-empty='<p class="p-3 text-muted">{{ __('pms.common.select_row') }}</p>'>
+            <div id="res-detail" @class(['border-t border-line overflow-auto bg-surface shrink-0', \App\Http\Controllers\Reservations\NavigatorController::PANELS[$panel] ?? 'h-48']) @if ($panel === 'none') hidden @endif data-empty='<p class="p-3 text-muted">{{ __('pms.common.select_row') }}</p>'>
                 <p class="p-3 text-muted">{{ __('pms.common.select_row') }}</p>
             </div>
         </section>
@@ -132,9 +137,36 @@
             @if ($canCancel)
                 <button type="button" form="cancel-form" class="btn btn-side" data-needs-selection="res-grid" data-action="cancel" data-modal-open="cancel-dialog" data-hotkey="alt+x">{{ __('pms.res.cancel') }} <span class="kbd ml-auto">Alt+X</span></button>
             @endif
-            <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
+            <button type="button" class="btn btn-side mt-auto" data-modal-open="columns-dialog" data-hotkey="alt+k">{{ __('pms.res.columns') }} <span class="kbd ml-auto">Alt+K</span></button>
+            <a href="{{ route('home') }}" class="btn btn-side" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </div>
+</div>
+{{-- Kolon ve alt panel tercihleri (kullanıcıya özel) --}}
+<div id="columns-dialog" data-modal hidden class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <form method="POST" action="{{ route('reservations.preferences') }}" class="win w-[26rem] max-w-full" role="dialog" aria-modal="true" aria-labelledby="columns-title">
+        @csrf
+        <div class="win-title"><span id="columns-title">{{ __('pms.res.columns') }}</span></div>
+        <div class="p-3 flex flex-col gap-2">
+            <p class="text-[12.5px] text-muted">{{ __('pms.res.columns_hint') }}</p>
+            <ul class="border border-line rounded divide-y divide-line/60" data-sortable>
+                @foreach (array_merge($columns, array_values(array_diff(\App\Http\Controllers\Reservations\NavigatorController::COLUMNS, $columns))) as $col)
+                    <li class="flex items-center gap-2 px-2 py-1">
+                        <label class="flex items-center gap-2 flex-1"><input type="checkbox" name="cols[]" value="{{ $col }}" @checked(in_array($col, $columns, true)) @if ($loop->first) data-autofocus @endif> {{ __('pms.res.cols.'.$col) }}</label>
+                        <button type="button" class="btn !h-6 !px-2" data-move="up" aria-label="{{ __('pms.res.move_up') }}">↑</button>
+                        <button type="button" class="btn !h-6 !px-2" data-move="down" aria-label="{{ __('pms.res.move_down') }}">↓</button>
+                    </li>
+                @endforeach
+            </ul>
+            <label><span class="field-label">{{ __('pms.res.panel') }}</span>
+                <select name="panel" class="input">@foreach (array_keys(\App\Http\Controllers\Reservations\NavigatorController::PANELS) as $p)<option value="{{ $p }}" @selected($panel === $p)>{{ __('pms.res.panels.'.$p) }}</option>@endforeach</select></label>
+        </div>
+        <div class="flex gap-2 px-3 py-2 border-t border-line">
+            <button name="reset" value="1" class="btn">{{ __('pms.res.columns_reset') }}</button>
+            <button class="btn btn-primary ml-auto">{{ __('pms.common.ok') }}</button>
+            <button type="button" class="btn" data-modal-close data-hotkey="escape">{{ __('pms.common.cancel') }}</button>
+        </div>
+    </form>
 </div>
 @if ($canCancel)
 {{-- Rezervasyon iptali: neden zorunlu --}}
