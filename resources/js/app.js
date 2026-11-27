@@ -251,10 +251,13 @@ if (profileSearch) {
     const chosen = document.querySelector('[data-profile-chosen]');
     const newGuest = document.querySelectorAll('[data-new-guest], [data-new-guest-label]');
     let timer;
+    // Kara listedeki misafir kırmızı ve nedeniyle gösterilir (Fidelio uyarısı); rezervasyon engellenmez.
+    const label = (p) => `${p.display_name}${p.nationality_code ? ' · ' + p.nationality_code : ''}${p.status === 'blacklisted' ? ` — ${profileSearch.dataset.blacklisted}: ${p.blacklist_reason ?? ''}` : ''}`;
     const choose = (p) => {
         idInput.value = p ? p.id : '';
-        chosen.textContent = p ? `${p.display_name}${p.nationality_code ? ' · ' + p.nationality_code : ''}` : '';
+        chosen.textContent = p ? label(p) : '';
         chosen.classList.toggle('hidden', !p);
+        chosen.classList.toggle('!text-danger', p?.status === 'blacklisted');
         newGuest.forEach((el) => el.classList.toggle('hidden', !!p));
         results.classList.add('hidden');
     };
@@ -269,8 +272,8 @@ if (profileSearch) {
             results.replaceChildren(...list.map((p) => {
                 const b = document.createElement('button');
                 b.type = 'button';
-                b.className = 'block w-full text-left px-2 py-1 hover:bg-brand-50';
-                b.textContent = `${p.display_name}${p.nationality_code ? ' · ' + p.nationality_code : ''}`;
+                b.className = 'block w-full text-left px-2 py-1 hover:bg-brand-50' + (p.status === 'blacklisted' ? ' text-danger font-semibold' : '');
+                b.textContent = label(p);
                 b.addEventListener('click', () => { choose(p); profileSearch.value = p.display_name; });
                 return b;
             }));

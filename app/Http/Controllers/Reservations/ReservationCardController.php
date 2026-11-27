@@ -96,7 +96,8 @@ class ReservationCardController extends Controller
 
         return response()->json(Profile::query()->where('property_id', app(Property::class)->id)->whereIn('type', $types)
             ->where(fn ($w) => $w->where('display_name', 'like', $q.'%')->orWhere('last_name', 'like', $q.'%'))
-            ->orderBy('display_name')->limit(15)->get(['id', 'display_name', 'nationality_code', 'type']));
+            ->where('status', '!=', 'inactive')->whereNull('merged_into_id')
+            ->orderBy('display_name')->limit(15)->get(['id', 'display_name', 'nationality_code', 'type', 'status', 'blacklist_reason']));
     }
 
     private function validated(Request $request, ?Reservation $reservation): array

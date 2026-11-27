@@ -41,7 +41,7 @@
                     <input type="hidden" name="profile_id" value="{{ old('profile_id') }}" data-profile-id>
                     <div class="relative">
                         <label class="field-label" for="profile_search">{{ __('pms.card.search_profile') }}</label>
-                        <input id="profile_search" class="input" autocomplete="off" data-profile-search="{{ route('reservations.profiles') }}" autofocus>
+                        <input id="profile_search" class="input" autocomplete="off" data-profile-search="{{ route('reservations.profiles') }}" data-blacklisted="{{ __('pms.prof.statuses.blacklisted') }}" autofocus>
                         <div class="absolute z-20 left-0 right-0 bg-panel border border-line rounded shadow-lg hidden max-h-60 overflow-auto" data-profile-results></div>
                     </div>
                     <div class="text-[12px] font-semibold text-brand-700 hidden" data-profile-chosen></div>
@@ -58,6 +58,9 @@
                     </div>
                 @else
                     <div class="text-[15px] font-semibold">{{ $r->profile?->display_name }} <span class="text-muted font-normal">{{ $r->profile?->nationality_code }}</span></div>
+                    @if ($r->profile?->status === 'blacklisted')
+                        <div class="flash flash-error !py-1" role="alert"><b>{{ __('pms.prof.statuses.blacklisted') }}:</b> {{ $r->profile->blacklist_reason }}</div>
+                    @endif
                     <div class="text-[12px] text-muted">{{ $r->profile?->communications->pluck('value')->implode(' · ') }}</div>
                 @endif
             </fieldset>

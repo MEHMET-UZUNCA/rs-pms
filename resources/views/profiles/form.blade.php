@@ -12,6 +12,7 @@
     $docs = old('documents', $documents);
     $docTypes = \App\Domain\Profiles\Services\ProfileService::DOCUMENT_TYPES;
     $active = old('active', $profile->status !== 'inactive' ? '1' : '0') === '1';
+    $blacklisted = old('blacklisted', $profile->status === 'blacklisted' ? '1' : '0') === '1';
 @endphp
 <form method="POST" action="{{ $profile->exists ? route('profiles.update', $profile) : route('profiles.store', $profile->type) }}" class="win flex-1">
     @csrf
@@ -72,8 +73,11 @@
         <div class="grid gap-3 content-start">
         <section class="win !min-h-fit p-3 grid grid-cols-[9rem_1fr] gap-x-2 gap-y-1.5 items-center content-start">
             <label for="active">{{ __('pms.prof.active') }}</label>
-            <label class="flex items-center gap-2"><input type="hidden" name="active" value="0"><input type="checkbox" id="active" name="active" value="1" @checked($active)>
-                @if ($profile->status === 'blacklisted')<span class="text-danger font-semibold">{{ __('pms.prof.statuses.blacklisted') }}</span>@endif</label>
+            <label class="flex items-center gap-2"><input type="hidden" name="active" value="0"><input type="checkbox" id="active" name="active" value="1" @checked($active)></label>
+            <label for="blacklisted" class="text-danger font-semibold">{{ __('pms.prof.statuses.blacklisted') }}</label>
+            <label class="flex items-center gap-2"><input type="hidden" name="blacklisted" value="0"><input type="checkbox" id="blacklisted" name="blacklisted" value="1" @checked($blacklisted)></label>
+            <label for="blacklist_reason">{{ __('pms.prof.blacklist_reason') }}</label>
+            <input id="blacklist_reason" name="blacklist_reason" value="{{ $v('blacklist_reason') }}" maxlength="500" class="input @error('blacklist_reason') input-error @enderror">
             @if ($individual)
                 <label for="birth_date">{{ __('pms.prof.birthday_place') }}</label>
                 <div class="grid grid-cols-[8rem_1fr] gap-2"><input id="birth_date" name="birth_date" value="{{ old('birth_date', $profile->birth_date?->format('d.m.Y')) }}" class="input @error('birth_date') input-error @enderror" autocomplete="off" placeholder="gg.aa.yyyy">

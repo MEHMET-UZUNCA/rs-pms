@@ -138,18 +138,22 @@ class ProfileController extends Controller
             'phone' => ['nullable', 'string', 'max:40'], 'mobile' => ['nullable', 'string', 'max:40'], 'email' => ['nullable', 'email', 'max:190'],
             'address.line1' => ['nullable', 'string', 'max:200'], 'address.line2' => ['nullable', 'string', 'max:200'], 'address.postal_code' => ['nullable', 'string', 'max:15'],
             'address.city' => ['nullable', 'string', 'max:100'], 'address.state' => ['nullable', 'string', 'max:60'], 'address.country_code' => ['nullable', Rule::exists('pms_countries', 'code')],
+            'blacklist_reason' => ['nullable', 'required_if:blacklisted,1', 'string', 'max:500'],
             'documents' => ['nullable', 'array', 'max:10'], 'documents.*.id' => ['nullable', 'integer'],
             'documents.*.type' => ['nullable', 'required_with:documents.*.number', Rule::in(ProfileService::DOCUMENT_TYPES)],
             'documents.*.number' => ['nullable', 'string', 'max:40'],
         ], [], [
             'last_name' => __('pms.prof.last_name'), 'company_name' => __('pms.prof.company_name'), 'birth_date' => __('pms.prof.birth_date'), 'email' => __('pms.users.email'),
-            'wedding_date' => __('pms.prof.wedding_date'), 'documents.*.type' => __('pms.prof.doc_type'),
+            'wedding_date' => __('pms.prof.wedding_date'), 'blacklist_reason' => __('pms.prof.blacklist_reason'), 'documents.*.type' => __('pms.prof.doc_type'),
         ]);
         foreach (['no_mailing', 'no_emailing', 'store_private_data'] as $flag) {
             $data[$flag] = $request->boolean($flag);
         }
-        // Active? kutusu; kara listedeki profil aktif kaldıkça kara listede kalır (eski kayıtlar)
-        $data['status'] = $request->boolean('active') ? ($profile?->status === 'blacklisted' ? 'blacklisted' : 'active') : 'inactive';
+        // Kara liste (nedeni zorunlu) > Active? kutusu. Kara listeden çıkınca neden silinir.
+        $data['status'] = $request->boolean('blacklisted') ? 'blacklisted' : ($request->boolean('active') ? 'active' : 'inactive');
+        if ($data['status'] !== 'blacklisted') {
+            $data['blacklist_reason'] = null;
+        }
         if ($request->boolean('documents_sent')) {   // formda belge tablosu var: listede olmayanlar silinir
             $data['documents'] = array_values($data['documents'] ?? []);
         } else {

@@ -56,6 +56,7 @@ class ProfileScreenTest extends DomainTestCase
         foreach (['Position', 'Department', 'Letter greeting', 'Active?', 'Birthday / Place', 'More Fields', 'VIP Code', 'Wedding day', 'Personal Documents'] as $label) {
             $this->assertStringContainsString($label, $form);
         }
+        $this->assertStringContainsString('Blacklist reason', $form);
         $this->assertStringNotContainsString('Marketing consent', $form);
         $this->assertStringNotContainsString('Occupation', $form);
     }
@@ -90,11 +91,25 @@ class ProfileScreenTest extends DomainTestCase
         $this->assertSame(['Özcan, Murat', 'inactive', 0, 0], [$p->display_name, $p->status, $p->communications()->count(), $p->addresses()->count()]);
         $this->assertSame([$doc->id, 'kktc_id'], [(int) DB::table('pms_profile_identities')->where('profile_id', $p->id)->value('id'), DB::table('pms_profile_identities')->where('profile_id', $p->id)->value('document_type')]);
 
-        // Belgelerin hepsi kaldırılırsa silinir; kara listedeki profil aktif kaldıkça kara listede kalır
-        $p->update(['status' => 'blacklisted']);
-        $this->actingAs($this->user)->put("/profiller/{$p->id}", ['last_name' => 'Özcan', 'active' => '1', 'documents_sent' => '1'])->assertSessionHasNoErrors();
-        $this->assertSame(['blacklisted', 0], [$p->fresh()->status, DB::table('pms_profile_identities')->where('profile_id', $p->id)->count()]);
+        // Kara liste: neden zorunlu; belgelerin hepsi kaldırılırsa silinir
+        $this->actingAs($this->user)->put("/profiller/{$p->id}", ['last_name' => 'Özcan', 'active' => '1', 'blacklisted' => '1'])->assertSessionHasErrors('blacklist_reason');
+        $this->actingAs($this->user)->put("/profiller/{$p->id}", ['last_name' => 'Özcan', 'active' => '1', 'blacklisted' => '1', 'blacklist_reason' => 'Unpaid bill', 'documents_sent' => '1'])
+            ->assertSessionHasNoErrors();
+        $this->assertSame(['blacklisted', 'Unpaid bill', 0], [$p->fresh()->status, $p->fresh()->blacklist_reason, DB::table('pms_profile_identities')->where('profile_id', $p->id)->count()]);
         $this->actingAs($this->user)->get('/profiller?ad=Özcan')->assertSee('Blacklisted');
+        $this->actingAs($this->user)->get("/profiller/{$p->id}/duzenle")->assertSee('value="Unpaid bill"', false);
+        $this->actingAs($this->user)->get("/profiller/{$p->id}/ozet")->assertSee('Unpaid bill');
+
+        // Rezervasyonda profil aramasında kara liste ve nedeni gelir; rezervasyon kartında uyarı
+        $found = $this->actingAs($this->user)->getJson('/rezervasyon/profiller?q=Özcan')->assertOk()->json();
+        $this->assertSame(['blacklisted', 'Unpaid bill'], [$found[0]['status'], $found[0]['blacklist_reason']]);
+        $res = \App\Domain\Reservations\Models\Reservation::query()->where('property_id', $this->property)->firstOrFail();
+        $res->update(['profile_id' => $p->id]);
+        $this->actingAs($this->user)->get(route('reservations.edit', $res))->assertOk()->assertSee('Blacklisted:')->assertSee('Unpaid bill');
+
+        // Kara listeden çıkınca neden silinir
+        $this->actingAs($this->user)->put("/profiller/{$p->id}", ['last_name' => 'Özcan', 'active' => '1', 'blacklisted' => '0', 'blacklist_reason' => 'Unpaid bill'])->assertSessionHasNoErrors();
+        $this->assertSame(['active', null], [$p->fresh()->status, $p->fresh()->blacklist_reason]);
     }
 
     public function test_new_company_and_validation(): void
