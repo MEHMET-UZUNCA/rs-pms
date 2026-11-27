@@ -254,9 +254,104 @@
             @endif
         </section>
 
-        @foreach (['inventory', 'packages', 'features', 'credit_card'] as $tab)
-            <section data-tab-panel="{{ $tab }}" class="p-3" hidden><p class="text-muted">{{ __('pms.card.not_yet') }}</p></section>
-        @endforeach
+        {{-- Ctrl+6 Features: oda tercihleri ve uyan boş odalar --}}
+        <section data-tab-panel="features" class="p-3 grid gap-3 lg:grid-cols-[2fr_3fr]" hidden>
+            <fieldset class="border border-line rounded px-3 pb-3 flex flex-col gap-1.5" @disabled($locked)>
+                <legend class="px-1 text-[12px] text-muted">{{ __('pms.card.features_title') }}</legend>
+                <input type="hidden" name="features_sent" value="1">
+                @forelse ($roomFeatures as $f)
+                    <label class="flex items-center gap-2"><input type="checkbox" name="features[]" value="{{ $f->id }}" @checked(in_array($f->id, old('features', $selectedFeatures))) @if ($loop->first) data-autofocus @endif>
+                        <b class="w-12">{{ $f->code }}</b> {{ $f->name }}</label>
+                @empty
+                    <p class="text-muted">{{ __('pms.card.no_features') }}</p>
+                @endforelse
+                <p class="text-[12px] text-muted mt-1">{{ __('pms.card.features_hint') }}</p>
+            </fieldset>
+            <div class="min-w-0">
+                <b>{{ __('pms.card.matching_rooms') }}</b>
+                @if ($new)
+                    <p class="text-muted mt-1">{{ __('pms.meal.save_first') }}</p>
+                @else
+                    <div class="flex flex-wrap gap-1.5 mt-1" data-matching-rooms>
+                        @forelse ($matchingRooms as $m)
+                            <button type="button" class="btn !h-auto py-1 flex-col !items-start" data-pick-room="{{ $m->id }}" title="{{ $m->features }}" @disabled($locked)>
+                                <span class="font-semibold">{{ $m->number }} @if ((int) $r->room_id === $m->id)<span class="text-ok text-[11px]">✓</span>@endif</span>
+                                <span class="text-[11px] text-muted">{{ __('pms.hk.hk_status.'.$m->hk_status) }} · {{ $m->features ?: '—' }}</span></button>
+                        @empty
+                            <p class="text-muted">{{ __('pms.card.no_matching') }}</p>
+                        @endforelse
+                    </div>
+                    <p class="text-[12px] text-muted mt-1">{{ __('pms.card.pick_room_hint') }}</p>
+                @endif
+            </div>
+        </section>
+
+        {{-- Ctrl+7 Credit Card: garanti kartı (yalnız son 4 hane) --}}
+        <section data-tab-panel="credit_card" class="p-3" hidden>
+            <fieldset class="border border-line rounded px-3 pb-3 grid grid-cols-2 md:grid-cols-4 gap-2 max-w-3xl" @disabled($locked)>
+                <legend class="px-1 text-[12px] text-muted">{{ __('pms.card.cc_title') }}</legend>
+                @if ($card)
+                    <div class="col-span-full text-[13.5px]"><b>{{ strtoupper((string) $card->brand) }} •••• {{ $card->last4 }}</b>
+                        @if ($card->expiry_month) · {{ sprintf('%02d/%02d', $card->expiry_month, $card->expiry_year % 100) }}@endif @if ($card->holder_name) · {{ $card->holder_name }}@endif
+                        <label class="inline-flex items-center gap-1.5 ml-3 text-[12.5px]"><input type="checkbox" name="card_remove" value="1"> {{ __('pms.card.cc_remove') }}</label></div>
+                @endif
+                <div class="col-span-2"><label class="field-label" for="card_holder">{{ __('pms.card.cc_holder') }}</label><input id="card_holder" name="card_holder" value="{{ old('card_holder', $card?->holder_name) }}" maxlength="150" class="input" autocomplete="off"></div>
+                <div><label class="field-label" for="card_brand">{{ __('pms.card.cc_brand') }}</label>
+                    <select id="card_brand" name="card_brand" class="input"><option value=""></option>@foreach (\App\Domain\Reservations\Services\ReservationExtrasService::CARD_BRANDS as $b)<option value="{{ $b }}" @selected(old('card_brand', $card?->brand) === $b)>{{ __('pms.card.cc_brands.'.$b) }}</option>@endforeach</select></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="field-label" for="card_last4">{{ __('pms.card.cc_last4') }}</label><input id="card_last4" name="card_last4" value="{{ old('card_last4') }}" maxlength="4" inputmode="numeric" pattern="\d{4}" class="input @error('card_last4') input-error @enderror" autocomplete="off" placeholder="{{ $card?->last4 }}"></div>
+                    <div><label class="field-label" for="card_expiry">{{ __('pms.card.cc_expiry') }}</label><input id="card_expiry" name="card_expiry" value="{{ old('card_expiry', $card?->expiry_month ? sprintf('%02d/%02d', $card->expiry_month, $card->expiry_year % 100) : '') }}" maxlength="5" placeholder="MM/YY" class="input @error('card_expiry') input-error @enderror" autocomplete="off"></div>
+                </div>
+                <p class="col-span-full text-[12px] text-muted">{{ __('pms.card.cc_hint') }}</p>
+            </fieldset>
+        </section>
+
+        {{-- Ctrl+2 Inventory: sayılı kalemler (bebek yatağı, ek yatak …) --}}
+        <section data-tab-panel="inventory" class="p-3 flex flex-col gap-3" hidden>
+            @if ($new)
+                <p class="text-muted">{{ __('pms.meal.save_first') }}</p>
+            @elseif ($items->isEmpty())
+                <p class="text-muted">{{ __('pms.card.no_items') }} @can('permission', 'setup.options')<a class="text-brand-600 hover:underline" href="{{ route('setup.items.index') }}">{{ __('pms.items.title') }}</a>@endcan</p>
+            @else
+                <table class="grid-table max-w-3xl">
+                    <thead><tr><th>{{ __('pms.items.item') }}</th><th class="text-right">{{ __('pms.fixed.quantity') }}</th><th>{{ __('pms.fixed.from') }}</th><th>{{ __('pms.fixed.to') }}</th><th></th></tr></thead>
+                    <tbody>
+                    @forelse ($reservationItems as $ri)
+                        <tr><td class="font-semibold">{{ $ri->code }} {{ $ri->name }}</td><td class="text-right">{{ $ri->quantity }}</td><td>{{ $date($ri->date_from) }}</td><td>{{ $date($ri->date_to) }}</td>
+                            <td>@unless ($locked)<button form="ri-del-{{ $ri->id }}" class="btn !h-6 !px-2" title="{{ __('pms.common.delete') }}">✕</button>@endunless</td></tr>
+                    @empty
+                        <tr><td colspan="5" class="text-center text-muted py-3">{{ __('pms.card.no_reservation_items') }}</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                @unless ($locked)
+                    <div class="flex flex-wrap items-end gap-2 rounded border border-line p-2 max-w-3xl">
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.items.item') }}</span>
+                            <select name="item_id" form="item-form" class="input w-64" required>@foreach ($items as $i)<option value="{{ $i->id }}">{{ $i->code }} {{ $i->name }} ({{ $i->quantity_total }})</option>@endforeach</select></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.quantity') }}</span><input name="quantity" form="item-form" value="1" type="number" min="1" max="20" class="input w-20"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.from') }}</span><input name="date_from" form="item-form" value="{{ $date($r->arrival_date) }}" class="input w-28"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.to') }}</span><input name="date_to" form="item-form" value="{{ $date($r->departure_date) }}" class="input w-28"></label>
+                        <button form="item-form" class="btn btn-primary">{{ __('pms.common.new') }}</button>
+                        <p class="w-full text-[12px] text-muted">{{ __('pms.card.items_hint') }}</p>
+                    </div>
+                @endunless
+            @endif
+        </section>
+
+        {{-- Ctrl+4 Packages: fiyat kodunun pansiyon paketi ve içeriği --}}
+        <section data-tab-panel="packages" class="p-3 flex flex-col gap-2" hidden>
+            @php $pkg = $r->rateCode?->package; @endphp
+            @if ($pkg)
+                <div><b>{{ $pkg->code }}</b> {{ $pkg->name }} <span class="text-muted text-[12.5px]">· {{ __('pms.res.rate_code') }} {{ $r->rateCode->code }} · {{ $pkg->is_included_in_rate ? __('pms.card.pkg_included') : __('pms.card.pkg_extra') }}</span></div>
+                <table class="grid-table max-w-2xl">
+                    <thead><tr><th>{{ __('pms.billing.department_code') }}</th><th>{{ __('pms.card.pkg_calc') }}</th><th class="text-right">{{ __('pms.card.pkg_adult') }}</th><th class="text-right">{{ __('pms.card.pkg_child') }}</th></tr></thead>
+                    <tbody>@foreach ($boardElements as $e)<tr><td>{{ $e->code }} {{ $e->name }}</td><td>{{ __('pms.card.pkg_calcs.'.$e->calc) }}</td><td class="text-right">{{ $money($e->amount_adult) }}</td><td class="text-right">{{ $money($e->amount_child) }}</td></tr>@endforeach</tbody>
+                </table>
+            @else
+                <p class="text-muted">{{ __('pms.card.no_package') }}</p>
+            @endif
+            <p class="text-[12px] text-muted">{{ __('pms.card.pkg_hint') }}</p>
+        </section>
     </div>
 
     <div class="flex items-center gap-2 px-3 py-2 border-t border-line">
@@ -269,6 +364,10 @@
 @unless ($new)
     <form method="POST" action="{{ route('reservations.board', $r) }}" id="board-form" hidden>@csrf</form>
     <form method="POST" action="{{ route('reservations.fixed-charges.store', $r) }}" id="fixed-charge-form" hidden>@csrf</form>
+    <form method="POST" action="{{ route('reservations.items.store', $r) }}" id="item-form" hidden>@csrf</form>
+    @foreach ($reservationItems as $ri)
+        <form method="POST" action="{{ route('reservations.items.destroy', [$r, $ri->id]) }}" id="ri-del-{{ $ri->id }}" hidden>@csrf @method('DELETE')</form>
+    @endforeach
     @foreach ($fixedCharges as $fc)
         <form method="POST" action="{{ route('reservations.fixed-charges.destroy', [$r, $fc->id]) }}" id="fc-del-{{ $fc->id }}" hidden data-confirm="{{ __('pms.fixed.confirm_delete') }}">@csrf @method('DELETE')</form>
     @endforeach

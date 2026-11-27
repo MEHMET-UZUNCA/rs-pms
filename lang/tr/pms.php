@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'items' => 'Envanter kalemleri',
         'guest_requests' => 'Misafir istekleri',
         'room_moves' => 'Oda değişimleri',
         'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
@@ -123,6 +124,7 @@ return [
         'discrepancy' => ['skip' => 'Skip', 'sleep' => 'Sleep', 'person' => 'Kişi sayısı'],
     ],
     'card' => [
+        'features_title' => 'Oda tercihleri', 'no_features' => 'Oda özelliği tanımlı değil.', 'features_hint' => 'Rezervasyonla kaydedilir (F10). Seçili özelliklerin hepsine sahip odalar sağda listelenir.', 'matching_rooms' => 'Bu özelliklere sahip, bu tipte boş odalar', 'no_matching' => 'Konaklama boyunca bu özelliklerin hepsine sahip boş oda yok.', 'pick_room_hint' => 'Odaya tıklayınca Rezervasyon sekmesinde seçilir; F10 ile kaydedin.', 'cc_title' => 'Garanti kartı', 'cc_holder' => 'Kart sahibi', 'cc_brand' => 'Kart türü', 'cc_brands' => ['visa' => 'Visa', 'mastercard' => 'Mastercard', 'amex' => 'American Express', 'troy' => 'Troy', 'other' => 'Diğer'], 'cc_last4' => 'Son 4 hane', 'cc_expiry' => 'Son kullanma', 'cc_remove' => 'Kartı kaldır', 'cc_hint' => 'Yalnız son 4 hane saklanır. Kart numarasının tamamını ve CVV\'yi asla girmeyin; kartla ödeme POS cihazından alınır.', 'cc_last4_only' => 'Kartın yalnız son 4 hanesini girin.', 'no_items' => 'Henüz envanter kalemi tanımlı değil.', 'no_reservation_items' => 'Bu rezervasyonda kalem yok.', 'items_hint' => 'Stok tarihlere göre denetlenir: kalemin toplam adedi aynı gecelerdeki diğer rezervasyonlarla paylaşılır.', 'pkg_included' => 'fiyata dahil', 'pkg_extra' => 'fiyata ek', 'pkg_calc' => 'Hesap', 'pkg_adult' => 'Yetişkin', 'pkg_child' => 'Çocuk', 'pkg_calcs' => ['per_room' => 'Oda başına', 'per_person' => 'Kişi başına', 'per_adult' => 'Yetişkin başına', 'per_child' => 'Çocuk başına'], 'no_package' => 'Fiyat kodunda paket yok (yalnız oda).', 'pkg_hint' => 'Gece bazında pansiyon Meal Plan sekmesinden (Ctrl+0) değişir; ek ücretler (ek yatak, otopark …) Fixed Charges (Ctrl+8) olarak eklenir.',
         'new_title' => 'Yeni rezervasyon', 'edit_title' => 'Rezervasyon :no — :name', 'created' => ':no numaralı rezervasyon açıldı.', 'saved' => ':no numaralı rezervasyon kaydedildi.',
         'tabs' => ['reservation' => 'Rezervasyon', 'inventory' => 'Envanter', 'profiles' => 'Profiller', 'packages' => 'Paketler',
             'rates' => 'Gece fiyatları', 'features' => 'Özellikler', 'credit_card' => 'Kredi kartı', 'fixed_charges' => 'Sabit ücretler',
@@ -477,5 +479,11 @@ Kaya, Ayşe
         'created' => 'İstek kaydedildi.', 'status_saved' => 'Durum: :status.', 'note_saved' => 'Not eklendi.', 'note' => 'Not', 'note_hint' => 'Not (isteğe bağlı)', 'add_note' => 'Not ekle',
         'start' => 'Başla', 'complete' => 'Tamamlandı', 'cancel' => 'İsteği iptal et', 'reopen' => 'Yeniden aç', 'closed' => 'Bu istek kapalı; önce yeniden açın.',
         'no_room' => ':room numaralı oda bulunamadı.', 'badge' => ':count geciken istek',
+    ],
+    'items' => [
+        'title' => 'Envanter Kalemleri', 'subtitle' => 'Odalara verilen sayılı kalemler (bebek yatağı, ek yatak …)', 'item' => 'Kalem', 'total' => 'Toplam adet', 'price' => 'Fiyat',
+        'reservations' => 'Rezervasyonda', 'name_hint' => 'Bebek yatağı', 'hint' => 'Toplam, otelin sahip olduğu adettir; rezervasyon bir kalemi ancak her gece yeterince boşta varsa alır. Ücreti Fixed Charges olarak eklenir.',
+        'added' => 'Kalem eklendi.', 'deleted' => 'Kalem silindi.', 'in_use' => 'Kalem rezervasyonlarda kullanılıyor, silinemez.', 'confirm_delete' => ':code kalemi silinsin mi?',
+        'outside_stay' => 'Kalem tarihleri konaklama içinde olmalı.', 'not_enough' => 'Bu geceler için yeterli boşta yok (boşta: :free).',
     ],
 ];

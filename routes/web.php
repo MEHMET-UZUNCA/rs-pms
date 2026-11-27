@@ -21,6 +21,8 @@ use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\AvailabilityController;
 use App\Http\Controllers\Reservations\BlockController;
 use App\Http\Controllers\Reservations\FixedChargeController;
+use App\Http\Controllers\Reservations\ReservationItemController;
+use App\Http\Controllers\Setup\ItemController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
@@ -155,6 +157,14 @@ Route::middleware(['auth', 'property'])->group(function () {
         });
     });
 
+    Route::post('/rezervasyon/{reservation}/envanter', [ReservationItemController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.items.store');
+    Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
+    Route::middleware('permission:setup.options')->prefix('ayarlar/envanter')->name('setup.items.')->group(function () {
+        Route::get('/', [ItemController::class, 'index'])->name('index');
+        Route::post('/', [ItemController::class, 'store'])->name('store');
+        Route::put('/{item}', [ItemController::class, 'update'])->whereNumber('item')->name('update');
+        Route::delete('/{item}', [ItemController::class, 'destroy'])->whereNumber('item')->name('destroy');
+    });
     Route::post('/rezervasyon/{reservation}/sabit-ucret', [FixedChargeController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.fixed-charges.store');
     Route::delete('/rezervasyon/{reservation}/sabit-ucret/{charge}', [FixedChargeController::class, 'destroy'])->whereNumber(['reservation', 'charge'])->middleware('permission:reservations.edit')->name('reservations.fixed-charges.destroy');
     Route::post('/rezervasyon/{reservation}/pansiyon', [MealPlanController::class, 'change'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.board');

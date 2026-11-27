@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'items' => 'Inventory Items',
         'guest_requests' => 'Guest Requests',
         'room_moves' => 'Room Moves',
         'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
@@ -123,6 +124,7 @@ return [
         'discrepancy' => ['skip' => 'Skip', 'sleep' => 'Sleep', 'person' => 'Person'],
     ],
     'card' => [
+        'features_title' => 'Room preferences', 'no_features' => 'No room features are defined.', 'features_hint' => 'Saved with the reservation (F10). Rooms having all selected features are listed on the right.', 'matching_rooms' => 'Free rooms of this type with these features', 'no_matching' => 'No free room with all of these features for the stay.', 'pick_room_hint' => 'Click a room to choose it on the Reservation tab, then save with F10.', 'cc_title' => 'Guarantee card', 'cc_holder' => 'Card holder', 'cc_brand' => 'Card type', 'cc_brands' => ['visa' => 'Visa', 'mastercard' => 'Mastercard', 'amex' => 'American Express', 'troy' => 'Troy', 'other' => 'Other'], 'cc_last4' => 'Last 4 digits', 'cc_expiry' => 'Expiry', 'cc_remove' => 'Remove card', 'cc_hint' => 'Only the last 4 digits are stored. Never enter the full card number or the CVV; card payments go through the POS terminal.', 'cc_last4_only' => 'Enter only the last 4 digits of the card.', 'no_items' => 'No inventory items are defined yet.', 'no_reservation_items' => 'No items on this reservation.', 'items_hint' => 'Stock is checked for the dates: the item total is shared with other reservations on the same nights.', 'pkg_included' => 'included in the rate', 'pkg_extra' => 'charged in addition', 'pkg_calc' => 'Calculation', 'pkg_adult' => 'Adult', 'pkg_child' => 'Child', 'pkg_calcs' => ['per_room' => 'Per room', 'per_person' => 'Per person', 'per_adult' => 'Per adult', 'per_child' => 'Per child'], 'no_package' => 'The rate code has no package (room only).', 'pkg_hint' => 'Board per night is changed on the Meal Plan tab (Ctrl+0); extra charges (extra bed, parking …) are added as Fixed Charges (Ctrl+8).',
         'new_title' => 'New Reservation', 'edit_title' => 'Reservation :no — :name', 'created' => 'Reservation :no created.', 'saved' => 'Reservation :no saved.',
         'tabs' => ['reservation' => 'Reservation', 'inventory' => 'Inventory', 'profiles' => 'Profiles', 'packages' => 'Packages',
             'rates' => 'Rate Grid', 'features' => 'Features', 'credit_card' => 'Credit Card', 'fixed_charges' => 'Fixed Charges',
@@ -477,5 +479,11 @@ Müller, Anna
         'created' => 'Request saved.', 'status_saved' => 'Status: :status.', 'note_saved' => 'Note added.', 'note' => 'Note', 'note_hint' => 'Note (optional)', 'add_note' => 'Add a note',
         'start' => 'Start', 'complete' => 'Done', 'cancel' => 'Cancel request', 'reopen' => 'Reopen', 'closed' => 'This request is closed; reopen it first.',
         'no_room' => 'Room :room not found.', 'badge' => ':count late requests',
+    ],
+    'items' => [
+        'title' => 'Inventory Items', 'subtitle' => 'Countable items lent to rooms (baby cot, extra bed …)', 'item' => 'Item', 'total' => 'Total quantity', 'price' => 'Price',
+        'reservations' => 'Booked', 'name_hint' => 'Baby cot', 'hint' => 'The total is the number the hotel owns; a reservation can book an item only while enough are free on every night. Charges for items are posted as Fixed Charges.',
+        'added' => 'Item added.', 'deleted' => 'Item deleted.', 'in_use' => 'The item is used on reservations and cannot be deleted.', 'confirm_delete' => 'Delete item :code?',
+        'outside_stay' => 'Item dates must be within the stay.', 'not_enough' => 'Not enough free for these nights (free: :free).',
     ],
 ];

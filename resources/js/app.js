@@ -513,6 +513,18 @@ document.addEventListener('click', (e) => {
     btn.focus();
 });
 
+// Rezervasyon kartı → Features: uyan odaya tıklayınca oda seçilir ve Rezervasyon sekmesine dönülür (kaydetmek için F10)
+document.addEventListener('click', (e) => {
+    const pick = e.target.closest('[data-pick-room]');
+    if (!pick) return;
+    const select = document.querySelector('[data-room-select]');
+    if (!select) return;
+    select.value = pick.dataset.pickRoom;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    document.querySelector('[data-tab-button="reservation"]')?.click();
+    select.focus();
+});
+
 // Tümünü seç (Kat Hizmetleri oda listesi)
 document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
     all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });

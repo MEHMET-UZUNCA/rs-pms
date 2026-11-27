@@ -31,7 +31,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 19 | Grup rezervasyonu, çoklu seçimle toplu check-in, grup folyo yönlendirme | Bloklar ve Gruplar ekranı: kota, isim listesiyle rezervasyon, otomatik oda atama, toplu giriş, ana hesaba yönlendirme | Var | **Grup / blok rezervasyon**: bir grup altında çok oda, toplu oda atama, toplu check-in / check-out, ana folyoya yönlendirme (routing) |
 | 20 | Geç çıkış (Late C/Out) saati | ETA / ETD kartta, Late C/O işareti kartta ve navigatörde | Var | Ücret kasadan kayıtla ya da Fixed Charge ile |
 | 21 | Kirli odaya check-in yapılamaz (parametre) | Rezervasyon seçenekleri: kirli odaya giriş izin ver / uyar / engelle | Var | |
-| 22 | Rezervasyon kartı sekmeleri (Misafirler, Fiyatlandır, Folyo, Diğer) | Kart: Rezervasyon, Profiller, Fiyatlar, Notlar, Meal Plan; Folyo Alt+B | Kısmen | Fixed Charges yapıldı (gece kapanışında otomatik). Boş sekmeler: Inventory, Packages, Features, Credit Card |
+| 22 | Rezervasyon kartı sekmeleri (Misafirler, Fiyatlandır, Folyo, Diğer) | Kartın 10 sekmesinin hepsi çalışıyor (Inventory, Packages, Features, Credit Card dahil); Folyo Alt+B | Var | |
 
 ## Önerilen sıra
 
