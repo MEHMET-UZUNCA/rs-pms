@@ -45,13 +45,13 @@ class BlockService
             $from = CarbonImmutable::parse($data['start_date']);
             $to = CarbonImmutable::parse($data['end_date']);   // çıkış günü (son gece = bir önceki gün)
             if ($to->lte($from)) {
-                throw new ReservationException('Blok bitiş tarihi başlangıçtan sonra olmalı.');
+                throw new ReservationException(__('pms.err.block_dates'));
             }
             if ($block && $block->exists) {
                 $outside = Reservation::query()->where('block_id', $block->id)->whereNotIn('status', ['cancelled', 'no_show'])
                     ->where(fn ($q) => $q->where('arrival_date', '<', $from->toDateString())->orWhere('departure_date', '>', $to->toDateString()))->exists();
                 if ($outside) {
-                    throw new ReservationException('Bloktaki rezervasyonlar yeni tarihlerin dışında kalıyor.');
+                    throw new ReservationException(__('pms.err.block_outside'));
                 }
                 $oldFrom = $block->start_date->toImmutable();
                 $oldTo = $block->end_date->toImmutable();
@@ -119,25 +119,25 @@ class BlockService
     public function pickUp(Block $block, int $roomTypeId, int $count, array $names, array $extra, ?int $userId): array
     {
         if ($block->status === 'cancelled') {
-            throw new ReservationException('İptal edilmiş bloktan rezervasyon açılamaz.');
+            throw new ReservationException(__('pms.err.block_cancelled'));
         }
         $names = array_values(array_filter(array_map('trim', $names), fn ($n) => $n !== ''));
         $count = max($count, count($names));
         if ($count < 1 || $count > 200) {
-            throw new ReservationException('Oda sayısı 1 ile 200 arasında olmalı.');
+            throw new ReservationException(__('pms.err.block_count'));
         }
         $arrival = CarbonImmutable::parse($extra['arrival_date'] ?? $block->start_date);
         $departure = CarbonImmutable::parse($extra['departure_date'] ?? $block->end_date);
         if ($arrival->lt($block->start_date->toImmutable()) || $departure->gt($block->end_date->toImmutable()) || $departure->lte($arrival)) {
-            throw new ReservationException('Rezervasyon tarihleri blok tarihleri içinde olmalı.');
+            throw new ReservationException(__('pms.err.block_range'));
         }
         $remaining = (int) DB::table('pms_block_inventory')->where('block_id', $block->id)->where('room_type_id', $roomTypeId)
             ->whereBetween('date', [$arrival->toDateString(), $departure->subDay()->toDateString()])->selectRaw('MIN(allotted - picked_up) AS r')->value('r');
         if ($remaining < $count) {
-            throw new ReservationException("Kotada bu oda tipinden yeterli oda yok (kalan {$remaining}).");
+            throw new ReservationException(__('pms.err.block_short', ['left' => $remaining]));
         }
         if (! $block->rate_code_id || ! $block->market_segment_id || ! $block->source_code_id) {
-            throw new ReservationException('Blokta fiyat kodu, pazar ve kaynak dolu olmalı.');
+            throw new ReservationException(__('pms.err.block_codes'));
         }
 
         return DB::transaction(function () use ($block, $roomTypeId, $count, $names, $extra, $arrival, $departure, $userId) {

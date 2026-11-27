@@ -86,7 +86,7 @@ class NightAuditService
 
         $run = DB::table('pms_night_audit_runs')->where('property_id', $propertyId)->where('business_date', $bd)->first();
         if ($run && $run->status === 'completed') {
-            throw new NightAuditException("{$bd} iş günü zaten kapatılmış.");
+            throw new NightAuditException(__('pms.err.audit_closed', ['date' => $bd]));
         }
         $runId = $run->id ?? DB::table('pms_night_audit_runs')->insertGetId([
             'property_id' => $propertyId, 'business_date' => $bd, 'status' => 'running', 'trigger' => 'manual', 'run_by' => $userId,
@@ -153,7 +153,7 @@ class NightAuditService
         if ($blocking) {
             DB::table('pms_night_audit_runs')->where('id', $runId)->update(['status' => 'held']);
             DB::table('pms_night_audit_steps')->where('run_id', $runId)->where('code', 'checks')->update(['status' => 'failed', 'error' => implode(', ', $blocking)]);
-            throw new NightAuditException('Gece kapanışını engelleyen kontroller: '.implode(', ', $blocking));
+            throw new NightAuditException(__('pms.err.audit_blocked', ['checks' => implode(', ', $blocking)]));
         }
 
         return array_map(fn ($c) => count($c[1]), $checks);

@@ -99,7 +99,7 @@ class OutletScreenTest extends DomainTestCase
         $this->actingAs($this->admin)->post('/ayarlar/outletler', $base + ['code' => 'pool'])->assertSessionHasErrors('code');
         $this->actingAs($this->admin)->post('/ayarlar/outletler', $base + ['code' => 'NEW', 'simphony_rvc_number' => 1])->assertSessionHasErrors('simphony_rvc_number');
         $this->actingAs($this->admin)->post('/ayarlar/outletler', $base + ['code' => 'NEW', 'codes' => [$cafeCode]])
-            ->assertSessionHasErrors(['codes' => '320 kodu "Cafe Rocks" outlet\'ine bağlı. Önce oradan çıkarın.']);
+            ->assertSessionHasErrors(['codes' => 'Code 320 is linked to outlet "Cafe Rocks". Remove it there first.']);
         $this->actingAs($this->admin)->post('/ayarlar/outletler', $base + ['code' => 'NEW', 'codes' => [$cash]])->assertSessionHasErrors('codes');
         $this->assertNull(Outlet::where('code', 'NEW')->first());
     }

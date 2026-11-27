@@ -95,7 +95,7 @@ class TransactionCodeScreenTest extends DomainTestCase
         $this->actingAs($this->admin)->post('/ayarlar/departman-kodlari', $this->payload(['taxes' => [
             ['tax_id' => $this->tax('VAT5'), 'valid_from' => '2001-01-01', 'valid_to' => ''],
             ['tax_id' => $this->tax('VAT5'), 'valid_from' => '2020-01-01', 'valid_to' => ''],
-        ]]))->assertSessionHasErrors(['taxes' => 'Aynı vergi çakışan tarihlerle iki kez girilmiş.']);
+        ]]))->assertSessionHasErrors(['taxes' => 'The same tax is entered twice with overlapping dates.']);
         $this->actingAs($this->admin)->post('/ayarlar/departman-kodlari', $this->payload(['taxes' => [
             ['tax_id' => $this->tax('VAT5'), 'valid_from' => '2027-01-01', 'valid_to' => '2026-01-01'],
         ]]))->assertSessionHasErrors('taxes');

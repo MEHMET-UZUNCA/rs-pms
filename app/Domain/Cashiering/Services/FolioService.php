@@ -17,7 +17,7 @@ class FolioService
     public function window(Reservation $reservation, int $window): Folio
     {
         if ($window < 1 || $window > 8) {
-            throw new PostingException('Pencere 1 ile 8 arasında olmalı.');
+            throw new PostingException(__('pms.err.window_range'));
         }
 
         return DB::transaction(function () use ($reservation, $window) {

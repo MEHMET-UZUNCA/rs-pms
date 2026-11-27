@@ -42,7 +42,7 @@ class ReservationService
             $arrival = CarbonImmutable::parse($data['arrival_date']);
             $departure = CarbonImmutable::parse($data['departure_date']);
             if ($departure->lte($arrival) && empty($data['is_day_use'])) {
-                throw new ReservationException('Çıkış tarihi girişten sonra olmalı.');
+                throw new ReservationException(__('pms.err.departure_after'));
             }
             $bands = $data['child_bands'] ?? [];
             $manual = $data['manual_amount'] ?? null;
@@ -81,10 +81,10 @@ class ReservationService
             $from = CarbonImmutable::parse($arrival);
             $to = CarbonImmutable::parse($departure);
             if ($reservation->status === 'in_house' && ! $from->isSameDay($reservation->arrival_date)) {
-                throw new ReservationException('İçerideki misafirin giriş tarihi değiştirilemez.');
+                throw new ReservationException(__('pms.err.inhouse_arrival'));
             }
             if ($to->lte($from)) {
-                throw new ReservationException('Çıkış tarihi girişten sonra olmalı.');
+                throw new ReservationException(__('pms.err.departure_after'));
             }
 
             $kept = $reservation->nightRows()->where('is_overridden', true)->get()->keyBy(fn ($n) => $n->stay_date->toDateString());
@@ -140,10 +140,10 @@ class ReservationService
                 } else {
                     // Elle fiyat verildi: tarihler değişir, bütün gelmemiş geceler aşağıda bu fiyatla yeniden kurulur.
                     if ($reservation->status === 'in_house' && ! $from->isSameDay($oldFrom)) {
-                        throw new ReservationException('İçerideki misafirin giriş tarihi değiştirilemez.');
+                        throw new ReservationException(__('pms.err.inhouse_arrival'));
                     }
                     if ($to->lte($from)) {
-                        throw new ReservationException('Çıkış tarihi girişten sonra olmalı.');
+                        throw new ReservationException(__('pms.err.departure_after'));
                     }
                     $reservation->update(['arrival_date' => $from->toDateString(), 'departure_date' => $to->toDateString(), 'nights' => $from->diffInDays($to)]);
                     $reservation->nightRows()->where('status', 'expected')->where(fn ($q) => $q->where('stay_date', '<', $from->toDateString())
@@ -166,7 +166,7 @@ class ReservationService
                     $reservation->update(['room_id' => null]);
                     $reservation->nightRows()->update(['room_id' => null]);
                 } else {
-                    throw new ReservationException('İçerideki misafirin odası boşaltılamaz; oda değiştirin.');
+                    throw new ReservationException(__('pms.err.inhouse_room'));
                 }
             }
             $this->refreshAvailability($reservation, $reservation->arrival_date, $reservation->departure_date);
@@ -179,7 +179,7 @@ class ReservationService
     {
         return DB::transaction(function () use ($reservation, $reasonCodeId, $userId) {
             if (! in_array($reservation->status, ['inquiry', 'tentative', 'confirmed', 'waitlist'], true)) {
-                throw new ReservationException('Yalnız gelmemiş rezervasyon iptal edilebilir.');
+                throw new ReservationException(__('pms.err.cancel_status'));
             }
             $from = $reservation->status;
             $reservation->update([
@@ -255,7 +255,7 @@ class ReservationService
         return DB::transaction(function () use ($reservation, $room, $userId, $moveReasonId) {
             $this->assertActive($reservation);
             if ((int) $room->property_id !== (int) $reservation->property_id || ! $room->is_active || $room->is_pseudo) {
-                throw new ReservationException("Oda {$room->number} atanamaz.");
+                throw new ReservationException(__('pms.err.room_not_assignable', ['room' => $room->number]));
             }
             $from = $reservation->status === 'in_house'
                 ? Property::query()->find($reservation->property_id)->current_business_date->toDateString()
@@ -266,12 +266,12 @@ class ReservationService
                 ->whereBetween('stay_date', [$from, CarbonImmutable::parse($to)->subDay()->toDateString()])
                 ->whereHas('reservation', fn ($q) => $q->whereIn('status', ['confirmed', 'in_house', 'tentative']))->exists();
             if ($clash) {
-                throw new ReservationException("Oda {$room->number} bu tarihlerde başka rezervasyona atanmış.");
+                throw new ReservationException(__('pms.err.room_taken', ['room' => $room->number]));
             }
             $outage = DB::table('pms_room_outages')->where('room_id', $room->id)->where('type', 'ooo')->whereNull('released_at')
                 ->where('date_from', '<', $to)->where('date_to', '>', $from)->exists();
             if ($outage) {
-                throw new ReservationException("Oda {$room->number} bu tarihlerde arızalı (OOO).");
+                throw new ReservationException(__('pms.err.room_ooo', ['room' => $room->number]));
             }
 
             $previous = $reservation->room_id;
@@ -296,17 +296,17 @@ class ReservationService
             $property = Property::query()->findOrFail($reservation->property_id);
             $today = $property->current_business_date;
             if (! in_array($reservation->status, ['confirmed', 'tentative'], true)) {
-                throw new ReservationException('Bu rezervasyona giriş yapılamaz (durum: '.$reservation->status.').');
+                throw new ReservationException(__('pms.err.checkin_status', ['status' => __('pms.res.statuses.'.$reservation->status)]));
             }
             if (! $reservation->arrival_date->isSameDay($today)) {
-                throw new ReservationException('Giriş yalnız geliş gününde yapılabilir.');
+                throw new ReservationException(__('pms.err.checkin_day'));
             }
             if (! $reservation->room_id) {
-                throw new ReservationException('Girişten önce oda atanmalı.');
+                throw new ReservationException(__('pms.err.checkin_room'));
             }
             $room = Room::query()->whereKey($reservation->room_id)->lockForUpdate()->firstOrFail();
             if ($room->fo_status === 'occupied' && (int) $room->current_reservation_id !== (int) $reservation->id) {
-                throw new ReservationException("Oda {$room->number} dolu.");
+                throw new ReservationException(__('pms.err.room_occupied', ['room' => $room->number]));
             }
             if (in_array($room->hk_status, ['dirty', 'pickup'], true) && ReservationOptions::get($reservation->property_id)['dirty_room_check_in'] === 'block') {
                 throw new ReservationException(__('pms.res.dirty_blocked', ['room' => $room->number]));
@@ -332,11 +332,11 @@ class ReservationService
     {
         return DB::transaction(function () use ($reservation, $userId) {
             if ($reservation->status !== 'in_house') {
-                throw new ReservationException('Yalnız içerideki misafirin çıkışı yapılabilir.');
+                throw new ReservationException(__('pms.err.checkout_status'));
             }
             $open = $reservation->folios()->where('status', 'open')->where('balance', '<>', 0)->pluck('folio_number');
             if ($open->isNotEmpty()) {
-                throw new ReservationException('Bakiyesi kapanmamış folyo var: '.$open->implode(', '));
+                throw new ReservationException(__('pms.err.checkout_balance', ['folios' => $open->implode(', ')]));
             }
             $today = Property::query()->findOrFail($reservation->property_id)->current_business_date->toDateString();
 
@@ -378,7 +378,7 @@ class ReservationService
             $override = $overrides[$day->toDateString()] ?? $manual;
             $amount = $override ?? $quote->amount;
             if ($amount === null) {
-                throw new ReservationException("{$rateCode->code} fiyat kodunda {$day->format('d.m.Y')} için fiyat yok.");
+                throw new ReservationException(__('pms.err.no_rate', ['rate' => $rateCode->code, 'date' => $day->format('d.m.Y')]));
             }
             $net = $this->taxes->split($rateCode->roomTransactionCode, (float) $amount, $day)['net'];
             ReservationNight::create([
@@ -401,7 +401,7 @@ class ReservationService
     private function assertActive(Reservation $reservation): void
     {
         if (in_array($reservation->status, ['cancelled', 'no_show', 'checked_out'], true)) {
-            throw new ReservationException('Kapanmış rezervasyon değiştirilemez (durum: '.$reservation->status.').');
+            throw new ReservationException(__('pms.err.closed_reservation', ['status' => __('pms.res.statuses.'.$reservation->status)]));
         }
     }
 

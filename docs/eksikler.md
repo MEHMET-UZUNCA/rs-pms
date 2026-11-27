@@ -62,7 +62,7 @@ Kayıtta tutarsız görünen, otelde Fidelio'ya bakılıp doğrulanacak bilgiler
 
 ## Dil
 
-- Servis hata mesajları (ör. "Girişten önce oda atanmalı", outlet/departman kodu kuralları) henüz yalnız Türkçe; dil dosyasına taşınacak.
+- Servis hata mesajları dil dosyasında (pms.err); arayüz diline göre gelir. Simphony protokol hataları yalnız loga yazılır, Türkçe kaldı.
 - İngilizce terimlerin Fidelio ekranlarıyla birebir aynılığı personelle bir kez gözden geçirilecek (farklı görülen terim lang/en/pms.php'de düzeltilir).
 
 ## Kat hizmetleri

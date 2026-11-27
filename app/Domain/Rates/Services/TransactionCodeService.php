@@ -34,7 +34,7 @@ class TransactionCodeService
     {
         return DB::transaction(function () use ($propertyId, $data, $taxes, $code) {
             if (! DB::table('pms_transaction_code_groups')->where('property_id', $propertyId)->where('id', $data['group_id'])->exists()) {
-                throw new TransactionCodeException('Grup bu tesise ait değil.');
+                throw new TransactionCodeException(__('pms.err.group_property'));
             }
             foreach (['adjustment_transaction_code_id' => 'Düzeltme kodu', 'return_transaction_code_id' => 'İade kodu',
                 'cc_commission_transaction_code_id' => 'Kart komisyonu kodu', 'discount_of_transaction_code_id' => 'Asıl kod'] as $field => $label) {
@@ -43,10 +43,10 @@ class TransactionCodeService
                     continue;
                 }
                 if ($code && (int) $id === $code->id) {
-                    throw new TransactionCodeException("{$label} kodun kendisi olamaz.");
+                    throw new TransactionCodeException(__('pms.err.code_self', ['label' => $label]));
                 }
                 if (! DB::table('pms_transaction_codes')->where('property_id', $propertyId)->where('id', $id)->whereNull('deleted_at')->exists()) {
-                    throw new TransactionCodeException("{$label} bu tesiste bulunamadı.");
+                    throw new TransactionCodeException(__('pms.err.code_missing', ['label' => $label]));
                 }
             }
             if (empty($data['is_discount'])) {
@@ -78,16 +78,16 @@ class TransactionCodeService
             }
             $row = ['tax_id' => (int) $tax['tax_id'], 'valid_from' => $tax['valid_from'] ?: null, 'valid_to' => $tax['valid_to'] ?: null];
             if (! DB::table('pms_taxes')->where('property_id', $propertyId)->where('id', $row['tax_id'])->exists()) {
-                throw new TransactionCodeException('Seçilen vergi bu tesise ait değil.');
+                throw new TransactionCodeException(__('pms.err.tax_property'));
             }
             if ($row['valid_from'] && $row['valid_to'] && $row['valid_to'] < $row['valid_from']) {
-                throw new TransactionCodeException('Vergi satırında bitiş tarihi başlangıçtan önce olamaz.');
+                throw new TransactionCodeException(__('pms.err.tax_line_dates'));
             }
             foreach ($rows as $other) {
                 $overlap = ($other['valid_to'] === null || $row['valid_from'] === null || $row['valid_from'] <= $other['valid_to'])
                     && ($row['valid_to'] === null || $other['valid_from'] === null || $other['valid_from'] <= $row['valid_to']);
                 if ($other['tax_id'] === $row['tax_id'] && $overlap) {
-                    throw new TransactionCodeException('Aynı vergi çakışan tarihlerle iki kez girilmiş.');
+                    throw new TransactionCodeException(__('pms.err.tax_overlap'));
                 }
             }
             $rows[] = $row;
@@ -105,7 +105,7 @@ class TransactionCodeService
             }
         }
         if ($usage !== []) {
-            throw new TransactionCodeException("{$code->code} {$code->name} kullanımda (".implode(', ', array_unique($usage)).'); silinemez, pasife alın.');
+            throw new TransactionCodeException(__('pms.err.code_in_use', ['code' => $code->code.' '.$code->name, 'usage' => implode(', ', array_unique($usage))]));
         }
 
         try {
@@ -114,7 +114,7 @@ class TransactionCodeService
                 $code->forceDelete();
             });
         } catch (QueryException) {
-            throw new TransactionCodeException("{$code->code} {$code->name} başka kayıtlarda kullanılıyor; silinemez, pasife alın.");
+            throw new TransactionCodeException(__('pms.err.code_referenced', ['code' => $code->code.' '.$code->name]));
         }
     }
 

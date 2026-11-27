@@ -20,7 +20,7 @@ class HousekeepingService
     public function setStatus(int $propertyId, array $roomIds, string $code, ?int $userId): int
     {
         $status = DB::table('pms_hk_status_codes')->where('property_id', $propertyId)->where('code', $code)->where('is_active', true)->first()
-            ?? throw new HousekeepingException("Kat hizmeti kodu bulunamadı: {$code}");
+            ?? throw new HousekeepingException(__('pms.err.hk_code', ['code' => $code]));
 
         return DB::transaction(function () use ($propertyId, $roomIds, $status, $userId) {
             $count = 0;
@@ -56,27 +56,27 @@ class HousekeepingService
     {
         $type = strtoupper($type);
         if (! in_array($type, ['OOO', 'OOS'], true)) {
-            throw new HousekeepingException('Tip OOO ya da OOS olmalı.');
+            throw new HousekeepingException(__('pms.err.outage_type'));
         }
         [$f, $t] = [CarbonImmutable::parse($from), CarbonImmutable::parse($to)];
         if ($t->lte($f)) {
-            throw new HousekeepingException('Bitiş tarihi başlangıçtan sonra olmalı.');
+            throw new HousekeepingException(__('pms.err.end_after_start'));
         }
 
         return DB::transaction(function () use ($propertyId, $roomId, $type, $f, $t, $reasonCodeId, $note, $userId) {
             $room = DB::table('pms_rooms')->where('property_id', $propertyId)->where('id', $roomId)->lockForUpdate()->first()
-                ?? throw new HousekeepingException('Oda bulunamadı.');
+                ?? throw new HousekeepingException(__('pms.err.room_not_found'));
             if ($type === 'OOO') {
                 $clash = DB::table('pms_reservations')->where('room_id', $roomId)->whereIn('status', ['confirmed', 'tentative', 'in_house'])
                     ->where('arrival_date', '<', $t->toDateString())->where('departure_date', '>', $f->toDateString())->value('confirmation_number');
                 if ($clash) {
-                    throw new HousekeepingException("Oda {$room->number} bu dönemde {$clash} numaralı rezervasyona atanmış; önce odayı değiştirin.");
+                    throw new HousekeepingException(__('pms.err.outage_reserved', ['room' => $room->number, 'no' => $clash]));
                 }
             }
             $overlap = DB::table('pms_room_outages')->where('room_id', $roomId)->whereNull('released_at')
                 ->where('date_from', '<', $t->toDateString())->where('date_to', '>', $f->toDateString())->exists();
             if ($overlap) {
-                throw new HousekeepingException("Oda {$room->number} bu dönemde zaten arızalı / hizmet dışı.");
+                throw new HousekeepingException(__('pms.err.outage_exists', ['room' => $room->number]));
             }
             $id = DB::table('pms_room_outages')->insertGetId([
                 'property_id' => $propertyId, 'room_id' => $roomId, 'type' => $type, 'date_from' => $f->toDateString(), 'date_to' => $t->toDateString(),
@@ -93,7 +93,7 @@ class HousekeepingService
     {
         DB::transaction(function () use ($propertyId, $outageId, $userId) {
             $outage = DB::table('pms_room_outages')->where('property_id', $propertyId)->where('id', $outageId)->whereNull('released_at')->first()
-                ?? throw new HousekeepingException('Açık arıza kaydı bulunamadı.');
+                ?? throw new HousekeepingException(__('pms.err.outage_not_found'));
             DB::table('pms_room_outages')->where('id', $outageId)->update(['released_at' => now(), 'released_by' => $userId, 'updated_at' => now()]);
             $room = DB::table('pms_rooms')->find($outage->room_id);
             if ($outage->return_hk_status && $room->hk_status !== $outage->return_hk_status) {

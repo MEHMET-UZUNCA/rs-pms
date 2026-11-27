@@ -30,7 +30,7 @@ class PostingService
     public function charge(Folio $folio, TransactionCode $code, float $amount, float $quantity = 1, ?string $description = null, array $attributes = []): Posting
     {
         if (in_array($code->type, ['payment', 'deposit'], true)) {
-            throw new PostingException("{$code->code} bir ödeme kodu; harcama olarak kaydedilemez.");
+            throw new PostingException(__('pms.err.payment_as_charge', ['code' => $code->code]));
         }
         if ($folio->no_post) {
             throw new PostingException(__('pms.fa.err_no_post', ['number' => $folio->folio_number]));
@@ -43,7 +43,7 @@ class PostingService
     public function payment(Folio $folio, TransactionCode $code, float $amount, ?string $description = null, array $attributes = []): Posting
     {
         if (! in_array($code->type, ['payment', 'deposit'], true)) {
-            throw new PostingException("{$code->code} bir ödeme kodu değil.");
+            throw new PostingException(__('pms.err.not_payment', ['code' => $code->code]));
         }
         $kind = $code->type === 'deposit' ? 'deposit' : 'payment';
 
@@ -56,10 +56,10 @@ class PostingService
         return DB::transaction(function () use ($posting, $reasonCodeId, $note, $userId) {
             $original = Posting::query()->whereKey($posting->id)->lockForUpdate()->firstOrFail();
             if ($original->reversed_by_id) {
-                throw new PostingException('Bu kayıt zaten ters çevrilmiş.');
+                throw new PostingException(__('pms.err.already_reversed'));
             }
             if ($original->reversal_of_id) {
-                throw new PostingException('Ters kaydın kendisi ters çevrilemez; yeni kayıt atın.');
+                throw new PostingException(__('pms.err.reverse_reversal'));
             }
 
             $reversal = $this->write($original->folio, $original->transactionCode, -(float) $original->amount, (float) $original->quantity,
@@ -80,10 +80,10 @@ class PostingService
         return DB::transaction(function () use ($posting, $target, $userId) {
             $original = Posting::query()->whereKey($posting->id)->lockForUpdate()->firstOrFail();
             if ($original->reversed_by_id) {
-                throw new PostingException('Ters çevrilmiş kayıt aktarılamaz.');
+                throw new PostingException(__('pms.err.transfer_reversed'));
             }
             if ((int) $original->folio_id === (int) $target->id) {
-                throw new PostingException('Kayıt zaten bu folyoda.');
+                throw new PostingException(__('pms.err.same_folio'));
             }
 
             $out = $this->write($original->folio, $original->transactionCode, -(float) $original->amount, (float) $original->quantity,
@@ -116,14 +116,14 @@ class PostingService
 
             $locked = Folio::query()->whereKey($folio->id)->lockForUpdate()->firstOrFail();
             if ($locked->status !== 'open') {
-                throw new PostingException("Folyo {$locked->folio_number} kapalı; kayıt atılamaz.");
+                throw new PostingException(__('pms.err.folio_closed', ['folio' => $locked->folio_number]));
             }
             $property = Property::query()->findOrFail($locked->property_id);
             $businessDate = $property->current_business_date;
             $closed = DB::table('pms_business_dates')->where('property_id', $property->id)
                 ->where('business_date', $businessDate->toDateString())->where('status', 'closed')->exists();
             if ($closed) {
-                throw new PostingException('İş günü kapalı; kayıt atılamaz.');
+                throw new PostingException(__('pms.err.day_closed'));
             }
 
             [$net, $tax, $lines] = $this->taxParts($code, $amount, $attributes['tax_from'] ?? null, $businessDate);

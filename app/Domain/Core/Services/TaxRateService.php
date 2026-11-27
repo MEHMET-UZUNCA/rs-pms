@@ -18,11 +18,11 @@ class TaxRateService
     public function changeRate(Tax $tax, float $newRate, CarbonInterface $from, ?string $name = null): Tax
     {
         if ($newRate < 0 || $newRate > 100) {
-            throw new InvalidArgumentException('Vergi oranı 0 ile 100 arasında olmalı.');
+            throw new InvalidArgumentException(__('pms.err.tax_range'));
         }
         $from = CarbonImmutable::parse($from)->startOfDay();
         if ($tax->valid_from && $from->lte($tax->valid_from)) {
-            throw new InvalidArgumentException('Yeni oranın başlangıcı mevcut sürümün başlangıcından sonra olmalı.');
+            throw new InvalidArgumentException(__('pms.err.tax_start'));
         }
 
         return DB::transaction(function () use ($tax, $newRate, $from, $name) {

@@ -81,7 +81,7 @@ class ReservationNavigatorTest extends DomainTestCase
         $this->assertSame('in_house', $oz->fresh()->status);
 
         $petrov = $this->res('Petrov');   // oda atanmamış
-        $this->actingAs($this->user)->post("/rezervasyon/{$petrov->id}/giris")->assertSessionHas('error', 'Girişten önce oda atanmalı.');
+        $this->actingAs($this->user)->post("/rezervasyon/{$petrov->id}/giris")->assertSessionHas('error', 'Assign a room before check-in.');
     }
 
     public function test_permissions(): void

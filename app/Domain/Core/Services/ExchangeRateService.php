@@ -50,17 +50,17 @@ class ExchangeRateService
         if ($xml === null) {
             $url = self::SOURCES[$source];
             if ($url === null) {
-                throw new RuntimeException('Kur kaynağı "elle" seçili; kurlar ekrandan girilir.');
+                throw new RuntimeException(__('pms.err.fx_manual'));
             }
             $response = Http::timeout(30)->retry(2, 2000)->get($url);
             if (! $response->successful()) {
-                throw new RuntimeException('Kur servisi cevap vermedi: HTTP '.$response->status());
+                throw new RuntimeException(__('pms.err.fx_http', ['status' => $response->status()]));
             }
             $xml = $response->body();
         }
         $bank = self::parse($xml);
         if ($bank === []) {
-            throw new RuntimeException('Kur listesinde döviz bulunamadı (XML biçimi tanınmadı).');
+            throw new RuntimeException(__('pms.err.fx_empty'));
         }
 
         $date = Property::query()->findOrFail($propertyId)->current_business_date->toDateString();
@@ -117,7 +117,7 @@ class ExchangeRateService
         libxml_use_internal_errors(true);
         $doc = simplexml_load_string($xml, SimpleXMLElement::class, LIBXML_NONET | LIBXML_NOCDATA);
         if ($doc === false) {
-            throw new RuntimeException('Kur listesi okunamadı (geçersiz XML).');
+            throw new RuntimeException(__('pms.err.fx_xml'));
         }
         $patterns = [
             'code' => '/^(sembol|symbol|kod|kodu|code|currencycode|doviz_?kodu|kur_?kodu|doviz_?cinsi)$/i',
@@ -192,7 +192,7 @@ class ExchangeRateService
         $calc = fn (float $pct) => $base !== null ? round($base * (1 + $pct / 100), 6) : null;
         $posting = $fixed['posting_rate'] ?? $calc((float) $rule->rate_margin_pct);
         if ($posting === null) {
-            throw new RuntimeException("{$rule->currency_code} için kur girilmedi.");
+            throw new RuntimeException(__('pms.err.fx_missing', ['currency' => $rule->currency_code]));
         }
 
         return ExchangeRate::query()->updateOrCreate(

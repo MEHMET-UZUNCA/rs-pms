@@ -97,7 +97,7 @@ class CashierService
     public function close(object $shift, array $counted, ?string $notes, int $userId): void
     {
         if ($shift->status !== 'open') {
-            throw new PostingException('Vardiya zaten kapalı.');
+            throw new PostingException(__('pms.err.shift_closed'));
         }
         DB::transaction(function () use ($shift, $counted, $notes, $userId) {
             foreach ($this->totals($shift) as $t) {

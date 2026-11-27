@@ -33,20 +33,20 @@ class OutletService
                 ->get(['tc.id', 'tc.code', 'tc.type', 'tc.outlet_id', 'o.name as outlet_name']);
 
             if ($codes->count() !== count($codeIds)) {
-                throw new OutletException('Seçilen departman kodlarından biri bu tesise ait değil.');
+                throw new OutletException(__('pms.err.outlet_code_property'));
             }
             if ($payment = $codes->firstWhere('type', 'payment')) {
-                throw new OutletException("{$payment->code} bir ödeme kodu; outlet'e yalnız gelir kodları bağlanır.");
+                throw new OutletException(__('pms.err.outlet_payment', ['code' => $payment->code]));
             }
             foreach ($codes as $code) {
                 if ($code->outlet_id && (int) $code->outlet_id !== $outlet?->id) {
-                    throw new OutletException("{$code->code} kodu \"{$code->outlet_name}\" outlet'ine bağlı. Önce oradan çıkarın.");
+                    throw new OutletException(__('pms.err.outlet_taken', ['code' => $code->code, 'outlet' => $code->outlet_name]));
                 }
             }
 
             $default = $data['default_transaction_code_id'] ?? null;
             if ($default && ! in_array((int) $default, $codeIds, true)) {
-                throw new OutletException('Varsayılan kod, outlet\'in kodlarından biri olmalı.');
+                throw new OutletException(__('pms.err.outlet_default'));
             }
             $data['default_transaction_code_id'] = $default
                 ? (int) $default
@@ -74,7 +74,7 @@ class OutletService
             }
         }
         if ($usage !== []) {
-            throw new OutletException("\"{$outlet->name}\" kullanımda (".implode(', ', $usage).'); silinemez, pasife alın.');
+            throw new OutletException(__('pms.err.outlet_in_use', ['name' => $outlet->name, 'usage' => implode(', ', $usage)]));
         }
 
         DB::transaction(function () use ($outlet) {

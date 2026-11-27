@@ -26,13 +26,13 @@ class FixedChargeService
     public function add(Reservation $reservation, array $data): int
     {
         if (in_array($reservation->status, ['cancelled', 'no_show', 'checked_out'], true)) {
-            throw new ReservationException('Kapanmış rezervasyona sabit ücret eklenemez.');
+            throw new ReservationException(__('pms.err.fixed_closed'));
         }
         $from = CarbonImmutable::parse($data['date_from']);
         $to = CarbonImmutable::parse($data['date_to']);
         $lastNight = $reservation->departure_date->toImmutable()->subDay();
         if ($from->lt($reservation->arrival_date->toImmutable()) || $to->gt($lastNight) || $to->lt($from)) {
-            throw new ReservationException('Sabit ücret tarihleri konaklama geceleri içinde olmalı ('.$reservation->arrival_date->format('d.m.Y').' – '.$lastNight->format('d.m.Y').').');
+            throw new ReservationException(__('pms.err.fixed_dates', ['from' => $reservation->arrival_date->format('d.m.Y'), 'to' => $lastNight->format('d.m.Y')]));
         }
 
         return DB::table('pms_fixed_charges')->insertGetId([
