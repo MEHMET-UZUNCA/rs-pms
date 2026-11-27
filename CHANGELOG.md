@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Ekran ve klavye kabul testi (inceleme önerisi 7): tests/browser/sweep.js (30 ekran × 1093 / 1280 / 1366 / 1920 px: taşma, sığmayan düğme, JS hatası) ve tests/browser/keys.js (yalnız klavyeyle 17 adımlık ön büro akışı); sonuçlar docs/13-kabul-testi.md. Bulunan sorun: yan düğmelerde kısayol etiketi sığmıyordu — yan düğmeler sıkılaştırıldı. (M.U)
+
 - Web sitesinden rezervasyon (Web API v1.1): POST /api/v1/reservations (fiyat PMS'te hesaplanır, müsaitlik ve fiyat kodu kuralları denetlenir, external_reference ile tekrar denemede aynı rezervasyon döner, aynı e-postalı profil yeniden kullanılır), GET /api/v1/reservations/{onay no}?last_name= (durum), POST …/cancel (giriş gününden önce iptal). Kodlar Ayarlar → Rezervasyon seçenekleri → Web sitesi rezervasyonları (rezervasyon tipi, pazar, kaynak, kesin / opsiyon); boşken kapalı (503). Navigatörde "Web (7 gün)" görünümü. docs/11-web-api.md §11.5. (M.U)
 
 - Misafir istekleri ve şikâyetler (Front Desk → Guest Requests; Elektraweb görev yönetimi): oda numarasıyla kayıt (odadaki içerideki misafir ve rezervasyon kendiliğinden bağlanır) ya da serbest (lobi vb.); tür (istek / şikâyet), sorumlu departman (ön büro, kat hizmetleri, teknik servis, yiyecek içecek, concierge, spa, misafir ilişkileri, güvenlik), öncelik, son gün ve saat. Sekmeler: Açık, Gecikmiş, Benim açtıklarım, Kapanan (7 gün), Hepsi; departman süzgeci. Alt panelde işlem: Başla, Tamamlandı, İptal, Yeniden aç (notla), not ekle; bütün geçmiş kullanıcı ve saatle. Son saati geçen açık işler kırmızı, üst çubukta "n geciken istek" uyarısı. Yeni yetki front_office.requests. Fidelio Messages / Locator değildir. Migration: pms_traces alanları, pms_trace_logs. (M.U)

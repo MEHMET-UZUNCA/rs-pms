@@ -1,0 +1,26 @@
+const { chromium } = require('playwright');
+(async () => {
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1366, height: 768 } });
+  const errs = []; p.on('pageerror', (e) => errs.push(e.message));
+  const step = async (name, fn, check) => { await fn(); await p.waitForLoadState('networkidle'); await p.waitForTimeout(150); console.log((await check()) ? 'OK  ' : 'FAIL', name, '→', p.url().replace(process.env.PMS_URL || 'http://127.0.0.1:8000', '')); };
+  await p.goto((process.env.PMS_URL || 'http://127.0.0.1:8000') + '/giris');
+  await step('login (Tab/Enter)', async () => { await p.keyboard.type(process.env.PMS_USER); await p.keyboard.press('Tab'); await p.keyboard.type(process.env.PMS_PASS); await p.keyboard.press('Enter'); }, async () => p.url().endsWith('/'));
+  await step('Ctrl+U navigator', () => p.keyboard.press('Control+u'), async () => p.url().includes('/rezervasyon'));
+  await step('Alt+2 arrivals', () => p.keyboard.press('Alt+2'), async () => p.url().includes('f=gelecek'));
+  await step('↓ + Enter opens card', async () => { await p.keyboard.press('ArrowDown'); await p.keyboard.press('Enter'); }, async () => /rezervasyon\/\d+$/.test(p.url()));
+  await step('Ctrl+5 rates tab', () => p.keyboard.press('Control+5'), async () => p.locator('[data-tab-panel=rates]').isVisible());
+  await step('Esc back', () => p.keyboard.press('Escape'), async () => !/rezervasyon\/\d+$/.test(p.url()));
+  await step('Ctrl+L room rack', () => p.keyboard.press('Control+l'), async () => p.url().includes('/oda-plani'));
+  await step('Alt+T group by type', () => p.keyboard.press('Alt+t'), async () => p.url().includes('grup=1'));
+  await step('Ctrl+P profiles', () => p.keyboard.press('Control+p'), async () => p.url().includes('/profiller'));
+  await step('Alt+N type dialog + Enter', async () => { await p.keyboard.press('Alt+n'); await p.waitForTimeout(100); await p.keyboard.press('Enter'); }, async () => p.url().includes('/profiller/yeni/individual'));
+  await step('Esc closes form', () => p.keyboard.press('Escape'), async () => p.url().includes('/profiller') && !p.url().includes('yeni'));
+  await step('Ctrl+H house status', () => p.keyboard.press('Control+h'), async () => p.url().includes('house-status'));
+  await step('F1 shortcuts', () => p.keyboard.press('F1'), async () => p.url().includes('/kisayollar'));
+  await step('Ctrl+B billing (in house)', () => p.keyboard.press('Control+b'), async () => p.url().includes('f=iceride'));
+  await step('Alt+B opens folio', async () => { await p.keyboard.press('ArrowDown'); await p.keyboard.press('Alt+b'); }, async () => p.url().includes('/folyo/rezervasyon/'));
+  await step('Alt+I invoice dialog', () => p.keyboard.press('Alt+i'), async () => p.locator('#invoice-dialog').isVisible());
+  await step('Esc closes dialog only', () => p.keyboard.press('Escape'), async () => !(await p.locator('#invoice-dialog').isVisible()) && p.url().includes('/folyo/'));
+  console.log('page errors:', errs.length ? errs : 'none');
+  await b.close();
+})();

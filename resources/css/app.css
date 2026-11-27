@@ -48,7 +48,8 @@
     .input-error { @apply border-danger; }
     .btn { @apply inline-flex items-center gap-1.5 h-8 px-3 border border-line rounded bg-white text-[13.5px] text-ink hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:opacity-40 disabled:pointer-events-none whitespace-nowrap; }
     .btn-primary { @apply bg-brand-600 border-brand-600 text-white font-medium hover:bg-brand-700; }
-    .btn-side { @apply w-full justify-start text-[13px] min-w-0 overflow-hidden; }
+    .btn-side { @apply w-full justify-start text-[13px] min-w-0 overflow-hidden px-2 gap-1; }
+    .btn-side .kbd { @apply text-[10px] px-0.5 shrink-0; }
     .grid-table { @apply w-full border-collapse text-[13.5px]; }
     .grid-table th { @apply sticky top-0 z-10 bg-surface text-left font-medium text-[12.5px] text-muted border-b border-line px-2 py-1.5 whitespace-nowrap; }
     .grid-table td { @apply px-2 py-1 border-b border-line/60 whitespace-nowrap; }
