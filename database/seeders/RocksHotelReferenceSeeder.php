@@ -26,6 +26,15 @@ class RocksHotelReferenceSeeder extends Seeder
             DB::table('pms_countries')->updateOrInsert(['code' => $code], ['iso3' => $iso3, 'name_tr' => $tr, 'name_en' => $en, 'nationality_tr' => $nat, 'phone_prefix' => $phone, 'updated_at' => now()]);
         }
 
+        // Bütün ülkeler (ISO 3166: 2 ve 3 harf, İngilizce / Türkçe ad — database/data/countries.tsv, ICU verisinden); yukarıdakiler korunur
+        $countries = array_map(fn ($l) => explode("\t", $l), array_slice(file(database_path('data/countries.tsv'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES), 1));
+        $existing = DB::table('pms_countries')->pluck('code')->flip();
+        foreach ($countries as [$code, $iso3, $en, $tr]) {
+            if (! isset($existing[$code])) {
+                DB::table('pms_countries')->insert(['code' => $code, 'iso3' => $iso3, 'name_en' => $en, 'name_tr' => $tr, 'created_at' => now(), 'updated_at' => now()]);
+            }
+        }
+
         DB::table('pms_properties')->updateOrInsert(['code' => 'RCK'], [
             'name' => 'Rocks Hotel', 'country_code' => 'CY', 'base_currency' => 'TRY', 'timezone' => 'Asia/Nicosia',
             'current_business_date' => DB::table('pms_properties')->where('code', 'RCK')->value('current_business_date') ?? now()->toDateString(),
