@@ -28,12 +28,21 @@ class ReservationCardController extends Controller
 
     public function create(Request $request): View
     {
-        $bd = CarbonImmutable::parse(app(Property::class)->current_business_date);
+        $property = app(Property::class);
+        $bd = CarbonImmutable::parse($property->current_business_date);
+        // Oda planından: ?oda=&gelis=&cikis= (boş hücrelerde sürükleyerek)
+        $arrival = BusinessDateInput::parse((string) $request->query('gelis', ''), $bd);
+        $arrival = $arrival && $arrival->gte($bd) ? $arrival : $bd;
+        $departure = BusinessDateInput::parse((string) $request->query('cikis', ''), $bd);
+        $departure = $departure && $departure->gt($arrival) ? $departure : $arrival->addDay();
+        $room = $request->query('oda') ? Room::query()->where('property_id', $property->id)->whereKey((int) $request->query('oda'))->first() : null;
 
-        return $this->card(new Reservation([
-            'arrival_date' => $bd, 'departure_date' => $bd->addDay(), 'nights' => 1, 'adults' => 2, 'children' => 0,
+        return $this->card(new Reservation(array_filter([
+            'arrival_date' => $arrival, 'departure_date' => $departure, 'nights' => $arrival->diffInDays($departure), 'adults' => 2, 'children' => 0,
             'room_charges_allowed' => true, 'guarantee_type' => 'none', 'status' => 'confirmed',
-        ]));
+            'room_id' => $room?->id,
+            'room_type_id' => $room?->room_type_id ?? DB::table('pms_room_types')->where('property_id', $property->id)->where('id', (int) $request->query('tip'))->value('id'),
+        ], fn ($v) => $v !== null)));
     }
 
     public function edit(Reservation $reservation): View

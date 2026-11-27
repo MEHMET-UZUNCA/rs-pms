@@ -152,6 +152,10 @@ return [
     ],
 
     'rack' => [
+        'actions' => ['card' => 'Reservation card', 'folio' => 'Folio / payment', 'checkin' => 'Check in', 'checkout' => 'Check out'],
+        'moved' => ':name — room :room, :from–:to.', 'in_house_arrival' => 'The arrival date of an in-house guest cannot change; only the room or the departure date.',
+        'confirm_move' => 'Move the reservation to room :room, :from – :to?', 'confirm_resize' => 'Change the stay to :from – :to?',
+        'resize_hint' => 'Drag to change the departure date', 'drag_hint' => 'Drag a bar to move it, drag its right edge to change departure, drag over empty cells for a new reservation',
         'title' => 'Room Rack', 'days' => ':n days', 'prev' => 'Previous', 'next' => 'Next', 'today' => 'Business Date', 'start' => 'Start',
         'all_types' => 'All room types', 'all_floors' => 'All floors', 'room' => 'Room', 'occupancy' => 'Occupied', 'unassigned' => 'Unassigned',
         'legend' => ['in_house' => 'In House', 'confirmed' => 'Expected', 'tentative' => 'Tentative', 'ooo' => 'Out of Order', 'oos' => 'Out of Service'],
@@ -411,5 +415,11 @@ Müller, Anna
         'picked' => ':count reservations created.', 'assigned' => ':count rooms assigned.', 'no_room_for' => 'No free room for: :list', 'checked_in' => ':count reservations checked in.',
         'routed' => 'Room and board charges of :count reservations go to master account :folio.', 'unrouted' => 'Routing removed from :count reservations.',
         'select_members' => 'Select at least one reservation.',
+    ],
+    'avail' => [
+        'title' => 'Availability', 'subtitle' => 'Sellable rooms by room type and day',
+        'rows' => ['avail' => 'Available', 'sold' => 'Sold', 'tentative' => 'Tentative', 'blocks' => 'Remaining in blocks', 'ooo' => 'Out of order', 'occupancy' => 'Occupancy %'],
+        'cell' => ':physical rooms − :ooo OOO − :sold sold − :blocks in blocks (tentative :tentative)',
+        'hint' => 'Available = rooms − out of order − sold − remaining in definite blocks. Click a number for a new reservation.',
     ],
 ];

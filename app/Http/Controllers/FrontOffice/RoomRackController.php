@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\FrontOffice;
 
 use App\Domain\Core\Models\Property;
+use App\Domain\Inventory\Models\Room;
+use App\Domain\Reservations\Exceptions\ReservationException;
+use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\ReservationService;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -53,7 +58,8 @@ class RoomRackController extends Controller
             ->each(function ($r) use (&$bars, $bar) {
                 if ($b = $bar($r->arrival_date, $r->departure_date)) {
                     $bars[$r->room_id][] = $b + ['kind' => $r->status === 'in_house' ? 'in_house' : ($r->status === 'confirmed' ? 'confirmed' : 'tentative'),
-                        'label' => $r->display_name, 'id' => $r->id, 'title' => $r->display_name.' · '.CarbonImmutable::parse($r->arrival_date)->format('d.m').
+                        'label' => $r->display_name, 'id' => $r->id, 'status' => $r->status, 'arrival' => substr((string) $r->arrival_date, 0, 10),
+                        'departure' => substr((string) $r->departure_date, 0, 10), 'title' => $r->display_name.' · '.CarbonImmutable::parse($r->arrival_date)->format('d.m').
                         '–'.CarbonImmutable::parse($r->departure_date)->format('d.m').' · '.$r->adults.($r->children ? '+'.$r->children : '')];
                 }
             });
@@ -87,5 +93,39 @@ class RoomRackController extends Controller
             'types' => DB::table('pms_room_types')->where('property_id', $property->id)->orderBy('sort')->get(['id', 'code']),
             'floors' => DB::table('pms_floors')->where('property_id', $property->id)->orderBy('code')->get(['id', 'code', 'name']),
         ]);
+    }
+
+    /**
+     * Sürükle-bırak: rezervasyonu başka odaya ve / veya tarihe taşır, sağ kenardan çekince çıkış tarihi değişir.
+     * Kurallar servisten gelir (dolu / çakışan / arızalı oda, içerideki misafirin giriş tarihi değişmez); hata olursa hiçbir şey değişmez.
+     */
+    public function move(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
+    {
+        $property = app(Property::class);
+        abort_unless((int) $reservation->property_id === (int) $property->id, 404);
+        $data = $request->validate([
+            'room_id' => ['required', 'integer'], 'arrival_date' => ['required', 'date'], 'departure_date' => ['required', 'date', 'after:arrival_date'],
+        ]);
+        $room = Room::query()->where('property_id', $property->id)->findOrFail($data['room_id']);
+        $arrival = CarbonImmutable::parse($data['arrival_date']);
+        $departure = CarbonImmutable::parse($data['departure_date']);
+        $user = $request->user()->id;
+        try {
+            DB::transaction(function () use ($reservation, $room, $arrival, $departure, $service, $user) {
+                if (! $arrival->isSameDay($reservation->arrival_date) || ! $departure->isSameDay($reservation->departure_date)) {
+                    if ($reservation->status === 'in_house' && ! $arrival->isSameDay($reservation->arrival_date)) {
+                        throw new ReservationException(__('pms.rack.in_house_arrival'));
+                    }
+                    $service->changeDates($reservation, $arrival->toDateString(), $departure->toDateString(), $user);
+                }
+                $service->assignRoom($reservation->fresh(), $room, $user);   // oda aynıysa da yeni tarihlerde çakışma kontrolü
+            });
+        } catch (ReservationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+        $reservation->refresh();
+
+        return back()->with('status', __('pms.rack.moved', ['name' => $reservation->profile?->display_name, 'room' => $room->number,
+            'from' => $reservation->arrival_date->format('d.m'), 'to' => $reservation->departure_date->format('d.m')]));
     }
 }

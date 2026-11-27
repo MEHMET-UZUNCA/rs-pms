@@ -62,4 +62,54 @@ class RoomRackTest extends DomainTestCase
         $this->assertMatchesRegularExpression('/tabular-nums">6<span class="text-muted"> · 4%/', preg_replace('/\s+/', ' ', $html));
         $this->assertMatchesRegularExpression('/text-danger font-semibold">2</', preg_replace('/\s+/', ' ', $html));
     }
+
+    public function test_bar_actions_menu(): void
+    {
+        $html = $this->actingAs($this->user)->get('/oda-plani')->getContent();
+        $yilmaz = DB::table('pms_reservations as r')->join('pms_profiles as p', 'p.id', '=', 'r.profile_id')->where('p.last_name', 'Yılmaz')->value('r.id');
+        $ozturk = DB::table('pms_reservations as r')->join('pms_profiles as p', 'p.id', '=', 'r.profile_id')->where('p.last_name', 'Öztürk')->value('r.id');
+        $this->assertStringContainsString('id="rack-menu"', $html);
+        $actions = fn (int $id) => json_decode(html_entity_decode(preg_match('/data-bar="'.$id.'"[^>]*data-actions=\'([^\']*)\'/', $html, $m) ? $m[1] : '{}'), true);
+        $this->assertSame(['card', 'folio'], array_keys($actions($yilmaz)));             // içeride: kart, folyo
+        $this->assertSame(['card', 'checkin'], array_keys($actions($ozturk)));            // bugün gelecek, odası var: giriş
+        $this->assertStringContainsString('data-new-url=', $html);
+    }
+
+    public function test_drag_moves_room_and_dates_with_rules(): void
+    {
+        $res = fn (string $last) => \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', $last))->firstOrFail();
+        DB::table('pms_rate_amounts')->insert(['rate_code_id' => DB::table('pms_rate_codes')->where('code', 'BAR')->value('id'), 'room_type_id' => null,
+            'date_from' => '2026-11-01', 'date_to' => '2026-12-31', 'price_2' => 4200, 'price_1' => 4000]);   // örnek veride gece fiyatı elle; yeni geceler için
+        $ozturk = $res('Öztürk');   // 01.12–04.12, 1108 YMF, bugün gelecek
+        $target = DB::table('pms_rooms')->where('number', '1109')->value('id');
+
+        // Başka odaya ve iki gün ileri
+        $this->actingAs($this->user)->post("/oda-plani/{$ozturk->id}/tasi", ['room_id' => $target, 'arrival_date' => '2026-12-03', 'departure_date' => '2026-12-06'])
+            ->assertRedirect();
+        $this->assertNull(session('error'), (string) session('error'));
+        $ozturk->refresh();
+        $this->assertSame([(int) $target, '2026-12-03', '2026-12-06', 3], [(int) $ozturk->room_id, $ozturk->arrival_date->toDateString(), $ozturk->departure_date->toDateString(), $ozturk->nightRows()->where('room_id', $target)->count()]);
+
+        // İçerideki misafirin girişi değişmez; çıkışı uzatılabilir
+        $yilmaz = $res('Yılmaz');
+        $this->actingAs($this->user)->post("/oda-plani/{$yilmaz->id}/tasi", ['room_id' => $yilmaz->room_id, 'arrival_date' => $yilmaz->arrival_date->addDay()->toDateString(),
+            'departure_date' => $yilmaz->departure_date->addDay()->toDateString()])->assertSessionHas('error');
+        $this->actingAs($this->user)->post("/oda-plani/{$yilmaz->id}/tasi", ['room_id' => $yilmaz->room_id, 'arrival_date' => $yilmaz->arrival_date->toDateString(),
+            'departure_date' => $yilmaz->departure_date->addDays(2)->toDateString()])->assertSessionHas('status');
+        $this->assertSame($yilmaz->departure_date->addDays(2)->toDateString(), $yilmaz->fresh()->departure_date->toDateString());
+
+        // Dolu odaya taşınamaz, hiçbir şey değişmez
+        $occupied = DB::table('pms_rooms')->where('number', '2410')->value('id');   // Müller içeride
+        $this->actingAs($this->user)->post("/oda-plani/{$ozturk->id}/tasi", ['room_id' => $occupied, 'arrival_date' => '2026-12-03', 'departure_date' => '2026-12-06'])->assertSessionHas('error');
+        $this->assertSame((int) $target, (int) $ozturk->fresh()->room_id);
+    }
+
+    public function test_new_reservation_from_empty_cells(): void
+    {
+        $room = DB::table('pms_rooms')->where('number', '1109')->first();
+        $html = $this->actingAs($this->user)->get("/rezervasyon/yeni?oda={$room->id}&gelis=03.12.2026&cikis=06.12.2026")->assertOk()->getContent();
+        $this->assertStringContainsString('value="03.12.2026"', $html);
+        $this->assertStringContainsString('value="06.12.2026"', $html);
+        $this->assertMatchesRegularExpression('/<option value="'.$room->id.'"[^>]*selected/', $html);
+    }
 }

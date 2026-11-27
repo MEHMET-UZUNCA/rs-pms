@@ -289,6 +289,158 @@ document.querySelector('[data-fixed-code]')?.addEventListener('change', (e) => {
     if (amount && price && !amount.value) amount.value = String(Number(price)).replace('.', LANG === 'tr' ? ',' : '.');
 });
 
+// Oda planı (Room Rack): çubuğa tıkla → işlem menüsü (kart, folyo, giriş, çıkış); çubuğu sürükle → başka oda / tarih;
+// sağ kenarı çek → çıkış tarihi; boş hücrelerde sürükle → o oda ve tarihlerle yeni rezervasyon. Değişiklikten önce onay sorulur.
+const rack = document.querySelector('[data-rack]');
+if (rack) {
+    const menu = document.getElementById('rack-menu');
+    const start = Date.parse(rack.dataset.start + 'T00:00:00Z');
+    const DAY = 86400000;
+    const iso = (i) => new Date(start + i * DAY).toISOString().slice(0, 10);
+    const shift = (isoDate, days) => new Date(Date.parse(isoDate + 'T00:00:00Z') + days * DAY).toISOString().slice(0, 10);
+    const dmy = (isoDate) => isoDate.split('-').reverse().join('.');
+    const canMove = rack.hasAttribute('data-can-move');
+    let menuBar = null;
+    let suppressClick = false;
+
+    const closeMenu = () => { menu.hidden = true; menuBar = null; };
+    const runAction = (bar, action) => {
+        const url = JSON.parse(bar.dataset.actions || '{}')[action];
+        if (!url) return;
+        if (action === 'checkin') {
+            const f = document.getElementById('rack-checkin-form');
+            f.action = url;
+            f.submit();
+        } else {
+            location.href = url;
+        }
+    };
+    const openMenu = (bar, x, y) => {
+        const actions = JSON.parse(bar.dataset.actions || '{}');
+        menu.querySelectorAll('[data-menu-action]').forEach((a) => { a.hidden = !actions[a.dataset.menuAction]; });
+        menu.hidden = false;
+        menu.style.left = Math.min(x, window.innerWidth - menu.offsetWidth - 8) + 'px';
+        menu.style.top = Math.min(y, window.innerHeight - menu.offsetHeight - 8) + 'px';
+        menuBar = bar;
+        menu.querySelector('[data-menu-action]:not([hidden])')?.focus();
+    };
+    menu.addEventListener('click', (e) => {
+        const a = e.target.closest('[data-menu-action]');
+        if (!a || !menuBar) return;
+        e.preventDefault();
+        const bar = menuBar;
+        closeMenu();
+        runAction(bar, a.dataset.menuAction);
+    });
+    document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && !e.target.closest('[data-bar]')) closeMenu(); });
+    // Menü açıkken Esc / harf kısayolları sayfanın kısayollarından önce gelir
+    document.addEventListener('keydown', (e) => {
+        const bar = menuBar ?? (document.activeElement?.matches?.('[data-bar]') ? document.activeElement : null);
+        if (!bar || e.ctrlKey || e.altKey) return;
+        const key = { Enter: 'card', b: 'folio', g: 'checkin', o: 'checkout' }[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+        if (e.key === 'Escape' && menuBar) { e.preventDefault(); e.stopImmediatePropagation(); closeMenu(); bar.focus(); return; }
+        if (key === 'card' && !menuBar) { e.preventDefault(); e.stopImmediatePropagation(); const r = bar.getBoundingClientRect(); openMenu(bar, r.left, r.bottom); return; }
+        if (key && JSON.parse(bar.dataset.actions || '{}')[key]) { e.preventDefault(); e.stopImmediatePropagation(); closeMenu(); runAction(bar, key); }
+    }, true);
+    rack.addEventListener('click', (e) => {
+        const bar = e.target.closest('[data-bar]');
+        if (!bar || suppressClick) { suppressClick = false; return; }
+        if (e.target.closest('[data-resize]')) return;
+        openMenu(bar, e.clientX, e.clientY);
+    });
+
+    // Sürükleme
+    const cellAt = (x, y) => document.elementsFromPoint(x, y).find((el) => el.matches?.('[data-cell]'));
+    let marked = [];
+    const mark = (row, from, to, bad = false) => {
+        marked.forEach((c) => c.classList.remove('!bg-brand-200', '!bg-danger/20'));
+        marked = [];
+        if (!row) return;
+        row.querySelectorAll('[data-cell]').forEach((c) => {
+            const i = Number(c.dataset.cell);
+            if (i >= from && i <= to) { c.classList.add(bad ? '!bg-danger/20' : '!bg-brand-200'); marked.push(c); }
+        });
+    };
+    let drag = null;
+    rack.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || !canMove) return;
+        const bar = e.target.closest('[data-bar]');
+        const cell = cellAt(e.clientX, e.clientY);
+        if (!cell) return;
+        const row = cell.closest('[data-room-id]');
+        if (bar) {
+            drag = { kind: e.target.closest('[data-resize]') ? 'resize' : 'move', bar, row, grab: Number(cell.dataset.cell), x: e.clientX, y: e.clientY, active: false };
+        } else if (!e.target.closest('[data-kind]')) {
+            drag = { kind: 'new', row, grab: Number(cell.dataset.cell), x: e.clientX, y: e.clientY, active: true };
+            mark(row, drag.grab, drag.grab);
+        }
+    });
+    rack.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        if (!drag.active && Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
+        drag.active = true;
+        if (drag.bar) drag.bar.style.pointerEvents = 'none';
+        const cell = cellAt(e.clientX, e.clientY);
+        if (!cell) return;
+        const row = drag.kind === 'move' ? cell.closest('[data-room-id]') : drag.row;
+        const i = Number(cell.dataset.cell);
+        drag.target = { row, i };
+        if (drag.kind === 'new') {
+            mark(row, Math.min(drag.grab, i), Math.max(drag.grab, i));
+        } else {
+            const a = Math.round((Date.parse(drag.bar.dataset.arrival + 'T00:00:00Z') - start) / DAY);
+            const d = Math.round((Date.parse(drag.bar.dataset.departure + 'T00:00:00Z') - start) / DAY);
+            const delta = i - drag.grab;
+            if (drag.kind === 'move') mark(row, a + delta, d + delta - 1, drag.bar.dataset.status === 'in_house' && delta !== 0);
+            else mark(row, a, Math.max(a, i));
+        }
+    });
+    const endDrag = (e) => {
+        if (!drag) return;
+        const d = drag;
+        drag = null;
+        if (d.bar) d.bar.style.pointerEvents = '';
+        mark(null);
+        if (d.kind === 'new') {
+            const i = d.target ? d.target.i : d.grab;
+            const from = Math.min(d.grab, i);
+            const to = Math.max(d.grab, i);
+            const url = new URL(rack.dataset.newUrl, location.href);
+            url.searchParams.set('oda', d.row.dataset.roomId);
+            url.searchParams.set('gelis', dmy(iso(from)));
+            url.searchParams.set('cikis', dmy(iso(to + 1)));
+            location.href = url;
+            return;
+        }
+        if (!d.active || !d.target || e.type === 'pointercancel') return;
+        suppressClick = true;
+        const delta = d.target.i - d.grab;
+        let arrival = d.bar.dataset.arrival;
+        let departure = d.bar.dataset.departure;
+        let room = d.row;
+        if (d.kind === 'move') {
+            arrival = shift(arrival, delta);
+            departure = shift(departure, delta);
+            room = d.target.row;
+        } else {
+            departure = iso(d.target.i + 1);
+            if (departure <= arrival) departure = shift(arrival, 1);
+        }
+        if (room === d.row && arrival === d.bar.dataset.arrival && departure === d.bar.dataset.departure) return;
+        const msg = (d.kind === 'move' ? rack.dataset.msgMove : rack.dataset.msgResize)
+            .replace(':room', room.dataset.room).replace(':from', dmy(arrival)).replace(':to', dmy(departure));
+        if (!confirm(msg)) return;
+        const f = document.getElementById('rack-move-form');
+        f.action = d.bar.dataset.moveUrl;
+        f.room_id.value = room.dataset.roomId;
+        f.arrival_date.value = arrival;
+        f.departure_date.value = departure;
+        f.submit();
+    };
+    rack.addEventListener('pointerup', endDrag);
+    rack.addEventListener('pointercancel', endDrag);
+}
+
 // Tümünü seç (Kat Hizmetleri oda listesi)
 document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
     all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });

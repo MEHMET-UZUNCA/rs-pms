@@ -22,6 +22,7 @@ class Menu
                 ['block_reservation', $can('reservations.view') ? route('blocks.index') : null],
                 ['group_reservation', $can('reservations.edit') ? route('blocks.create', ['tur' => 'group']) : null],
                 ['financial_accounts', $can('reservations.view') ? route('reservations.navigator', ['f' => 'fa']) : null],
+                ['availability', $can('reservations.view') ? route('availability.index') : null],
                 ['quick_reservation', null],
                 ['meal_plan', $can('reservations.view') ? route('meal-plan.forecast') : null],
             ],

@@ -6,6 +6,8 @@
     $q = fn (array $over) => route('front-office.room-rack', array_filter(array_merge(['bas' => $start->format('d.m.Y'), 'gun' => $span, 'tip' => $typeId ?: null, 'kat' => $floorId ?: null], $over)));
     $cols = 'grid-template-columns: 7.5rem repeat('.$span.', minmax('.($span > 14 ? '2.2rem' : '4.5rem').', 1fr))';
     $canEdit = Gate::allows('permission', 'reservations.edit');
+    $canBill = Gate::allows('permission', 'cashiering.billing');
+    $canCheckIn = Gate::allows('permission', 'reservations.checkin');
 @endphp
 @section('content')
 <div class="win flex-1">
@@ -28,7 +30,9 @@
         </div>
     </form>
 
-    <div class="flex-1 min-h-0 overflow-auto text-[12px]" data-rack>
+    <div class="flex-1 min-h-0 overflow-auto text-[12px] select-none" data-rack data-start="{{ $start->toDateString() }}" data-span="{{ $span }}"
+         @if ($canEdit) data-new-url="{{ route('reservations.create') }}" data-can-move @endif
+         data-msg-move="{{ __('pms.rack.confirm_move') }}" data-msg-resize="{{ __('pms.rack.confirm_resize') }}">
         <div class="grid sticky top-0 z-30 bg-surface border-b border-line min-w-max" style="{{ $cols }}">
             <div class="sticky left-0 z-10 bg-surface px-2 py-1.5 font-semibold">{{ __('pms.rack.room') }}</div>
             @foreach ($days as $d)
@@ -39,19 +43,28 @@
         </div>
 
         @foreach ($rooms as $room)
-            <div class="grid border-b border-line/60 min-w-max hover:bg-brand-50/40" style="{{ $cols }}" data-room="{{ $room->number }}">
+            <div class="grid border-b border-line/60 min-w-max hover:bg-brand-50/40" style="{{ $cols }}" data-room="{{ $room->number }}" data-room-id="{{ $room->id }}">
                 <div class="sticky left-0 z-10 bg-panel px-2 py-1 flex items-center gap-1.5" style="grid-row: 1">
                     <b class="w-9">{{ $room->number }}</b><span class="text-muted w-8">{{ $room->type_code }}</span>
                     <span class="px-1 rounded text-[10px] {{ $hk[$room->hk_status] ?? '' }}" title="{{ __('pms.hk.fo_status.'.$room->fo_status) }} / {{ __('pms.hk.hk_status.'.$room->hk_status) }}">{{ __('pms.hk.short.'.$room->fo_status.'_'.($room->hk_status === 'dirty' ? 'dirty' : 'clean')) }}</span>
                 </div>
                 @foreach ($days as $i => $d)
-                    <div class="border-l border-line/50 min-h-7" style="grid-row: 1; grid-column: {{ $i + 2 }}"></div>
+                    <div class="border-l border-line/50 min-h-7 {{ $canEdit ? 'cursor-cell' : '' }}" style="grid-row: 1; grid-column: {{ $i + 2 }}" data-cell="{{ $i }}"></div>
                 @endforeach
                 @foreach ($bars[$room->id] ?? [] as $b)
-                    @php $tag = $b['id'] && $canEdit ? 'a' : 'div'; @endphp
-                    <{{ $tag }} @if ($tag === 'a') href="{{ route('reservations.edit', $b['id']) }}" @endif title="{{ $b['title'] }}" data-kind="{{ $b['kind'] }}"
-                        class="{{ $colors[$b['kind']] }} text-white font-semibold rounded px-1.5 my-1 mx-0.5 truncate min-w-0 leading-5 hover:brightness-110 {{ $b['cont_left'] ? 'rounded-l-none' : '' }} {{ $b['cont_right'] ? 'rounded-r-none' : '' }}"
-                        style="grid-row: 1; grid-column: {{ $b['col'] + 2 }} / span {{ $b['len'] }}; contain: inline-size">{{ $b['cont_left'] ? '‹ ' : '' }}{{ $b['label'] }}</{{ $tag }}>
+                    @php
+                        $isRes = (bool) $b['id'];
+                        $actions = $isRes ? array_filter([
+                            'card' => route('reservations.edit', $b['id']),
+                            'folio' => $canBill && $b['status'] === 'in_house' ? route('billing.reservation', $b['id']) : null,
+                            'checkin' => $canCheckIn && in_array($b['status'], ['confirmed', 'tentative'], true) && $b['arrival'] === $businessDate->toDateString() ? route('reservations.check-in', $b['id']) : null,
+                            'checkout' => $canBill && $b['status'] === 'in_house' && $b['departure'] <= $businessDate->toDateString() ? route('billing.reservation', $b['id']) : null,
+                        ]) : [];
+                    @endphp
+                    <div title="{{ $b['title'] }}" data-kind="{{ $b['kind'] }}" @if ($isRes) data-bar="{{ $b['id'] }}" data-status="{{ $b['status'] }}" data-arrival="{{ $b['arrival'] }}" data-departure="{{ $b['departure'] }}"
+                        data-actions='@json($actions)' data-move-url="{{ route('front-office.room-rack.move', $b['id']) }}" tabindex="0" role="button" @endif
+                        class="relative {{ $colors[$b['kind']] }} text-white font-semibold rounded px-1.5 my-1 mx-0.5 truncate min-w-0 leading-5 hover:brightness-110 {{ $isRes ? 'cursor-pointer' : '' }} {{ $isRes && $canEdit ? 'cursor-grab' : '' }} {{ $b['cont_left'] ? 'rounded-l-none' : '' }} {{ $b['cont_right'] ? 'rounded-r-none' : '' }}"
+                        style="grid-row: 1; grid-column: {{ $b['col'] + 2 }} / span {{ $b['len'] }}; contain: inline-size">{{ $b['cont_left'] ? '‹ ' : '' }}{{ $b['label'] }}@if ($isRes && $canEdit && ! $b['cont_right'])<span data-resize class="absolute right-0 top-0 bottom-0 w-2 cursor-ew-resize bg-white/30 rounded-r" title="{{ __('pms.rack.resize_hint') }}"></span>@endif</div>
                 @endforeach
             </div>
         @endforeach
@@ -64,11 +77,20 @@
         </div>
     </div>
 
+    {{-- Çubuk işlem menüsü --}}
+    <div id="rack-menu" hidden class="fixed z-50 min-w-44 bg-panel border border-line rounded shadow-lg py-1 text-[13px]" role="menu">
+        @foreach (['card' => 'Enter', 'folio' => 'B', 'checkin' => 'G', 'checkout' => 'O'] as $a => $key)
+            <a data-menu-action="{{ $a }}" role="menuitem" class="flex items-center gap-3 px-3 py-1.5 hover:bg-brand-50 focus:bg-brand-50 outline-none" href="#">{{ __('pms.rack.actions.'.$a) }} <span class="kbd ml-auto">{{ $key }}</span></a>
+        @endforeach
+    </div>
+    <form method="POST" id="rack-move-form" hidden>@csrf<input name="room_id"><input name="arrival_date"><input name="departure_date"></form>
+    <form method="POST" id="rack-checkin-form" hidden>@csrf</form>
+
     <div class="flex flex-wrap items-center gap-3 px-3 py-1.5 border-t border-line text-[12px]">
         @foreach (['in_house', 'confirmed', 'tentative', 'ooo', 'oos'] as $k)
             <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded {{ $colors[$k] }}"></span>{{ __('pms.rack.legend.'.$k) }}</span>
         @endforeach
-        <span class="ml-auto text-muted">Alt+← / Alt+→ · Ctrl+L</span>
+        <span class="ml-auto text-muted">{{ $canEdit ? __('pms.rack.drag_hint').' · ' : '' }}Alt+← / Alt+→ · Ctrl+L</span>
         <a href="{{ route('reservations.navigator') }}" class="btn" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd">Esc</span></a>
     </div>
 </div>

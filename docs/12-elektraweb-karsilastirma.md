@@ -12,9 +12,9 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 |---|---|---|---|---|
 | 1 | Günlük durum ekranı (doluluk, gelir, tahmin, konaklayan; grafik ve liste) | Ana sayfa = Ön büro kontrol paneli | Var | **Ön büro kontrol paneli**: bugün giriş / çıkış / içeride, doluluk %, oda geliri, ADR, 7–14 günlük doluluk tahmini, kirli / arızalı oda sayısı; her kutudan ilgili listeye geçiş |
 | 2 | Rezervasyon listesi: tek tıkla süzme ve gruplama | Reservation Navigator (F3, Alt+1–0 süzgeçler) | Var | Gruplama (acenta / oda tipi / pansiyona göre ara toplam) yok — kısa iş |
-| 3 | Oda tipi müsaitliği | Rezervasyon kartında müsaitlik kontrolü, Web API availability | Kısmen | **Availability ekranı** (oda tipi × gün, satılabilir / satılan / OOO); Fidelio Rate Query benzeri |
-| 4 | Oda blokaj / oda planı: sürükle-bırak ile oda ve tarih değişimi, sürükleyerek rezervasyon açma | Room Rack (oda-plani) görüntüleme | Kısmen | Oda planından **rezervasyon kartı, oda değişimi, tarih uzatma** (sürükle-bırak), boş hücreden yeni rezervasyon |
-| 5 | Oda planından çıkmadan tahsilat, folyo, check-out | Folyo / Billing ekranı ayrı | Kısmen | Oda planında sağ tık / kısayol menüsü: Folyo, Ödeme, Check-in, Check-out |
+| 3 | Oda tipi müsaitliği | Rezervasyon kartında müsaitlik kontrolü, Web API availability | Var | Müsaitlik ekranı (oda tipi × gün; satılan, opsiyon, blok, arızalı, doluluk) |
+| 4 | Oda blokaj / oda planı: sürükle-bırak ile oda ve tarih değişimi, sürükleyerek rezervasyon açma | Room Rack: sürükle-bırak ile oda / tarih değişimi, kenardan uzatma, boş hücrelerden yeni rezervasyon | Var | |
+| 5 | Oda planından çıkmadan tahsilat, folyo, check-out | Oda planında çubuk menüsü: kart, folyo / ödeme, giriş, çıkış | Var | |
 | 6 | Oda durumları temizlik ve doluluğa göre renkli | Housekeeping ve Room Rack renkli | Var | |
 | 7 | Profil eşleştirme, mükerrer profil bulma ve birleştirme | Profil arama; tabloda merged_into_id hazır | Kısmen | **Profil birleştirme** (Fidelio Merge): aynı ad / doğum tarihi / belge no / e-posta ile aday listesi, rezervasyon ve geçmiş tek profile taşınır |
 | 8 | Folyo: ödeme, posting, faturalama aynı ekranda | Billing: kayıt, ödeme, düzeltme, aktarma, 8 pencere, check-out | Kısmen | **Fatura / folyo yazdırma** (PDF), fatura no serisi |
@@ -38,7 +38,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 1. ~~Fixed Charges ve geç çıkış~~ — yapıldı.
 2. ~~Ön büro kontrol paneli (#1)~~ — yapıldı.
 3. ~~Grup / blok rezervasyon ve routing (#19)~~ — yapıldı. Sonra: toplu çıkış, kotanın gece gece düzenlenmesi, opsiyon tarihinde otomatik bırakma (release).
-4. Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3).
+4. ~~Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3)~~ — yapıldı.
 5. Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10).
 6. Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21).
 7. Misafir istekleri / şikâyetler (#14).

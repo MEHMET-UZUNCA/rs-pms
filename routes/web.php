@@ -14,6 +14,7 @@ use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Profiles\ProfileController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
+use App\Http\Controllers\Reservations\AvailabilityController;
 use App\Http\Controllers\Reservations\BlockController;
 use App\Http\Controllers\Reservations\FixedChargeController;
 use App\Http\Controllers\Reservations\MealPlanController;
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Ön Büro → Oda Planı (Room Rack)
     Route::get('/oda-plani', [RoomRackController::class, 'index'])->middleware('permission:reservations.view')->name('front-office.room-rack');
+    Route::post('/oda-plani/{reservation}/tasi', [RoomRackController::class, 'move'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('front-office.room-rack.move');
 
     // Rezervasyon Navigatörü
     Route::middleware('permission:reservations.view')->prefix('rezervasyon')->name('reservations.')->group(function () {
@@ -119,6 +121,8 @@ Route::middleware(['auth', 'property'])->group(function () {
     });
 
     // Multiboard: pansiyon değişikliği ve öğün sayıları
+    Route::get('/musaitlik', [AvailabilityController::class, 'index'])->middleware('permission:reservations.view')->name('availability.index');
+
     // Reservation → Block / Group Reservation
     Route::middleware('permission:reservations.view')->prefix('bloklar')->name('blocks.')->group(function () {
         Route::get('/', [BlockController::class, 'index'])->name('index');

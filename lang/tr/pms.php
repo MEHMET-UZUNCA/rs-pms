@@ -152,6 +152,10 @@ return [
     ],
 
     'rack' => [
+        'actions' => ['card' => 'Rezervasyon kartı', 'folio' => 'Folyo / ödeme', 'checkin' => 'Giriş yap', 'checkout' => 'Çıkış yap'],
+        'moved' => ':name — :room numaralı oda, :from–:to.', 'in_house_arrival' => 'İçerideki misafirin giriş tarihi değişmez; yalnız oda ya da çıkış tarihi değişir.',
+        'confirm_move' => 'Rezervasyon :room numaralı odaya, :from – :to tarihlerine taşınsın mı?', 'confirm_resize' => 'Konaklama :from – :to olarak değişsin mi?',
+        'resize_hint' => 'Çıkış tarihini değiştirmek için sürükleyin', 'drag_hint' => 'Çubuğu sürükleyerek taşıyın, sağ kenarından çekerek çıkışı değiştirin, boş hücrelerde sürükleyerek yeni rezervasyon açın',
         'title' => 'Oda Planı', 'days' => ':n gün', 'prev' => 'Önceki', 'next' => 'Sonraki', 'today' => 'İş günü', 'start' => 'Başlangıç',
         'all_types' => 'Tüm oda tipleri', 'all_floors' => 'Tüm katlar', 'room' => 'Oda', 'occupancy' => 'Dolu', 'unassigned' => 'Odasız',
         'legend' => ['in_house' => 'İçeride', 'confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'ooo' => 'Arızalı (OOO)', 'oos' => 'Hizmet dışı (OOS)'],
@@ -411,5 +415,11 @@ Kaya, Ayşe
         'picked' => ':count rezervasyon açıldı.', 'assigned' => ':count odaya atama yapıldı.', 'no_room_for' => 'Boş oda bulunamadı: :list', 'checked_in' => ':count rezervasyona giriş yapıldı.',
         'routed' => ':count rezervasyonun oda ve pansiyon ücreti :folio ana hesabına yazılacak.', 'unrouted' => ':count rezervasyonun yönlendirmesi kaldırıldı.',
         'select_members' => 'En az bir rezervasyon seçin.',
+    ],
+    'avail' => [
+        'title' => 'Müsaitlik', 'subtitle' => 'Oda tipine ve güne göre satılabilir oda',
+        'rows' => ['avail' => 'Müsait', 'sold' => 'Satılan', 'tentative' => 'Opsiyon', 'blocks' => 'Blokta kalan', 'ooo' => 'Arızalı', 'occupancy' => 'Doluluk %'],
+        'cell' => ':physical oda − :ooo arızalı − :sold satılan − :blocks blokta (opsiyon :tentative)',
+        'hint' => 'Müsait = oda − arızalı − satılan − kesin bloklarda kalan. Yeni rezervasyon için sayıya tıklayın.',
     ],
 ];
