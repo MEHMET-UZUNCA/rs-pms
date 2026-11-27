@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Fidelio veri aktarımı: `php artisan pms:import-fidelio {klasör}` — PROISV CSV'lerinden profiller (adres, iletişim, şifreli kimlik belgesi, birleştirme bağı), kesim tarihinden sonraki rezervasyonlar ve gece satırları (beklenen, içeride, bekleme listesi, teklif, istenirse iptal; çok odalı satır bölünür; onay no Fidelio numarası), ek misafirler, içerideki misafirlerin pencere bazında açık bakiyesi (879 devir). --dry-run, --only, --from, eslesme.json ile kod çevirisi, tekrar çalıştırılabilir, doğrulama raporu (sayılar, tutarlar, eksik kodlar, hatalar). Ülke listesi 260 ülkeye tamamlandı (ISO 2/3, İngilizce / Türkçe). docs/06 §6.4. (M.U)
+
 - Yedekleme ve sunucu kurulumu: `php artisan pms:backup` (MySQL / MariaDB'de tutarlı mysqldump, SQLite'ta dosya kopyası; gzip; BACKUP_PATH, ikinci yere kopya BACKUP_COPY_PATH, BACKUP_KEEP_DAYS'ten eskileri siler; parola komut satırına yazılmaz), her gece 04:15 ve gün içinde 4 saatte bir zamanlanmış. docs/15-sunucu-kurulum.md: gerekenler, .env canlı değerleri, Nginx HTTPS, cron, Supervisor (Simphony dinleyicisi, kuyruk), güvenlik duvarı, binlog, geri yükleme denemesi, güncelleme adımları, canlıya geçiş kontrol listesi. (M.U)
 
 - Kişisel veri (KVKK / KKTC 89/2007): profil kartında "Anonimleştir (KVKK)" — misafirin talebiyle ad, iletişim, adres, kimlik belgeleri, kart ve kişisel alanlar silinir, profil "Anonim #no" olarak kalır; rezervasyon, folyo, fatura ve istatistik korunur; güncel / ileri rezervasyonu olan anonimleştirilemez; değişiklik kaydındaki eski değerler de temizlenir. Rezervasyon seçeneklerinde saklama süresi (yıl); `pms:anonymize-profiles` (--dry-run, --years) her ayın 1'inde süresi dolanları anonimleştirir (0 = kapalı). (M.U)
