@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Http;
 
+use App\Domain\Cashiering\Exceptions\PostingException;
 use App\Domain\Cashiering\Models\Folio;
 use App\Domain\Cashiering\Services\PostingService;
-use App\Domain\Cashiering\Exceptions\PostingException;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;

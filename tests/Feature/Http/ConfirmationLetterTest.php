@@ -3,9 +3,9 @@
 namespace Tests\Feature\Http;
 
 use App\Domain\Reservations\Models\Reservation;
+use App\Mail\ConfirmationLetterMail;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
-use App\Mail\ConfirmationLetterMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tests\Feature\Domain\DomainTestCase;

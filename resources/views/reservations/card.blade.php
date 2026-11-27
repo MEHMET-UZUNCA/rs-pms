@@ -29,7 +29,8 @@
     </nav>
 
     @if ($errors->any())
-        <div class="flash flash-error m-3 mb-0" role="alert">@foreach ($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>
+        <div class="flash flash-error m-3 mb-0" role="alert">@foreach ($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+            @if (session('overbooking') && Gate::allows('permission', 'reservations.overbooking'))<label class="flex items-center gap-2 mt-1 font-semibold"><input type="checkbox" name="overbook" value="1"> {{ __('pms.card.overbook_anyway') }}</label>@endif</div>
     @endif
 
     <div class="flex-1 min-h-0 overflow-auto">

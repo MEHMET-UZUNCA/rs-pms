@@ -2,9 +2,9 @@
 
 namespace App\Domain\Rates\Models;
 
+use App\Domain\Inventory\Models\RoomType;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
-use App\Domain\Inventory\Models\RoomType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

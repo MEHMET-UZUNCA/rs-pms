@@ -4,6 +4,7 @@ namespace App\Domain\Reservations\Services;
 
 use App\Domain\Profiles\Models\Profile;
 use App\Domain\Reservations\Models\Reservation;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Onay mektubunun (Reservation Confirmation Letter) verisi — yazdırma sayfası ve e-posta aynı veriyi kullanır.
@@ -45,7 +46,7 @@ class ConfirmationLetterBuilder
             return null;
         }
 
-        return \Illuminate\Support\Facades\DB::table('pms_profile_communications')->where('profile_id', $reservation->profile_id)
+        return DB::table('pms_profile_communications')->where('profile_id', $reservation->profile_id)
             ->where('type', 'email')->orderByDesc('is_primary')->orderBy('id')->value('value');
     }
 

@@ -9,6 +9,7 @@ use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Services\ReservationService;
 use App\Domain\Reservations\Support\ReservationOptions;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Support\BusinessDateInput;
 use App\Support\UserPreferences;
 use Carbon\CarbonImmutable;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
@@ -47,7 +49,7 @@ class NavigatorController extends Controller
     public const PANELS = ['none' => 0, 's' => 'h-32', 'm' => 'h-48', 'l' => 'h-72'];
 
     /** @return list<string> kullanıcının kolonları (sırayla) */
-    public static function columns(?\App\Models\User $user): array
+    public static function columns(?User $user): array
     {
         $saved = UserPreferences::get($user, 'navigator.columns');
         $cols = is_array($saved) ? array_values(array_intersect($saved, self::COLUMNS)) : [];
@@ -128,8 +130,8 @@ class NavigatorController extends Controller
     /** Kolon ve alt panel tercihlerini kaydeder (boş liste = varsayılan). */
     public function preferences(Request $request): RedirectResponse
     {
-        $data = $request->validate(['cols' => ['nullable', 'array'], 'cols.*' => [\Illuminate\Validation\Rule::in(self::COLUMNS)],
-            'panel' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(self::PANELS))], 'reset' => ['nullable']]);
+        $data = $request->validate(['cols' => ['nullable', 'array'], 'cols.*' => [Rule::in(self::COLUMNS)],
+            'panel' => ['nullable', Rule::in(array_keys(self::PANELS))], 'reset' => ['nullable']]);
         if ($request->boolean('reset')) {
             UserPreferences::set($request->user(), 'navigator', null);
         } else {
@@ -144,7 +146,7 @@ class NavigatorController extends Controller
     public function cancel(Request $request, Reservation $reservation, ReservationService $service): RedirectResponse
     {
         $this->authorizeProperty($reservation->property_id);
-        $data = $request->validate(['reason_code_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('pms_reason_codes', 'id')
+        $data = $request->validate(['reason_code_id' => ['required', 'integer', Rule::exists('pms_reason_codes', 'id')
             ->where('property_id', $reservation->property_id)->where('category', 'cancellation')]], [], ['reason_code_id' => __('pms.res.cancel_reason')]);
         try {
             $reservation = $service->cancel($reservation, (int) $data['reason_code_id'], $request->user()->id);

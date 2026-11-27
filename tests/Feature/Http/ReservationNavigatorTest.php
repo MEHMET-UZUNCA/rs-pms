@@ -107,8 +107,8 @@ class ReservationNavigatorTest extends DomainTestCase
 
     public function test_cancel_from_navigator_with_reason(): void
     {
-        $res = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, gelecek
-        $inHouse = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();
+        $res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, gelecek
+        $inHouse = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();
         $html = $this->actingAs($this->user)->get('/rezervasyon?f=ileri')->assertOk()->getContent();
         $this->assertStringContainsString('id="cancel-dialog"', $html);
         $this->assertStringContainsString('data-url-cancel="'.route('reservations.cancel', $res).'"', $html);
@@ -130,7 +130,7 @@ class ReservationNavigatorTest extends DomainTestCase
 
     public function test_operational_views_tentative_cancelled_no_show(): void
     {
-        $res = \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();
+        $res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();
         $res->update(['status' => 'tentative']);
         $this->actingAs($this->user)->get('/rezervasyon?f=bekleyen')->assertOk()->assertSee('Arslan, Can')->assertSee('Tentative');
         $reason = DB::table('pms_reason_codes')->where('property_id', $this->property)->where('category', 'cancellation')->value('id');

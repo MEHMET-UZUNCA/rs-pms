@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http;
 
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Support\ReservationOptions;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
@@ -73,7 +74,7 @@ class QueueRoomsTest extends DomainTestCase
         $r = $this->arrival();
         $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/kuyruk");
         $this->actingAs($this->user)->get('/')->assertSee('data-queue-badge', false);
-        \App\Domain\Reservations\Support\ReservationOptions::save($this->property, ['queue_rooms' => false], null);
+        ReservationOptions::save($this->property, ['queue_rooms' => false], null);
         $this->actingAs($this->user)->get('/')->assertDontSee('data-queue-badge', false);
     }
 }

@@ -36,7 +36,7 @@ class InvoiceService
     /**
      * Folyo cari hesaba mı gidiyor? (Faturası Logo'dan kesilir.) Ödeyen şirket / acenta / kaynak profili ya da folyoda City Ledger ödemesi.
      *
-     * @return string|null  neden (null: anlık müşteri, PMS'te kesilir)
+     * @return string|null neden (null: anlık müşteri, PMS'te kesilir)
      */
     public function accountReason(Folio $folio): ?string
     {

@@ -15,6 +15,7 @@ use App\Domain\Reservations\Models\ReservationNight;
 use App\Domain\Reservations\Services\FixedChargeService;
 use App\Domain\Reservations\Support\ReservationOptions;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -48,7 +49,7 @@ class NightAuditService
         $answers = NightAuditAnswers::get($propertyId);
         $checks = [];
         foreach ($this->checkQueries($propertyId, $bd) as $code => $query) {
-            $items = $query instanceof \Illuminate\Database\Eloquent\Builder && $query->getModel() instanceof Reservation
+            $items = $query instanceof Builder && $query->getModel() instanceof Reservation
                 ? $query->with(['profile:id,display_name', 'room:id,number'])->get() : $query->get();
             $checks[$code] = ['severity' => NightAuditAnswers::severity($answers[$code]), 'answer' => $answers[$code], 'items' => $items];
         }
@@ -59,7 +60,7 @@ class NightAuditService
     /**
      * Kontrollerin sorguları (Fidelio "Answers for Automatic Night Audit" sırası).
      *
-     * @return array<string, \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder>
+     * @return array<string, Builder|\Illuminate\Database\Query\Builder>
      */
     private function checkQueries(int $propertyId, string $bd): array
     {
@@ -128,7 +129,7 @@ class NightAuditService
         $answers = NightAuditAnswers::get($property->id);
         $checks = [];
         foreach ($this->checkQueries($property->id, $bd) as $code => $query) {
-            $model = $query instanceof \Illuminate\Database\Eloquent\Builder ? $query->getModel() : null;
+            $model = $query instanceof Builder ? $query->getModel() : null;
             $items = match (true) {
                 $model instanceof Reservation => $query->pluck('confirmation_number')->all(),
                 $model instanceof Folio => $query->pluck('folio_number')->all(),

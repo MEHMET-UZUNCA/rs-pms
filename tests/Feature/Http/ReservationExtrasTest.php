@@ -6,6 +6,7 @@ use App\Domain\Reservations\Models\Reservation;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Testing\TestResponse;
 use Tests\Feature\Domain\DomainTestCase;
 
 class ReservationExtrasTest extends DomainTestCase
@@ -24,7 +25,7 @@ class ReservationExtrasTest extends DomainTestCase
         $this->res = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, 4 gece, ESU, oda yok
     }
 
-    private function save(array $extra): \Illuminate\Testing\TestResponse
+    private function save(array $extra): TestResponse
     {
         $r = $this->res;
 

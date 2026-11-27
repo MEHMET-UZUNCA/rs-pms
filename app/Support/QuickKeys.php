@@ -13,7 +13,7 @@ class QuickKeys
 {
     /**
      * @return list<array{label: string, hotkey: string, display: string, url: ?string}>
-     *   url null: ekran henüz yok (menüde soluk görünür, kısayol çalışmaz) ya da kullanıcının yetkisi yok.
+     *                                                                                   url null: ekran henüz yok (menüde soluk görünür, kısayol çalışmaz) ya da kullanıcının yetkisi yok.
      */
     public static function global(): array
     {

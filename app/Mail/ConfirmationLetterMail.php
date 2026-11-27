@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Domain\Reservations\Models\Reservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -13,7 +14,7 @@ class ConfirmationLetterMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @param array{r: \App\Domain\Reservations\Models\Reservation, lang: string, guest: string, rate: string, guests: string, bookedBy: string} $letter */
+    /** @param array{r: Reservation, lang: string, guest: string, rate: string, guests: string, bookedBy: string} $letter */
     public function __construct(public array $letter) {}
 
     public function envelope(): Envelope

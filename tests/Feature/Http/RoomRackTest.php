@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http;
 
+use App\Domain\Reservations\Models\Reservation;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
@@ -77,7 +78,7 @@ class RoomRackTest extends DomainTestCase
 
     public function test_drag_moves_room_and_dates_with_rules(): void
     {
-        $res = fn (string $last) => \App\Domain\Reservations\Models\Reservation::whereHas('profile', fn ($q) => $q->where('last_name', $last))->firstOrFail();
+        $res = fn (string $last) => Reservation::whereHas('profile', fn ($q) => $q->where('last_name', $last))->firstOrFail();
         DB::table('pms_rate_amounts')->insert(['rate_code_id' => DB::table('pms_rate_codes')->where('code', 'BAR')->value('id'), 'room_type_id' => null,
             'date_from' => '2026-11-01', 'date_to' => '2026-12-31', 'price_2' => 4200, 'price_1' => 4000]);   // örnek veride gece fiyatı elle; yeni geceler için
         $ozturk = $res('Öztürk');   // 01.12–04.12, 1108 YMF, bugün gelecek

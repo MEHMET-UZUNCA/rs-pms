@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Setup;
 use App\Domain\Core\Models\Property;
 use App\Domain\Rates\Models\RateAmount;
 use App\Domain\Rates\Models\RateCode;
+use App\Domain\Rates\Services\RateCalculator;
 use App\Domain\Rates\Services\RateCodeService;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -213,7 +215,7 @@ class RateCodeController extends Controller
         if (collect(['price_default', 'price_1', 'price_2', 'price_3', 'price_4'])->every(fn ($f) => $data[$f] === null)) {
             return back()->withInput()->withErrors(['price_default' => __('pms.rates.err_no_price')]);
         }
-        $rooms = ($data['room_numbers'] ?? null) ? implode(', ', \App\Domain\Rates\Services\RateCalculator::rooms($data['room_numbers'])) : null;
+        $rooms = ($data['room_numbers'] ?? null) ? implode(', ', RateCalculator::rooms($data['room_numbers'])) : null;
         if ($rooms) {
             $known = DB::table('pms_rooms')->where('property_id', $p->id)->whereIn('number', explode(', ', $rooms))->pluck('number')->all();
             $unknown = array_diff(explode(', ', $rooms), $known);
@@ -261,7 +263,7 @@ class RateCodeController extends Controller
         ]);
     }
 
-    /** @return array{details: \Illuminate\Support\Collection} */
+    /** @return array{details: Collection} */
     private function details(RateCode $rate): array
     {
         return ['details' => $rate->amounts()->with(['roomTypes:id,code', 'season:id,code,name'])->orderBy('date_from')->orderBy('id')->get()];

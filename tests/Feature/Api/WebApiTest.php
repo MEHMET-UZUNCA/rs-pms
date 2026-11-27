@@ -4,6 +4,9 @@ namespace Tests\Feature\Api;
 
 use App\Domain\Core\Services\ExchangeRateService;
 use App\Domain\Rates\Models\RateCode;
+use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Support\ReservationOptions;
+use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -91,12 +94,12 @@ class WebApiTest extends DomainTestCase
 
         // Ayar yokken kapalı
         $post($body)->assertStatus(503);
-        \App\Domain\Reservations\Support\ReservationOptions::save($this->property, ['web_reservation_type' => 'GTD', 'web_market' => 'IND', 'web_source' => 'DIR'], null);
+        ReservationOptions::save($this->property, ['web_reservation_type' => 'GTD', 'web_market' => 'IND', 'web_source' => 'DIR'], null);
 
         $res = $post($body)->assertCreated()->json('data');
         $this->assertSame(['confirmed', 'YMF', '27IND', 3, 'W-1001', 'Weber, Anna'], [$res['status'], $res['room_type'], $res['rate_code'], $res['nights'], $res['external_reference'], $res['guest']]);
         $this->assertEqualsWithDelta(3 * 640, $res['total'], 0.01);   // fiyat PMS'te hesaplanır
-        $r = \App\Domain\Reservations\Models\Reservation::where('confirmation_number', $res['confirmation_number'])->firstOrFail();
+        $r = Reservation::where('confirmation_number', $res['confirmation_number'])->firstOrFail();
         $this->assertSame(['WEB:W-1001', 'Sea view if possible', '18:30'], [$r->external_reference, $r->guest_comments, substr((string) $r->eta, 0, 5)]);
         $this->assertSame('anna@example.com', DB::table('pms_profile_communications')->where('profile_id', $r->profile_id)->where('type', 'email')->value('value_normalized'));
 
@@ -105,7 +108,7 @@ class WebApiTest extends DomainTestCase
         $this->assertTrue($again['duplicate']);
         $this->assertSame($res['confirmation_number'], $again['data']['confirmation_number']);
         $second = $post(array_merge($body, ['external_reference' => 'W-1002', 'arrival' => '2027-04-01', 'departure' => '2027-04-03']))->assertCreated()->json('data');
-        $this->assertSame((int) $r->profile_id, (int) \App\Domain\Reservations\Models\Reservation::where('confirmation_number', $second['confirmation_number'])->value('profile_id'));
+        $this->assertSame((int) $r->profile_id, (int) Reservation::where('confirmation_number', $second['confirmation_number'])->value('profile_id'));
 
         // Kurallar
         $post(array_merge($body, ['external_reference' => 'X1', 'room_type' => 'ESU']))->assertStatus(409);   // fiyatı yok
@@ -122,7 +125,7 @@ class WebApiTest extends DomainTestCase
         $this->assertNotNull($r->fresh()->cancellation_number);
 
         // Ön büroda Web görünümü
-        $user = \App\Models\User::create(['username' => 'ON', 'name' => 'Ön', 'email' => 'on@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
+        $user = User::create(['username' => 'ON', 'name' => 'Ön', 'email' => 'on@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $user->id, 'property_id' => $this->property, 'role_id' => DB::table('pms_roles')->where('code', 'FOA')->value('id')]);
         $this->withoutVite();
         $this->actingAs($user)->get('/rezervasyon?f=web')->assertOk()->assertSee('Weber, Anna');

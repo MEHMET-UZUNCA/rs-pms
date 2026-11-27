@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Genel kontrol (docs/14-genel-kontrol.md): kod stili (pint) temizlendi, eksik iki çeviri eklendi, yetki ve tesis ayrımı denetlendi. Düzeltmeler: **overbooking** — rezervasyon kartı artık müsaitliği aşan kaydı geri alır ve uyarır; yeni Reservation → Overbooking ekranında oda tipi × gün izin verilen fazla satış (hücre hücre ya da dönem için); sınır içi kayıt uyarısız, sınır üstü yalnız `reservations.overbooking` yetkisiyle "Yine de kaydet"; yalnız not gibi değişiklikler engellenmez; web sitesi müsaitliğin üstüne satmaz. Erken çıkışta çıkış tarihi bugüne çekilir. (M.U)
+
 - Rezervasyon kartının boş sekmeleri tamamlandı: Features (Ctrl+6) — oda tercihleri (deniz manzarası, sigara içilmeyen …) ve bu özelliklerin hepsine sahip, konaklama boyunca boş, arızasız odalar; odaya tıklayınca Rezervasyon sekmesinde seçilir. Credit Card (Ctrl+7) — garanti kartı: kart sahibi, tür, yalnız son 4 hane, son kullanma (tam numara girilirse reddedilir; kart numarası ve CVV saklanmaz), kaldırma. Inventory (Ctrl+2) — sayılı kalemler (bebek yatağı, ek yatak …) tarihlerle, her gece için stok denetimiyle; Ayarlar → Envanter kalemleri ekranı (kod, ad, toplam adet, fiyat). Packages (Ctrl+4) — fiyat kodunun pansiyon paketi ve içeriği (departman kodu, hesap, yetişkin / çocuk tutarı); ek ücretler Fixed Charges'ta. Migration: pms_reservation_features. (M.U)
 
 - Ekran ve klavye kabul testi (inceleme önerisi 7): tests/browser/sweep.js (30 ekran × 1093 / 1280 / 1366 / 1920 px: taşma, sığmayan düğme, JS hatası) ve tests/browser/keys.js (yalnız klavyeyle 17 adımlık ön büro akışı); sonuçlar docs/13-kabul-testi.md. Bulunan sorun: yan düğmelerde kısayol etiketi sığmıyordu — yan düğmeler sıkılaştırıldı. (M.U)

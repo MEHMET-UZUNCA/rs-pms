@@ -92,13 +92,13 @@ Kayıtta tutarsız görünen, otelde Fidelio'ya bakılıp doğrulanacak bilgiler
 
 ## Yapılacak ekranlar ve işler (sırayla)
 
-1. ~~Rezervasyon Kartı~~ yapıldı (Ctrl+1, 3, 5, 9) — kalan sekmeler: Ctrl+2 envanter, Ctrl+4 paketler, Ctrl+6 özellikler, Ctrl+7 kredi kartı, Ctrl+8 sabit ücretler, Ctrl+0 yemek planı; iptal ve paylaşım (share)
-2. ~~Simphony dinleyicisi (Enhanced protokol)~~ yapıldı — kalan: SPH.XML'den satış kalemi eşlemeleri, oda dışı ödemelerin FA'ya yazılması, Simphony'de ikinci arayüz kaydı (#102) ile canlı deneme
-3. ~~Folyo (Billing) ekranı~~ yapıldı — kalan: fatura kesme ve yazdırma, folyo bölme (split), yönlendirme kuralları (routing), kasiyer vardiyası, döviz ile ödeme, ödünç/depozito
-4. Vergiler (Tax Details) ekranı ve Departman Kodu Grupları ekranı
-5. ~~Oda Planı (Room Rack)~~ yapıldı — kalan: sürükle-bırakla oda değiştirme / uzatma, arıza (OOO/OOS) girişi ekranı
-6. ~~Gece kapanışı ekranı~~ yapıldı — kalan: gece raporlarının yazdırılması (PDF), otomatik (zamanlanmış) kapanış, Logo fişinin kapanışta üretilmesi
-7. Logo aktarımı
-8. Fidelio veri aktarımı (PROISV)
-9. Rapor ekranı (Miscellaneous → Reports) — başlangıç seti docs/10-raporlar.md'de (ön büro, oda/kat hizmetleri, doluluk, finans; 19 rapor)
-10. ~~Multiboard~~ yapıldı (gece bazında pansiyon, Meal Plan sekmesi, öğün sayıları) — kalan: pansiyon değişikliğinde fiyat farkının otomatik kaydı, pansiyon paketlerinin tutarları (Package Link Header: kahvaltı / akşam yemeği tutarı), otelin sattığı pansiyonların teyidi (AI var mı?)
+Güncel öncelik listesi: **docs/14-genel-kontrol.md** (27.11.2026 genel kontrol). Kısaca:
+
+1. Fidelio veri aktarımı (profiller, ileri rezervasyonlar, içeridekiler, bakiyeler) — canlıya geçiş ön koşulu
+2. Yedekleme ve sunucu kurulum belgesi (cron, Simphony dinleyicisi için Supervisor / systemd, HTTPS, APP_DEBUG=false)
+3. Raporlar (docs/10-raporlar.md başlangıç seti)
+4. Simphony'de tek kayıt yolu (ChatGPT'nin yerel kodu gelince), Logo aktarımı
+5. Değişiklik kaydı (audit log), servis mesajlarının dil dosyasına taşınması, Reinstate / Undo Check-in, depozito takibi
+
+Yapılanlar (özet): rezervasyon kartının 10 sekmesi, Simphony dinleyicisi, folyo (8 pencere, routing, fatura, döviz, kasa), vergiler, oda planı
+(sürükle-bırak, hızlı kayıt), gece kapanışı, multiboard, bloklar / gruplar, müsaitlik, overbooking, misafir istekleri, profil birleştirme, web API.

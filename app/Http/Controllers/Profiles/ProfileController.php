@@ -61,7 +61,9 @@ class ProfileController extends Controller
     public function summary(Profile $profile): View
     {
         $this->own($profile);
-        $column = match ($profile->type) { 'company' => 'company_profile_id', 'travel_agent' => 'agent_profile_id', 'source' => 'source_profile_id', 'group' => 'group_profile_id', default => 'profile_id' };
+        $column = match ($profile->type) {
+            'company' => 'company_profile_id', 'travel_agent' => 'agent_profile_id', 'source' => 'source_profile_id', 'group' => 'group_profile_id', default => 'profile_id'
+        };
 
         return view('profiles._summary', [
             'profile' => $profile->load(['addresses', 'communications']),

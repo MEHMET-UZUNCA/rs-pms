@@ -7,14 +7,18 @@ use App\Domain\Inventory\Models\Room;
 use App\Domain\Profiles\Models\Profile;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\ReservationExtrasService;
 use App\Domain\Reservations\Services\ReservationService;
+use App\Domain\Reservations\Support\ReservationOptions;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -68,11 +72,12 @@ class ReservationCardController extends Controller
                     $reservation = $service->assignRoom($reservation, Room::findOrFail($data['room_id']), $request->user()->id);
                 }
                 $this->saveExtras($reservation, $data);
+                $this->assertCapacity($reservation, $request);
 
                 return $reservation;
             });
         } catch (ReservationException $e) {
-            return back()->withInput()->withErrors(['reservation' => $e->getMessage()]);
+            return back()->withInput()->withErrors(['reservation' => $e->getMessage()])->with('overbooking', str_starts_with($e->getMessage(), self::OVERBOOK_MARK));
         }
 
         return redirect()->route('reservations.edit', $reservation)
@@ -84,14 +89,21 @@ class ReservationCardController extends Controller
         $this->authorizeProperty($reservation);
         $data = $this->validated($request, $reservation);
         try {
-            $service->update($reservation, array_merge($this->fields($data), [
-                'arrival_date' => $data['arrival_date'], 'departure_date' => $data['departure_date'],
-                'child_bands' => [1 => (int) ($data['children'] ?? 0)], 'room_id' => $data['room_id'] ?? null,
-                'room_move_reason_id' => $data['room_move_reason_id'] ?? null,
-            ] + ($data['manual_amount'] !== null ? ['manual_amount' => $data['manual_amount']] : [])), $request->user()->id);
-            $this->saveExtras($reservation->fresh(), $data);
+            $before = [$reservation->arrival_date->toDateString(), $reservation->departure_date->toDateString(), (int) $reservation->room_type_id];
+            DB::transaction(function () use ($service, $reservation, $data, $request, $before) {
+                $service->update($reservation, array_merge($this->fields($data), [
+                    'arrival_date' => $data['arrival_date'], 'departure_date' => $data['departure_date'],
+                    'child_bands' => [1 => (int) ($data['children'] ?? 0)], 'room_id' => $data['room_id'] ?? null,
+                    'room_move_reason_id' => $data['room_move_reason_id'] ?? null,
+                ] + ($data['manual_amount'] !== null ? ['manual_amount' => $data['manual_amount']] : [])), $request->user()->id);
+                $this->saveExtras($reservation->fresh(), $data);
+                $after = $reservation->fresh();
+                if ($before !== [$after->arrival_date->toDateString(), $after->departure_date->toDateString(), (int) $after->room_type_id]) {
+                    $this->assertCapacity($after, $request);   // yalnız tarih ya da oda tipi değiştiyse (not, kart gibi değişiklikler engellenmez)
+                }
+            });
         } catch (ReservationException $e) {
-            return back()->withInput()->withErrors(['reservation' => $e->getMessage()]);
+            return back()->withInput()->withErrors(['reservation' => $e->getMessage()])->with('overbooking', str_starts_with($e->getMessage(), self::OVERBOOK_MARK));
         }
 
         return redirect()->route('reservations.edit', $reservation)->with('status', __('pms.card.saved', ['no' => $reservation->confirmation_number]));
@@ -147,7 +159,7 @@ class ReservationCardController extends Controller
             'room_charges_allowed' => ['boolean'],
             'eta' => ['nullable', 'date_format:H:i'], 'etd' => ['nullable', 'date_format:H:i'],
             'features' => ['nullable', 'array'], 'features.*' => ['integer', Rule::exists('pms_room_features', 'id')->where('property_id', $property->id)],
-            'card_holder' => ['nullable', 'string', 'max:150'], 'card_brand' => ['nullable', Rule::in(\App\Domain\Reservations\Services\ReservationExtrasService::CARD_BRANDS)],
+            'card_holder' => ['nullable', 'string', 'max:150'], 'card_brand' => ['nullable', Rule::in(ReservationExtrasService::CARD_BRANDS)],
             'card_last4' => ['nullable', 'regex:/^\d{4}$/'], 'card_expiry' => ['nullable', 'regex:#^(0[1-9]|1[0-2])/\d{2}$#'],
             'room_move_reason_id' => ['nullable', 'integer', Rule::exists('pms_reason_codes', 'id')->where('property_id', $property->id)->where('category', 'room_move')],
             'guest_comments' => ['nullable', 'string', 'max:2000'],
@@ -207,11 +219,11 @@ class ReservationCardController extends Controller
             'chargeCodes' => DB::table('pms_transaction_codes')->where('property_id', $p)->whereNotIn('type', ['payment', 'deposit'])->where('is_discount', false)
                 ->where('is_active', true)->where('manual_post_allowed', true)->whereNull('deleted_at')->orderBy('code')->get(['id', 'code', 'name', 'default_price']),
             'roomFeatures' => DB::table('pms_room_features')->where('property_id', $p)->orderBy('code')->get(['id', 'code', 'name']),
-            'selectedFeatures' => $reservation->exists ? app(\App\Domain\Reservations\Services\ReservationExtrasService::class)->features($reservation) : [],
+            'selectedFeatures' => $reservation->exists ? app(ReservationExtrasService::class)->features($reservation) : [],
             'matchingRooms' => $reservation->exists && ! in_array($reservation->status, ['cancelled', 'no_show', 'checked_out'], true)
-                ? app(\App\Domain\Reservations\Services\ReservationExtrasService::class)->matchingRooms($p, (int) $reservation->room_type_id,
+                ? app(ReservationExtrasService::class)->matchingRooms($p, (int) $reservation->room_type_id,
                     $reservation->arrival_date->toDateString(), $reservation->departure_date->toDateString(),
-                    app(\App\Domain\Reservations\Services\ReservationExtrasService::class)->features($reservation), $reservation->id) : collect(),
+                    app(ReservationExtrasService::class)->features($reservation), $reservation->id) : collect(),
             'card' => $reservation->payment_token_id ? DB::table('pms_payment_tokens')->where('id', $reservation->payment_token_id)->first(['brand', 'last4', 'expiry_month', 'expiry_year', 'holder_name']) : null,
             'items' => DB::table('pms_items')->where('property_id', $p)->orderBy('code')->get(['id', 'code', 'name', 'quantity_total', 'price']),
             'reservationItems' => $reservation->exists ? DB::table('pms_reservation_items as ri')->join('pms_items as i', 'i.id', '=', 'ri.item_id')
@@ -219,14 +231,36 @@ class ReservationCardController extends Controller
             'boardElements' => $reservation->exists && $reservation->rateCode?->package_id ? DB::table('pms_package_elements as e')->join('pms_transaction_codes as t', 't.id', '=', 'e.transaction_code_id')
                 ->where('e.package_id', $reservation->rateCode->package_id)->get(['e.calc', 'e.amount_adult', 'e.amount_child', 't.code', 't.name']) : collect(),
             'moveReasons' => DB::table('pms_reason_codes')->where('property_id', $p)->where('category', 'room_move')->where('is_active', true)->orderBy('code')->get(['id', 'code', 'name']),
-            'checkOutTime' => \App\Domain\Reservations\Support\ReservationOptions::get($p)['check_out_time'],
+            'checkOutTime' => ReservationOptions::get($p)['check_out_time'],
         ]);
+    }
+
+    public const OVERBOOK_MARK = '⚠';
+
+    /**
+     * Overbooking denetimi: kayıttan sonra oda tipinin müsaitliği eksiye düştüyse (kesin satış + kesin blok > oda − arızalı) kayıt geri alınır;
+     * kullanıcı "yine de kaydet"i işaretlerse kaydedilir. Opsiyon ve sayılmayan rezervasyon tipleri müsaitliği düşürmez, denetlenmez.
+     */
+    private function assertCapacity(Reservation $reservation, Request $request): void
+    {
+        $mayOverbook = Gate::allows('permission', 'reservations.overbooking');
+        if (($request->boolean('overbook') && $mayOverbook) || in_array($reservation->status, ['cancelled', 'no_show', 'checked_out'], true)) {
+            return;
+        }
+        // Overbooking sınırı (Reservation → Overbooking) içinde kalan fazla satış uyarısız kaydedilir
+        $short = DB::table('pms_inventory_daily')->where('property_id', $reservation->property_id)->where('room_type_id', $reservation->room_type_id)
+            ->where('date', '>=', $reservation->arrival_date->toDateString())->where('date', '<', $reservation->departure_date->toDateString())
+            ->whereRaw('CAST(available AS SIGNED) + CAST(overbooking_limit AS SIGNED) < 0')->orderBy('date')->get(['date', 'available']);
+        if ($short->isNotEmpty()) {
+            throw new ReservationException(self::OVERBOOK_MARK.' '.__($mayOverbook ? 'pms.card.overbooking' : 'pms.card.overbooking_denied', ['type' => $reservation->roomType?->code,
+                'dates' => $short->map(fn ($d) => Carbon::parse($d->date)->format('d.m').' ('.$d->available.')')->implode(', ')]));
+        }
     }
 
     /** Features ve garanti kartı (kartın ana formuyla birlikte kaydedilir). */
     private function saveExtras(Reservation $reservation, array $data): void
     {
-        $extras = app(\App\Domain\Reservations\Services\ReservationExtrasService::class);
+        $extras = app(ReservationExtrasService::class);
         if ($data['features_sent'] ?? false) {
             $extras->syncFeatures($reservation, $data['features'] ?? []);
         }

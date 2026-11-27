@@ -5,6 +5,7 @@ namespace Tests\Feature\Http;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Services\MealPlanService;
 use App\Domain\Reservations\Services\ReservationService;
+use App\Domain\Reservations\Support\ReservationOptions;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Seeders\DemoDataSeeder;
@@ -95,7 +96,7 @@ class MultiboardTest extends DomainTestCase
         $this->assertStringContainsString('HBD', $html);
 
         // Giriş günü kahvaltı da sayılsın
-        \App\Domain\Reservations\Support\ReservationOptions::save($this->property, ['meals_first_day' => ['breakfast' => true, 'lunch' => false, 'dinner' => true]], null);
+        ReservationOptions::save($this->property, ['meals_first_day' => ['breakfast' => true, 'lunch' => false, 'dinner' => true]], null);
         $f = app(MealPlanService::class)->forecast($this->property, CarbonImmutable::parse('2026-12-10'), CarbonImmutable::parse('2026-12-10'));
         $this->assertSame(['breakfast' => 3, 'lunch' => 0, 'dinner' => 3], $this->day($f, '2026-12-10'));
     }

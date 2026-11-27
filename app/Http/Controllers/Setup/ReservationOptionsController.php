@@ -7,6 +7,7 @@ use App\Domain\Reservations\Support\ReservationOptions;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -16,7 +17,7 @@ class ReservationOptionsController extends Controller
     public function edit(): View
     {
         $p = app(Property::class)->id;
-        $codes = fn (string $table) => \Illuminate\Support\Facades\DB::table($table)->where('property_id', $p)->whereNull('deleted_at')->orderBy('code')->get(['code', 'name']);
+        $codes = fn (string $table) => DB::table($table)->where('property_id', $p)->whereNull('deleted_at')->orderBy('code')->get(['code', 'name']);
 
         return view('setup.options.reservation', ['options' => ReservationOptions::get($p),
             'resTypes' => $codes('pms_reservation_types'), 'markets' => $codes('pms_market_segments'), 'sources' => $codes('pms_source_codes')]);

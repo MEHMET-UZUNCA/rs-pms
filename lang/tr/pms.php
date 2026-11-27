@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'overbooking' => 'Overbooking',
         'items' => 'Envanter kalemleri',
         'guest_requests' => 'Misafir istekleri',
         'room_moves' => 'Oda değişimleri',
@@ -112,7 +113,7 @@ return [
         'filters' => ['web' => 'Web (7 gün)', 'bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
             'ileri' => 'İleri tarihli', 'fa' => 'İçerideki FA', 'fa-acilacak' => 'Bugün açılacak FA', 'fa-kapanacak' => 'Bugün kapanacak FA',
             'fa-kapali' => 'Kapanmış FA', 'fa-ileri' => 'İleri tarihli FA'],
-        'statuses' => ['confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'waitlist' => 'Bekleme listesi', 'in_house' => 'İçeride',
+        'statuses' => ['inquiry' => 'Talep', 'confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'waitlist' => 'Bekleme listesi', 'in_house' => 'İçeride',
             'checked_out' => 'Çıkış yaptı', 'cancelled' => 'İptal', 'no_show' => 'No-show'],
     ],
 
@@ -124,6 +125,8 @@ return [
         'discrepancy' => ['skip' => 'Skip', 'sleep' => 'Sleep', 'person' => 'Kişi sayısı'],
     ],
     'card' => [
+        'overbooking_denied' => 'Overbooking: :dates tarihlerinde boş :type odası yok ve overbooking sınırı doldu. Sınır üstü kaydı yalnız yetkili (supervisor) yapabilir.',
+        'overbooking' => 'Overbooking: :dates tarihlerinde boş :type odası yok (bu kayıttan sonraki müsaitlik). Başka oda tipi ya da tarih seçin veya aşağıdan onaylayın.', 'overbook_anyway' => 'Yine de kaydet (overbooking)',
         'features_title' => 'Oda tercihleri', 'no_features' => 'Oda özelliği tanımlı değil.', 'features_hint' => 'Rezervasyonla kaydedilir (F10). Seçili özelliklerin hepsine sahip odalar sağda listelenir.', 'matching_rooms' => 'Bu özelliklere sahip, bu tipte boş odalar', 'no_matching' => 'Konaklama boyunca bu özelliklerin hepsine sahip boş oda yok.', 'pick_room_hint' => 'Odaya tıklayınca Rezervasyon sekmesinde seçilir; F10 ile kaydedin.', 'cc_title' => 'Garanti kartı', 'cc_holder' => 'Kart sahibi', 'cc_brand' => 'Kart türü', 'cc_brands' => ['visa' => 'Visa', 'mastercard' => 'Mastercard', 'amex' => 'American Express', 'troy' => 'Troy', 'other' => 'Diğer'], 'cc_last4' => 'Son 4 hane', 'cc_expiry' => 'Son kullanma', 'cc_remove' => 'Kartı kaldır', 'cc_hint' => 'Yalnız son 4 hane saklanır. Kart numarasının tamamını ve CVV\'yi asla girmeyin; kartla ödeme POS cihazından alınır.', 'cc_last4_only' => 'Kartın yalnız son 4 hanesini girin.', 'no_items' => 'Henüz envanter kalemi tanımlı değil.', 'no_reservation_items' => 'Bu rezervasyonda kalem yok.', 'items_hint' => 'Stok tarihlere göre denetlenir: kalemin toplam adedi aynı gecelerdeki diğer rezervasyonlarla paylaşılır.', 'pkg_included' => 'fiyata dahil', 'pkg_extra' => 'fiyata ek', 'pkg_calc' => 'Hesap', 'pkg_adult' => 'Yetişkin', 'pkg_child' => 'Çocuk', 'pkg_calcs' => ['per_room' => 'Oda başına', 'per_person' => 'Kişi başına', 'per_adult' => 'Yetişkin başına', 'per_child' => 'Çocuk başına'], 'no_package' => 'Fiyat kodunda paket yok (yalnız oda).', 'pkg_hint' => 'Gece bazında pansiyon Meal Plan sekmesinden (Ctrl+0) değişir; ek ücretler (ek yatak, otopark …) Fixed Charges (Ctrl+8) olarak eklenir.',
         'new_title' => 'Yeni rezervasyon', 'edit_title' => 'Rezervasyon :no — :name', 'created' => ':no numaralı rezervasyon açıldı.', 'saved' => ':no numaralı rezervasyon kaydedildi.',
         'tabs' => ['reservation' => 'Rezervasyon', 'inventory' => 'Envanter', 'profiles' => 'Profiller', 'packages' => 'Paketler',
@@ -237,7 +240,7 @@ return [
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'perm' => ['reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -286,7 +289,7 @@ return [
     ],
 
     'rates' => [
-        'is_public' => 'Online / Web (OTA)', 'show_web' => 'Web fiyatlarını göster', 
+        'is_public' => 'Online / Web (OTA)', 'show_web' => 'Web fiyatlarını göster',
         'title' => 'Fiyat kodları', 'subtitle' => 'Fiyat kategorileri, fiyat kodları ve fiyat detayları', 'code' => 'Fiyat kodu', 'show_inactive' => 'Pasif fiyatları göster',
         'board' => 'Pansiyon', 'no_board' => 'Pansiyonsuz (No Board)', 'currency' => 'Para birimi', 'currency_short' => 'Döviz', 'periods' => 'Detay', 'no_category' => 'Kategorisiz',
         'new_title' => 'Yeni fiyat kodu', 'edit_title' => ':code fiyat kodu', 'category' => 'Fiyat kategorisi', 'new_category' => 'ya da yeni kategori',
@@ -382,7 +385,7 @@ return [
         'id_number' => 'Kimlik / pasaport no', 'company_name' => 'Firma adı', 'commission' => 'Komisyon', 'default_rate' => 'Varsayılan fiyat kodu',
         'contact' => 'İletişim ve adres', 'address' => 'Adres', 'zip' => 'Posta kodu', 'state' => 'İl / eyalet', 'country' => 'Ülke', 'privacy' => 'Gizlilik ve durum',
         'marketing_consent' => 'Pazarlama izni', 'no_mailing' => 'Posta gönderme', 'no_emailing' => 'E-posta gönderme', 'store_private_data' => 'Kişisel veriyi sakla',
-        'statuses' => ['active' => 'Aktif', 'inactive' => 'Pasif', 'blacklisted' => 'Kara liste'], 'blacklist_reason' => 'Kara liste nedeni',
+        'statuses' => ['merged' => 'Birleştirildi', 'active' => 'Aktif', 'inactive' => 'Pasif', 'blacklisted' => 'Kara liste'], 'blacklist_reason' => 'Kara liste nedeni',
         'select_type' => 'Profil tipi seçin', 'type' => 'Tip', 'position' => 'Pozisyon', 'department' => 'Departman', 'letter_greeting' => 'Mektup hitabı',
         'communication' => 'İletişim', 'active' => 'Aktif', 'birthday_place' => 'Doğum tarihi / yeri', 'birth_place' => 'Doğum yeri', 'more_fields' => 'Diğer bilgiler',
         'vip_code' => 'VIP kodu', 'wedding_date' => 'Evlilik yıldönümü', 'documents' => 'Kimlik belgeleri', 'doc_type' => 'Belge', 'doc_number' => 'Numara',
@@ -418,9 +421,9 @@ return [
         'rooms_per_night' => 'Gecelik oda sayısı', 'rooms_hint' => 'Bloğun her gecesi için oda tipine göre oda sayısı.', 'rooms' => 'Oda',
         'no_rooms' => 'Henüz oda kotası yok.', 'master' => 'Ana hesap', 'no_master' => 'henüz açılmadı (Ana hesaba yönlendir açar)',
         'pick_up' => 'Bloktan rezervasyon aç', 'rooming_list' => 'İsim listesi (her satıra bir misafir, isteğe bağlı)',
-        'rooming_hint' => "Yılmaz, Ahmet
+        'rooming_hint' => 'Yılmaz, Ahmet
 Kaya, Ayşe
-(boşsa rezervasyonlar grup adıyla açılır)", 'create_reservations' => 'Rezervasyonları aç',
+(boşsa rezervasyonlar grup adıyla açılır)', 'create_reservations' => 'Rezervasyonları aç',
         'members' => 'Bloktaki rezervasyonlar', 'auto_assign' => 'Oda ata', 'route_master' => 'Ana hesaba yönlendir', 'unroute' => 'Yönlendirmeyi kaldır',
         'select_all' => 'Tümünü seç', 'billing' => 'Oda ve pansiyon ücreti', 'to_master' => 'Ana hesap', 'own_folio' => 'Misafir folyosu', 'no_members' => 'Henüz rezervasyon yok.',
         'picked' => ':count rezervasyon açıldı.', 'assigned' => ':count odaya atama yapıldı.', 'no_room_for' => 'Boş oda bulunamadı: :list', 'checked_in' => ':count rezervasyona giriş yapıldı.',
@@ -485,5 +488,10 @@ Kaya, Ayşe
         'reservations' => 'Rezervasyonda', 'name_hint' => 'Bebek yatağı', 'hint' => 'Toplam, otelin sahip olduğu adettir; rezervasyon bir kalemi ancak her gece yeterince boşta varsa alır. Ücreti Fixed Charges olarak eklenir.',
         'added' => 'Kalem eklendi.', 'deleted' => 'Kalem silindi.', 'in_use' => 'Kalem rezervasyonlarda kullanılıyor, silinemez.', 'confirm_delete' => ':code kalemi silinsin mi?',
         'outside_stay' => 'Kalem tarihleri konaklama içinde olmalı.', 'not_enough' => 'Bu geceler için yeterli boşta yok (boşta: :free).',
+    ],
+    'ob' => [
+        'title' => 'Overbooking', 'subtitle' => 'Oda tipi ve gün bazında izin verilen fazla satış', 'limit' => 'Sınır', 'available' => 'Müsait',
+        'hint' => 'Üstte müsait oda (kırmızı = zaten overbooking). Kutuda o gün müsaitliğin kaç oda üstüne satılabileceği (boş / 0 = yok). Sınır içindeki rezervasyonlar uyarısız kaydedilir; web sitesi müsaitliğin üstüne asla satmaz.',
+        'range' => 'Dönem için sınır', 'apply' => 'Döneme uygula', 'saved' => ':count gün kaydedildi.', 'too_long' => 'Bir seferde en çok bir yıl.',
     ],
 ];

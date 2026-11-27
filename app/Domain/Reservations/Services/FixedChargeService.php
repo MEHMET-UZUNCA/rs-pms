@@ -3,9 +3,9 @@
 namespace App\Domain\Reservations\Services;
 
 use App\Domain\Cashiering\Models\Folio;
-use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Cashiering\Services\FolioService;
 use App\Domain\Cashiering\Services\PostingService;
+use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
 use Carbon\CarbonImmutable;

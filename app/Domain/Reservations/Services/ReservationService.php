@@ -12,8 +12,8 @@ use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Rates\Services\RateCalculator;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
-use App\Domain\Reservations\Support\ReservationOptions;
 use App\Domain\Reservations\Models\ReservationNight;
+use App\Domain\Reservations\Support\ReservationOptions;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 
@@ -284,7 +284,10 @@ class ReservationService
             }
             $today = Property::query()->findOrFail($reservation->property_id)->current_business_date->toDateString();
 
-            $reservation->update(['status' => 'checked_out', 'checked_out_at' => now(), 'checked_out_by' => $userId, 'check_out_business_date' => $today]);
+            $oldDeparture = $reservation->departure_date->toImmutable();
+            $early = $oldDeparture->toDateString() > $today;   // erken çıkış: çıkış tarihi bugüne çekilir (asıl tarih original_departure_date'te)
+            $reservation->update(['status' => 'checked_out', 'checked_out_at' => now(), 'checked_out_by' => $userId, 'check_out_business_date' => $today]
+                + ($early ? ['departure_date' => $today, 'nights' => max(0, (int) $reservation->arrival_date->diffInDays(CarbonImmutable::parse($today)))] : []));
             $reservation->folios()->where('status', 'open')->update(['status' => 'closed', 'closed_business_date' => $today, 'closed_by' => $userId]);
             $reservation->nightRows()->where('status', 'expected')->where('stay_date', '>=', $today)->update(['status' => 'cancelled']); // erken çıkış
             if ($reservation->room_id) {
@@ -293,7 +296,7 @@ class ReservationService
                     + ($status ? ['hk_status' => $status, 'hk_status_changed_at' => now()] : []));
             }
             $this->log($reservation, 'in_house', 'checked_out', $userId);
-            $this->refreshAvailability($reservation, CarbonImmutable::parse($today), $reservation->departure_date);
+            $this->refreshAvailability($reservation, CarbonImmutable::parse($today), $oldDeparture);
 
             return $reservation->fresh();
         });

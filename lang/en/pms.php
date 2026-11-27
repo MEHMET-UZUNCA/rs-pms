@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'overbooking' => 'Overbooking',
         'items' => 'Inventory Items',
         'guest_requests' => 'Guest Requests',
         'room_moves' => 'Room Moves',
@@ -111,7 +112,7 @@ return [
         'business_date_title' => 'Business Date :date',
         'filters' => ['web' => 'Web (7 days)', 'bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
             'fa' => 'FA In House', 'fa-acilacak' => 'FA Arrivals', 'fa-kapanacak' => 'FA Departures', 'fa-kapali' => 'FA Checked Out', 'fa-ileri' => 'FA Future'],
-        'statuses' => ['confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
+        'statuses' => ['inquiry' => 'Inquiry', 'confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
             'checked_out' => 'Checked Out', 'cancelled' => 'Cancelled', 'no_show' => 'No Show'],
     ],
 
@@ -124,6 +125,8 @@ return [
         'discrepancy' => ['skip' => 'Skip', 'sleep' => 'Sleep', 'person' => 'Person'],
     ],
     'card' => [
+        'overbooking_denied' => 'Overbooking: no free :type room on :dates and the overbooking limit is reached. Only a supervisor can book over the limit.',
+        'overbooking' => 'Overbooking: no free :type room on :dates (availability after this booking). Choose another room type or dates, or confirm below.', 'overbook_anyway' => 'Save anyway (overbooking)',
         'features_title' => 'Room preferences', 'no_features' => 'No room features are defined.', 'features_hint' => 'Saved with the reservation (F10). Rooms having all selected features are listed on the right.', 'matching_rooms' => 'Free rooms of this type with these features', 'no_matching' => 'No free room with all of these features for the stay.', 'pick_room_hint' => 'Click a room to choose it on the Reservation tab, then save with F10.', 'cc_title' => 'Guarantee card', 'cc_holder' => 'Card holder', 'cc_brand' => 'Card type', 'cc_brands' => ['visa' => 'Visa', 'mastercard' => 'Mastercard', 'amex' => 'American Express', 'troy' => 'Troy', 'other' => 'Other'], 'cc_last4' => 'Last 4 digits', 'cc_expiry' => 'Expiry', 'cc_remove' => 'Remove card', 'cc_hint' => 'Only the last 4 digits are stored. Never enter the full card number or the CVV; card payments go through the POS terminal.', 'cc_last4_only' => 'Enter only the last 4 digits of the card.', 'no_items' => 'No inventory items are defined yet.', 'no_reservation_items' => 'No items on this reservation.', 'items_hint' => 'Stock is checked for the dates: the item total is shared with other reservations on the same nights.', 'pkg_included' => 'included in the rate', 'pkg_extra' => 'charged in addition', 'pkg_calc' => 'Calculation', 'pkg_adult' => 'Adult', 'pkg_child' => 'Child', 'pkg_calcs' => ['per_room' => 'Per room', 'per_person' => 'Per person', 'per_adult' => 'Per adult', 'per_child' => 'Per child'], 'no_package' => 'The rate code has no package (room only).', 'pkg_hint' => 'Board per night is changed on the Meal Plan tab (Ctrl+0); extra charges (extra bed, parking …) are added as Fixed Charges (Ctrl+8).',
         'new_title' => 'New Reservation', 'edit_title' => 'Reservation :no — :name', 'created' => 'Reservation :no created.', 'saved' => 'Reservation :no saved.',
         'tabs' => ['reservation' => 'Reservation', 'inventory' => 'Inventory', 'profiles' => 'Profiles', 'packages' => 'Packages',
@@ -237,7 +240,7 @@ return [
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'perm' => ['reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -286,7 +289,7 @@ return [
     ],
 
     'rates' => [
-        'is_public' => 'Online / Web (OTA)', 'show_web' => 'Show Web Rates', 
+        'is_public' => 'Online / Web (OTA)', 'show_web' => 'Show Web Rates',
         'title' => 'Rates', 'subtitle' => 'Rate categories, rate codes and rate details', 'code' => 'Rate code', 'show_inactive' => 'Show Inactive Rates',
         'board' => 'Board type', 'no_board' => 'No Board', 'currency' => 'Currency', 'currency_short' => 'Curr.', 'periods' => 'Details', 'no_category' => 'Without category',
         'new_title' => 'Rate Edit : New Rate', 'edit_title' => 'Rate Edit : :code', 'category' => 'Rate category', 'new_category' => 'or new category',
@@ -382,7 +385,7 @@ return [
         'id_number' => 'ID / passport no.', 'company_name' => 'Company name', 'commission' => 'Commission', 'default_rate' => 'Default rate code',
         'contact' => 'Contact and address', 'address' => 'Address', 'zip' => 'ZIP', 'state' => 'State', 'country' => 'Country', 'privacy' => 'Privacy and status',
         'marketing_consent' => 'Marketing consent', 'no_mailing' => 'No mailing', 'no_emailing' => 'No e-mailing', 'store_private_data' => 'Store private data',
-        'statuses' => ['active' => 'Active', 'inactive' => 'Inactive', 'blacklisted' => 'Blacklisted'], 'blacklist_reason' => 'Blacklist reason',
+        'statuses' => ['merged' => 'Merged', 'active' => 'Active', 'inactive' => 'Inactive', 'blacklisted' => 'Blacklisted'], 'blacklist_reason' => 'Blacklist reason',
         'select_type' => 'Select Profile Type', 'type' => 'Type', 'position' => 'Position', 'department' => 'Department', 'letter_greeting' => 'Letter greeting',
         'communication' => 'Communication', 'active' => 'Active?', 'birthday_place' => 'Birthday / Place', 'birth_place' => 'Place of birth', 'more_fields' => 'More Fields',
         'vip_code' => 'VIP Code', 'wedding_date' => 'Wedding day', 'documents' => 'Personal Documents', 'doc_type' => 'Type', 'doc_number' => 'Number',
@@ -418,9 +421,9 @@ return [
         'rooms_per_night' => 'Rooms per night', 'rooms_hint' => 'Number of rooms for each night of the block, by room type.', 'rooms' => 'Rooms',
         'no_rooms' => 'No rooms allotted yet.', 'master' => 'Master account', 'no_master' => 'not opened yet (Route to master opens it)',
         'pick_up' => 'Create reservations from the block', 'rooming_list' => 'Rooming list (one guest per line, optional)',
-        'rooming_hint' => "Smith, John
+        'rooming_hint' => 'Smith, John
 Müller, Anna
-(empty: reservations are opened with the group name)", 'create_reservations' => 'Create reservations',
+(empty: reservations are opened with the group name)', 'create_reservations' => 'Create reservations',
         'members' => 'Reservations in the block', 'auto_assign' => 'Assign rooms', 'route_master' => 'Route to master', 'unroute' => 'Remove routing',
         'select_all' => 'Select all', 'billing' => 'Room and board charges', 'to_master' => 'Master account', 'own_folio' => 'Guest folio', 'no_members' => 'No reservations yet.',
         'picked' => ':count reservations created.', 'assigned' => ':count rooms assigned.', 'no_room_for' => 'No free room for: :list', 'checked_in' => ':count reservations checked in.',
@@ -485,5 +488,10 @@ Müller, Anna
         'reservations' => 'Booked', 'name_hint' => 'Baby cot', 'hint' => 'The total is the number the hotel owns; a reservation can book an item only while enough are free on every night. Charges for items are posted as Fixed Charges.',
         'added' => 'Item added.', 'deleted' => 'Item deleted.', 'in_use' => 'The item is used on reservations and cannot be deleted.', 'confirm_delete' => 'Delete item :code?',
         'outside_stay' => 'Item dates must be within the stay.', 'not_enough' => 'Not enough free for these nights (free: :free).',
+    ],
+    'ob' => [
+        'title' => 'Overbooking', 'subtitle' => 'Allowed overbooking per room type and day', 'limit' => 'Limit', 'available' => 'Available',
+        'hint' => 'Top: available rooms (red = already overbooked). Box: how many rooms may be sold over availability that day (empty / 0 = none). Reservations within the limit are saved without a warning; the web site never sells over availability.',
+        'range' => 'Set a limit for a period', 'apply' => 'Apply to period', 'saved' => ':count days saved.', 'too_long' => 'At most one year at a time.',
     ],
 ];

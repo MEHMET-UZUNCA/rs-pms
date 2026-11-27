@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Http;
 
+use App\Domain\FrontOffice\Services\DashboardService;
 use App\Domain\NightAudit\Services\NightAuditService;
 use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
 use Tests\Feature\Domain\DomainTestCase;
@@ -55,7 +57,7 @@ class DashboardTest extends DomainTestCase
 
     public function test_forecast_counts_sold_tentative_and_ooo(): void
     {
-        $days = app(\App\Domain\FrontOffice\Services\DashboardService::class)->forecast($this->property, \Carbon\CarbonImmutable::parse('2026-12-01'), 100);
+        $days = app(DashboardService::class)->forecast($this->property, CarbonImmutable::parse('2026-12-01'), 100);
         $this->assertCount(14, $days);
         $sold = DB::table('pms_reservation_nights as n')->join('pms_reservations as r', 'r.id', '=', 'n.reservation_id')->where('n.stay_date', '2026-12-01')
             ->where('n.status', '!=', 'cancelled')->where('r.is_day_use', false)->whereIn('r.status', ['confirmed', 'in_house'])->count();

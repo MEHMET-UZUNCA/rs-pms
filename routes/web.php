@@ -4,12 +4,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\Cashiering\CashierController;
-use App\Http\Controllers\Cashiering\InvoiceController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
+use App\Http\Controllers\Cashiering\InvoiceController;
+use App\Http\Controllers\FrontOffice\GuestRequestController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\QueueController;
-use App\Http\Controllers\FrontOffice\GuestRequestController;
 use App\Http\Controllers\FrontOffice\RoomMoveController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
@@ -17,22 +17,23 @@ use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Profiles\ProfileController;
-use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\AvailabilityController;
 use App\Http\Controllers\Reservations\BlockController;
+use App\Http\Controllers\Reservations\ConfirmationLetterController;
 use App\Http\Controllers\Reservations\FixedChargeController;
-use App\Http\Controllers\Reservations\ReservationItemController;
-use App\Http\Controllers\Setup\ItemController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
+use App\Http\Controllers\Reservations\OverbookingController;
 use App\Http\Controllers\Reservations\ReservationCardController;
+use App\Http\Controllers\Reservations\ReservationItemController;
 use App\Http\Controllers\Setup\ExchangeRateController;
+use App\Http\Controllers\Setup\ItemController;
 use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\RateCodeController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
-use App\Http\Controllers\Setup\UserController;
 use App\Http\Controllers\Setup\TransactionCodeController;
+use App\Http\Controllers\Setup\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Dil seçimi (girişten önce de çalışır; girişli kullanıcıda kalıcı olarak kaydedilir)
@@ -141,6 +142,8 @@ Route::middleware(['auth', 'property'])->group(function () {
     });
 
     // Multiboard: pansiyon değişikliği ve öğün sayıları
+    Route::get('/overbooking', [OverbookingController::class, 'index'])->middleware('permission:reservations.view')->name('overbooking.index');
+    Route::post('/overbooking', [OverbookingController::class, 'save'])->middleware('permission:reservations.overbooking')->name('overbooking.save');
     Route::get('/musaitlik', [AvailabilityController::class, 'index'])->middleware('permission:reservations.view')->name('availability.index');
 
     // Reservation → Block / Group Reservation

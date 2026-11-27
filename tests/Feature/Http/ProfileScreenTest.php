@@ -3,6 +3,8 @@
 namespace Tests\Feature\Http;
 
 use App\Domain\Profiles\Models\Profile;
+use App\Domain\Profiles\Services\ProfileService;
+use App\Domain\Reservations\Models\Reservation;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
@@ -79,7 +81,7 @@ class ProfileScreenTest extends DomainTestCase
         $doc = DB::table('pms_profile_identities')->where('profile_id', $p->id)->sole();
         $this->assertSame('passport', $doc->document_type);
         $this->assertStringNotContainsString('1234567', $doc->document_number);   // şifreli
-        $this->assertSame(\App\Domain\Profiles\Services\ProfileService::documentHash('u1234567'), $doc->document_number_hash);
+        $this->assertSame(ProfileService::documentHash('u1234567'), $doc->document_number_hash);
         $this->actingAs($this->user)->get("/profiller/{$p->id}/duzenle")->assertOk()->assertSee('U 1234567')->assertSee('Lefkoşa');
 
         // Düzenle: pasif, belge numarası değişir, e-posta ve adres silinir; belge tipi zorunlu
@@ -103,7 +105,7 @@ class ProfileScreenTest extends DomainTestCase
         // Rezervasyonda profil aramasında kara liste ve nedeni gelir; rezervasyon kartında uyarı
         $found = $this->actingAs($this->user)->getJson('/rezervasyon/profiller?q=Özcan')->assertOk()->json();
         $this->assertSame(['blacklisted', 'Unpaid bill'], [$found[0]['status'], $found[0]['blacklist_reason']]);
-        $res = \App\Domain\Reservations\Models\Reservation::query()->where('property_id', $this->property)->firstOrFail();
+        $res = Reservation::query()->where('property_id', $this->property)->firstOrFail();
         $res->update(['profile_id' => $p->id]);
         $this->actingAs($this->user)->get(route('reservations.edit', $res))->assertOk()->assertSee('Blacklisted:')->assertSee('Unpaid bill');
 
