@@ -12,6 +12,7 @@ use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\FixedChargeService;
 use App\Domain\Reservations\Services\ReservationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -141,6 +142,32 @@ class ReservationAndNightAuditTest extends DomainTestCase
         $this->assertSame('closed', $folio->fresh()->status);
         $this->assertSame('dirty', $this->room()->hk_status);
         $this->assertSame('vacant', $this->room()->fo_status);
+    }
+
+    public function test_night_audit_posts_fixed_charges(): void
+    {
+        $res = $this->book('2026-12-01', '2026-12-04');
+        $this->reservations->assignRoom($res, $this->room());
+        $res = $this->reservations->checkIn($res->fresh());
+        $fixed = app(FixedChargeService::class);
+        $code = $this->code('110');
+        $fixed->add($res, ['transaction_code_id' => $code, 'description' => 'Otopark', 'quantity' => 2, 'amount' => 50, 'frequency' => 'daily', 'date_from' => '2026-12-01', 'date_to' => '2026-12-03']);
+        $fixed->add($res, ['transaction_code_id' => $code, 'description' => 'Ek yatak', 'quantity' => 1, 'amount' => 150, 'frequency' => 'once', 'date_from' => '2026-12-02', 'date_to' => '2026-12-03']);
+        $fixed->add($res, ['transaction_code_id' => $code, 'description' => 'Haftalık', 'quantity' => 1, 'amount' => 30, 'frequency' => 'weekly', 'date_from' => '2026-12-01', 'date_to' => '2026-12-03']);
+        try {
+            $fixed->add($res, ['transaction_code_id' => $code, 'quantity' => 1, 'amount' => 10, 'frequency' => 'daily', 'date_from' => '2026-12-01', 'date_to' => '2026-12-04']);
+            $this->fail('Çıkış gününe sabit ücret eklendi');
+        } catch (ReservationException) {
+        }
+
+        foreach (range(1, 3) as $night) {
+            app(NightAuditService::class)->run($this->property);
+        }
+        $posted = DB::table('pms_postings')->where('source', 'fixed_charge')->orderBy('stay_date')->orderBy('id')->get(['stay_date', 'amount', 'quantity', 'description']);
+        $this->assertSame([['2026-12-01', 100.0, 'Otopark'], ['2026-12-01', 30.0, 'Haftalık'], ['2026-12-02', 100.0, 'Otopark'], ['2026-12-02', 150.0, 'Ek yatak'], ['2026-12-03', 100.0, 'Otopark']],
+            $posted->map(fn ($p) => [substr((string) $p->stay_date, 0, 10), (float) $p->amount, $p->description])->all());
+        $this->assertSame('2026-12-03', substr((string) DB::table('pms_fixed_charges')->where('description', 'Otopark')->value('last_posted_date'), 0, 10));
+        $this->assertSame(1, DB::table('pms_night_audit_steps')->where('code', 'room_charges')->where('result', 'like', '%"fixed_charges_posted":1%')->count());   // 3. gece
     }
 
     public function test_only_check_out_and_room_move_make_rooms_dirty(): void

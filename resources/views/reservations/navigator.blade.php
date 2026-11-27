@@ -74,7 +74,7 @@
                                 @class(['is-inactive' => in_array($r->status, ['cancelled', 'no_show'], true)])>
                                 <td class="font-semibold">{{ $r->room?->number }}</td>
                                 <td>{{ $r->profile?->display_name }}</td>
-                                <td>{{ $r->arrival_date?->format('d.m.Y') }}</td><td>{{ $r->departure_date?->format('d.m.Y') }}</td>
+                                <td>{{ $r->arrival_date?->format('d.m.Y') }}</td><td>{{ $r->departure_date?->format('d.m.Y') }}@if ($r->etd && substr((string) $r->etd, 0, 5) > ($coTime ??= \App\Domain\Reservations\Support\ReservationOptions::get($r->property_id)['check_out_time'])) <span class="text-danger font-semibold text-[11px]" title="ETD {{ substr((string) $r->etd, 0, 5) }}">{{ __('pms.card.late_co') }} {{ substr((string) $r->etd, 0, 5) }}</span>@endif</td>
                                 <td class="text-right">{{ $r->nights }}</td>
                                 <td>{{ $r->roomType?->code }}</td><td>{{ $r->rateCode?->code }}</td>
                                 <td>{{ $r->adults }}@if ($r->children)+{{ $r->children }}@endif</td>

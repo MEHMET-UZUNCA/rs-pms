@@ -12,6 +12,7 @@ use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Models\ReservationNight;
+use App\Domain\Reservations\Services\FixedChargeService;
 use App\Domain\Reservations\Support\ReservationOptions;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
@@ -231,7 +232,8 @@ class NightAuditService
             $total += (float) $night->amount;
         }
 
-        return ['room_charges_posted' => $count, 'amount_posted' => round($total, 2)];
+        // Fixed Charges: o geceye düşen sabit ücretler (otopark, ek yatak …)
+        return ['room_charges_posted' => $count, 'amount_posted' => round($total, 2)] + app(FixedChargeService::class)->postForDate($property->id, $bd, $userId);
     }
 
     private function statistics(Property $property, string $bd): array

@@ -133,6 +133,7 @@ class ReservationCardController extends Controller
             'guarantee_type' => ['required', Rule::in(self::GUARANTEES)],
             'credit_limit' => ['nullable', 'numeric', 'min:0', 'max:999999999'],
             'room_charges_allowed' => ['boolean'],
+            'eta' => ['nullable', 'date_format:H:i'], 'etd' => ['nullable', 'date_format:H:i'],
             'guest_comments' => ['nullable', 'string', 'max:2000'],
             'internal_notes' => ['nullable', 'string', 'max:2000'],
         ], [], [
@@ -146,7 +147,7 @@ class ReservationCardController extends Controller
     private function fields(array $data): array
     {
         return array_intersect_key($data, array_flip(['room_type_id', 'rate_code_id', 'adults', 'reservation_type_id', 'market_segment_id',
-            'source_code_id', 'company_profile_id', 'agent_profile_id', 'guarantee_type', 'credit_limit', 'room_charges_allowed',
+            'source_code_id', 'company_profile_id', 'agent_profile_id', 'guarantee_type', 'credit_limit', 'room_charges_allowed', 'eta', 'etd',
             'guest_comments', 'internal_notes']));
     }
 
@@ -184,6 +185,11 @@ class ReservationCardController extends Controller
                 $reservation->source_profile_id, $reservation->group_profile_id]))->get(),
             'boards' => DB::table('pms_packages')->where('property_id', $p)->where('type', 'board')->whereNull('deleted_at')->orderBy('id')->get(),
             'history' => $reservation->exists ? DB::table('pms_reservation_status_logs')->where('reservation_id', $reservation->id)->orderBy('id')->get() : collect(),
+            'fixedCharges' => $reservation->exists ? DB::table('pms_fixed_charges as f')->join('pms_transaction_codes as t', 't.id', '=', 'f.transaction_code_id')
+                ->where('f.reservation_id', $reservation->id)->orderBy('f.date_from')->orderBy('f.id')->get(['f.*', 't.code', 't.name as code_name']) : collect(),
+            'chargeCodes' => DB::table('pms_transaction_codes')->where('property_id', $p)->whereNotIn('type', ['payment', 'deposit'])->where('is_discount', false)
+                ->where('is_active', true)->where('manual_post_allowed', true)->whereNull('deleted_at')->orderBy('code')->get(['id', 'code', 'name', 'default_price']),
+            'checkOutTime' => \App\Domain\Reservations\Support\ReservationOptions::get($p)['check_out_time'],
         ]);
     }
 

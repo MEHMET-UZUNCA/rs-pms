@@ -75,6 +75,11 @@
                     <input id="adults" name="adults" type="number" min="1" max="20" value="{{ $v('adults', 2) }}" class="input" required></div>
                 <div><label class="field-label" for="children">{{ __('pms.card.children') }}</label>
                     <input id="children" name="children" type="number" min="0" max="20" value="{{ $v('children', 0) }}" class="input"></div>
+                @php $lateCo = $v('etd') && substr((string) $v('etd'), 0, 5) > $checkOutTime; @endphp
+                <div><label class="field-label" for="eta">{{ __('pms.card.eta') }}</label>
+                    <input id="eta" name="eta" type="time" value="{{ substr((string) $v('eta'), 0, 5) }}" class="input @error('eta') input-error @enderror"></div>
+                <div><label class="field-label" for="etd">{{ __('pms.card.etd') }} @if ($lateCo)<span class="text-danger font-semibold">· {{ __('pms.card.late_co') }}</span>@endif</label>
+                    <input id="etd" name="etd" type="time" value="{{ substr((string) $v('etd'), 0, 5) }}" class="input @error('etd') input-error @enderror" title="{{ __('pms.card.etd_hint', ['time' => $checkOutTime]) }}"></div>
                 <div class="col-span-2"><label class="field-label" for="room_type_id">{{ __('pms.res.room_type') }} *</label>
                     <select id="room_type_id" name="room_type_id" class="input" required data-room-type>
                         @foreach ($roomTypes as $t)<option value="{{ $t->id }}" @selected((int) $v('room_type_id') === (int) $t->id)>{{ $t->code }} — {{ $t->name }}</option>@endforeach
@@ -197,7 +202,51 @@
             @endif
         </section>
 
-        @foreach (['inventory', 'packages', 'features', 'credit_card', 'fixed_charges'] as $tab)
+        {{-- Ctrl+8 Fixed Charges: gece kapanışında kendiliğinden yazılan sabit ücretler --}}
+        <section data-tab-panel="fixed_charges" class="p-3 flex flex-col gap-3" hidden>
+            @if ($new)
+                <p class="text-muted">{{ __('pms.meal.save_first') }}</p>
+            @else
+                <table class="grid-table max-w-5xl">
+                    <thead><tr><th>{{ __('pms.fixed.code') }}</th><th>{{ __('pms.fixed.description') }}</th><th class="text-right">{{ __('pms.fixed.quantity') }}</th>
+                        <th class="text-right">{{ __('pms.fixed.amount') }}</th><th class="text-right">{{ __('pms.fixed.total') }}</th><th>{{ __('pms.fixed.frequency') }}</th>
+                        <th>{{ __('pms.fixed.from') }}</th><th>{{ __('pms.fixed.to') }}</th><th>{{ __('pms.fixed.window') }}</th><th>{{ __('pms.fixed.last_posted') }}</th><th></th></tr></thead>
+                    <tbody>
+                    @forelse ($fixedCharges as $fc)
+                        <tr><td class="font-semibold">{{ $fc->code }} {{ $fc->code_name }}</td><td>{{ $fc->description }}</td>
+                            <td class="text-right">{{ rtrim(rtrim(number_format((float) $fc->quantity, 2, ',', '.'), '0'), ',') }}</td><td class="text-right">{{ $money($fc->amount) }}</td>
+                            <td class="text-right font-semibold">{{ $money($fc->amount * $fc->quantity) }}</td><td>{{ __('pms.fixed.frequencies.'.$fc->frequency) }}</td>
+                            <td>{{ $date($fc->date_from) }}</td><td>{{ $date($fc->date_to) }}</td><td>{{ $fc->folio_window }}</td><td>{{ $date($fc->last_posted_date) }}</td>
+                            <td>@unless ($locked)<button form="fc-del-{{ $fc->id }}" class="btn !h-6 !px-2" title="{{ __('pms.common.delete') }}">✕</button>@endunless</td></tr>
+                    @empty
+                        <tr><td colspan="11" class="text-center text-muted py-4">{{ __('pms.fixed.none') }}</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                @unless ($locked)
+                    @php $lastNight = $r->departure_date->copy()->subDay(); $firstNight = $r->arrival_date->max(app(\App\Domain\Core\Models\Property::class)->current_business_date); @endphp
+                    <div class="flex flex-wrap items-end gap-2 rounded border border-line p-2 max-w-5xl">
+                        <b class="w-full">{{ __('pms.fixed.new') }}</b>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.code') }} *</span>
+                            <select name="transaction_code_id" form="fixed-charge-form" class="input w-64" required data-fixed-code><option value=""></option>
+                                @foreach ($chargeCodes as $c)<option value="{{ $c->id }}" data-price="{{ $c->default_price }}">{{ $c->code }} {{ $c->name }}</option>@endforeach</select></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.description') }}</span><input name="description" form="fixed-charge-form" maxlength="255" class="input w-48"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.quantity') }}</span><input name="quantity" form="fixed-charge-form" value="1" inputmode="decimal" class="input w-16 text-right"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.amount') }} *</span><input name="amount" form="fixed-charge-form" inputmode="decimal" class="input w-28 text-right" required data-fixed-amount></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.frequency') }}</span>
+                            <select name="frequency" form="fixed-charge-form" class="input">@foreach (\App\Domain\Reservations\Services\FixedChargeService::FREQUENCIES as $f)<option value="{{ $f }}" @selected($f === 'daily')>{{ __('pms.fixed.frequencies.'.$f) }}</option>@endforeach</select></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.from') }}</span><input name="date_from" form="fixed-charge-form" value="{{ $firstNight->format('d.m.Y') }}" class="input w-28"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.to') }}</span><input name="date_to" form="fixed-charge-form" value="{{ $lastNight->format('d.m.Y') }}" class="input w-28"></label>
+                        <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.window') }}</span>
+                            <select name="folio_window" form="fixed-charge-form" class="input w-16">@for ($w = 1; $w <= 8; $w++)<option value="{{ $w }}">{{ $w }}</option>@endfor</select></label>
+                        <button form="fixed-charge-form" class="btn btn-primary">{{ __('pms.common.new') }}</button>
+                        <p class="w-full text-[12px] text-muted">{{ __('pms.fixed.hint') }}</p>
+                    </div>
+                @endunless
+            @endif
+        </section>
+
+        @foreach (['inventory', 'packages', 'features', 'credit_card'] as $tab)
             <section data-tab-panel="{{ $tab }}" class="p-3" hidden><p class="text-muted">{{ __('pms.card.not_yet') }}</p></section>
         @endforeach
     </div>
@@ -211,5 +260,9 @@
 </form>
 @unless ($new)
     <form method="POST" action="{{ route('reservations.board', $r) }}" id="board-form" hidden>@csrf</form>
+    <form method="POST" action="{{ route('reservations.fixed-charges.store', $r) }}" id="fixed-charge-form" hidden>@csrf</form>
+    @foreach ($fixedCharges as $fc)
+        <form method="POST" action="{{ route('reservations.fixed-charges.destroy', [$r, $fc->id]) }}" id="fc-del-{{ $fc->id }}" hidden data-confirm="{{ __('pms.fixed.confirm_delete') }}">@csrf @method('DELETE')</form>
+    @endforeach
 @endunless
 @endsection

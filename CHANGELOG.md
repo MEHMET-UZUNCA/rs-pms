@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Fixed Charges (rezervasyon kartı, Ctrl+8): rezervasyona sabit ücret (departman kodu, açıklama, adet, tutar, sıklık: bir kez / her gece / haftalık, başlangıç–bitiş, folyo penceresi); tarihler konaklama geceleri içinde olmalı, ödeme kodu seçilemez, kodun varsayılan fiyatı tutara gelir. Gece kapanışı (Oda, paket ve sabit ücretler adımı) o geceye düşen ücretleri kendiliğinden ilgili folyo penceresine yazar; aynı gece ikinci kez yazılmaz. Geliş / çıkış saati (ETA / ETD) kartta; çıkış saati seçenekteki saatten sonraysa kartta ve navigatörde "Late C/O" işareti (ücreti Fixed Charge "bir kez" ya da kasadan kayıtla alınır). (M.U)
+
 - Kara liste profil kartına geri eklendi: "Blacklisted" kutusu ve nedeni (zorunlu); kara listeden çıkınca neden silinir. Rezervasyonda profil aramasında kara listedeki misafir kırmızı ve nedeniyle görünür, rezervasyon kartında uyarı çıkar (rezervasyon engellenmez). Profil aramasında pasif profiller gelmez. (M.U)
 
 - Profil kartı Fidelio'daki kullanılan alanlara göre: Yeni (Alt+N) önce Select Profile Type penceresi; kart tek sayfada Fidelio Profile + More Fields alanları — pozisyon, departman, mektup hitabı, doğum yeri, evlilik yıldönümü yeni; Active? kutusu; kimlik belgeleri (Personal Documents: pasaport, kimlik, KKTC / TC kimlik, ehliyet; numara şifreli saklanır). Kullanılmayan alanlar (meslek, pazarlama izni, kara liste nedeni) karttan kaldırıldı; eski kara liste kayıtları korunur. Ekranlarda açılan pencereler için genel yapı (data-modal). Migration: pms_profiles.position, department. (M.U)

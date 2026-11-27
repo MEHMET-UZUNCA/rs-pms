@@ -282,6 +282,13 @@ if (profileSearch) {
     });
 }
 
+// Fixed Charges: kod seçilince varsayılan fiyatı tutara yaz (tutar boşsa)
+document.querySelector('[data-fixed-code]')?.addEventListener('change', (e) => {
+    const amount = document.querySelector('[data-fixed-amount]');
+    const price = e.target.selectedOptions[0]?.dataset.price;
+    if (amount && price && !amount.value) amount.value = String(Number(price)).replace('.', LANG === 'tr' ? ',' : '.');
+});
+
 // Tümünü seç (Kat Hizmetleri oda listesi)
 document.querySelectorAll('[data-check-all]').forEach((all) => all.addEventListener('change', () => {
     all.closest('table').querySelectorAll('tbody input[type=checkbox]').forEach((box) => { box.checked = all.checked; });

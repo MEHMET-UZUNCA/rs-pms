@@ -29,13 +29,13 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 17 | Mobil uygulama (oda durumu, görev, arıza sahadan) | Ekranlar telefonda çalışır (duyarlı) | Kısmen | Kat hizmetleri için telefona uygun sade ekran |
 | 18 | Oda değişimi: boş oda listesi + **değişim nedeni**, Oda Değişim Listesi | Oda değişimi var (eski oda Dirty), Room History'de görünür | Kısmen | **Değişim nedeni** kodları ve günlük **Oda değişim listesi** |
 | 19 | Grup rezervasyonu, çoklu seçimle toplu check-in, grup folyo yönlendirme | Grup profil tipi | Yok | **Grup / blok rezervasyon**: bir grup altında çok oda, toplu oda atama, toplu check-in / check-out, ana folyoya yönlendirme (routing) |
-| 20 | Geç çıkış (Late C/Out) saati | Rezervasyon seçeneklerinde çıkış saati | Kısmen | Rezervasyonda **geç çıkış saati** ve ücreti (Fixed Charge / tek seferlik kayıt) |
+| 20 | Geç çıkış (Late C/Out) saati | ETA / ETD kartta, Late C/O işareti kartta ve navigatörde | Var | Ücret kasadan kayıtla ya da Fixed Charge ile |
 | 21 | Kirli odaya check-in yapılamaz (parametre) | Dolu odaya giriş engelli; kirli odaya izin var | Kısmen | Rezervasyon seçeneklerine "Kirli odaya giriş: izin ver / uyar / engelle" |
-| 22 | Rezervasyon kartı sekmeleri (Misafirler, Fiyatlandır, Folyo, Diğer) | Kart: Rezervasyon, Profiller, Fiyatlar, Notlar, Meal Plan; Folyo Alt+B | Kısmen | Boş sekmeler: Inventory, Packages, Features, Credit Card, **Fixed Charges** (sıradaki iş) |
+| 22 | Rezervasyon kartı sekmeleri (Misafirler, Fiyatlandır, Folyo, Diğer) | Kart: Rezervasyon, Profiller, Fiyatlar, Notlar, Meal Plan; Folyo Alt+B | Kısmen | Fixed Charges yapıldı (gece kapanışında otomatik). Boş sekmeler: Inventory, Packages, Features, Credit Card |
 
 ## Önerilen sıra
 
-1. Fixed Charges (başlandı) ve geç çıkış ücreti.
+1. ~~Fixed Charges ve geç çıkış~~ — yapıldı.
 2. Ön büro kontrol paneli (#1).
 3. Grup / blok rezervasyon ve routing (#19).
 4. Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3).

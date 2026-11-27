@@ -103,6 +103,38 @@ class ReservationCardTest extends DomainTestCase
         ]))->assertSessionHasErrors('reservation');
     }
 
+    public function test_fixed_charges_tab_and_late_check_out(): void
+    {
+        $r = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Arslan'))->firstOrFail();   // +2, 4 gece
+        $code = $this->id('pms_transaction_codes', '110');
+        $html = $this->actingAs($this->user)->get("/rezervasyon/{$r->id}")->assertOk()->getContent();
+        $this->assertStringContainsString('New fixed charge', $html);
+        $this->assertStringContainsString('No fixed charges.', $html);
+
+        $add = fn (array $o) => $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/sabit-ucret", array_merge([
+            'transaction_code_id' => $code, 'description' => 'Parking', 'quantity' => '1', 'amount' => '75,50', 'frequency' => 'daily',
+            'date_from' => $r->arrival_date->format('d.m.Y'), 'date_to' => $r->departure_date->subDay()->format('d.m.Y'), 'folio_window' => '2',
+        ], $o));
+        $add([])->assertSessionHas('status')->assertSessionHasNoErrors();
+        $add(['date_to' => $r->departure_date->format('d.m.Y')])->assertSessionHas('error');                 // çıkış gecesi konaklama dışında
+        $add(['transaction_code_id' => $this->id('pms_transaction_codes', '900')])->assertSessionHasErrors('transaction_code_id');   // ödeme kodu
+        $add(['amount' => '0'])->assertSessionHasErrors('amount');
+
+        $fc = DB::table('pms_fixed_charges')->where('reservation_id', $r->id)->sole();
+        $this->assertSame([75.5, 'daily', 2], [(float) $fc->amount, $fc->frequency, (int) $fc->folio_window]);
+        $this->actingAs($this->user)->get("/rezervasyon/{$r->id}")->assertSee('Parking')->assertSee('75,50');
+        $this->actingAs($this->user)->delete("/rezervasyon/{$r->id}/sabit-ucret/{$fc->id}")->assertRedirect();
+        $this->assertSame(0, DB::table('pms_fixed_charges')->where('reservation_id', $r->id)->count());
+
+        // Geliş / çıkış saati: çıkış saati seçenekteki saatten (12:00) sonraysa Late C/O
+        $this->actingAs($this->user)->put("/rezervasyon/{$r->id}", $this->payload([
+            'arrival_date' => $r->arrival_date->format('d.m.Y'), 'departure_date' => $r->departure_date->format('d.m.Y'), 'room_type_id' => $r->room_type_id,
+            'eta' => '16:30', 'etd' => '15:00',
+        ]))->assertSessionHasNoErrors();
+        $this->assertSame(['16:30', '15:00'], [substr((string) $r->fresh()->eta, 0, 5), substr((string) $r->fresh()->etd, 0, 5)]);
+        $this->actingAs($this->user)->get("/rezervasyon/{$r->id}")->assertSee('Late C/O');
+    }
+
     public function test_validation_and_closed_reservations(): void
     {
         $this->actingAs($this->user)->post('/rezervasyon', $this->payload(['last_name' => '', 'departure_date' => '-1']))

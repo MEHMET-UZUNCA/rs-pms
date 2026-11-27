@@ -14,6 +14,7 @@ use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Profiles\ProfileController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
+use App\Http\Controllers\Reservations\FixedChargeController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\ReservationCardController;
@@ -117,6 +118,8 @@ Route::middleware(['auth', 'property'])->group(function () {
     });
 
     // Multiboard: pansiyon değişikliği ve öğün sayıları
+    Route::post('/rezervasyon/{reservation}/sabit-ucret', [FixedChargeController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.fixed-charges.store');
+    Route::delete('/rezervasyon/{reservation}/sabit-ucret/{charge}', [FixedChargeController::class, 'destroy'])->whereNumber(['reservation', 'charge'])->middleware('permission:reservations.edit')->name('reservations.fixed-charges.destroy');
     Route::post('/rezervasyon/{reservation}/pansiyon', [MealPlanController::class, 'change'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.board');
     Route::get('/ogun-sayilari', [MealPlanController::class, 'forecast'])->middleware('permission:reservations.view')->name('meal-plan.forecast');
 
