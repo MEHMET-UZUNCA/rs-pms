@@ -7,6 +7,7 @@ use App\Domain\Core\Models\Property;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Services\ReservationService;
+use App\Domain\Reservations\Support\ReservationOptions;
 use App\Http\Controllers\Controller;
 use App\Support\BusinessDateInput;
 use Carbon\CarbonImmutable;
@@ -94,7 +95,13 @@ class NavigatorController extends Controller
             return back()->with('error', $e->getMessage())->with('selected', $reservation->id);
         }
 
-        return back()->with('status', __('pms.res.checked_in', ['name' => $reservation->profile?->display_name, 'room' => $reservation->room?->number]))->with('selected', $reservation->id);
+        $back = back()->with('status', __('pms.res.checked_in', ['name' => $reservation->profile?->display_name, 'room' => $reservation->room?->number]))->with('selected', $reservation->id);
+        $room = $reservation->room()->first();
+        if ($room && in_array($room->hk_status, ['dirty', 'pickup'], true) && ReservationOptions::get($reservation->property_id)['dirty_room_check_in'] === 'warn') {
+            $back->with('error', __('pms.res.dirty_warning', ['room' => $room->number]));
+        }
+
+        return $back;
     }
 
     private function reservations(int $propertyId, ?string $filter, CarbonImmutable $bd, Request $request, ?CarbonImmutable $arrival, ?CarbonImmutable $departure)

@@ -9,6 +9,7 @@ use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
 use App\Http\Controllers\FrontOffice\QueueController;
+use App\Http\Controllers\FrontOffice\RoomMoveController;
 use App\Http\Controllers\FrontOffice\RoomRackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Housekeeping\HousekeepingController;
@@ -68,6 +69,8 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     // Ön Büro → Oda Planı (Room Rack)
     Route::get('/oda-plani', [RoomRackController::class, 'index'])->middleware('permission:reservations.view')->name('front-office.room-rack');
+    Route::get('/oda-degisimleri', [RoomMoveController::class, 'index'])->middleware('permission:reservations.view')->name('room-moves.index');
+    Route::post('/oda-degisimleri/{move}/neden', [RoomMoveController::class, 'reason'])->whereNumber('move')->middleware('permission:reservations.edit')->name('room-moves.reason');
     Route::post('/oda-plani/{reservation}/tasi', [RoomRackController::class, 'move'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('front-office.room-rack.move');
 
     // Rezervasyon Navigatörü

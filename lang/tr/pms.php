@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'room_moves' => 'Oda değişimleri',
         'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
@@ -88,6 +89,7 @@ return [
     ],
 
     'res' => [
+        'dirty_blocked' => ':room numaralı oda kirli; kat hizmetleri temiz yapana kadar giriş yapılamaz.', 'dirty_warning' => 'Dikkat: :room numaralı oda hâlâ kirli.',
         'letter_email' => 'Misafir e-postası', 'letter_send' => 'E-postayla gönder', 'letter_sent' => 'Onay mektubu :email adresine gönderildi.', 'letter_failed' => 'E-posta gönderilemedi. SMTP ayarlarını kontrol edin.',
         'letter_no_smtp' => 'E-posta henüz ayarlanmadı (.env içindeki SMTP ayarları).', 'letter_last' => 'Son gönderim :date, :email (:user)',
         'letter' => 'Onay Mektubu', 'print' => 'Yazdır',
@@ -249,6 +251,7 @@ return [
     ],
 
     'options' => [
+        'dirty_room_check_in' => 'Kirli odaya giriş', 'dirty' => ['allow' => 'İzin ver', 'warn' => 'Uyararak izin ver', 'block' => 'İzin verme'],
         'title' => 'Rezervasyon seçenekleri', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Rezervasyon seçenekleri kaydedildi.',
         'check_in_time' => 'Varsayılan giriş saati', 'check_out_time' => 'Varsayılan çıkış saati', 'day_use_check_in_time' => 'Günübirlik giriş saati',
         'day_use_check_out_time' => 'Günübirlik çıkış saati', 'status_after_check_in' => 'Girişten sonra oda durumu',
@@ -441,5 +444,9 @@ Kaya, Ayşe
         'charges' => 'Bu vardiyada atılan harcamalar', 'notes' => 'Not', 'close' => 'Vardiyayı kapat', 'close_confirm' => 'Vardiya kapatılsın mı? Sonraki kayıtlar yeni vardiya açar.',
         'no_open' => 'Açık vardiyanız yok. Folyoya ilk kayıt ya da ödemeyle vardiya açılır.', 'recent' => 'Son vardiyalarım', 'recent_all' => 'Son vardiyalar (bütün kasiyerler)',
         'statuses' => ['open' => 'Açık', 'closed' => 'Kapalı'], 'closed_ok' => 'Vardiya kapandı.', 'report' => 'Kasa raporu', 'payments' => 'Ödemeler', 'supervisor' => 'Sorumlu',
+    ],
+    'moves' => [
+        'title' => 'Oda Değişimleri', 'reason' => 'Oda değişim nedeni', 'reason_hint' => 'İçerideki misafirin odası değişirken kullanılır', 'from_room' => 'Eski oda', 'to_room' => 'Yeni oda',
+        'user' => 'Kullanıcı', 'none' => 'Bu dönemde oda değişimi yok.', 'saved' => 'Neden kaydedildi.', 'type_changed' => 'tip değişti',
     ],
 ];

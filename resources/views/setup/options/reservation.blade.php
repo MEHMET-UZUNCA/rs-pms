@@ -22,6 +22,10 @@
                         @endforeach
                     </select>
                 @endforeach
+                <label class="field-label !mb-0" for="dirty_room_check_in">{{ __('pms.options.dirty_room_check_in') }}</label>
+                <select id="dirty_room_check_in" name="dirty_room_check_in" class="input">
+                    @foreach (\App\Domain\Reservations\Support\ReservationOptions::DIRTY_CHECK_IN as $o)<option value="{{ $o }}" @selected($v('dirty_room_check_in') === $o)>{{ __('pms.options.dirty.'.$o) }}</option>@endforeach
+                </select>
             </section>
             <section class="win !min-h-fit p-3 flex flex-col gap-2">
                 @foreach (['queue_rooms', 'meal_plan'] as $flag)

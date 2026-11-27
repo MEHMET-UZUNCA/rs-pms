@@ -25,6 +25,7 @@ class ReservationOptionsController extends Controller
         $data = $request->validate([
             'check_in_time' => $time, 'check_out_time' => $time, 'day_use_check_in_time' => $time, 'day_use_check_out_time' => $time,
             'status_after_check_in' => $status, 'status_after_check_out' => $status, 'status_after_audit_occupied' => $status, 'status_after_no_show' => $status,
+            'dirty_room_check_in' => ['required', Rule::in(ReservationOptions::DIRTY_CHECK_IN)],
         ]);
         foreach (['queue_rooms', 'meal_plan'] as $flag) {
             $data[$flag] = $request->boolean($flag);

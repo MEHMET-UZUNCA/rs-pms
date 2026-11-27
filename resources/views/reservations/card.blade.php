@@ -94,6 +94,11 @@
                             <option value="{{ $room->id }}" data-type="{{ $room->room_type_id }}" @selected((int) $v('room_id') === (int) $room->id)>{{ $room->number }} · {{ __('pms.hk.fo_status.'.$room->fo_status) }} / {{ __('pms.hk.hk_status.'.$room->hk_status) }}</option>
                         @endforeach
                     </select></div>
+                @if ($r->status === 'in_house')
+                    <div class="col-span-2"><label class="field-label" for="room_move_reason_id">{{ __('pms.moves.reason') }}</label>
+                        <select id="room_move_reason_id" name="room_move_reason_id" class="input" title="{{ __('pms.moves.reason_hint') }}"><option value=""></option>
+                            @foreach ($moveReasons as $mr)<option value="{{ $mr->id }}" @selected((int) old('room_move_reason_id') === (int) $mr->id)>{{ $mr->code }} {{ $mr->name }}</option>@endforeach</select></div>
+                @endif
                 <div class="col-span-2"><label class="field-label" for="rate_code_id">{{ __('pms.res.rate_code') }} *</label>
                     <select id="rate_code_id" name="rate_code_id" class="input" required>
                         @foreach ($rateCodes as $rc)<option value="{{ $rc->id }}" @selected((int) $v('rate_code_id') === (int) $rc->id)>{{ $rc->code }} — {{ $rc->name }}</option>@endforeach

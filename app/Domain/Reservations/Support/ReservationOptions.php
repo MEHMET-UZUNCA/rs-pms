@@ -16,6 +16,9 @@ class ReservationOptions
     /** Oda durumu seçenekleri: "none" = No Action. */
     public const ROOM_STATUSES = ['none', 'dirty', 'clean', 'inspected'];
 
+    /** Kirli (Dirty / Pick Up) odaya giriş: izin ver / uyar / engelle. */
+    public const DIRTY_CHECK_IN = ['allow', 'warn', 'block'];
+
     public const DEFAULTS = [
         'check_in_time' => '14:00', 'check_out_time' => '12:00',
         'day_use_check_in_time' => '14:00', 'day_use_check_out_time' => '18:00',
@@ -25,6 +28,7 @@ class ReservationOptions
         'status_after_check_out' => 'dirty',         // Room Status after Check Out
         'status_after_audit_occupied' => 'none',     // Room Status after N/A if occupied
         'status_after_no_show' => 'none',            // Room Status after No Show
+        'dirty_room_check_in' => 'warn',             // kirli odaya giriş (Elektraweb parametresi): allow / warn / block
         'market_code_mandatory' => true,
         'queue_rooms' => true,                       // Queue Rooms Handling
         'meal_plan' => true,                         // Meal plan functionality

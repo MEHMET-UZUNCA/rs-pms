@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'room_moves' => 'Room Moves',
         'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
@@ -88,6 +89,7 @@ return [
     ],
 
     'res' => [
+        'dirty_blocked' => 'Room :room is dirty; check-in is not allowed until housekeeping sets it clean.', 'dirty_warning' => 'Note: room :room is still dirty.',
         'letter_email' => 'Guest e-mail', 'letter_send' => 'Send by e-mail', 'letter_sent' => 'Confirmation letter sent to :email.', 'letter_failed' => 'The e-mail could not be sent. Check the SMTP settings.',
         'letter_no_smtp' => 'E-mail is not set up yet (SMTP settings in .env).', 'letter_last' => 'Last sent :date to :email (:user)',
         'letter' => 'Confirmation Letter', 'print' => 'Print',
@@ -249,6 +251,7 @@ return [
     ],
 
     'options' => [
+        'dirty_room_check_in' => 'Check in to a dirty room', 'dirty' => ['allow' => 'Allow', 'warn' => 'Allow with warning', 'block' => 'Do not allow'],
         'title' => 'Reservation Options', 'subtitle' => 'Global Settings → Reservation', 'saved' => 'Reservation options saved.',
         'check_in_time' => 'Default Check In Time', 'check_out_time' => 'Default Check Out Time', 'day_use_check_in_time' => 'Day use Default Check In Time',
         'day_use_check_out_time' => 'Day use Default Check Out Time', 'status_after_check_in' => 'Room Status after Check In',
@@ -441,5 +444,9 @@ Müller, Anna
         'charges' => 'Charges posted in this shift', 'notes' => 'Notes', 'close' => 'Close shift', 'close_confirm' => 'Close the shift? Later postings open a new shift.',
         'no_open' => 'You have no open shift. A shift opens with your first posting or payment on a folio.', 'recent' => 'My recent shifts', 'recent_all' => 'Recent shifts (all cashiers)',
         'statuses' => ['open' => 'Open', 'closed' => 'Closed'], 'closed_ok' => 'Shift closed.', 'report' => 'Cashier report', 'payments' => 'Payments', 'supervisor' => 'Supervisor',
+    ],
+    'moves' => [
+        'title' => 'Room Moves', 'reason' => 'Room change reason', 'reason_hint' => 'Used when the room of an in-house guest changes', 'from_room' => 'From room', 'to_room' => 'To room',
+        'user' => 'User', 'none' => 'No room moves in this period.', 'saved' => 'Reason saved.', 'type_changed' => 'type changed',
     ],
 ];

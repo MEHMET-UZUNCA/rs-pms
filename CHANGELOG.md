@@ -2,6 +2,9 @@
 
 ## Geliştirme
 
+- Kirli odaya giriş ayarı (Rezervasyon seçenekleri): izin ver / uyararak izin ver (varsayılan) / izin verme. "İzin verme"de kirli ya da Pick Up odaya giriş yapılamaz (navigatör, oda planı, toplu grup girişi); "uyar"da giriş yapılır, uyarı çıkar. (M.U)
+- Oda değişim nedeni ve listesi: içerideki misafirin odası kartta değişirken neden seçilir (Misafir isteği, Upgrade, Arıza, Gürültü, Otel kararı, Diğer — reason codes, kategori room_move); Front Desk → Room Moves: tarih aralığında oda değişimleri (eski / yeni oda, tip değişimi, kullanıcı), neden sonradan da girilebilir (oda planında sürükleyerek yapılan değişimler için). (M.U)
+
 - Fatura yeri kuralı (otel teyidi): anlık (bireysel) müşterilerin faturası PMS'ten, cari hesapların faturası Logo'dan kesilir. Folyonun ödeyeni şirket / acenta / kaynaksa ya da folyo City Ledger ile kapatılmışsa fatura penceresinde uyarı çıkar ve PMS faturası kesilmez; gerekirse "Yine de PMS'te fatura kes" işaretlenir. (M.U)
 
 - Dövizli ödeme: folyoda ödeme formunda döviz seçimi; tutar dövizde girilir, nakitte günün Cash Rate'i (yoksa Posting Rate), kartta Posting Rate ile TL'ye çevrilir; döviz tutarı ve kur kayıtta saklanır, açıklamaya yazılır (ör. "900 Cash EUR 100,00 × 39,0000"). Kuru olmayan dövizde uyarı. (M.U)

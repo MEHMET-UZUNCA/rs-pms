@@ -86,6 +86,7 @@ class ReservationCardController extends Controller
             $service->update($reservation, array_merge($this->fields($data), [
                 'arrival_date' => $data['arrival_date'], 'departure_date' => $data['departure_date'],
                 'child_bands' => [1 => (int) ($data['children'] ?? 0)], 'room_id' => $data['room_id'] ?? null,
+                'room_move_reason_id' => $data['room_move_reason_id'] ?? null,
             ] + ($data['manual_amount'] !== null ? ['manual_amount' => $data['manual_amount']] : [])), $request->user()->id);
         } catch (ReservationException $e) {
             return back()->withInput()->withErrors(['reservation' => $e->getMessage()]);
@@ -143,6 +144,7 @@ class ReservationCardController extends Controller
             'credit_limit' => ['nullable', 'numeric', 'min:0', 'max:999999999'],
             'room_charges_allowed' => ['boolean'],
             'eta' => ['nullable', 'date_format:H:i'], 'etd' => ['nullable', 'date_format:H:i'],
+            'room_move_reason_id' => ['nullable', 'integer', Rule::exists('pms_reason_codes', 'id')->where('property_id', $property->id)->where('category', 'room_move')],
             'guest_comments' => ['nullable', 'string', 'max:2000'],
             'internal_notes' => ['nullable', 'string', 'max:2000'],
         ], [], [
@@ -198,6 +200,7 @@ class ReservationCardController extends Controller
                 ->where('f.reservation_id', $reservation->id)->orderBy('f.date_from')->orderBy('f.id')->get(['f.*', 't.code', 't.name as code_name']) : collect(),
             'chargeCodes' => DB::table('pms_transaction_codes')->where('property_id', $p)->whereNotIn('type', ['payment', 'deposit'])->where('is_discount', false)
                 ->where('is_active', true)->where('manual_post_allowed', true)->whereNull('deleted_at')->orderBy('code')->get(['id', 'code', 'name', 'default_price']),
+            'moveReasons' => DB::table('pms_reason_codes')->where('property_id', $p)->where('category', 'room_move')->where('is_active', true)->orderBy('code')->get(['id', 'code', 'name']),
             'checkOutTime' => \App\Domain\Reservations\Support\ReservationOptions::get($p)['check_out_time'],
         ]);
     }

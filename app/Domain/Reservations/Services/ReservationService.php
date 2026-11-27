@@ -113,7 +113,8 @@ class ReservationService
             $manual = array_key_exists('manual_amount', $data) ? $data['manual_amount'] : null;
             $roomId = array_key_exists('room_id', $data) ? ($data['room_id'] ? (int) $data['room_id'] : null) : $reservation->room_id;
             [$arrival, $departure] = [$data['arrival_date'] ?? null, $data['departure_date'] ?? null];
-            unset($data['child_bands'], $data['manual_amount'], $data['room_id'], $data['arrival_date'], $data['departure_date']);
+            $moveReason = isset($data['room_move_reason_id']) ? (int) $data['room_move_reason_id'] : null;
+            unset($data['child_bands'], $data['manual_amount'], $data['room_id'], $data['arrival_date'], $data['departure_date'], $data['room_move_reason_id']);
 
             $pricing = ['room_type_id', 'rate_code_id', 'adults'];
             $repricing = $manual !== null || collect($pricing)->contains(fn ($f) => array_key_exists($f, $data) && (string) $data[$f] !== (string) $reservation->{$f})
@@ -160,7 +161,7 @@ class ReservationService
             $reservation = $reservation->fresh();
             if ($roomId !== $reservation->room_id) {
                 if ($roomId) {
-                    $reservation = $this->assignRoom($reservation, Room::query()->findOrFail($roomId), $userId);
+                    $reservation = $this->assignRoom($reservation, Room::query()->findOrFail($roomId), $userId, $moveReason);
                 } elseif ($reservation->status !== 'in_house') {
                     $reservation->update(['room_id' => null]);
                     $reservation->nightRows()->update(['room_id' => null]);
@@ -193,9 +194,9 @@ class ReservationService
         });
     }
 
-    public function assignRoom(Reservation $reservation, Room $room, ?int $userId = null): Reservation
+    public function assignRoom(Reservation $reservation, Room $room, ?int $userId = null, ?int $moveReasonId = null): Reservation
     {
-        return DB::transaction(function () use ($reservation, $room, $userId) {
+        return DB::transaction(function () use ($reservation, $room, $userId, $moveReasonId) {
             $this->assertActive($reservation);
             if ((int) $room->property_id !== (int) $reservation->property_id || ! $room->is_active || $room->is_pseudo) {
                 throw new ReservationException("Oda {$room->number} atanamaz.");
@@ -223,7 +224,7 @@ class ReservationService
             if ($reservation->status === 'in_house' && $previous && (int) $previous !== (int) $room->id) {
                 DB::table('pms_reservation_room_moves')->insert([
                     'reservation_id' => $reservation->id, 'from_room_id' => $previous, 'to_room_id' => $room->id,
-                    'business_date' => $from, 'user_id' => $userId, 'created_at' => now(),
+                    'business_date' => $from, 'reason_code_id' => $moveReasonId, 'user_id' => $userId, 'created_at' => now(),
                 ]);
                 Room::query()->whereKey($previous)->update(['fo_status' => 'vacant', 'hk_status' => 'dirty', 'hk_status_changed_at' => now(), 'current_reservation_id' => null]);   // oda değişimi: eski oda Dirty
                 $room->update(['fo_status' => 'occupied', 'current_reservation_id' => $reservation->id]);
@@ -250,6 +251,9 @@ class ReservationService
             $room = Room::query()->whereKey($reservation->room_id)->lockForUpdate()->firstOrFail();
             if ($room->fo_status === 'occupied' && (int) $room->current_reservation_id !== (int) $reservation->id) {
                 throw new ReservationException("Oda {$room->number} dolu.");
+            }
+            if (in_array($room->hk_status, ['dirty', 'pickup'], true) && ReservationOptions::get($reservation->property_id)['dirty_room_check_in'] === 'block') {
+                throw new ReservationException(__('pms.res.dirty_blocked', ['room' => $room->number]));
             }
 
             $reservation->update(['status' => 'in_house', 'checked_in_at' => now(), 'checked_in_by' => $userId, 'check_in_business_date' => $today->toDateString(), 'queued_at' => null]);
