@@ -4,6 +4,7 @@ namespace App\Domain\Users\Services;
 
 use App\Console\Commands\ImportFidelioUsers;
 use App\Models\User;
+use App\Support\Audit\Audit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -45,6 +46,11 @@ class UserAdminService
             } else {
                 $user->update($data);
             }
+            $oldRole = DB::table('pms_user_properties')->where('user_id', $user->id)->where('property_id', $propertyId)->value('role_id');
+            if ((int) $oldRole !== (int) $roleId) {
+                Audit::record('user', $user->id, 'role_changed', ['role' => DB::table('pms_roles')->where('id', $oldRole)->value('code')],
+                    ['role' => DB::table('pms_roles')->where('id', $roleId)->value('code')], null, $propertyId);
+            }
             DB::table('pms_user_properties')->where('user_id', $user->id)->where('property_id', $propertyId)->delete();
             DB::table('pms_user_properties')->insert(['user_id' => $user->id, 'property_id' => $propertyId, 'role_id' => $roleId,
                 'created_at' => now(), 'updated_at' => now()]);
@@ -58,6 +64,7 @@ class UserAdminService
     {
         $password = ImportFidelioUsers::password();
         $user->forceFill(['password' => Hash::make($password), 'must_change_password' => true])->save();
+        Audit::record('user', $user->id, 'password_reset');
 
         return $password;
     }
@@ -77,8 +84,13 @@ class UserAdminService
             } else {
                 $roleId = DB::table('pms_roles')->insertGetId($data + ['created_at' => now(), 'updated_at' => now()]);
             }
+            $before = DB::table('pms_role_permissions as rp')->join('pms_permissions as p', 'p.id', '=', 'rp.permission_id')->where('rp.role_id', $roleId)->pluck('p.code')->all();
             DB::table('pms_role_permissions')->where('role_id', $roleId)->delete();
             $valid = DB::table('pms_permissions')->whereIn('id', $permissionIds)->pluck('id');
+            $after = DB::table('pms_permissions')->whereIn('id', $valid)->pluck('code')->all();
+            if (array_diff($before, $after) || array_diff($after, $before)) {
+                Audit::record('role', $roleId, 'permissions_changed', ['removed' => array_values(array_diff($before, $after))], ['added' => array_values(array_diff($after, $before))], $data['code']);
+            }
             DB::table('pms_role_permissions')->insert($valid->map(fn ($id) => ['role_id' => $roleId, 'permission_id' => $id])->all());
 
             return $roleId;
@@ -93,6 +105,7 @@ class UserAdminService
         if (DB::table('pms_user_properties')->where('role_id', $roleId)->exists()) {
             throw new UserAdminException(__('pms.roles.err_in_use'));
         }
+        Audit::record('role', $roleId, 'deleted', ['code' => DB::table('pms_roles')->where('id', $roleId)->value('code')]);
         DB::table('pms_roles')->where('id', $roleId)->delete();
     }
 

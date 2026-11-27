@@ -4,6 +4,7 @@ namespace App\Domain\Rates\Models;
 
 use App\Domain\Core\Models\Tax;
 use App\Domain\Pos\Models\Outlet;
+use App\Support\Audit\Audited;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /** Tablo: pms_transaction_codes — tasarım: docs/03-veritabani.md */
 class TransactionCode extends Model
 {
+    use Audited;
     use SoftDeletes;
 
     protected $table = 'pms_transaction_codes';

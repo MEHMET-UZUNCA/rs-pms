@@ -57,6 +57,7 @@ class Menu
                 ['items', $can('setup.options') ? route('setup.items.index') : null],
                 ['users', $can('setup.users') ? route('setup.users.index') : null],
                 ['roles', $can('setup.users') ? route('setup.roles.index') : null],
+                ['audit_log', $can('setup.audit') ? route('setup.audit') : null],
             ],
         ];
     }

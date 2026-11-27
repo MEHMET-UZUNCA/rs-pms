@@ -26,6 +26,7 @@ use App\Http\Controllers\Reservations\NavigatorController;
 use App\Http\Controllers\Reservations\OverbookingController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Reservations\ReservationItemController;
+use App\Http\Controllers\Setup\AuditLogController;
 use App\Http\Controllers\Setup\ExchangeRateController;
 use App\Http\Controllers\Setup\ItemController;
 use App\Http\Controllers\Setup\OutletController;
@@ -164,6 +165,7 @@ Route::middleware(['auth', 'property'])->group(function () {
 
     Route::post('/rezervasyon/{reservation}/envanter', [ReservationItemController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.items.store');
     Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
+    Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');
     Route::middleware('permission:setup.options')->prefix('ayarlar/envanter')->name('setup.items.')->group(function () {
         Route::get('/', [ItemController::class, 'index'])->name('index');
         Route::post('/', [ItemController::class, 'store'])->name('store');

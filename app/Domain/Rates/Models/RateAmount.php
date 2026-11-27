@@ -3,6 +3,7 @@
 namespace App\Domain\Rates\Models;
 
 use App\Domain\Inventory\Models\RoomType;
+use App\Support\Audit\Audited;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /** Tablo: pms_rate_amounts — tasarım: docs/03-veritabani.md */
 class RateAmount extends Model
 {
+    use Audited;
+
     protected $table = 'pms_rate_amounts';
 
     protected $guarded = ['id'];

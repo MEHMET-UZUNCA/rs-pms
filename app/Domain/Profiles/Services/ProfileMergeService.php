@@ -3,6 +3,7 @@
 namespace App\Domain\Profiles\Services;
 
 use App\Domain\Profiles\Models\Profile;
+use App\Support\Audit\Audit;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -125,6 +126,7 @@ class ProfileMergeService
             DB::table('pms_profile_identities')->where('profile_id', $drop->id)->delete();
 
             $drop->update(['merged_into_id' => $keep->id, 'merged_at' => now(), 'status' => 'merged', 'updated_by' => $userId]);
+            Audit::record('profile', $keep->id, 'merged', ['merged_profile' => $drop->id, 'name' => $drop->display_name], $moved, null, $keep->property_id);
 
             return array_filter($moved);
         });

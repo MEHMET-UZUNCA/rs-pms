@@ -8,6 +8,7 @@ use App\Domain\Inventory\Models\Room;
 use App\Domain\Inventory\Models\RoomType;
 use App\Domain\Profiles\Models\Profile;
 use App\Domain\Rates\Models\RateCode;
+use App\Support\Audit\Audited;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /** Tablo: pms_reservations — tasarım: docs/03-veritabani.md */
 class Reservation extends Model
 {
+    use Audited;
+
     protected $table = 'pms_reservations';
 
     protected $guarded = ['id'];

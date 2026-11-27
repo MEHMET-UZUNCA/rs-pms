@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'audit_log' => 'Değişiklik kaydı',
         'overbooking' => 'Overbooking',
         'items' => 'Envanter kalemleri',
         'guest_requests' => 'Misafir istekleri',
@@ -241,7 +242,7 @@ return [
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'perm' => ['setup_audit' => 'Değişiklik kaydı', 'reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -494,5 +495,13 @@ Kaya, Ayşe
         'title' => 'Overbooking', 'subtitle' => 'Oda tipi ve gün bazında izin verilen fazla satış', 'limit' => 'Sınır', 'available' => 'Müsait',
         'hint' => 'Üstte müsait oda (kırmızı = zaten overbooking). Kutuda o gün müsaitliğin kaç oda üstüne satılabileceği (boş / 0 = yok). Sınır içindeki rezervasyonlar uyarısız kaydedilir; web sitesi müsaitliğin üstüne asla satmaz.',
         'range' => 'Dönem için sınır', 'apply' => 'Döneme uygula', 'saved' => ':count gün kaydedildi.', 'too_long' => 'Bir seferde en çok bir yıl.',
+    ],
+    'audit_log' => [
+        'title' => 'Değişiklik Kaydı', 'type' => 'Kayıt türü', 'record' => 'Kayıt no', 'action' => 'İşlem', 'changes' => 'Değişiklikler', 'all' => 'Hepsi', 'system' => 'sistem',
+        'card_title' => 'Değişiklikler', 'hint' => 'Kim, neyi, ne zaman değiştirdi: rezervasyonlar, profiller, fiyatlar, folyolar, bloklar, kullanıcı ve roller, ayarlar, overbooking.',
+        'types' => ['reservation' => 'Rezervasyon', 'profile' => 'Profil', 'rate_code' => 'Fiyat kodu', 'rate_amount' => 'Fiyat detayı', 'block' => 'Blok', 'folio' => 'Folyo / hesap',
+            'transaction_code' => 'Departman kodu', 'user' => 'Kullanıcı', 'role' => 'Rol', 'room_outage' => 'Arıza', 'settings' => 'Ayarlar', 'overbooking' => 'Overbooking'],
+        'actions' => ['created' => 'Oluşturuldu', 'updated' => 'Değiştirildi', 'deleted' => 'Silindi', 'status_changed' => 'Durum değişti', 'role_changed' => 'Rol değişti',
+            'password_reset' => 'Şifre sıfırlandı', 'permissions_changed' => 'Yetkiler değişti', 'merged' => 'Birleştirildi'],
     ],
 ];

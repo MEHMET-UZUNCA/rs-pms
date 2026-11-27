@@ -2,6 +2,7 @@
 
 namespace App\Domain\Reservations\Support;
 
+use App\Support\Audit\Audit;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -52,7 +53,12 @@ class ReservationOptions
     /** @param array<string, mixed> $options */
     public static function save(int $propertyId, array $options, ?int $userId): void
     {
-        $value = array_replace(self::get($propertyId), array_intersect_key($options, self::DEFAULTS));
+        $old = self::get($propertyId);
+        $value = array_replace($old, array_intersect_key($options, self::DEFAULTS));
+        $changed = array_filter($value, fn ($v, $k) => ($old[$k] ?? null) !== $v, ARRAY_FILTER_USE_BOTH);
+        if ($changed) {
+            Audit::record('settings', $propertyId, 'updated', array_intersect_key($old, $changed), $changed, self::KEY, $propertyId);
+        }
         DB::table('pms_settings')->updateOrInsert(['property_id' => $propertyId, 'key' => self::KEY],
             ['value' => json_encode($value), 'updated_by' => $userId, 'updated_at' => now(), 'created_at' => now()]);
     }

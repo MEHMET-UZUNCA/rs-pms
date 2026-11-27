@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reservations;
 use App\Domain\Core\Models\Property;
 use App\Domain\Rates\Services\AvailabilityService;
 use App\Http\Controllers\Controller;
+use App\Support\Audit\Audit;
 use App\Support\BusinessDateInput;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
@@ -87,6 +88,8 @@ class OverbookingController extends Controller
             }
         });
         $dates = array_column($rows, 1);
+        Audit::record('overbooking', $p->id, 'updated', null, ['days' => count($rows), 'from' => min($dates), 'to' => max($dates),
+            'values' => array_values(array_unique(array_column($rows, 2)))], null, $p->id);
         $availability->rebuild($p->id, CarbonImmutable::parse(min($dates)), CarbonImmutable::parse(max($dates)));
 
         return back()->with('status', __('pms.ob.saved', ['count' => count($rows)]));

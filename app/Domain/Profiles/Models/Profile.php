@@ -2,6 +2,7 @@
 
 namespace App\Domain\Profiles\Models;
 
+use App\Support\Audit\Audited;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /** Tablo: pms_profiles — tasarım: docs/03-veritabani.md */
 class Profile extends Model
 {
+    use Audited;
     use SoftDeletes;
 
     protected $table = 'pms_profiles';

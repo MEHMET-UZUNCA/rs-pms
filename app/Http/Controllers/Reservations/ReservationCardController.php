@@ -213,6 +213,8 @@ class ReservationCardController extends Controller
             'linked' => Profile::whereIn('id', array_filter([$reservation->company_profile_id, $reservation->agent_profile_id,
                 $reservation->source_profile_id, $reservation->group_profile_id]))->get(),
             'boards' => DB::table('pms_packages')->where('property_id', $p)->where('type', 'board')->whereNull('deleted_at')->orderBy('id')->get(),
+            'changes' => $reservation->exists ? DB::table('pms_audit_logs as a')->leftJoin('users as u', 'u.id', '=', 'a.user_id')->where('a.auditable_type', 'reservation')
+                ->where('a.auditable_id', $reservation->id)->where('a.action', '!=', 'created')->orderByDesc('a.id')->limit(50)->get(['a.*', 'u.username']) : collect(),
             'history' => $reservation->exists ? DB::table('pms_reservation_status_logs')->where('reservation_id', $reservation->id)->orderBy('id')->get() : collect(),
             'fixedCharges' => $reservation->exists ? DB::table('pms_fixed_charges as f')->join('pms_transaction_codes as t', 't.id', '=', 'f.transaction_code_id')
                 ->where('f.reservation_id', $reservation->id)->orderBy('f.date_from')->orderBy('f.id')->get(['f.*', 't.code', 't.name as code_name']) : collect(),

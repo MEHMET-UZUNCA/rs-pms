@@ -301,7 +301,7 @@ class RocksHotelReferenceSeeder extends Seeder
             ['night_audit.override', 'Gece kapanışı kontrollerini amir onayıyla geçme', 'night_audit'],
             ['housekeeping.view', 'Kat hizmetleri ekranı', 'housekeeping'], ['housekeeping.status', 'Oda durumu değiştirme', 'housekeeping'],
             ['housekeeping.outage', 'Arızalı / hizmet dışı oda (OOO/OOS)', 'housekeeping'],
-            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup'], ['setup.rates', 'Fiyat kodları', 'setup'], ['front_office.lost_found', 'Kayıp eşya (Lost & Found)', 'front_office'], ['profiles.view', 'Profil görüntüleme', 'profiles'], ['profiles.edit', 'Profil açma ve düzenleme', 'profiles'], ['cashiering.shifts', 'Bütün kasiyerlerin vardiyaları', 'cashiering'], ['front_office.requests', 'Misafir istekleri ve şikâyetler', 'front_office'], ['reservations.overbooking', 'Overbooking sınırı ve sınır üstü kayıt', 'reservations']] as [$code, $name, $group]) {
+            ['setup.users', 'Kullanıcılar ve roller', 'setup'], ['cashiering.accounts', 'Rezervasyonsuz hesap (PM hesabı) açma', 'cashiering'], ['setup.options', 'Rezervasyon seçenekleri', 'setup'], ['setup.exchange_rates', 'Döviz kurları', 'setup'], ['setup.rates', 'Fiyat kodları', 'setup'], ['front_office.lost_found', 'Kayıp eşya (Lost & Found)', 'front_office'], ['profiles.view', 'Profil görüntüleme', 'profiles'], ['profiles.edit', 'Profil açma ve düzenleme', 'profiles'], ['cashiering.shifts', 'Bütün kasiyerlerin vardiyaları', 'cashiering'], ['front_office.requests', 'Misafir istekleri ve şikâyetler', 'front_office'], ['reservations.overbooking', 'Overbooking sınırı ve sınır üstü kayıt', 'reservations'], ['setup.audit', 'Değişiklik kaydı', 'setup']] as [$code, $name, $group]) {
             DB::table('pms_permissions')->updateOrInsert(['code' => $code], ['name' => $name, 'group' => $group, 'updated_at' => now()]);
         }
         DB::table('pms_roles')->updateOrInsert(['code' => 'admin'], ['name' => 'Sistem yöneticisi', 'updated_at' => now()]);
@@ -369,6 +369,11 @@ class RocksHotelReferenceSeeder extends Seeder
         foreach (['SUP', 'IT1', 'FOM', 'FOS', 'ACC', 'AUD'] as $code) {
             if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
                 DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['cashiering.shifts']]);
+            }
+        }
+        foreach (['SUP', 'IT1', 'FOM', 'ACC', 'GMH'] as $code) {
+            if ($roleId = DB::table('pms_roles')->where('code', $code)->value('id')) {
+                DB::table('pms_role_permissions')->insertOrIgnore(['role_id' => $roleId, 'permission_id' => $permissionIds['setup.audit']]);
             }
         }
         foreach (['SUP', 'IT1', 'FOM', 'FOS', 'REA'] as $code) {

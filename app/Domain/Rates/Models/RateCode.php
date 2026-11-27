@@ -2,6 +2,7 @@
 
 namespace App\Domain\Rates\Models;
 
+use App\Support\Audit\Audited;
 use App\Support\Casts\DateOnly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /** Tablo: pms_rate_codes — tasarım: docs/03-veritabani.md */
 class RateCode extends Model
 {
+    use Audited;
     use SoftDeletes;
 
     protected $table = 'pms_rate_codes';

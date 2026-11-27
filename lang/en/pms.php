@@ -10,6 +10,7 @@ return [
     'languages' => ['en' => 'English', 'tr' => 'Türkçe'],
 
     'menu' => [
+        'audit_log' => 'Audit Log',
         'overbooking' => 'Overbooking',
         'items' => 'Inventory Items',
         'guest_requests' => 'Guest Requests',
@@ -241,7 +242,7 @@ return [
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'perm' => ['setup_audit' => 'Audit log', 'reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -494,5 +495,13 @@ Müller, Anna
         'title' => 'Overbooking', 'subtitle' => 'Allowed overbooking per room type and day', 'limit' => 'Limit', 'available' => 'Available',
         'hint' => 'Top: available rooms (red = already overbooked). Box: how many rooms may be sold over availability that day (empty / 0 = none). Reservations within the limit are saved without a warning; the web site never sells over availability.',
         'range' => 'Set a limit for a period', 'apply' => 'Apply to period', 'saved' => ':count days saved.', 'too_long' => 'At most one year at a time.',
+    ],
+    'audit_log' => [
+        'title' => 'Audit Log', 'type' => 'Record type', 'record' => 'Record no.', 'action' => 'Action', 'changes' => 'Changes', 'all' => 'All', 'system' => 'system',
+        'card_title' => 'Changes', 'hint' => 'Who changed what and when: reservations, profiles, rates, folios, blocks, users and roles, settings, overbooking.',
+        'types' => ['reservation' => 'Reservation', 'profile' => 'Profile', 'rate_code' => 'Rate code', 'rate_amount' => 'Rate detail', 'block' => 'Block', 'folio' => 'Folio / account',
+            'transaction_code' => 'Department code', 'user' => 'User', 'role' => 'Role', 'room_outage' => 'Out of order', 'settings' => 'Settings', 'overbooking' => 'Overbooking'],
+        'actions' => ['created' => 'Created', 'updated' => 'Changed', 'deleted' => 'Deleted', 'status_changed' => 'Status changed', 'role_changed' => 'Role changed',
+            'password_reset' => 'Password reset', 'permissions_changed' => 'Permissions changed', 'merged' => 'Merged'],
     ],
 ];

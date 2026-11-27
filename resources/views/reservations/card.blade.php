@@ -171,6 +171,13 @@
                 <textarea id="guest_comments" name="guest_comments" rows="6" class="input !h-auto py-1">{{ $v('guest_comments') }}</textarea></div>
             <div><label class="field-label" for="internal_notes">{{ __('pms.card.internal_notes') }}</label>
                 <textarea id="internal_notes" name="internal_notes" rows="6" class="input !h-auto py-1">{{ $v('internal_notes') }}</textarea></div>
+            @if ($changes->isNotEmpty())
+                <div class="lg:col-span-2"><div class="field-label">{{ __('pms.audit_log.card_title') }}</div>
+                    <table class="grid-table" data-card-changes><tbody>
+                        @foreach ($changes as $log)<tr class="align-top"><td class="tabular-nums w-32">{{ \Illuminate\Support\Carbon::parse($log->created_at)->format('d.m.Y H:i') }}</td><td class="w-24">{{ $log->username ?? __('pms.audit_log.system') }}</td>
+                            <td class="text-[12.5px]">@include('partials.audit-changes', ['log' => $log])</td></tr>@endforeach
+                    </tbody></table></div>
+            @endif
             @if ($history->isNotEmpty())
                 <div class="lg:col-span-2"><div class="field-label">{{ __('pms.card.status_history') }}</div>
                     <table class="grid-table"><tbody>
