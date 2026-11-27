@@ -10,7 +10,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 
 | # | Elektraweb | RS PMS | Durum | Not / yapılacak |
 |---|---|---|---|---|
-| 1 | Günlük durum ekranı (doluluk, gelir, tahmin, konaklayan; grafik ve liste) | Ana sayfa yalnız menü; House Status ekranı sayılar | Kısmen | **Ön büro kontrol paneli**: bugün giriş / çıkış / içeride, doluluk %, oda geliri, ADR, 7–14 günlük doluluk tahmini, kirli / arızalı oda sayısı; her kutudan ilgili listeye geçiş |
+| 1 | Günlük durum ekranı (doluluk, gelir, tahmin, konaklayan; grafik ve liste) | Ana sayfa = Ön büro kontrol paneli | Var | **Ön büro kontrol paneli**: bugün giriş / çıkış / içeride, doluluk %, oda geliri, ADR, 7–14 günlük doluluk tahmini, kirli / arızalı oda sayısı; her kutudan ilgili listeye geçiş |
 | 2 | Rezervasyon listesi: tek tıkla süzme ve gruplama | Reservation Navigator (F3, Alt+1–0 süzgeçler) | Var | Gruplama (acenta / oda tipi / pansiyona göre ara toplam) yok — kısa iş |
 | 3 | Oda tipi müsaitliği | Rezervasyon kartında müsaitlik kontrolü, Web API availability | Kısmen | **Availability ekranı** (oda tipi × gün, satılabilir / satılan / OOO); Fidelio Rate Query benzeri |
 | 4 | Oda blokaj / oda planı: sürükle-bırak ile oda ve tarih değişimi, sürükleyerek rezervasyon açma | Room Rack (oda-plani) görüntüleme | Kısmen | Oda planından **rezervasyon kartı, oda değişimi, tarih uzatma** (sürükle-bırak), boş hücreden yeni rezervasyon |
@@ -36,7 +36,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 ## Önerilen sıra
 
 1. ~~Fixed Charges ve geç çıkış~~ — yapıldı.
-2. Ön büro kontrol paneli (#1).
+2. ~~Ön büro kontrol paneli (#1)~~ — yapıldı.
 3. Grup / blok rezervasyon ve routing (#19).
 4. Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3).
 5. Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10).

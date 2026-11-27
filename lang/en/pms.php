@@ -382,4 +382,16 @@ return [
         'confirm_delete' => 'Delete this fixed charge? Amounts already posted stay on the folio.',
         'hint' => 'Posted automatically by the night audit for each night in the period (Once: on the begin date; Weekly: on the same weekday as the begin date).',
     ],
+    'dash' => [
+        'title' => 'Front Office Dashboard', 'today' => 'Today',
+        'tiles' => ['arrivals' => 'Arrivals', 'departures' => 'Departures', 'in_house' => 'In house (rooms)', 'occupancy' => 'Occupancy tonight', 'adr' => 'Average rate tonight',
+            'available' => 'Free rooms tonight', 'dirty' => 'Vacant dirty', 'queue' => 'Queue rooms'],
+        'pax' => ':n guests', 'still_expected' => 'still expected', 'rooms_left' => ':n rooms still to leave', 'tonight_rooms' => ':n of :total rooms', 'net' => 'Net :amount',
+        'ooo' => 'Out of order: :n', 'dirty_occupied' => 'Occupied dirty: :n', 'queue_hint' => 'Guests waiting for a room',
+        'forecast' => 'Occupancy forecast (:days days)', 'sold' => 'Sold', 'tentative' => 'Tentative', 'free' => 'Free',
+        'last_closed' => 'Last closed day', 'occupancy_pct' => 'Occupancy', 'rooms_sold' => 'Rooms sold', 'room_revenue' => 'Room revenue', 'fnb_revenue' => 'Food and beverage',
+        'other_revenue' => 'Other revenue', 'total_revenue' => 'Total revenue', 'movements' => 'Arrivals · departures · no shows', 'net_hint' => 'Revenue is net (excluding VAT), from the night audit.',
+        'no_audit' => 'No night audit has been closed yet.', 'list_arrivals' => 'Arrivals today', 'list_departures' => 'Departures today', 'pax_short' => 'Pax',
+        'queued' => 'Queue', 'overdue' => 'Overdue',
+    ],
 ];

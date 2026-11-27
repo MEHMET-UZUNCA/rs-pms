@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Ön büro kontrol paneli (ana sayfa; rezervasyon ya da kat hizmetleri yetkisi olana): girişler, çıkışlar, içeride, bu gece doluluk, ortalama fiyat, boş oda, boş kirli oda, bekleyen odalar kutuları (tıklayınca ilgili liste); 14 günlük doluluk tahmini (satılan, opsiyon, arızalı, boş, %); son kapanan günün doluluk ve gelirleri (gece kapanışı istatistiği, net); bugün gelecekler (ETA, oda kirliyse uyarı, kuyrukta) ve bugün çıkacaklar (ETD, gecikmiş). VIP ve kara liste işaretli. Telefonda tek sütun. (M.U)
+
 - Fixed Charges (rezervasyon kartı, Ctrl+8): rezervasyona sabit ücret (departman kodu, açıklama, adet, tutar, sıklık: bir kez / her gece / haftalık, başlangıç–bitiş, folyo penceresi); tarihler konaklama geceleri içinde olmalı, ödeme kodu seçilemez, kodun varsayılan fiyatı tutara gelir. Gece kapanışı (Oda, paket ve sabit ücretler adımı) o geceye düşen ücretleri kendiliğinden ilgili folyo penceresine yazar; aynı gece ikinci kez yazılmaz. Geliş / çıkış saati (ETA / ETD) kartta; çıkış saati seçenekteki saatten sonraysa kartta ve navigatörde "Late C/O" işareti (ücreti Fixed Charge "bir kez" ya da kasadan kayıtla alınır). (M.U)
 
 - Kara liste profil kartına geri eklendi: "Blacklisted" kutusu ve nedeni (zorunlu); kara listeden çıkınca neden silinir. Rezervasyonda profil aramasında kara listedeki misafir kırmızı ve nedeniyle görünür, rezervasyon kartında uyarı çıkar (rezervasyon engellenmez). Profil aramasında pasif profiller gelmez. (M.U)

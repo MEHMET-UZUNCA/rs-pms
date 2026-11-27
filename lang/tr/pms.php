@@ -382,4 +382,16 @@ return [
         'confirm_delete' => 'Bu sabit ücret silinsin mi? Daha önce yazılan tutarlar folyoda kalır.',
         'hint' => 'Gece kapanışı dönemdeki her gece kendiliğinden folyoya yazar (Bir kez: başlangıç gününde; Haftalık: başlangıç gününün haftanın aynı gününde).',
     ],
+    'dash' => [
+        'title' => 'Ön Büro Kontrol Paneli', 'today' => 'Bugün',
+        'tiles' => ['arrivals' => 'Girişler', 'departures' => 'Çıkışlar', 'in_house' => 'İçeride (oda)', 'occupancy' => 'Bu gece doluluk', 'adr' => 'Bu gece ortalama fiyat',
+            'available' => 'Bu gece boş oda', 'dirty' => 'Boş kirli', 'queue' => 'Bekleyen odalar'],
+        'pax' => ':n kişi', 'still_expected' => 'daha gelecek', 'rooms_left' => ':n oda daha çıkacak', 'tonight_rooms' => ':total odanın :n tanesi', 'net' => 'Net :amount',
+        'ooo' => 'Arızalı: :n', 'dirty_occupied' => 'Dolu kirli: :n', 'queue_hint' => 'Oda bekleyen misafirler',
+        'forecast' => 'Doluluk tahmini (:days gün)', 'sold' => 'Satılan', 'tentative' => 'Opsiyon', 'free' => 'Boş',
+        'last_closed' => 'Son kapanan gün', 'occupancy_pct' => 'Doluluk', 'rooms_sold' => 'Satılan oda', 'room_revenue' => 'Oda geliri', 'fnb_revenue' => 'Yiyecek içecek',
+        'other_revenue' => 'Diğer gelir', 'total_revenue' => 'Toplam gelir', 'movements' => 'Giriş · çıkış · no-show', 'net_hint' => 'Gelirler KDV hariç (net), gece kapanışından.',
+        'no_audit' => 'Henüz gece kapanışı yapılmadı.', 'list_arrivals' => 'Bugün gelecekler', 'list_departures' => 'Bugün çıkacaklar', 'pax_short' => 'Kişi',
+        'queued' => 'Kuyrukta', 'overdue' => 'Gecikmiş',
+    ],
 ];
