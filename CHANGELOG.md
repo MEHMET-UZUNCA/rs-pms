@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Oda planı: hızlı kayıt (Elektraweb Oda Planı) — içerideki misafirin çubuk menüsünde "Hızlı kayıt" (P): departman kodu, tutar, adet, açıklama; folyoya gitmeden 1. pencereye yazılır (vergi, vardiya, yetki kuralları folyodaki gibi). Oda tipine göre gruplama (Alt+T): odalar tip sırasıyla, her tipin başında ad ve oda sayısı. (M.U)
+
 - Navigatör kolonları kullanıcıya özel (Fidelio grid gibi): Kolonlar (Alt+K) penceresinde kolon seç / gizle, ↑ ↓ ile sırala, alt panel yüksekliği (gizli / küçük / orta / büyük), Varsayılan. Varsayılanda Gece ve Fiyat kodu kapalı (alt panelde görünür) — dizüstü ekranda yatay kaydırma olmaz. Tercihler users.preferences'ta (migration). (M.U)
 
 - Ön büro aksiyonları: kontrol panelindeki bugün gelecek / çıkacak satırlarına tıklayınca (ya da satırda Enter) işlem menüsü — rezervasyon kartı, oda ata (odası yoksa), giriş G (odası varsa), folyo / ödeme B, çıkış O, onay mektubu L, navigatörde aç N; ↑/↓ satır ve menüde gezinme, Esc kapatır. Navigatörde yeni operasyon görünümleri: Opsiyon / bekleme, İptal (bugün iptal edilen ya da gelişi bugün ve sonrası), No-show (son 7 gün); çıkış günü gelmiş misafir için Check Out düğmesi (Alt+O, folyoya gider). (M.U)

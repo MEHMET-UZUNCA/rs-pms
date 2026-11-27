@@ -311,6 +311,12 @@ if (rack) {
             const f = document.getElementById('rack-checkin-form');
             f.action = url;
             f.submit();
+        } else if (action === 'post') {
+            const dialog = document.getElementById('rack-post-dialog');
+            dialog.querySelector('[data-post-reservation]').value = url;
+            dialog.querySelector('[data-post-guest]').textContent = bar.textContent.trim();
+            dialog.hidden = false;
+            dialog.querySelector('[data-autofocus]')?.focus();
         } else {
             location.href = url;
         }
@@ -337,7 +343,7 @@ if (rack) {
     document.addEventListener('keydown', (e) => {
         const bar = menuBar ?? (document.activeElement?.matches?.('[data-bar]') ? document.activeElement : null);
         if (!bar || e.ctrlKey || e.altKey) return;
-        const key = { Enter: 'card', b: 'folio', g: 'checkin', o: 'checkout' }[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+        const key = { Enter: 'card', p: 'post', b: 'folio', g: 'checkin', o: 'checkout' }[e.key.length === 1 ? e.key.toLowerCase() : e.key];
         if (e.key === 'Escape' && menuBar) { e.preventDefault(); e.stopImmediatePropagation(); closeMenu(); bar.focus(); return; }
         if (key === 'card' && !menuBar) { e.preventDefault(); e.stopImmediatePropagation(); const r = bar.getBoundingClientRect(); openMenu(bar, r.left, r.bottom); return; }
         if (key && JSON.parse(bar.dataset.actions || '{}')[key]) { e.preventDefault(); e.stopImmediatePropagation(); closeMenu(); runAction(bar, key); }

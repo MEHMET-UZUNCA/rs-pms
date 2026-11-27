@@ -157,7 +157,8 @@ return [
     ],
 
     'rack' => [
-        'actions' => ['card' => 'Rezervasyon kartı', 'folio' => 'Folyo / ödeme', 'checkin' => 'Giriş yap', 'checkout' => 'Çıkış yap'],
+        'group_by_type' => 'Tipe göre grupla', 'quick_post' => 'Hızlı kayıt',
+        'actions' => ['post' => 'Hızlı kayıt', 'card' => 'Rezervasyon kartı', 'folio' => 'Folyo / ödeme', 'checkin' => 'Giriş yap', 'checkout' => 'Çıkış yap'],
         'moved' => ':name — :room numaralı oda, :from–:to.', 'in_house_arrival' => 'İçerideki misafirin giriş tarihi değişmez; yalnız oda ya da çıkış tarihi değişir.',
         'confirm_move' => 'Rezervasyon :room numaralı odaya, :from – :to tarihlerine taşınsın mı?', 'confirm_resize' => 'Konaklama :from – :to olarak değişsin mi?',
         'resize_hint' => 'Çıkış tarihini değiştirmek için sürükleyin', 'drag_hint' => 'Çubuğu sürükleyerek taşıyın, sağ kenarından çekerek çıkışı değiştirin, boş hücrelerde sürükleyerek yeni rezervasyon açın',

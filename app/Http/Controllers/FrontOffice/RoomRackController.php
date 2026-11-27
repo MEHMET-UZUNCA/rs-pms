@@ -32,14 +32,15 @@ class RoomRackController extends Controller
         $end = $start->addDays($span);   // hariç
         $typeId = (int) $request->query('tip');
         $floorId = (int) $request->query('kat');
+        $grouped = $request->boolean('grup');   // oda tipine göre gruplu
 
         $rooms = DB::table('pms_rooms as r')->join('pms_room_types as t', 't.id', '=', 'r.room_type_id')
             ->leftJoin('pms_floors as f', 'f.id', '=', 'r.floor_id')
             ->where('r.property_id', $property->id)->where('r.is_active', true)->where('r.is_pseudo', false)
             ->when($typeId, fn ($q) => $q->where('r.room_type_id', $typeId))
             ->when($floorId, fn ($q) => $q->where('r.floor_id', $floorId))
-            ->orderBy('r.number')
-            ->get(['r.id', 'r.number', 'r.fo_status', 'r.hk_status', 'r.service_status', 't.code as type_code', 'f.code as floor_code']);
+            ->when($grouped, fn ($q) => $q->orderBy('t.sort')->orderBy('t.code'))->orderBy('r.number')
+            ->get(['r.id', 'r.number', 'r.fo_status', 'r.hk_status', 'r.service_status', 't.code as type_code', 't.name as type_name', 'f.code as floor_code']);
 
         $day = fn ($date) => (int) $start->diffInDays(CarbonImmutable::parse($date), false);
         $bar = function ($from, $to) use ($day, $span) {
@@ -89,7 +90,9 @@ class RoomRackController extends Controller
 
         return view('front-office.room-rack', [
             'rooms' => $rooms, 'bars' => $bars, 'days' => $days, 'start' => $start, 'span' => $span, 'businessDate' => $bd,
-            'typeId' => $typeId, 'floorId' => $floorId,
+            'typeId' => $typeId, 'floorId' => $floorId, 'grouped' => $grouped,
+            'manualCodes' => DB::table('pms_transaction_codes')->where('property_id', $property->id)->whereNotIn('type', ['payment', 'deposit'])->where('is_active', true)
+                ->where('manual_post_allowed', true)->where('disabled_in_billing', false)->whereNull('deleted_at')->orderByRaw('CAST(code AS UNSIGNED)')->get(['code', 'name']),
             'types' => DB::table('pms_room_types')->where('property_id', $property->id)->orderBy('sort')->get(['id', 'code']),
             'floors' => DB::table('pms_floors')->where('property_id', $property->id)->orderBy('code')->get(['id', 'code', 'name']),
         ]);

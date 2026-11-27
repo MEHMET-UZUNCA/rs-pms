@@ -3,7 +3,8 @@
 @php
     $colors = ['in_house' => 'bg-ok', 'confirmed' => 'bg-brand-500', 'tentative' => 'bg-amber-600', 'ooo' => 'bg-slate-500', 'oos' => 'bg-slate-400'];
     $hk = ['clean' => 'bg-ok/15 text-ok', 'dirty' => 'bg-danger/10 text-danger', 'inspected' => 'bg-brand-100 text-brand-700', 'pickup' => 'bg-amber-100 text-amber-800'];
-    $q = fn (array $over) => route('front-office.room-rack', array_filter(array_merge(['bas' => $start->format('d.m.Y'), 'gun' => $span, 'tip' => $typeId ?: null, 'kat' => $floorId ?: null], $over)));
+    $q = fn (array $over) => route('front-office.room-rack', array_filter(array_merge(['bas' => $start->format('d.m.Y'), 'gun' => $span, 'tip' => $typeId ?: null, 'kat' => $floorId ?: null, 'grup' => $grouped ? 1 : null], $over)));
+    $canPost = Gate::allows('permission', 'cashiering.post');
     $cols = 'grid-template-columns: 7.5rem repeat('.$span.', minmax('.($span > 14 ? '2.2rem' : '4.5rem').', 1fr))';
     $canEdit = Gate::allows('permission', 'reservations.edit');
     $canBill = Gate::allows('permission', 'cashiering.billing');
@@ -23,6 +24,8 @@
             @foreach ($types as $t)<option value="{{ $t->id }}" @selected($typeId === (int) $t->id)>{{ $t->code }}</option>@endforeach</select>
         <select name="kat" class="input w-36" onchange="this.form.submit()"><option value="">{{ __('pms.rack.all_floors') }}</option>
             @foreach ($floors as $f)<option value="{{ $f->id }}" @selected($floorId === (int) $f->id)>{{ $f->name }}</option>@endforeach</select>
+        <input type="hidden" name="grup" value="{{ $grouped ? 1 : '' }}">
+        <a href="{{ $q(['grup' => $grouped ? null : 1]) }}" @class(['btn', 'btn-primary' => $grouped]) data-hotkey="alt+t">{{ __('pms.rack.group_by_type') }} <span class="kbd">Alt+T</span></a>
         <div class="ml-auto flex gap-1">
             @foreach (\App\Http\Controllers\FrontOffice\RoomRackController::SPANS as $n)
                 <a href="{{ $q(['gun' => $n]) }}" @class(['btn', 'btn-primary' => $n === $span])>{{ __('pms.rack.days', ['n' => $n]) }}</a>
@@ -43,6 +46,9 @@
         </div>
 
         @foreach ($rooms as $room)
+            @if ($grouped && ($loop->first || $rooms[$loop->index - 1]->type_code !== $room->type_code))
+                <div class="sticky left-0 px-2 py-1 bg-brand-50 border-b border-line text-[12.5px] font-semibold text-brand-700 min-w-max" data-type-group="{{ $room->type_code }}">{{ $room->type_code }} · {{ $room->type_name }} <span class="font-normal text-muted">({{ $rooms->where('type_code', $room->type_code)->count() }})</span></div>
+            @endif
             <div class="grid border-b border-line/60 min-w-max hover:bg-brand-50/40" style="{{ $cols }}" data-room="{{ $room->number }}" data-room-id="{{ $room->id }}">
                 <div class="sticky left-0 z-10 bg-panel px-2 py-1 flex items-center gap-1.5" style="grid-row: 1">
                     <b class="w-9">{{ $room->number }}</b><span class="text-muted w-8">{{ $room->type_code }}</span>
@@ -59,6 +65,7 @@
                             'folio' => $canBill && $b['status'] === 'in_house' ? route('billing.reservation', $b['id']) : null,
                             'checkin' => $canCheckIn && in_array($b['status'], ['confirmed', 'tentative'], true) && $b['arrival'] === $businessDate->toDateString() ? route('reservations.check-in', $b['id']) : null,
                             'checkout' => $canBill && $b['status'] === 'in_house' && $b['departure'] <= $businessDate->toDateString() ? route('billing.reservation', $b['id']) : null,
+                            'post' => $canPost && $b['status'] === 'in_house' ? (string) $b['id'] : null,
                         ]) : [];
                     @endphp
                     <div title="{{ $b['title'] }}" data-kind="{{ $b['kind'] }}" @if ($isRes) data-bar="{{ $b['id'] }}" data-status="{{ $b['status'] }}" data-arrival="{{ $b['arrival'] }}" data-departure="{{ $b['departure'] }}"
@@ -79,12 +86,33 @@
 
     {{-- Çubuk işlem menüsü --}}
     <div id="rack-menu" hidden class="fixed z-50 min-w-44 bg-panel border border-line rounded shadow-lg py-1 text-[13px]" role="menu">
-        @foreach (['card' => 'Enter', 'folio' => 'B', 'checkin' => 'G', 'checkout' => 'O'] as $a => $key)
+        @foreach (['card' => 'Enter', 'post' => 'P', 'folio' => 'B', 'checkin' => 'G', 'checkout' => 'O'] as $a => $key)
             <a data-menu-action="{{ $a }}" role="menuitem" class="flex items-center gap-3 px-3 py-1.5 hover:bg-brand-50 focus:bg-brand-50 outline-none" href="#">{{ __('pms.rack.actions.'.$a) }} <span class="kbd ml-auto">{{ $key }}</span></a>
         @endforeach
     </div>
     <form method="POST" id="rack-move-form" hidden>@csrf<input name="room_id"><input name="arrival_date"><input name="departure_date"></form>
     <form method="POST" id="rack-checkin-form" hidden>@csrf</form>
+    @if ($canPost)
+        {{-- Hızlı kayıt (Elektraweb Oda Planı → hızlı posting): folyoya gitmeden 1. pencereye harcama --}}
+        <div id="rack-post-dialog" data-modal hidden class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+            <form method="POST" action="{{ route('billing.post') }}" class="win w-[28rem] max-w-full" role="dialog" aria-modal="true" aria-labelledby="rack-post-title">
+                @csrf
+                <input type="hidden" name="reservation_id" data-post-reservation><input type="hidden" name="window" value="1">
+                <div class="win-title"><span id="rack-post-title">{{ __('pms.rack.quick_post') }}</span><span class="font-normal text-brand-100 text-[12px]" data-post-guest></span></div>
+                <div class="p-3 grid grid-cols-[6rem_1fr_4rem] gap-2">
+                    <label><span class="field-label">{{ __('pms.billing.department_code') }}</span><input name="code" list="rack-codes" class="input" required autocomplete="off" data-autofocus></label>
+                    <datalist id="rack-codes">@foreach ($manualCodes as $c)<option value="{{ $c->code }}">{{ $c->name }}</option>@endforeach</datalist>
+                    <label><span class="field-label">{{ __('pms.billing.unit_price') }}</span><input name="amount" inputmode="decimal" class="input" required></label>
+                    <label><span class="field-label">{{ __('pms.billing.qty') }}</span><input name="quantity" value="1" inputmode="decimal" class="input"></label>
+                    <label class="col-span-3"><span class="field-label">{{ __('pms.billing.supplement') }}</span><input name="description" maxlength="100" class="input"></label>
+                </div>
+                <div class="flex gap-2 px-3 py-2 border-t border-line">
+                    <button class="btn btn-primary ml-auto">{{ __('pms.billing.post_button') }}</button>
+                    <button type="button" class="btn" data-modal-close data-hotkey="escape">{{ __('pms.common.cancel') }}</button>
+                </div>
+            </form>
+        </div>
+    @endif
 
     <div class="flex flex-wrap items-center gap-3 px-3 py-1.5 border-t border-line text-[12px]">
         @foreach (['in_house', 'confirmed', 'tentative', 'ooo', 'oos'] as $k)

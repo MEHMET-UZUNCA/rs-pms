@@ -70,7 +70,7 @@ class RoomRackTest extends DomainTestCase
         $ozturk = DB::table('pms_reservations as r')->join('pms_profiles as p', 'p.id', '=', 'r.profile_id')->where('p.last_name', 'Öztürk')->value('r.id');
         $this->assertStringContainsString('id="rack-menu"', $html);
         $actions = fn (int $id) => json_decode(html_entity_decode(preg_match('/data-bar="'.$id.'"[^>]*data-actions=\'([^\']*)\'/', $html, $m) ? $m[1] : '{}'), true);
-        $this->assertSame(['card', 'folio'], array_keys($actions($yilmaz)));             // içeride: kart, folyo
+        $this->assertSame(['card', 'folio', 'post'], array_keys($actions($yilmaz)));     // içeride: kart, folyo, hızlı kayıt
         $this->assertSame(['card', 'checkin'], array_keys($actions($ozturk)));            // bugün gelecek, odası var: giriş
         $this->assertStringContainsString('data-new-url=', $html);
     }
@@ -111,5 +111,19 @@ class RoomRackTest extends DomainTestCase
         $this->assertStringContainsString('value="03.12.2026"', $html);
         $this->assertStringContainsString('value="06.12.2026"', $html);
         $this->assertMatchesRegularExpression('/<option value="'.$room->id.'"[^>]*selected/', $html);
+    }
+
+    public function test_group_by_type_and_quick_posting(): void
+    {
+        $html = $this->actingAs($this->user)->get('/oda-plani?grup=1')->assertOk()->getContent();
+        $this->assertGreaterThan(5, substr_count($html, 'data-type-group="'));
+        $this->assertStringContainsString('id="rack-post-dialog"', $html);
+        $yilmaz = DB::table('pms_reservations as r')->join('pms_profiles as p', 'p.id', '=', 'r.profile_id')->where('p.last_name', 'Yılmaz')->value('r.id');
+        $this->assertMatchesRegularExpression('/data-bar="'.$yilmaz.'"[^>]*data-actions=\'[^\']*post/', $html);
+
+        $before = (float) DB::table('pms_folios')->where('reservation_id', $yilmaz)->where('window', 1)->value('balance');
+        $this->actingAs($this->user)->from('/oda-plani?grup=1')->post('/folyo/kayit', ['reservation_id' => $yilmaz, 'window' => 1, 'code' => '510', 'amount' => '100', 'quantity' => '1'])
+            ->assertRedirect('/oda-plani?grup=1')->assertSessionHas('status');
+        $this->assertSame($before + 100, (float) DB::table('pms_folios')->where('reservation_id', $yilmaz)->where('window', 1)->value('balance'));
     }
 }

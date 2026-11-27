@@ -157,7 +157,8 @@ return [
     ],
 
     'rack' => [
-        'actions' => ['card' => 'Reservation card', 'folio' => 'Folio / payment', 'checkin' => 'Check in', 'checkout' => 'Check out'],
+        'group_by_type' => 'Group by type', 'quick_post' => 'Quick posting',
+        'actions' => ['post' => 'Quick posting', 'card' => 'Reservation card', 'folio' => 'Folio / payment', 'checkin' => 'Check in', 'checkout' => 'Check out'],
         'moved' => ':name — room :room, :from–:to.', 'in_house_arrival' => 'The arrival date of an in-house guest cannot change; only the room or the departure date.',
         'confirm_move' => 'Move the reservation to room :room, :from – :to?', 'confirm_resize' => 'Change the stay to :from – :to?',
         'resize_hint' => 'Drag to change the departure date', 'drag_hint' => 'Drag a bar to move it, drag its right edge to change departure, drag over empty cells for a new reservation',
