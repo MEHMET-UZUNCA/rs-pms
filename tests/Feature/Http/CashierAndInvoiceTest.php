@@ -115,4 +115,23 @@ class CashierAndInvoiceTest extends DomainTestCase
         $this->assertSame(1, DB::table('pms_invoices')->count());
         $this->actingAs($this->user)->get("/folyo/rezervasyon/{$this->res->id}")->assertSee('Invoice 000001');
     }
+
+    public function test_account_customers_are_invoiced_in_logo(): void
+    {
+        $folio = DB::table('pms_folios')->where('reservation_id', $this->res->id)->where('window', 1)->first();
+        // City Ledger ile kapanan folyo: cari hesap
+        $this->actingAs($this->user)->post('/folyo/odeme', ['reservation_id' => $this->res->id, 'window' => 1, 'payment_code_id' => $this->tc('903'), 'amount' => '13450'])->assertSessionHas('status');
+        $this->actingAs($this->user)->get("/folyo/rezervasyon/{$this->res->id}")->assertSee('Invoices of account customers are issued in Logo.');
+        $this->actingAs($this->user)->post("/folyo/{$folio->id}/fatura", ['bill_to_name' => 'Örnek Holding'])->assertSessionHas('error');
+        $this->assertSame(0, DB::table('pms_invoices')->count());
+
+        // Bilerek PMS'te
+        $this->actingAs($this->user)->post("/folyo/{$folio->id}/fatura", ['bill_to_name' => 'Örnek Holding', 'force' => '1'])->assertRedirect();
+        $this->assertSame(1, DB::table('pms_invoices')->count());
+
+        // Şirket ödeyen folyo
+        $company = DB::table('pms_profiles')->where('property_id', $this->property)->where('type', 'company')->value('id');
+        DB::table('pms_folios')->where('reservation_id', $this->res->id)->where('window', 1)->update(['payee_profile_id' => $company]);
+        $this->assertNotNull(app(\App\Domain\Cashiering\Services\InvoiceService::class)->accountReason(\App\Domain\Cashiering\Models\Folio::find($folio->id)));
+    }
 }

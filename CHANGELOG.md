@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Fatura yeri kuralı (otel teyidi): anlık (bireysel) müşterilerin faturası PMS'ten, cari hesapların faturası Logo'dan kesilir. Folyonun ödeyeni şirket / acenta / kaynaksa ya da folyo City Ledger ile kapatılmışsa fatura penceresinde uyarı çıkar ve PMS faturası kesilmez; gerekirse "Yine de PMS'te fatura kes" işaretlenir. (M.U)
+
 - Dövizli ödeme: folyoda ödeme formunda döviz seçimi; tutar dövizde girilir, nakitte günün Cash Rate'i (yoksa Posting Rate), kartta Posting Rate ile TL'ye çevrilir; döviz tutarı ve kur kayıtta saklanır, açıklamaya yazılır (ör. "900 Cash EUR 100,00 × 39,0000"). Kuru olmayan dövizde uyarı. (M.U)
 - Kasiyer ve vardiya (Cashiering → Close Cashier): her kullanıcının kasiyer kaydı ilk kayıtta açılır; folyoya elle kayıt / ödeme ilk atıldığında vardiya açılır, kayıtlar vardiyaya bağlanır. Kasa kapanışı ekranı: ödeme kodu × döviz sistem toplamı (TL karşılığıyla), sayılan tutar (boş = sistem), fark, not; kapanınca kasa raporu (yazdırılır). Son vardiyalar listesi; yeni yetki cashiering.shifts ile bütün kasiyerlerin vardiyaları ve raporları (SUP, IT1, FOM, FOS, ACC, AUD). (M.U)
 - Folyo yazdırma (Alt+F, bilgi amaçlı döküm: kalemler, borç / ödeme, bakiye, KDV kırılımı, imza alanları) ve fatura kesme (Alt+I): alıcı adı, vergi dairesi / no, adres profilden gelir, değiştirilebilir; pencerenin faturalanmamış harcamaları faturaya girer ve tekrar faturalanamaz; numara "invoice" serisinden boşluksuz; fatura yazdırma (net, KDV oranına göre matrah ve KDV, genel toplam, ödenen). Folyo ekranında kesilen faturaların bağlantısı. Ortak A4 yazdırma düzeni (Ctrl+P, Esc). (M.U)

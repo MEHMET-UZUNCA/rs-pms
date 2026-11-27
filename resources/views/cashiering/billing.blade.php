@@ -151,6 +151,10 @@
             <label><span class="field-label">{{ __('pms.prof.tax_number') }}</span><input name="bill_to_tax_number" value="{{ $billTo['tax_number'] }}" maxlength="30" class="input"></label>
             <label class="col-span-2"><span class="field-label">{{ __('pms.prof.address') }}</span><input name="bill_to_address" value="{{ $billTo['address'] }}" maxlength="500" class="input"></label>
             <p class="col-span-2 text-[12px] text-muted">{{ __('pms.invoice.hint') }}</p>
+            @if ($accountReason)
+                <div class="col-span-2 flash flash-error !m-0" role="alert">{{ __('pms.invoice.logo_only', ['reason' => $accountReason]) }}</div>
+                <label class="col-span-2 flex items-center gap-2 text-[12px]"><input type="checkbox" name="force" value="1"> {{ __('pms.invoice.force') }}</label>
+            @endif
         </div>
         <div class="flex gap-2 px-3 py-2 border-t border-line">
             <button class="btn btn-primary ml-auto" @disabled($pendingCount === 0)>{{ __('pms.invoice.issue') }}</button>

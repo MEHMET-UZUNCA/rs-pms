@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 /**
  * Fatura (Fidelio Print Invoice): folyonun henüz faturalanmamış harcamaları faturaya girer (ters çevrilenler ve ters kayıtlar hariç),
  * kayıtlar faturaya bağlanır (tekrar faturalanmaz). Numara "invoice" serisinden boşluksuz alınır. Alıcı: folyonun ödeyeni ya da misafir,
- * vergi dairesi / no ve adres profilden; ekranda değiştirilebilir. Logo'ya aktarım ayrı adımdır.
+ * vergi dairesi / no ve adres profilden; ekranda değiştirilebilir.
+ * Otel kuralı: anlık (bireysel) müşterilerin faturası PMS'ten, cari hesapların (şirket / acenta / kaynak ödeyen ya da City Ledger ile
+ * kapanan folyolar) faturası Logo'dan kesilir; böyle bir folyoda PMS faturası ancak bilerek ("yine de PMS'te kes") kesilir.
  */
 class InvoiceService
 {
@@ -31,6 +33,23 @@ class InvoiceService
         ];
     }
 
+    /**
+     * Folyo cari hesaba mı gidiyor? (Faturası Logo'dan kesilir.) Ödeyen şirket / acenta / kaynak profili ya da folyoda City Ledger ödemesi.
+     *
+     * @return string|null  neden (null: anlık müşteri, PMS'te kesilir)
+     */
+    public function accountReason(Folio $folio): ?string
+    {
+        $payee = $folio->payee_profile_id ? DB::table('pms_profiles')->where('id', $folio->payee_profile_id)->first(['type', 'display_name']) : null;
+        if ($payee && in_array($payee->type, ['company', 'travel_agent', 'source'], true)) {
+            return __('pms.invoice.reason_payee', ['name' => $payee->display_name]);
+        }
+        $cityLedger = DB::table('pms_postings as p')->join('pms_transaction_codes as t', 't.id', '=', 'p.transaction_code_id')
+            ->where('p.folio_id', $folio->id)->whereNull('p.reversed_by_id')->whereNull('p.reversal_of_id')->where('t.payment_kind', 'city_ledger')->value('t.code');
+
+        return $cityLedger ? __('pms.invoice.reason_city_ledger', ['code' => $cityLedger]) : null;
+    }
+
     /** Faturalanacak kayıtlar. */
     public function pending(Folio $folio)
     {
@@ -41,8 +60,12 @@ class InvoiceService
     }
 
     /** @param array{name: string, tax_office?: ?string, tax_number?: ?string, address?: ?string, profile_id?: ?int} $billTo */
-    public function issue(Folio $folio, array $billTo, ?int $userId): int
+    public function issue(Folio $folio, array $billTo, ?int $userId, bool $force = false): int
     {
+        if (! $force && ($reason = $this->accountReason($folio))) {
+            throw new PostingException(__('pms.invoice.logo_only', ['reason' => $reason]));
+        }
+
         return DB::transaction(function () use ($folio, $billTo, $userId) {
             $lines = $this->pending($folio);
             if ($lines->isEmpty()) {

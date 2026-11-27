@@ -196,6 +196,7 @@ class BillingController extends Controller
             'currencies' => DB::table('pms_exchange_rates as e')->where('e.property_id', $p)->where('e.rate_type', 'day')->distinct()->orderBy('e.currency_code')->pluck('e.currency_code'),
             'baseCurrency' => app(Property::class)->base_currency,
             'billTo' => $folio ? app(InvoiceService::class)->defaultBillTo($folio) : null,
+            'accountReason' => $folio ? app(InvoiceService::class)->accountReason($folio) : null,
             'invoices' => $folio ? DB::table('pms_invoices')->where('folio_id', $folio->id)->orderBy('id')->get(['id', 'invoice_number', 'total_gross', 'status']) : collect(),
             'pendingCount' => ($pending = $folio ? app(InvoiceService::class)->pending($folio) : collect())->count(), 'pendingAmount' => (float) $pending->sum('amount'),
             'manualCodes' => TransactionCode::where('property_id', $p)->whereNotIn('type', ['payment', 'deposit'])->where('is_active', true)

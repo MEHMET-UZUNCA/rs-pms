@@ -424,6 +424,8 @@ Kaya, Ayşe
         'hint' => 'Müsait = oda − arızalı − satılan − kesin bloklarda kalan. Yeni rezervasyon için sayıya tıklayın.',
     ],
     'invoice' => [
+        'reason_payee' => 'folyonun ödeyeni :name', 'reason_city_ledger' => 'folyo cari hesaba (City Ledger :code) kapatılmış',
+        'logo_only' => 'Cari hesap: :reason. Cari hesapların faturası Logo\'dan kesilir.', 'force' => 'Yine de PMS\'te fatura kes',
         'title' => 'Fatura', 'folio' => 'Folyo', 'no' => 'No', 'info_copy' => 'Bilgi amaçlıdır', 'guest' => 'Misafir', 'charges' => 'Borç', 'payments' => 'Ödeme',
         'total_charges' => 'Toplam harcama', 'total_payments' => 'Toplam ödeme', 'vat' => 'KDV', 'base' => 'Matrah', 'vat_amount' => 'KDV tutarı',
         'info_note' => 'Bu belge fatura değildir. Fiyatlara KDV dahildir.', 'guest_signature' => 'Misafir imzası', 'cashier' => 'Kasiyer',

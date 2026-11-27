@@ -23,11 +23,10 @@ Kayıtta tutarsız görünen, otelde Fidelio'ya bakılıp doğrulanacak bilgiler
 | # | Ne | Şu anki kayıt | Nereden bakılır |
 |---|---|---|---|
 | T1 | 2404 tipi ESF (French) ama açıklaması "Twin"; 2405 tipi EST (Twin) ama açıklaması "French" — yer değiştirmiş olabilir | 2404 ESF, 2405 EST (Fidelio'daki gibi) | Fidelio Rooms → 2404, 2405 ya da odaya bakarak |
-| T4 | Fatura numarası PMS'te ("invoice" serisi, 000001'den) kesiliyor; otelin fatura seri / sıra numarası ve faturanın Logo'da mı PMS'te mi kesileceği | Fatura serisi boş önekli | Muhasebe |
 | T2 | KKTC Merkez Bankası kur adresi geliştirme ortamından açılmıyor | Varsayılan kaynak TCMB | KKTC MB okuyucusu yazılınca otel sunucusunda `php artisan pms:fetch-exchange-rates` denemesi |
 | T3 | Simphony satış kalemi → departman kodu eşlemesi kalem adlarından kuruldu (3 alkollü → BVRG, 4 diğer → outlet Other, 5 → 470, 6 → 513, 7 → 510, 8 → 640). Fidelio IFC8 ayarı (SPH.XML / IFC8 Configuration → Sales) ile karşılaştırılmalı | docs/simphony-protokol.md §6 | IFC8 ekranı ya da ilk gün Fidelio ile yan yana kayıt |
 
-Çözülenler: 1308 = YMT (otel teyidi), oda durumu kuralları (yalnız check-out ve oda değişimi Dirty).
+Çözülenler: fatura yeri — anlık (bireysel) müşteriler PMS'ten, cari hesaplar (şirket / acenta / City Ledger) Logo'dan (otel teyidi); 1308 = YMT (otel teyidi), oda durumu kuralları (yalnız check-out ve oda değişimi Dirty).
 
 ## Alınanlar
 

@@ -46,7 +46,7 @@ class InvoiceController extends Controller
         try {
             $id = $this->invoices->issue($folio, ['name' => $data['bill_to_name'], 'tax_office' => $data['bill_to_tax_office'] ?? null,
                 'tax_number' => $data['bill_to_tax_number'] ?? null, 'address' => $data['bill_to_address'] ?? null,
-                'profile_id' => $this->invoices->defaultBillTo($folio)['profile_id']], $request->user()->id);
+                'profile_id' => $this->invoices->defaultBillTo($folio)['profile_id']], $request->user()->id, $request->boolean('force'));
         } catch (PostingException $e) {
             return back()->with('error', $e->getMessage());
         }

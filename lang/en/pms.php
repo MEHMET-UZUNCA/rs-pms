@@ -424,6 +424,8 @@ Müller, Anna
         'hint' => 'Available = rooms − out of order − sold − remaining in definite blocks. Click a number for a new reservation.',
     ],
     'invoice' => [
+        'reason_payee' => 'the folio is paid by :name', 'reason_city_ledger' => 'the folio is settled to city ledger (:code)',
+        'logo_only' => 'Account customer: :reason. Invoices of account customers are issued in Logo.', 'force' => 'Issue the invoice in PMS anyway',
         'title' => 'Invoice', 'folio' => 'Folio', 'no' => 'No.', 'info_copy' => 'Information copy', 'guest' => 'Guest', 'charges' => 'Charges', 'payments' => 'Payments',
         'total_charges' => 'Total charges', 'total_payments' => 'Total payments', 'vat' => 'VAT', 'base' => 'Base', 'vat_amount' => 'VAT amount',
         'info_note' => 'This is not an invoice. Prices include VAT.', 'guest_signature' => 'Guest signature', 'cashier' => 'Cashier',
