@@ -142,7 +142,7 @@
             @endif
             @can('permission', 'reservations.checkin')
                 <form method="POST" data-confirm="{{ __('pms.res.undo_confirm') }}">@csrf
-                    <button class="btn btn-side w-full" data-needs-selection="res-grid" data-action="undo" data-hotkey="alt+u">{{ __('pms.res.undo_check_in') }} <span class="kbd ml-auto">Alt+U</span></button></form>
+                    <button class="btn btn-side w-full" data-needs-selection="res-grid" data-action="undo" data-hotkey="alt+u"><span class="truncate" title="{{ __('pms.res.undo_check_in') }}">{{ __('pms.res.undo_check_in_short') }}</span> <span class="kbd ml-auto">Alt+U</span></button></form>
             @endcan
             @if ($canCancel)
                 <button type="button" form="cancel-form" class="btn btn-side" data-needs-selection="res-grid" data-action="cancel" data-modal-open="cancel-dialog" data-hotkey="alt+x">{{ __('pms.res.cancel') }} <span class="kbd ml-auto">Alt+X</span></button>

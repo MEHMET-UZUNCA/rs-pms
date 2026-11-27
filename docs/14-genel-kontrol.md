@@ -31,7 +31,7 @@ kurulum / işletim, belgeler. Bulunanların bir kısmı hemen düzeltildi; kalan
 | 1 | ~~**Fidelio veri aktarımı**~~ komut yazıldı: `pms:import-fidelio` (docs/06 §6.4); otelden CSV gelince deneme aktarımı | Profiller, ileri tarihli rezervasyonlar, içerideki misafirler ve açık bakiyeler, FA / cari bakiyeleri olmadan geçiş yapılamaz | PROISV görünümleri hazır; aktarım komutu + doğrulama raporu yazılacak |
 | 2 | ~~**Yedekleme**~~ yapıldı: `pms:backup`, zamanlama, binlog ve geri yükleme (docs/15) | PMS veritabanı her gün ve gün içinde yedeklenmeli; şu an yalnız mimari belgesinde yazıyor, kurulu / denenmiş bir şey yok | Sunucuda günlük `mysqldump` + binlog, başka diske / makineye kopya, haftada bir geri yükleme denemesi |
 | 3 | ~~**Sunucu kurulum belgesi**~~ yapıldı: docs/15 | README yalnız geliştirme kurulumunu anlatıyor | Nginx/PHP-FPM, `.env` (APP_DEBUG=false), cron (`schedule:run`), Simphony dinleyicisi için Supervisor / systemd, log döndürme, HTTPS |
-| 4 | **Raporlar** (ertelenmişti) | Gece kapanışı sonrası en az: gelen / giden / içeride, doluluk, finans (departman kodu dökümü, kasa), kat hizmetleri | Başlangıç seti docs/10-raporlar.md |
+| 4 | ~~**Raporlar**~~ ilk set yapıldı: 18 rapor, Miscellaneous → Reports (docs/10 §10.0) | Gece kapanışı sonrası en az: gelen / giden / içeride, doluluk, finans (departman kodu dökümü, kasa), kat hizmetleri | Başlangıç seti docs/10-raporlar.md |
 | 5 | **Simphony'de tek kayıt yolu** | Canlı akış `MessageHandler`; ChatGPT'nin yerelde yazdığı ikinci yol GitHub'a gelmedi | Gelince birleştirilecek |
 | 6 | **Logo aktarımı** | Muhasebe (cari faturalar, günlük gelir fişi) | Logo REST / firma bilgileri bekleniyor (docs/05) |
 

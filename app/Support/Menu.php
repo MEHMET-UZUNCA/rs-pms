@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -46,7 +47,7 @@ class Menu
             ],
             'profiles' => [['profile_navigator', $can('profiles.view') ? route('profiles.index') : null]],
             'quick_keys' => array_merge(array_map(fn ($k) => [$k['label'], $k['url'], $k['display']], QuickKeys::global()), [['all_shortcuts', route('shortcuts'), 'F1']]),
-            'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['reports', null]],
+            'miscellaneous' => [['night_audit', $can('night_audit.view') ? route('night-audit.index') : null], ['reports', ReportController::canSee() ? route('reports.index') : null, 'Ctrl+Shift+R']],
             'setup' => [
                 ['outlets', $can('setup.outlets') ? route('setup.outlets.index') : null],
                 ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null],

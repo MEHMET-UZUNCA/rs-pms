@@ -2,7 +2,8 @@ const { chromium } = require('playwright');
 const urls = ['/', '/rezervasyon', '/rezervasyon?f=gelecek', '/rezervasyon/yeni', '/rezervasyon/1', '/folyo/rezervasyon/1', '/oda-plani', '/musaitlik', '/bloklar',
   '/profiller', '/profiller/yeni/individual', '/kat-hizmetleri', '/house-status', '/arizali-odalar', '/oda-gecmisi', '/bekleyen-odalar', '/kayip-esya',
   '/istekler', '/oda-degisimleri', '/kasa', '/ogun-sayilari', '/gece-kapanisi', '/kisayollar', '/ayarlar/fiyat-kodlari', '/ayarlar/doviz-kurlari',
-  '/ayarlar/departman-kodlari', '/ayarlar/outletler', '/ayarlar/kullanicilar', '/ayarlar/roller', '/ayarlar/rezervasyon-secenekleri'];
+  '/ayarlar/departman-kodlari', '/ayarlar/outletler', '/ayarlar/kullanicilar', '/ayarlar/roller', '/ayarlar/rezervasyon-secenekleri',
+  '/raporlar', '/raporlar?r=forecast&goster=1', '/raporlar?r=in_house&goster=1', '/raporlar?r=journal&goster=1'];
 (async () => {
   const b = await chromium.launch();
   for (const [w, h] of [[1280, 720], [1366, 768], [1920, 1080]]) {

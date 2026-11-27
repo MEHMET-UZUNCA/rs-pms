@@ -17,6 +17,7 @@ use App\Http\Controllers\Housekeeping\HousekeepingController;
 use App\Http\Controllers\Housekeeping\RoomsManagementController;
 use App\Http\Controllers\Miscellaneous\NightAuditController;
 use App\Http\Controllers\Profiles\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Reservations\AvailabilityController;
 use App\Http\Controllers\Reservations\BlockController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
@@ -169,6 +170,7 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::post('/rezervasyon/{reservation}/depozito/{deposit}', [DepositController::class, 'status'])->whereNumber(['reservation', 'deposit'])->middleware('permission:reservations.edit')->name('reservations.deposits.status');
     Route::post('/rezervasyon/{reservation}/envanter', [ReservationItemController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.items.store');
     Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
+    Route::get('/raporlar', [ReportController::class, 'index'])->name('reports.index');   // yetki rapor grubuna göre denetçide
     Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');
     Route::middleware('permission:setup.options')->prefix('ayarlar/envanter')->name('setup.items.')->group(function () {
         Route::get('/', [ItemController::class, 'index'])->name('index');

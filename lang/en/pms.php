@@ -93,7 +93,7 @@ return [
     ],
 
     'res' => [
-        'reinstate' => 'Reinstate', 'reinstate_confirm' => 'Reinstate the selected reservation?', 'reinstated' => ':name — reservation :no reinstated.', 'undo_check_in' => 'Undo Check In', 'undo_confirm' => 'Undo the check-in of the selected reservation?', 'check_in_undone' => ':name — check-in undone.', 'err_reinstate_status' => 'Only cancelled or no-show reservations can be reinstated.', 'err_reinstate_dates' => 'The stay is over; change the dates on the card first.', 'err_undo_day' => 'Check-in can be undone only on the check-in day.', 'err_undo_postings' => 'The folio has postings; correct or transfer them first.',
+        'reinstate' => 'Reinstate', 'reinstate_confirm' => 'Reinstate the selected reservation?', 'reinstated' => ':name — reservation :no reinstated.', 'undo_check_in' => 'Undo Check In', 'undo_check_in_short' => 'Undo C/I', 'undo_confirm' => 'Undo the check-in of the selected reservation?', 'check_in_undone' => ':name — check-in undone.', 'err_reinstate_status' => 'Only cancelled or no-show reservations can be reinstated.', 'err_reinstate_dates' => 'The stay is over; change the dates on the card first.', 'err_undo_day' => 'Check-in can be undone only on the check-in day.', 'err_undo_postings' => 'The folio has postings; correct or transfer them first.',
         'columns' => 'Columns', 'columns_hint' => 'Choose and order the columns of the list; saved for your user.', 'columns_saved' => 'Your list settings were saved.', 'columns_reset' => 'Default', 'move_up' => 'Move up', 'move_down' => 'Move down', 'panel' => 'Detail panel', 'panels' => ['none' => 'Hidden', 's' => 'Small', 'm' => 'Medium', 'l' => 'Large'], 'cols' => ['room' => 'Room', 'guest' => 'Guest', 'arrival' => 'Arrival', 'departure' => 'Departure', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'company' => 'Company / Agent', 'status' => 'Status', 'balance' => 'Balance', 'conf_no' => 'Conf. No.'],
         'cancel_reason' => 'Cancellation reason', 'cancel_title' => 'Cancel Reservation', 'cancel_confirm' => 'Cancel the selected reservation?', 'cancel_hint' => 'Only reservations that have not arrived can be cancelled. The room is released and a cancellation number is given.', 'cancelled_ok' => ':name — reservation cancelled, cancellation no. :no.',
         'dirty_blocked' => 'Room :room is dirty; check-in is not allowed until housekeeping sets it clean.', 'dirty_warning' => 'Note: room :room is still dirty.',
@@ -241,8 +241,8 @@ return [
         'delete_confirm' => 'Delete the selected role? A role given to users cannot be deleted.',
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
-        'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['setup_audit' => 'Audit log', 'reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping', 'reports' => 'Reports'],
+        'perm' => ['setup_audit' => 'Audit log', 'reports_front_office' => 'Reports: front office and rates', 'reports_housekeeping' => 'Reports: rooms and housekeeping', 'reports_occupancy' => 'Reports: occupancy and manager', 'reports_finance' => 'Reports: cashiering', 'reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -258,7 +258,7 @@ return [
         'global_hint' => 'Work from every screen.', 'move' => 'Move up / down', 'select_row' => 'Select row', 'filters' => 'Filters',
         'tabs' => 'Tabs', 'windows' => 'Folio windows', 'period' => 'Previous / next period', 'reservation_card' => 'Reservation Card',
         'setup_lists' => 'Setup lists (Outlets, Department Codes, Users, Roles)', 'forms' => 'Edit windows',
-        'browser_note' => 'Ctrl+N, Ctrl+T and Ctrl+W are reserved by the browser and may not reach the program; use Alt+Shift+N for New Reservation, or Ctrl+N in the Reservation Navigator.',
+        'browser_note' => 'Ctrl+N, Ctrl+T and Ctrl+W are reserved by the browser and may not reach the program; use Alt+Shift+N for New Reservation, or Ctrl+N in the Reservation Navigator. Ctrl+Shift+R (hard reload) likewise: Alt+Shift+R opens Reports.',
     ],
 
     'options' => [
@@ -580,5 +580,36 @@ Müller, Anna
         'confirm' => 'Delete the personal data of :name permanently? Name, contact, address, documents and card are removed; this cannot be undone.',
         'done' => 'The personal data was deleted; the profile remains as "Anonymous".', 'only_individual' => 'Only guest (individual) profiles can be anonymised.',
         'has_active' => 'The guest has a current or future reservation; anonymise after check-out.',
+    ],
+
+    'reports' => [
+        'title' => 'Reports', 'search' => 'Search report…', 'pick' => 'Choose a report on the left (type to search, Enter opens the first match).',
+        'hint' => 'Set the filters and press F10. Dates: t = business date, +1, 25.11.', 'show' => 'Show', 'total' => 'Total', 'revenue_total' => 'Revenue total',
+        'unassigned' => 'Without room only', 'clean_only' => 'Clean / inspected only', 'due_out' => 'Due out', 'arrival_today' => 'Arrival',
+        'footer' => 'Amounts in :currency (net = without tax); nightly rates in the rate code currency.',
+        'groups' => ['front_office' => 'Front Office', 'housekeeping' => 'Rooms / Housekeeping', 'occupancy' => 'Occupancy', 'finance' => 'Cashiering', 'rates' => 'Rates'],
+        'r' => [
+            'arrivals' => 'Arrivals', 'departures' => 'Departures', 'in_house' => 'In House Guests', 'cancellations' => 'No Shows / Cancellations',
+            'nationality' => 'In House by Nationality', 'free_rooms' => 'Free Rooms', 'room_status' => 'Room Status by Floor', 'out_of_order' => 'Out of Order / Out of Service',
+            'forecast' => 'Occupancy Forecast', 'manager' => 'Manager Report', 'department_totals' => 'Department Code Totals', 'daily_revenue' => 'Daily Revenue',
+            'journal' => 'Posting Journal', 'cashier' => 'Cashier Report (Payments)', 'open_balances' => 'Open Balances (Guest Ledger)', 'tax' => 'Tax Report',
+            'by_rate_code' => 'Reservations by Rate Code', 'rate_discrepancy' => 'Rate Discrepancy (manual rates)',
+        ],
+        'col' => [
+            'room' => 'Room', 'guest' => 'Guest', 'confirmation' => 'Conf. no', 'eta' => 'ETA', 'nights' => 'Nights', 'room_type' => 'Room type', 'persons' => 'Pax',
+            'rate_code' => 'Rate code', 'rate' => 'Rate', 'currency' => 'Cur.', 'agent_company' => 'Agent / company', 'status' => 'Status', 'comment' => 'Comment',
+            'arrival' => 'Arrival', 'departure' => 'Departure', 'checked_out' => 'C/O time', 'balance' => 'Balance', 'nationality' => 'Nat.', 'country' => 'Country',
+            'cancelled_at' => 'Cancelled', 'reason' => 'Reason', 'user' => 'User', 'revenue' => 'Revenue', 'rooms' => 'Rooms', 'adults' => 'Adults', 'children' => 'Children',
+            'share' => 'Share', 'floor' => 'Floor', 'hk_status' => 'HK status', 'fo_status' => 'FO status', 'features' => 'Features', 'outage' => 'OOO/OOS', 'movement' => 'Today',
+            'type' => 'Type', 'from' => 'From', 'to' => 'To', 'note' => 'Note', 'date' => 'Date', 'ooo' => 'OOO', 'sold' => 'Sold', 'tentative' => 'Tentative', 'free' => 'Free',
+            'occupancy' => 'Occ. %', 'arrivals' => 'Arr.', 'departures' => 'Dep.', 'adr' => 'Avg. rate', 'metric' => '', 'day' => 'Day', 'day_ly' => 'Day LY', 'mtd' => 'Month to date',
+            'mtd_ly' => 'MTD LY', 'ytd' => 'Year to date', 'ytd_ly' => 'YTD LY', 'code' => 'Code', 'name' => 'Description', 'count' => 'Count', 'quantity' => 'Qty', 'net' => 'Net',
+            'tax_amount' => 'Tax', 'gross' => 'Gross', 'rev_room' => 'Room', 'rev_food' => 'Food', 'rev_beverage' => 'Beverage', 'rev_other' => 'Other', 'total' => 'Total',
+            'time' => 'Time', 'folio' => 'Folio', 'description' => 'Description', 'amount' => 'Amount', 'foreign' => 'Foreign', 'source' => 'Source', 'amount_fx' => 'Amount',
+            'amount_base' => 'Base amount', 'base' => 'Taxable', 'reservations' => 'Reservations', 'room_nights' => 'Room nights',
+        ],
+        'metric' => ['rooms_available' => 'Rooms available', 'rooms_sold' => 'Rooms sold', 'occupancy' => 'Occupancy %', 'persons' => 'Guests (pax nights)', 'adr' => 'ADR (net)',
+            'revpar' => 'RevPAR', 'room_revenue' => 'Room revenue', 'fnb_revenue' => 'F&B revenue', 'other_revenue' => 'Other revenue', 'total_revenue' => 'Total revenue'],
+        'folio_types' => ['guest' => 'Guest', 'passer_by' => 'Passer-by', 'house_account' => 'House account', 'master' => 'Master', 'ar' => 'AR', 'pseudo_room' => 'Pseudo room', 'event' => 'Event'],
     ],
 ];

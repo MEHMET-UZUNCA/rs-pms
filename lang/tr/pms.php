@@ -93,7 +93,7 @@ return [
     ],
 
     'res' => [
-        'reinstate' => 'Geri al (Reinstate)', 'reinstate_confirm' => 'Seçili rezervasyon geri alınsın mı?', 'reinstated' => ':name — :no numaralı rezervasyon geri alındı.', 'undo_check_in' => 'Girişi geri al', 'undo_confirm' => 'Seçili rezervasyonun girişi geri alınsın mı?', 'check_in_undone' => ':name — giriş geri alındı.', 'err_reinstate_status' => 'Yalnız iptal ya da no-show rezervasyon geri alınır.', 'err_reinstate_dates' => 'Konaklama süresi geçmiş; önce kartta tarihleri değiştirin.', 'err_undo_day' => 'Giriş yalnız giriş günü içinde geri alınır.', 'err_undo_postings' => 'Folyoda kayıt var; önce düzeltin ya da aktarın.',
+        'reinstate' => 'Geri al (Reinstate)', 'reinstate_confirm' => 'Seçili rezervasyon geri alınsın mı?', 'reinstated' => ':name — :no numaralı rezervasyon geri alındı.', 'undo_check_in' => 'Girişi geri al', 'undo_check_in_short' => 'Giriş geri', 'undo_confirm' => 'Seçili rezervasyonun girişi geri alınsın mı?', 'check_in_undone' => ':name — giriş geri alındı.', 'err_reinstate_status' => 'Yalnız iptal ya da no-show rezervasyon geri alınır.', 'err_reinstate_dates' => 'Konaklama süresi geçmiş; önce kartta tarihleri değiştirin.', 'err_undo_day' => 'Giriş yalnız giriş günü içinde geri alınır.', 'err_undo_postings' => 'Folyoda kayıt var; önce düzeltin ya da aktarın.',
         'columns' => 'Kolonlar', 'columns_hint' => 'Listenin kolonlarını seçin ve sıralayın; kullanıcınıza kaydedilir.', 'columns_saved' => 'Liste ayarlarınız kaydedildi.', 'columns_reset' => 'Varsayılan', 'move_up' => 'Yukarı', 'move_down' => 'Aşağı', 'panel' => 'Alt panel', 'panels' => ['none' => 'Gizli', 's' => 'Küçük', 'm' => 'Orta', 'l' => 'Büyük'], 'cols' => ['room' => 'Oda', 'guest' => 'Misafir', 'arrival' => 'Geliş', 'departure' => 'Çıkış', 'nights' => 'Gece', 'room_type' => 'Oda tipi', 'rate_code' => 'Fiyat kodu', 'pax' => 'Kişi', 'company' => 'Şirket / Acenta', 'status' => 'Durum', 'balance' => 'Bakiye', 'conf_no' => 'Onay no'],
         'cancel_reason' => 'İptal nedeni', 'cancel_title' => 'Rezervasyon İptali', 'cancel_confirm' => 'Seçili rezervasyon iptal edilsin mi?', 'cancel_hint' => 'Yalnız gelmemiş rezervasyonlar iptal edilir. Oda boşalır, iptal numarası verilir.', 'cancelled_ok' => ':name — rezervasyon iptal edildi, iptal no :no.',
         'dirty_blocked' => ':room numaralı oda kirli; kat hizmetleri temiz yapana kadar giriş yapılamaz.', 'dirty_warning' => 'Dikkat: :room numaralı oda hâlâ kirli.',
@@ -241,8 +241,8 @@ return [
         'delete_confirm' => 'Seçili rol silinsin mi? Kullanıcıya verilmiş rol silinemez.',
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
-        'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['setup_audit' => 'Değişiklik kaydı', 'reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri', 'reports' => 'Raporlar'],
+        'perm' => ['setup_audit' => 'Değişiklik kaydı', 'reports_front_office' => 'Raporlar: ön büro ve fiyat', 'reports_housekeeping' => 'Raporlar: odalar ve kat hizmetleri', 'reports_occupancy' => 'Raporlar: doluluk ve yönetim', 'reports_finance' => 'Raporlar: kasa / finans', 'reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -258,7 +258,7 @@ return [
         'global_hint' => 'Her ekrandan çalışır.', 'move' => 'Yukarı / aşağı taşı', 'select_row' => 'Satır seç', 'filters' => 'Süzgeçler',
         'tabs' => 'Sekmeler', 'windows' => 'Folyo pencereleri', 'period' => 'Önceki / sonraki dönem', 'reservation_card' => 'Rezervasyon kartı',
         'setup_lists' => 'Ayar listeleri (Outlet, Departman kodu, Kullanıcı, Rol)', 'forms' => 'Düzenleme pencereleri',
-        'browser_note' => 'Ctrl+N, Ctrl+T ve Ctrl+W tarayıcıya ayrılmıştır ve programa ulaşmayabilir; yeni rezervasyon için Alt+Shift+N ya da navigatörde Ctrl+N kullanın.',
+        'browser_note' => 'Ctrl+N, Ctrl+T ve Ctrl+W tarayıcıya ayrılmıştır ve programa ulaşmayabilir; yeni rezervasyon için Alt+Shift+N ya da navigatörde Ctrl+N kullanın. Ctrl+Shift+R (yeniden yükle) de öyle: raporlar için Alt+Shift+R.',
     ],
 
     'options' => [
@@ -580,5 +580,36 @@ Kaya, Ayşe
         'confirm' => ':name kişisel bilgileri kalıcı olarak silinsin mi? Ad, iletişim, adres, belgeler ve kart silinir; geri alınamaz.',
         'done' => 'Kişisel bilgiler silindi; profil "Anonim" olarak kaldı.', 'only_individual' => 'Yalnız misafir (bireysel) profili anonimleştirilir.',
         'has_active' => 'Misafirin güncel ya da ileri tarihli rezervasyonu var; çıkıştan sonra anonimleştirin.',
+    ],
+
+    'reports' => [
+        'title' => 'Raporlar', 'search' => 'Rapor ara…', 'pick' => 'Soldan bir rapor seçin (yazarak arayın, Enter ilk raporu açar).',
+        'hint' => 'Süzgeçleri girip F10\'a basın. Tarih: t = iş günü, +1, 25.11.', 'show' => 'Göster', 'total' => 'Toplam', 'revenue_total' => 'Gelir toplamı',
+        'unassigned' => 'Yalnız odası atanmamış', 'clean_only' => 'Yalnız temiz / kontrollü', 'due_out' => 'Çıkacak', 'arrival_today' => 'Gelecek',
+        'footer' => 'Tutarlar :currency (net = vergisiz); gece fiyatları fiyat kodunun para biriminde.',
+        'groups' => ['front_office' => 'Ön Büro', 'housekeeping' => 'Odalar / Kat Hizmetleri', 'occupancy' => 'Doluluk', 'finance' => 'Kasa / Finans', 'rates' => 'Fiyat'],
+        'r' => [
+            'arrivals' => 'Gelecek misafirler', 'departures' => 'Çıkacak misafirler', 'in_house' => 'İçerideki misafirler', 'cancellations' => 'No-show / iptaller',
+            'nationality' => 'Uyruğa göre içerideki misafirler', 'free_rooms' => 'Boş odalar', 'room_status' => 'Kat kat oda durumu', 'out_of_order' => 'Arızalı / hizmet dışı odalar',
+            'forecast' => 'Doluluk tahmini', 'manager' => 'Yönetim raporu', 'department_totals' => 'Departman kodu toplamları', 'daily_revenue' => 'Günlük gelir',
+            'journal' => 'Kayıt dökümü (journal)', 'cashier' => 'Kasa raporu (ödemeler)', 'open_balances' => 'Açık bakiyeler', 'tax' => 'Vergi raporu',
+            'by_rate_code' => 'Fiyat koduna göre rezervasyonlar', 'rate_discrepancy' => 'Fiyat farkı (elle fiyat)',
+        ],
+        'col' => [
+            'room' => 'Oda', 'guest' => 'Misafir', 'confirmation' => 'Onay no', 'eta' => 'Geliş saati', 'nights' => 'Gece', 'room_type' => 'Oda tipi', 'persons' => 'Kişi',
+            'rate_code' => 'Fiyat kodu', 'rate' => 'Fiyat', 'currency' => 'Döviz', 'agent_company' => 'Acente / şirket', 'status' => 'Durum', 'comment' => 'Not',
+            'arrival' => 'Giriş', 'departure' => 'Çıkış', 'checked_out' => 'Çıkış saati', 'balance' => 'Bakiye', 'nationality' => 'Uyruk', 'country' => 'Ülke',
+            'cancelled_at' => 'İptal', 'reason' => 'Neden', 'user' => 'Kullanıcı', 'revenue' => 'Gelir', 'rooms' => 'Oda', 'adults' => 'Yetişkin', 'children' => 'Çocuk',
+            'share' => 'Pay', 'floor' => 'Kat', 'hk_status' => 'Temizlik', 'fo_status' => 'Ön büro', 'features' => 'Özellikler', 'outage' => 'OOO/OOS', 'movement' => 'Bugün',
+            'type' => 'Tür', 'from' => 'Başlangıç', 'to' => 'Bitiş', 'note' => 'Açıklama', 'date' => 'Tarih', 'ooo' => 'Arızalı', 'sold' => 'Satılan', 'tentative' => 'Opsiyon', 'free' => 'Boş',
+            'occupancy' => 'Doluluk %', 'arrivals' => 'Giriş', 'departures' => 'Çıkış', 'adr' => 'Ort. fiyat', 'metric' => '', 'day' => 'Gün', 'day_ly' => 'Gün GY', 'mtd' => 'Ay başından',
+            'mtd_ly' => 'Ay GY', 'ytd' => 'Yıl başından', 'ytd_ly' => 'Yıl GY', 'code' => 'Kod', 'name' => 'Açıklama', 'count' => 'Adet', 'quantity' => 'Miktar', 'net' => 'Net',
+            'tax_amount' => 'Vergi', 'gross' => 'Brüt', 'rev_room' => 'Oda', 'rev_food' => 'Yiyecek', 'rev_beverage' => 'İçecek', 'rev_other' => 'Diğer', 'total' => 'Toplam',
+            'time' => 'Saat', 'folio' => 'Folyo', 'description' => 'Açıklama', 'amount' => 'Tutar', 'foreign' => 'Döviz', 'source' => 'Kaynak', 'amount_fx' => 'Tutar',
+            'amount_base' => 'TL karşılığı', 'base' => 'Matrah', 'reservations' => 'Rezervasyon', 'room_nights' => 'Oda gecesi',
+        ],
+        'metric' => ['rooms_available' => 'Satılabilir oda', 'rooms_sold' => 'Satılan oda', 'occupancy' => 'Doluluk %', 'persons' => 'Kişi geceleme', 'adr' => 'Ortalama oda fiyatı (net)',
+            'revpar' => 'RevPAR', 'room_revenue' => 'Oda geliri', 'fnb_revenue' => 'Yiyecek-içecek geliri', 'other_revenue' => 'Diğer gelir', 'total_revenue' => 'Toplam gelir'],
+        'folio_types' => ['guest' => 'Misafir', 'passer_by' => 'Passer-by', 'house_account' => 'Otel hesabı', 'master' => 'Master', 'ar' => 'Cari', 'pseudo_room' => 'Sanal oda', 'event' => 'Etkinlik'],
     ],
 ];

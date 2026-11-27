@@ -35,7 +35,7 @@ class QuickKeysTest extends DomainTestCase
         $this->assertStringContainsString('data-hotkey="ctrl+n alt+shift+n" data-hotkey-global', $html);
         $this->assertStringContainsString('href="'.route('shortcuts').'" data-hotkey="f1" data-hotkey-global', $html);
         $this->assertStringContainsString('href="'.route('front-office.house-status').'" data-hotkey="ctrl+h" data-hotkey-global', $html);
-        $this->assertStringNotContainsString('data-hotkey="ctrl+shift+r" data-hotkey-global', $html);   // Reports henüz yok
+        $this->assertStringContainsString('href="'.route('reports.index').'" data-hotkey="ctrl+shift+r alt+shift+r" data-hotkey-global', $html);
     }
 
     public function test_hotkeys_follow_permissions(): void

@@ -1,6 +1,6 @@
 # 10. Raporlar
 
-**İlke:** Fidelio'daki gibi tek bir rapor ekranı (Miscellaneous → Reports, `Ctrl+Shift+R`), ama yalnız otelin kullandığı raporlar.
+**İlke:** Fidelio'daki gibi tek bir rapor ekranı (Miscellaneous → Reports, `Ctrl+Shift+R`; tarayıcı bunu "yeniden yükle" olarak alırsa `Alt+Shift+R`), ama yalnız otelin kullandığı raporlar.
 Fidelio'nun yüzlerce hazır raporu taşınmaz; aşağıdaki başlangıç seti yapılır, eksik görülen rapor sonra eklenir.
 
 ## 10.1 Kaynaklar
@@ -14,6 +14,23 @@ Fidelio'nun yüzlerce hazır raporu taşınmaz; aşağıdaki başlangıç seti y
 | Elektraweb yardım — Kapalı Oda Listesi, HK Oda İşlemleri, Maid Yönetimi, Ön Kasa | Kapalı odalar Geçmiş / Güncel / İptal; uyuşmazlık raporu; kasa: para birimi ve kullanıcı bazında toplamlar, kasa işlemleri detayı |
 | Fidelio Reports ekranı (fiyat raporları, 26.11.2026) | C4330, P4473, P4333, P4324, P4329, P4341, P4039, P4326, P4375 → aşağıda "Fiyat" |
 | Athena | Bekleniyor (rapor sayfası bağlantısı ya da ekran görüntüsü) |
+
+## 10.0 Durum (27.11.2026)
+
+Rapor ekranı yapıldı: solda yetkiye göre rapor ağacı ve arama (yaz + Enter), sağda süzgeçler, `F10` göster, `Alt+P` yazdır (A4; geniş raporlar
+yatay), `Alt+X` Excel için CSV (UTF-8, `;` ayraçlı, virgüllü ondalık). Yetkiler grup başına: `reports.front_office` (fiyat raporları dahil),
+`reports.housekeeping`, `reports.occupancy`, `reports.finance`. Aşağıdaki setten yapılanlar:
+
+| Yapıldı | Rapor |
+|---|---|
+| FO1–FO5 | Arrivals (odası atanmamış süzgeci), Departures (bakiye), In House (bugünkü fiyat, bakiye), No Show / Cancellations, uyruğa göre |
+| HK1–HK3 | Free Rooms (tarih aralığında gecesi ve arızası olmayan, yalnız temiz süzgeci, özellikler), Room Status by Floor (bugün çıkacak / gelecek), OOO / OOS |
+| OC1, OC3 | Occupancy Forecast (gün gün oda, arızalı, satılan, opsiyon, boş, doluluk, giriş, çıkış, kişi, gelir, ortalama fiyat), Manager Report (gün / ay / yıl başından, geçen yılla) |
+| FI1, FI2, FI4–FI7 | Departman kodu toplamları (adet, net, vergi, brüt), günlük gelir (oda / yiyecek / içecek / diğer), kayıt dökümü, kasa raporu (kullanıcı × ödeme kodu × döviz), açık bakiyeler, vergi raporu |
+| RT1, RT4 | Fiyat koduna göre rezervasyonlar (oda gecesi, gelir, ortalama), fiyat farkı (elle girilen gece fiyatları) |
+
+Kalanlar: HK4 (oda geçmişi ekranı zaten var: Rooms Management → Room History), OC2, FI3, RT2–RT9 ve gece kapanışında saklanan rapor paketi —
+otel kullandığı raporları bildirince. Gelir rakamları folyo kayıtlarından nettir (vergisiz); satılan oda gece satırlarından (iptal ve günübirlik hariç).
 
 ## 10.2 Başlangıç rapor seti
 

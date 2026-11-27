@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -25,7 +26,7 @@ class QuickKeys
             ['in_house', 'ctrl+i', 'Ctrl+I', $can('reservations.view') ? route('reservations.navigator', ['f' => 'iceride']) : null],
             ['new_reservation', 'ctrl+n alt+shift+n', 'Ctrl+N', $can('reservations.edit') ? route('reservations.create') : null],
             ['profiles', 'ctrl+p', 'Ctrl+P', $can('profiles.view') ? route('profiles.index') : null],
-            ['reports', 'ctrl+shift+r', 'Ctrl+Shift+R', null],
+            ['reports', 'ctrl+shift+r alt+shift+r', 'Ctrl+Shift+R', ReportController::canSee() ? route('reports.index') : null],
             ['room_rack', 'ctrl+l', 'Ctrl+L', $can('reservations.view') ? route('front-office.room-rack') : null],
             ['update_reservation', 'ctrl+u', 'Ctrl+U', $can('reservations.view') ? route('reservations.navigator') : null],
         ];
