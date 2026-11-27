@@ -91,6 +91,10 @@
                             </select></label>
                         <label class="w-28"><span class="field-label">{{ __('pms.billing.amount') }}</span>
                             <input name="amount" value="{{ number_format(max(0, (float) ($folio?->balance ?? 0)), 2, '.', '') }}" inputmode="decimal" class="input" required></label>
+                        <label class="w-20"><span class="field-label">{{ __('pms.cashier.currency') }}</span>
+                            <select name="currency_code" class="input @error('currency_code') input-error @enderror" title="{{ __('pms.billing.currency_hint') }}">
+                                <option value="">{{ $baseCurrency }}</option>@foreach ($currencies as $cur)@if ($cur !== $baseCurrency)<option value="{{ $cur }}" @selected(old('currency_code') === $cur)>{{ $cur }}</option>@endif @endforeach
+                            </select></label>
                         <button class="btn btn-primary">{{ __('pms.billing.pay_button') }}</button>
                     </form>
                 </div>
@@ -122,8 +126,37 @@
             @if (! $reservation && $folio && Gate::allows('permission', 'cashiering.accounts'))
                 <a href="{{ route('accounts.edit', $folio) }}" class="btn btn-side mt-3" data-hotkey="alt+a">{{ __('pms.fa.edit') }} <span class="kbd ml-auto">Alt+A</span></a>
             @endif
+            @if ($folio)
+                <a href="{{ route('billing.print', $folio) }}" class="btn btn-side mt-3" data-hotkey="alt+f">{{ __('pms.invoice.print_folio') }} <span class="kbd ml-auto">Alt+F</span></a>
+                @if ($canPost)
+                    <button type="button" class="btn btn-side" data-modal-open="invoice-dialog" data-hotkey="alt+i">{{ __('pms.invoice.issue') }} <span class="kbd ml-auto">Alt+I</span></button>
+                @endif
+                @foreach ($invoices as $inv)
+                    <a href="{{ route('invoices.show', $inv->id) }}" class="text-[12px] text-brand-600 hover:underline px-1">{{ __('pms.invoice.title') }} {{ $inv->invoice_number }} · {{ number_format((float) $inv->total_gross, 2, ',', '.') }}</a>
+                @endforeach
+            @endif
             <a href="{{ route('reservations.navigator', $reservation ? ['secili' => $reservation->id] : ['f' => 'fa']) }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </div>
 </div>
+@if ($folio && $canPost)
+{{-- Fatura kes: alıcı bilgileri profilden gelir, değiştirilebilir --}}
+<div id="invoice-dialog" data-modal hidden class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <form method="POST" action="{{ route('billing.invoice', $folio) }}" class="win w-[32rem] max-w-full" role="dialog" aria-modal="true" aria-labelledby="invoice-title">
+        @csrf
+        <div class="win-title"><span id="invoice-title">{{ __('pms.invoice.issue') }}</span><span class="font-normal text-brand-100 text-[12px]">{{ __('pms.invoice.pending', ['count' => $pendingCount, 'amount' => number_format($pendingAmount, 2, ',', '.')]) }}</span></div>
+        <div class="p-3 grid grid-cols-2 gap-2">
+            <label class="col-span-2"><span class="field-label">{{ __('pms.invoice.bill_to') }} *</span><input name="bill_to_name" value="{{ $billTo['name'] }}" maxlength="250" class="input" required data-autofocus></label>
+            <label><span class="field-label">{{ __('pms.prof.tax_office') }}</span><input name="bill_to_tax_office" value="{{ $billTo['tax_office'] }}" maxlength="100" class="input"></label>
+            <label><span class="field-label">{{ __('pms.prof.tax_number') }}</span><input name="bill_to_tax_number" value="{{ $billTo['tax_number'] }}" maxlength="30" class="input"></label>
+            <label class="col-span-2"><span class="field-label">{{ __('pms.prof.address') }}</span><input name="bill_to_address" value="{{ $billTo['address'] }}" maxlength="500" class="input"></label>
+            <p class="col-span-2 text-[12px] text-muted">{{ __('pms.invoice.hint') }}</p>
+        </div>
+        <div class="flex gap-2 px-3 py-2 border-t border-line">
+            <button class="btn btn-primary ml-auto" @disabled($pendingCount === 0)>{{ __('pms.invoice.issue') }}</button>
+            <button type="button" class="btn" data-modal-close data-hotkey="escape">{{ __('pms.common.cancel') }}</button>
+        </div>
+    </form>
+</div>
+@endif
 @endsection

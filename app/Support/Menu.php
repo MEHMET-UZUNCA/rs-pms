@@ -34,7 +34,7 @@ class Menu
                 ['lost_found', $can('front_office.lost_found') ? route('lost-found.index') : null],
                 ['room_rack', $can('reservations.view') ? route('front-office.room-rack') : null],
             ],
-            'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', null]],
+            'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', $can('cashiering.post') ? route('cashier.index') : null]],
             'housekeeping' => [
                 ['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null],
                 ['out_of_order', $can('housekeeping.view') ? route('rooms.out-of-order') : null],

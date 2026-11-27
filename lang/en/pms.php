@@ -138,6 +138,7 @@ return [
     ],
 
     'billing' => [
+        'no_rate' => 'No exchange rate for :currency today; enter it in Setup → Exchange Rates.', 'currency_hint' => 'Amount in the chosen currency; converted with today\'s rate (cash payments: cash rate).',
         'title' => 'Billing', 'fa_title' => 'Billing — :name', 'window' => 'Window :n', 'empty_window' => 'No postings in this window.',
         'total_balance' => 'Total balance', 'balance' => 'Balance', 'date' => 'Date', 'code' => 'Dept.', 'description' => 'Description', 'qty' => 'Qty',
         'amount' => 'Amount', 'reference' => 'Reference', 'user' => 'User', 'reversed' => 'reversed', 'show_reversed' => 'Show corrections',
@@ -228,7 +229,7 @@ return [
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping'],
-        'perm' => ['cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'perm' => ['cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -421,5 +422,22 @@ Müller, Anna
         'rows' => ['avail' => 'Available', 'sold' => 'Sold', 'tentative' => 'Tentative', 'blocks' => 'Remaining in blocks', 'ooo' => 'Out of order', 'occupancy' => 'Occupancy %'],
         'cell' => ':physical rooms − :ooo OOO − :sold sold − :blocks in blocks (tentative :tentative)',
         'hint' => 'Available = rooms − out of order − sold − remaining in definite blocks. Click a number for a new reservation.',
+    ],
+    'invoice' => [
+        'title' => 'Invoice', 'folio' => 'Folio', 'no' => 'No.', 'info_copy' => 'Information copy', 'guest' => 'Guest', 'charges' => 'Charges', 'payments' => 'Payments',
+        'total_charges' => 'Total charges', 'total_payments' => 'Total payments', 'vat' => 'VAT', 'base' => 'Base', 'vat_amount' => 'VAT amount',
+        'info_note' => 'This is not an invoice. Prices include VAT.', 'guest_signature' => 'Guest signature', 'cashier' => 'Cashier',
+        'bill_to' => 'Bill to', 'net' => 'Net', 'gross' => 'Total', 'total_net' => 'Total net', 'total_vat' => 'Total VAT', 'total' => 'Grand total', 'paid' => 'Paid',
+        'received_by' => 'Received by', 'issued_by' => 'Issued by', 'cancelled' => 'CANCELLED', 'print_folio' => 'Print folio', 'issue' => 'Invoice',
+        'pending' => ':count items not invoiced · :amount', 'nothing' => 'There are no charges on this folio that are not invoiced yet.',
+        'hint' => 'All charges of this window that are not invoiced yet go on the invoice; they cannot be invoiced again. The number comes from the invoice series.',
+    ],
+    'cashier' => [
+        'title' => 'Close Cashier', 'cashier' => 'Cashier', 'open_shift' => 'Open shift', 'opened' => 'Opened', 'closed' => 'Closed', 'preview' => 'Preview report',
+        'currency' => 'Currency', 'count' => 'Items', 'system' => 'System', 'counted' => 'Counted', 'difference' => 'Difference', 'base_amount' => 'In base currency',
+        'no_payments' => 'No payments in this shift.', 'count_hint' => 'Enter the counted cash; an empty field is taken as the system amount. Differences are written on the report.',
+        'charges' => 'Charges posted in this shift', 'notes' => 'Notes', 'close' => 'Close shift', 'close_confirm' => 'Close the shift? Later postings open a new shift.',
+        'no_open' => 'You have no open shift. A shift opens with your first posting or payment on a folio.', 'recent' => 'My recent shifts', 'recent_all' => 'Recent shifts (all cashiers)',
+        'statuses' => ['open' => 'Open', 'closed' => 'Closed'], 'closed_ok' => 'Shift closed.', 'report' => 'Cashier report', 'payments' => 'Payments', 'supervisor' => 'Supervisor',
     ],
 ];

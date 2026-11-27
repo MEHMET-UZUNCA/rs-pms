@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Cashiering;
 use App\Domain\Cashiering\Exceptions\PostingException;
 use App\Domain\Cashiering\Models\Folio;
 use App\Domain\Cashiering\Models\Posting;
+use App\Domain\Cashiering\Services\CashierService;
 use App\Domain\Cashiering\Services\FolioService;
+use App\Domain\Cashiering\Services\InvoiceService;
 use App\Domain\Cashiering\Services\PostingService;
 use App\Domain\Core\Models\Property;
+use App\Domain\Core\Services\ExchangeRateService;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
@@ -24,7 +27,7 @@ use Illuminate\View\View;
  */
 class BillingController extends Controller
 {
-    public function __construct(private readonly PostingService $postings, private readonly FolioService $folios) {}
+    public function __construct(private readonly PostingService $postings, private readonly FolioService $folios, private readonly CashierService $cashiers) {}
 
     public function reservation(Request $request, Reservation $reservation): View
     {
@@ -63,25 +66,45 @@ class BillingController extends Controller
 
         return $this->run($request, function (Folio $folio) use ($code, $data, $request) {
             $posting = $this->postings->charge($folio, $code, (float) $data['amount'], (float) ($data['quantity'] ?? 1), ($data['description'] ?? null) ?: null,
-                ['posted_by' => $request->user()->id, 'source' => 'manual']);
+                ['posted_by' => $request->user()->id, 'source' => 'manual', 'cashier_shift_id' => $this->cashiers->shiftFor($folio->property_id, $request->user())->id]);
 
             return __('pms.billing.posted', ['code' => $code->code, 'name' => $code->name, 'amount' => self::money($posting->amount)]);
         });
     }
 
-    public function payment(Request $request): RedirectResponse
+    /**
+     * Ödeme. Döviz seçilirse tutar o dövizdedir: nakitte geçerli günün Cash Rate'i (yoksa Posting Rate), diğerlerinde Posting Rate ile
+     * TL'ye çevrilir; döviz tutarı ve kur kayıtta saklanır (kasa kapanışında döviz olarak sayılır).
+     */
+    public function payment(Request $request, ExchangeRateService $rates): RedirectResponse
     {
-        $p = app(Property::class)->id;
+        $property = app(Property::class);
         $data = $request->validate([
             'payment_code_id' => ['required', 'integer'], 'amount' => ['required', 'numeric', 'not_in:0', 'min:-99999999', 'max:99999999'],
-            'description' => ['nullable', 'string', 'max:100'],
+            'currency_code' => ['nullable', 'string', 'size:3', 'exists:pms_currencies,code'], 'description' => ['nullable', 'string', 'max:100'],
         ], [], ['payment_code_id' => __('pms.billing.payment_code'), 'amount' => __('pms.billing.amount')]);
-        $code = TransactionCode::where('property_id', $p)->whereKey($data['payment_code_id'])->whereIn('type', ['payment', 'deposit'])->where('is_active', true)->firstOrFail();
+        $code = TransactionCode::where('property_id', $property->id)->whereKey($data['payment_code_id'])->whereIn('type', ['payment', 'deposit'])->where('is_active', true)->firstOrFail();
+        $currency = strtoupper($data['currency_code'] ?? '') ?: ($code->currency_code ?: $property->base_currency);
+        $attributes = ['posted_by' => $request->user()->id];
+        $amount = (float) $data['amount'];
+        $label = self::money($amount);
+        if ($currency !== $property->base_currency) {
+            $rate = $rates->current($property->id, $currency);
+            $value = $rate ? (float) (in_array($code->payment_kind, ['cash', 'foreign_cash'], true) ? ($rate->cash_rate ?: $rate->posting_rate) : $rate->posting_rate) : 0.0;
+            if ($value <= 0) {
+                return back()->withInput()->withErrors(['currency_code' => __('pms.billing.no_rate', ['currency' => $currency])]);
+            }
+            $attributes += ['foreign_currency' => $currency, 'foreign_amount' => -round($amount, 2), 'foreign_unit_price' => round($amount, 2), 'exchange_rate' => $value];
+            $label = $currency.' '.self::money($amount).' × '.number_format($value, 4, ',', '.');
+            $data['description'] = ($data['description'] ?? null) ?: $code->name.' '.$label;
+            $amount = round($amount * $value, 2);
+        }
 
-        return $this->run($request, function (Folio $folio) use ($code, $data, $request) {
-            $this->postings->payment($folio, $code, (float) $data['amount'], ($data['description'] ?? null) ?: null, ['posted_by' => $request->user()->id]);
+        return $this->run($request, function (Folio $folio) use ($code, $data, $request, $amount, $attributes, $label) {
+            $this->postings->payment($folio, $code, $amount, ($data['description'] ?? null) ?: null,
+                $attributes + ['cashier_shift_id' => $this->cashiers->shiftFor($folio->property_id, $request->user())->id]);
 
-            return __('pms.billing.paid', ['amount' => self::money($data['amount']).' ('.$code->name.')']);
+            return __('pms.billing.paid', ['amount' => $label.' ('.$code->name.')']);
         });
     }
 
@@ -170,6 +193,11 @@ class BillingController extends Controller
             'showReversed' => $showReversed,
             'paymentCodes' => TransactionCode::where('property_id', $p)->whereIn('type', ['payment', 'deposit'])->where('is_active', true)
                 ->where('disabled_in_payments', false)->orderByRaw('CAST(code AS UNSIGNED)')->get(['id', 'code', 'name']),
+            'currencies' => DB::table('pms_exchange_rates as e')->where('e.property_id', $p)->where('e.rate_type', 'day')->distinct()->orderBy('e.currency_code')->pluck('e.currency_code'),
+            'baseCurrency' => app(Property::class)->base_currency,
+            'billTo' => $folio ? app(InvoiceService::class)->defaultBillTo($folio) : null,
+            'invoices' => $folio ? DB::table('pms_invoices')->where('folio_id', $folio->id)->orderBy('id')->get(['id', 'invoice_number', 'total_gross', 'status']) : collect(),
+            'pendingCount' => ($pending = $folio ? app(InvoiceService::class)->pending($folio) : collect())->count(), 'pendingAmount' => (float) $pending->sum('amount'),
             'manualCodes' => TransactionCode::where('property_id', $p)->whereNotIn('type', ['payment', 'deposit'])->where('is_active', true)
                 ->where('manual_post_allowed', true)->where('disabled_in_billing', false)->orderByRaw('CAST(code AS UNSIGNED)')->get(['code', 'name']),
         ]);

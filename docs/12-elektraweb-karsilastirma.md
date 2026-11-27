@@ -17,9 +17,9 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 5 | Oda planından çıkmadan tahsilat, folyo, check-out | Oda planında çubuk menüsü: kart, folyo / ödeme, giriş, çıkış | Var | |
 | 6 | Oda durumları temizlik ve doluluğa göre renkli | Housekeeping ve Room Rack renkli | Var | |
 | 7 | Profil eşleştirme, mükerrer profil bulma ve birleştirme | Profil arama; tabloda merged_into_id hazır | Kısmen | **Profil birleştirme** (Fidelio Merge): aynı ad / doğum tarihi / belge no / e-posta ile aday listesi, rezervasyon ve geçmiş tek profile taşınır |
-| 8 | Folyo: ödeme, posting, faturalama aynı ekranda | Billing: kayıt, ödeme, düzeltme, aktarma, 8 pencere, check-out | Kısmen | **Fatura / folyo yazdırma** (PDF), fatura no serisi |
-| 9 | Birden fazla para biriminde işlem | Kur tablosu (TCMB, marjlı); ödeme TL | Kısmen | **Dövizli ödeme** (EUR/GBP/USD nakit, kur ve TL karşılığı folyoda) |
-| 10 | Cari hesap, kasa takibi, çek/senet vade | PM / sanal hesaplar; Logo entegrasyonu planlı | Kısmen | **Kasa (vardiya) kapanışı**: kasiyer bazında ödeme tipleri toplamı. Cari ve çek/senet Logo'da kalır |
+| 8 | Folyo: ödeme, posting, faturalama aynı ekranda | Billing: kayıt, ödeme, düzeltme, aktarma, 8 pencere, check-out; folyo yazdırma, fatura kesme ve yazdırma | Var | Faturanın Logo'ya aktarımı Logo entegrasyonuyla |
+| 9 | Birden fazla para biriminde işlem | Dövizli ödeme (nakitte Cash Rate, diğerinde Posting Rate), döviz tutarı ve kur kayıtta | Var | |
+| 10 | Cari hesap, kasa takibi, çek/senet vade | Kasiyer vardiyası ve kasa kapanışı (sayılan / fark, rapor); PM hesapları | Var | Cari ve çek/senet Logo'da kalır |
 | 11 | E-Fatura / E-Arşiv | — | Gerek yok | KKTC'de GİB e-fatura yok; fatura Logo'dan |
 | 12 | Kat hizmetleri: temizlik durumu, minibar, arıza bildirimi | Housekeeping, OOO/OOS, House Status, Lost & Found; minibar Simphony RVC 5 | Var | Kat görevlisine oda dağıtımı (Attendants) otel kullanmıyor |
 | 13 | Online rezervasyon motoru, kanal yönetimi; gelen rezervasyon ön büroda | Web API v1 (fiyat, müsaitlik); web sitesi ayrı proje | Kısmen | Web'den **rezervasyon yazma** API'si ve ön büroda "yeni web rezervasyonları" listesi; kanal yöneticisi tabloları hazır, bağlantı sonra |
@@ -39,7 +39,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 2. ~~Ön büro kontrol paneli (#1)~~ — yapıldı.
 3. ~~Grup / blok rezervasyon ve routing (#19)~~ — yapıldı. Sonra: toplu çıkış, kotanın gece gece düzenlenmesi, opsiyon tarihinde otomatik bırakma (release).
 4. ~~Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3)~~ — yapıldı.
-5. Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10).
+5. ~~Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10)~~ — yapıldı.
 6. Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21).
 7. Misafir istekleri / şikâyetler (#14).
 8. Web rezervasyon yazma API'si, online check-in, kimlik okuyucu (#13, #15, #16) — web projesi ve donanımla birlikte.

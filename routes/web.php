@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Cashiering\BillingController;
+use App\Http\Controllers\Cashiering\CashierController;
+use App\Http\Controllers\Cashiering\InvoiceController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
@@ -243,5 +245,15 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/kayit/{posting}/duzelt', [BillingController::class, 'correct'])->middleware('permission:cashiering.reverse')->name('correct');
         Route::post('/kayit/{posting}/aktar', [BillingController::class, 'transfer'])->middleware('permission:cashiering.post')->name('transfer');
         Route::post('/rezervasyon/{reservation}/cikis', [BillingController::class, 'checkOut'])->middleware('permission:reservations.checkout')->name('check-out');
+        Route::get('/{folio}/yazdir', [InvoiceController::class, 'folio'])->whereNumber('folio')->name('print');
+        Route::post('/{folio}/fatura', [InvoiceController::class, 'issue'])->whereNumber('folio')->middleware('permission:cashiering.post')->name('invoice');
+    });
+    Route::get('/fatura/{invoice}', [InvoiceController::class, 'show'])->whereNumber('invoice')->middleware('permission:cashiering.billing')->name('invoices.show');
+
+    // Cashiering → Close Cashier
+    Route::middleware('permission:cashiering.post')->prefix('kasa')->name('cashier.')->group(function () {
+        Route::get('/', [CashierController::class, 'index'])->name('index');
+        Route::post('/kapat', [CashierController::class, 'close'])->name('close');
+        Route::get('/vardiya/{shift}', [CashierController::class, 'report'])->whereNumber('shift')->name('report');
     });
 });

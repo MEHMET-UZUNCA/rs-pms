@@ -138,6 +138,7 @@ return [
     ],
 
     'billing' => [
+        'no_rate' => 'Bugün için :currency kuru yok; Ayarlar → Döviz kurlarından girin.', 'currency_hint' => 'Tutar seçilen dövizdedir; bugünün kuruyla çevrilir (nakitte efektif kur).',
         'title' => 'Folyo', 'fa_title' => 'Folyo — :name', 'window' => ':n. pencere', 'empty_window' => 'Bu pencerede kayıt yok.',
         'total_balance' => 'Toplam bakiye', 'balance' => 'Bakiye', 'date' => 'Tarih', 'code' => 'Kod', 'description' => 'Açıklama', 'qty' => 'Adet',
         'amount' => 'Tutar', 'reference' => 'Referans', 'user' => 'Kullanıcı', 'reversed' => 'iptal edildi', 'show_reversed' => 'Düzeltmeleri göster',
@@ -228,7 +229,7 @@ return [
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri'],
-        'perm' => ['cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'perm' => ['cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -421,5 +422,22 @@ Kaya, Ayşe
         'rows' => ['avail' => 'Müsait', 'sold' => 'Satılan', 'tentative' => 'Opsiyon', 'blocks' => 'Blokta kalan', 'ooo' => 'Arızalı', 'occupancy' => 'Doluluk %'],
         'cell' => ':physical oda − :ooo arızalı − :sold satılan − :blocks blokta (opsiyon :tentative)',
         'hint' => 'Müsait = oda − arızalı − satılan − kesin bloklarda kalan. Yeni rezervasyon için sayıya tıklayın.',
+    ],
+    'invoice' => [
+        'title' => 'Fatura', 'folio' => 'Folyo', 'no' => 'No', 'info_copy' => 'Bilgi amaçlıdır', 'guest' => 'Misafir', 'charges' => 'Borç', 'payments' => 'Ödeme',
+        'total_charges' => 'Toplam harcama', 'total_payments' => 'Toplam ödeme', 'vat' => 'KDV', 'base' => 'Matrah', 'vat_amount' => 'KDV tutarı',
+        'info_note' => 'Bu belge fatura değildir. Fiyatlara KDV dahildir.', 'guest_signature' => 'Misafir imzası', 'cashier' => 'Kasiyer',
+        'bill_to' => 'Fatura adı', 'net' => 'Net', 'gross' => 'Tutar', 'total_net' => 'Ara toplam (net)', 'total_vat' => 'Toplam KDV', 'total' => 'Genel toplam', 'paid' => 'Ödenen',
+        'received_by' => 'Teslim alan', 'issued_by' => 'Düzenleyen', 'cancelled' => 'İPTAL', 'print_folio' => 'Folyo yazdır', 'issue' => 'Fatura kes',
+        'pending' => 'Faturalanmamış :count kalem · :amount', 'nothing' => 'Bu folyoda faturalanmamış harcama yok.',
+        'hint' => 'Bu penceredeki faturalanmamış bütün harcamalar faturaya girer; tekrar faturalanamaz. Numara fatura serisinden alınır.',
+    ],
+    'cashier' => [
+        'title' => 'Kasa Kapanışı', 'cashier' => 'Kasiyer', 'open_shift' => 'Açık vardiya', 'opened' => 'Açılış', 'closed' => 'Kapanış', 'preview' => 'Raporu gör',
+        'currency' => 'Döviz', 'count' => 'Adet', 'system' => 'Sistem', 'counted' => 'Sayılan', 'difference' => 'Fark', 'base_amount' => 'TL karşılığı',
+        'no_payments' => 'Bu vardiyada ödeme yok.', 'count_hint' => 'Sayılan nakdi girin; boş alan sistem tutarı kabul edilir. Farklar rapora yazılır.',
+        'charges' => 'Bu vardiyada atılan harcamalar', 'notes' => 'Not', 'close' => 'Vardiyayı kapat', 'close_confirm' => 'Vardiya kapatılsın mı? Sonraki kayıtlar yeni vardiya açar.',
+        'no_open' => 'Açık vardiyanız yok. Folyoya ilk kayıt ya da ödemeyle vardiya açılır.', 'recent' => 'Son vardiyalarım', 'recent_all' => 'Son vardiyalar (bütün kasiyerler)',
+        'statuses' => ['open' => 'Açık', 'closed' => 'Kapalı'], 'closed_ok' => 'Vardiya kapandı.', 'report' => 'Kasa raporu', 'payments' => 'Ödemeler', 'supervisor' => 'Sorumlu',
     ],
 ];

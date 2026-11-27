@@ -2,6 +2,10 @@
 
 ## Geliştirme
 
+- Dövizli ödeme: folyoda ödeme formunda döviz seçimi; tutar dövizde girilir, nakitte günün Cash Rate'i (yoksa Posting Rate), kartta Posting Rate ile TL'ye çevrilir; döviz tutarı ve kur kayıtta saklanır, açıklamaya yazılır (ör. "900 Cash EUR 100,00 × 39,0000"). Kuru olmayan dövizde uyarı. (M.U)
+- Kasiyer ve vardiya (Cashiering → Close Cashier): her kullanıcının kasiyer kaydı ilk kayıtta açılır; folyoya elle kayıt / ödeme ilk atıldığında vardiya açılır, kayıtlar vardiyaya bağlanır. Kasa kapanışı ekranı: ödeme kodu × döviz sistem toplamı (TL karşılığıyla), sayılan tutar (boş = sistem), fark, not; kapanınca kasa raporu (yazdırılır). Son vardiyalar listesi; yeni yetki cashiering.shifts ile bütün kasiyerlerin vardiyaları ve raporları (SUP, IT1, FOM, FOS, ACC, AUD). (M.U)
+- Folyo yazdırma (Alt+F, bilgi amaçlı döküm: kalemler, borç / ödeme, bakiye, KDV kırılımı, imza alanları) ve fatura kesme (Alt+I): alıcı adı, vergi dairesi / no, adres profilden gelir, değiştirilebilir; pencerenin faturalanmamış harcamaları faturaya girer ve tekrar faturalanamaz; numara "invoice" serisinden boşluksuz; fatura yazdırma (net, KDV oranına göre matrah ve KDV, genel toplam, ödenen). Folyo ekranında kesilen faturaların bağlantısı. Ortak A4 yazdırma düzeni (Ctrl+P, Esc). (M.U)
+
 - Oda planından işlemler: rezervasyon çubuğuna tıklayınca (ya da seçip Enter) menü — rezervasyon kartı, folyo / ödeme (B), giriş (G, bugün gelen ve odası atanmış), çıkış (O, çıkışı gelmiş içerideki). Sürükle-bırak: çubuğu başka odaya ve / veya tarihe taşıma, sağ kenarından çekerek çıkış tarihini değiştirme (onay sorulur; içerideki misafirin girişi değişmez; dolu / çakışan / arızalı odaya taşınamaz, hata olursa hiçbir şey değişmez); boş hücrelerde sürükleyerek o oda ve tarihlerle yeni rezervasyon. (M.U)
 - Müsaitlik ekranı (Reservation → Availability): oda tipi × gün satılabilir oda (7 / 14 / 21 / 31 gün), altta müsait, satılan, opsiyon, blokta kalan, arızalı ve doluluk %; az kalan sarı, biten kırmızı; sayıya tıklayınca o tip ve tarihle yeni rezervasyon. (M.U)
 
