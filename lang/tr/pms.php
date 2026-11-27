@@ -112,7 +112,7 @@ return [
         'room_charges_open' => 'Oda hesabı açık', 'room_charges_closed' => 'Oda hesabı kapalı', 'none' => '—', 'no_folio' => 'yok',
         'fa_number' => 'Hesap no', 'validity' => 'Geçerlilik', 'open' => 'Açık', 'closed' => 'Kapalı', 'last_postings' => 'Son kayıtlar',
         'business_date_title' => 'İş günü :date',
-        'filters' => ['web' => 'Web (7 gün)', 'bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
+        'filters' => ['depozito' => 'Depozitosu geciken', 'web' => 'Web (7 gün)', 'bekleyen' => 'Opsiyon / bekleme', 'iptal' => 'İptal', 'noshow' => 'No-show', 'iceride' => 'İçeridekiler', 'gelecek' => 'Bugün gelecekler', 'gidecek' => 'Bugün gidecekler', 'cikmis' => 'Çıkış yapmış',
             'ileri' => 'İleri tarihli', 'fa' => 'İçerideki FA', 'fa-acilacak' => 'Bugün açılacak FA', 'fa-kapanacak' => 'Bugün kapanacak FA',
             'fa-kapali' => 'Kapanmış FA', 'fa-ileri' => 'İleri tarihli FA'],
         'statuses' => ['inquiry' => 'Talep', 'confirmed' => 'Kesin', 'tentative' => 'Opsiyon', 'waitlist' => 'Bekleme listesi', 'in_house' => 'İçeride',
@@ -568,5 +568,10 @@ Kaya, Ayşe
         'checkout_balance' => 'Bakiyesi kapanmamış folyo var: :folios',
         'no_rate' => ':rate fiyat kodunda :date için fiyat yok.',
         'closed_reservation' => 'Kapanmış rezervasyon değiştirilemez (durum: :status).',
+    ],
+    'deposit' => [
+        'title' => 'Depozito istekleri', 'due' => 'Son tarih', 'none' => 'Depozito istenmedi.', 'added' => 'Depozito isteği eklendi.', 'status_saved' => 'Depozito: :status.',
+        'statuses' => ['pending' => 'Bekleniyor', 'paid' => 'Ödendi', 'cancelled' => 'İptal'], 'overdue' => 'gecikti', 'mark_paid' => 'Ödendi',
+        'hint' => 'Folyoya depozito koduyla (992) ödeme atılınca en eski bekleyen istek ödendi olur. Son tarihi geçenler navigatörde "Depozitosu geciken" görünümündedir.',
     ],
 ];

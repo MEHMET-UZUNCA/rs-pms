@@ -227,6 +227,8 @@ class ReservationCardController extends Controller
                     $reservation->arrival_date->toDateString(), $reservation->departure_date->toDateString(),
                     app(ReservationExtrasService::class)->features($reservation), $reservation->id) : collect(),
             'card' => $reservation->payment_token_id ? DB::table('pms_payment_tokens')->where('id', $reservation->payment_token_id)->first(['brand', 'last4', 'expiry_month', 'expiry_year', 'holder_name']) : null,
+            'deposits' => $reservation->exists ? DB::table('pms_deposit_requests')->where('reservation_id', $reservation->id)->orderBy('due_date')->get() : collect(),
+            'currencies' => DB::table('pms_currencies')->where('is_active', true)->orderBy('sort')->pluck('code'),
             'items' => DB::table('pms_items')->where('property_id', $p)->orderBy('code')->get(['id', 'code', 'name', 'quantity_total', 'price']),
             'reservationItems' => $reservation->exists ? DB::table('pms_reservation_items as ri')->join('pms_items as i', 'i.id', '=', 'ri.item_id')
                 ->where('ri.reservation_id', $reservation->id)->orderBy('ri.date_from')->get(['ri.*', 'i.code', 'i.name']) : collect(),

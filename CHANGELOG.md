@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Depozito / ön ödeme takibi: rezervasyon kartı Credit Card sekmesinde depozito istekleri (son tarih, tutar, döviz); folyoya depozito koduyla (992) ödeme atılınca en eski bekleyen istek kendiliğinden "ödendi" olur, elle ödendi / iptal de yapılır; rezervasyonda bekleyen toplam ve en yakın son tarih tutulur; navigatörde "Depozitosu geciken" görünümü; değişiklik kaydına yazılır. (M.U)
+
 - Servis hata mesajları dil dosyasında (pms.err, 63 mesaj): rezervasyon, folyo, kasa, kat hizmetleri, gece kapanışı, outlet, departman kodu, vergi, kur, blok ve sabit ücret kuralları artık arayüz diline göre İngilizce ya da Türkçe. Yeni test: iki dil dosyasının anahtarları eşit olmalı. (Simphony protokol hataları yalnız loga yazıldığı için Türkçe kaldı.) (M.U)
 
 - Değişiklik kaydı (audit log): rezervasyon, profil, fiyat kodu ve fiyat detayı, blok, folyo / hesap, departman kodu, kullanıcı, arıza kayıtlarında oluşturma / değişiklik (yalnız değişen alanlar, eski → yeni) / silme kendiliğinden yazılır; rol yetkileri (eklenen / çıkarılan), kullanıcının rolü, şifre sıfırlama, rezervasyon seçenekleri, overbooking ve profil birleştirme ayrıca yazılır. Kullanıcı, iş günü, IP ile. Şifre ve token özetleri yazılmaz. Rezervasyon kartı Notlar sekmesinde "Değişiklikler"; Ayarlar → Değişiklik kaydı ekranı (tarih, kayıt türü, kayıt no, kullanıcı süzgeci; yeni yetki setup.audit: SUP, IT1, FOM, ACC, GMH). (M.U)

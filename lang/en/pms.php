@@ -112,7 +112,7 @@ return [
         'room_charges_open' => 'Room charges allowed', 'room_charges_closed' => 'Room charges blocked', 'none' => '—', 'no_folio' => 'none',
         'fa_number' => 'Account No.', 'validity' => 'Validity', 'open' => 'Open', 'closed' => 'Closed', 'last_postings' => 'Last postings',
         'business_date_title' => 'Business Date :date',
-        'filters' => ['web' => 'Web (7 days)', 'bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
+        'filters' => ['depozito' => 'Deposit due', 'web' => 'Web (7 days)', 'bekleyen' => 'Tentative', 'iptal' => 'Cancelled', 'noshow' => 'No Show', 'iceride' => 'In House', 'gelecek' => 'Arrivals', 'gidecek' => 'Departures', 'cikmis' => 'Checked Out', 'ileri' => 'Future',
             'fa' => 'FA In House', 'fa-acilacak' => 'FA Arrivals', 'fa-kapanacak' => 'FA Departures', 'fa-kapali' => 'FA Checked Out', 'fa-ileri' => 'FA Future'],
         'statuses' => ['inquiry' => 'Inquiry', 'confirmed' => 'Expected', 'tentative' => 'Tentative', 'waitlist' => 'Waitlist', 'in_house' => 'In House',
             'checked_out' => 'Checked Out', 'cancelled' => 'Cancelled', 'no_show' => 'No Show'],
@@ -568,5 +568,10 @@ Müller, Anna
         'checkout_balance' => 'There are folios with an open balance: :folios',
         'no_rate' => 'Rate code :rate has no price for :date.',
         'closed_reservation' => 'A closed reservation cannot be changed (status: :status).',
+    ],
+    'deposit' => [
+        'title' => 'Deposit requests', 'due' => 'Due date', 'none' => 'No deposit requested.', 'added' => 'Deposit request added.', 'status_saved' => 'Deposit: :status.',
+        'statuses' => ['pending' => 'Waiting', 'paid' => 'Paid', 'cancelled' => 'Cancelled'], 'overdue' => 'overdue', 'mark_paid' => 'Paid',
+        'hint' => 'A deposit payment posted on the folio with a deposit code (992) marks the oldest waiting request as paid. Overdue requests are listed in the navigator under "Deposit due".',
     ],
 ];

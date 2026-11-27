@@ -312,6 +312,40 @@
                 </div>
                 <p class="col-span-full text-[12px] text-muted">{{ __('pms.card.cc_hint') }}</p>
             </fieldset>
+            <fieldset class="border border-line rounded px-3 pb-3 mt-3 max-w-3xl">
+                <legend class="px-1 text-[12px] text-muted">{{ __('pms.deposit.title') }}</legend>
+                @if ($new)
+                    <p class="text-muted">{{ __('pms.meal.save_first') }}</p>
+                @else
+                    <table class="grid-table">
+                        <thead><tr><th>{{ __('pms.deposit.due') }}</th><th class="text-right">{{ __('pms.fixed.amount') }}</th><th>{{ __('pms.cashier.currency') }}</th><th>{{ __('pms.res.status') }}</th><th></th></tr></thead>
+                        <tbody>
+                        @forelse ($deposits as $d)
+                            @php $late = $d->status === 'pending' && $d->due_date < app(\App\Domain\Core\Models\Property::class)->current_business_date->toDateString(); @endphp
+                            <tr><td @class(['text-danger font-semibold' => $late])>{{ $date($d->due_date) }}</td><td class="text-right">{{ $money($d->amount) }}</td><td>{{ $d->currency_code }}</td>
+                                <td>{{ __('pms.deposit.statuses.'.$d->status) }}@if ($late) · {{ __('pms.deposit.overdue') }}@endif</td>
+                                <td class="whitespace-nowrap">@unless ($locked)
+                                    @if ($d->status === 'pending')
+                                        <button form="dep-{{ $d->id }}" name="status" value="paid" class="btn !h-6">{{ __('pms.deposit.mark_paid') }}</button>
+                                        <button form="dep-{{ $d->id }}" name="status" value="cancelled" class="btn !h-6">{{ __('pms.common.delete') }}</button>
+                                    @endif
+                                @endunless</td></tr>
+                        @empty
+                            <tr><td colspan="5" class="text-center text-muted py-3">{{ __('pms.deposit.none') }}</td></tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                    @unless ($locked)
+                        <div class="flex flex-wrap items-end gap-2 mt-2">
+                            <label class="flex flex-col"><span class="field-label">{{ __('pms.deposit.due') }}</span><input name="due_date" form="deposit-form" class="input w-28" value="{{ app(\App\Domain\Core\Models\Property::class)->current_business_date->copy()->addDays(7)->format('d.m.Y') }}" autocomplete="off"></label>
+                            <label class="flex flex-col"><span class="field-label">{{ __('pms.fixed.amount') }}</span><input name="amount" form="deposit-form" inputmode="decimal" class="input w-28 text-right" required></label>
+                            <label class="flex flex-col"><span class="field-label">{{ __('pms.cashier.currency') }}</span><select name="currency_code" form="deposit-form" class="input w-24">@foreach ($currencies as $c)<option value="{{ $c }}" @selected($c === $r->currency_code)>{{ $c }}</option>@endforeach</select></label>
+                            <button form="deposit-form" class="btn btn-primary">{{ __('pms.common.new') }}</button>
+                        </div>
+                        <p class="text-[12px] text-muted mt-1">{{ __('pms.deposit.hint') }}</p>
+                    @endunless
+                @endif
+            </fieldset>
         </section>
 
         {{-- Ctrl+2 Inventory: sayılı kalemler (bebek yatağı, ek yatak …) --}}
@@ -373,6 +407,10 @@
     <form method="POST" action="{{ route('reservations.board', $r) }}" id="board-form" hidden>@csrf</form>
     <form method="POST" action="{{ route('reservations.fixed-charges.store', $r) }}" id="fixed-charge-form" hidden>@csrf</form>
     <form method="POST" action="{{ route('reservations.items.store', $r) }}" id="item-form" hidden>@csrf</form>
+    <form method="POST" action="{{ route('reservations.deposits.store', $r) }}" id="deposit-form" hidden>@csrf</form>
+    @foreach ($deposits as $d)
+        <form method="POST" action="{{ route('reservations.deposits.status', [$r, $d->id]) }}" id="dep-{{ $d->id }}" hidden>@csrf</form>
+    @endforeach
     @foreach ($reservationItems as $ri)
         <form method="POST" action="{{ route('reservations.items.destroy', [$r, $ri->id]) }}" id="ri-del-{{ $ri->id }}" hidden>@csrf @method('DELETE')</form>
     @endforeach

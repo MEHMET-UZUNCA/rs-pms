@@ -33,6 +33,7 @@ class Reservation extends Model
             'arrival_date' => DateOnly::class,
             'departure_date' => DateOnly::class,
             'original_departure_date' => DateOnly::class,
+            'deposit_due_date' => DateOnly::class,
             'sale_date' => DateOnly::class,
             'option_date' => DateOnly::class,
             'checked_in_at' => 'datetime',

@@ -29,7 +29,7 @@ class NavigatorController extends Controller
     public const FILTERS = [
         'iceride' => ['İçeridekiler', 'alt+1'], 'gelecek' => ['Bugün gelecekler', 'alt+2'], 'gidecek' => ['Bugün gidecekler', 'alt+3'],
         'cikmis' => ['Çıkış yapmış', 'alt+4'], 'ileri' => ['İleri tarihli', 'alt+5'],
-        'bekleyen' => ['Opsiyon / bekleme', ''], 'iptal' => ['İptal', ''], 'noshow' => ['No-show', ''], 'web' => ['Web', ''],   // kısayolsuz (Alt+Shift Windows'ta dil değiştirir)
+        'bekleyen' => ['Opsiyon / bekleme', ''], 'iptal' => ['İptal', ''], 'noshow' => ['No-show', ''], 'web' => ['Web', ''], 'depozito' => ['Depozito', ''],   // kısayolsuz (Alt+Shift Windows'ta dil değiştirir)
         'fa' => ['İçerideki FA', 'alt+6'], 'fa-acilacak' => ['Bugün açılacak FA', 'alt+7'], 'fa-kapanacak' => ['Bugün kapanacak FA', 'alt+8'],
         'fa-kapali' => ['Kapanmış FA', 'alt+9'], 'fa-ileri' => ['İleri tarihli FA', 'alt+0'],
     ];
@@ -201,6 +201,9 @@ class NavigatorController extends Controller
             // Operasyon görünümleri: opsiyon / bekleme listesi (bugün ve sonrası), iptaller (bugün iptal edilen ya da gelişi bugün ve sonrası), son 7 günün no-show'ları
             ->when($filter === 'bekleyen', fn (Builder $q) => $q->whereIn('status', ['tentative', 'waitlist', 'inquiry'])->where('arrival_date', '>=', $day))
             ->when($filter === 'iptal', fn (Builder $q) => $q->where('status', 'cancelled')->where(fn ($w) => $w->where('arrival_date', '>=', $day)->orWhereDate('cancelled_at', now()->toDateString())))
+            ->when($filter === 'depozito', fn (Builder $q) => $q->whereIn('status', ['confirmed', 'tentative', 'waitlist', 'in_house'])
+                ->whereExists(fn ($e) => $e->selectRaw('1')->from('pms_deposit_requests as d')->whereColumn('d.reservation_id', 'pms_reservations.id')
+                    ->where('d.status', 'pending')->where('d.due_date', '<=', $day)))
             ->when($filter === 'web', fn (Builder $q) => $q->where('external_reference', 'like', 'WEB:%')->where('pms_reservations.created_at', '>=', now()->subDays(7)))
             ->when($filter === 'noshow', fn (Builder $q) => $q->where('status', 'no_show')->where('arrival_date', '>=', $bd->subDays(7)->toDateString()))
             ->when(filled($request->query('ad')), fn (Builder $q) => $q->whereHas('profile', fn ($p) => $p->where(fn ($w) => $w

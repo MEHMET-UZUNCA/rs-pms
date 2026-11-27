@@ -20,6 +20,7 @@ use App\Http\Controllers\Profiles\ProfileController;
 use App\Http\Controllers\Reservations\AvailabilityController;
 use App\Http\Controllers\Reservations\BlockController;
 use App\Http\Controllers\Reservations\ConfirmationLetterController;
+use App\Http\Controllers\Reservations\DepositController;
 use App\Http\Controllers\Reservations\FixedChargeController;
 use App\Http\Controllers\Reservations\MealPlanController;
 use App\Http\Controllers\Reservations\NavigatorController;
@@ -163,6 +164,8 @@ Route::middleware(['auth', 'property'])->group(function () {
         });
     });
 
+    Route::post('/rezervasyon/{reservation}/depozito', [DepositController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.deposits.store');
+    Route::post('/rezervasyon/{reservation}/depozito/{deposit}', [DepositController::class, 'status'])->whereNumber(['reservation', 'deposit'])->middleware('permission:reservations.edit')->name('reservations.deposits.status');
     Route::post('/rezervasyon/{reservation}/envanter', [ReservationItemController::class, 'store'])->whereNumber('reservation')->middleware('permission:reservations.edit')->name('reservations.items.store');
     Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
     Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');

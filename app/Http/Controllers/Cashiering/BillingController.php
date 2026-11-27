@@ -14,6 +14,7 @@ use App\Domain\Core\Services\ExchangeRateService;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Reservations\Exceptions\ReservationException;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\DepositService;
 use App\Domain\Reservations\Services\ReservationService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -101,8 +102,11 @@ class BillingController extends Controller
         }
 
         return $this->run($request, function (Folio $folio) use ($code, $data, $request, $amount, $attributes, $label) {
-            $this->postings->payment($folio, $code, $amount, ($data['description'] ?? null) ?: null,
+            $posting = $this->postings->payment($folio, $code, $amount, ($data['description'] ?? null) ?: null,
                 $attributes + ['cashier_shift_id' => $this->cashiers->shiftFor($folio->property_id, $request->user())->id]);
+            if ($code->type === 'deposit' && $folio->reservation_id) {   // depozito isteği ödendi
+                app(DepositService::class)->matchPayment(Reservation::findOrFail($folio->reservation_id), $posting->id);
+            }
 
             return __('pms.billing.paid', ['amount' => $label.' ('.$code->name.')']);
         });
