@@ -43,7 +43,7 @@ class ReservationCardController extends Controller
 
         return $this->card(new Reservation(array_filter([
             'arrival_date' => $arrival, 'departure_date' => $departure, 'nights' => $arrival->diffInDays($departure), 'adults' => 2, 'children' => 0,
-            'room_charges_allowed' => true, 'guarantee_type' => 'none', 'status' => 'confirmed',
+            'room_charges_allowed' => true, 'guarantee_type' => 'none', 'status' => 'confirmed', 'is_walk_in' => $request->boolean('walkin'),
             'room_id' => $room?->id,
             'room_type_id' => $room?->room_type_id ?? DB::table('pms_room_types')->where('property_id', $property->id)->where('id', (int) $request->query('tip'))->value('id'),
         ], fn ($v) => $v !== null)));
@@ -156,7 +156,7 @@ class ReservationCardController extends Controller
             'agent_profile_id' => ['nullable', 'integer', $own('pms_profiles')],
             'guarantee_type' => ['required', Rule::in(self::GUARANTEES)],
             'credit_limit' => ['nullable', 'numeric', 'min:0', 'max:999999999'],
-            'room_charges_allowed' => ['boolean'],
+            'room_charges_allowed' => ['boolean'], 'is_walk_in' => ['boolean'],
             'eta' => ['nullable', 'date_format:H:i'], 'etd' => ['nullable', 'date_format:H:i'],
             'features' => ['nullable', 'array'], 'features.*' => ['integer', Rule::exists('pms_room_features', 'id')->where('property_id', $property->id)],
             'card_holder' => ['nullable', 'string', 'max:150'], 'card_brand' => ['nullable', Rule::in(ReservationExtrasService::CARD_BRANDS)],
@@ -168,7 +168,7 @@ class ReservationCardController extends Controller
             'last_name' => __('pms.card.last_name'), 'arrival_date' => __('pms.res.arrival'), 'departure_date' => __('pms.res.departure'),
             'adults' => __('pms.card.adults'), 'room_type_id' => __('pms.res.room_type'), 'rate_code_id' => __('pms.res.rate_code'),
             'reservation_type_id' => __('pms.card.reservation_type'), 'market_segment_id' => __('pms.card.market'), 'source_code_id' => __('pms.card.source'),
-        ]) + ['manual_amount' => null, 'room_charges_allowed' => $request->boolean('room_charges_allowed'),
+        ]) + ['manual_amount' => null, 'room_charges_allowed' => $request->boolean('room_charges_allowed'), 'is_walk_in' => $request->boolean('is_walk_in'),
             'features_sent' => $request->boolean('features_sent'), 'card_remove' => $request->boolean('card_remove')];
     }
 
@@ -176,7 +176,7 @@ class ReservationCardController extends Controller
     private function fields(array $data): array
     {
         return array_intersect_key($data, array_flip(['room_type_id', 'rate_code_id', 'adults', 'reservation_type_id', 'market_segment_id',
-            'source_code_id', 'company_profile_id', 'agent_profile_id', 'guarantee_type', 'credit_limit', 'room_charges_allowed', 'eta', 'etd',
+            'source_code_id', 'company_profile_id', 'agent_profile_id', 'guarantee_type', 'credit_limit', 'room_charges_allowed', 'is_walk_in', 'eta', 'etd',
             'guest_comments', 'internal_notes']));
     }
 

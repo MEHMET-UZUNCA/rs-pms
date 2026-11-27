@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http;
 
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\FixedChargeService;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
@@ -96,5 +97,34 @@ class ReservationExtrasTest extends DomainTestCase
         $html = $this->actingAs($this->user)->get("/rezervasyon/{$this->res->id}")->getContent();
         $this->assertStringNotContainsString('This tab is not available yet.', $html);
         $this->assertTrue(str_contains($html, 'The rate code has no package (room only).') || str_contains($html, 'included in the rate'));
+    }
+
+    public function test_priced_items_are_charged_each_night_audit_night_once(): void
+    {
+        $r = Reservation::where('status', 'in_house')->where('property_id', $this->property)->firstOrFail();
+        $bd = DB::table('pms_properties')->where('id', $this->property)->value('current_business_date');
+        $code = (int) DB::table('pms_transaction_codes')->where('property_id', $this->property)->where('code', '580')->value('id');
+        $priced = DB::table('pms_items')->insertGetId(['property_id' => $this->property, 'code' => 'XBED', 'name' => 'Extra bed', 'quantity_total' => 5, 'transaction_code_id' => $code, 'price' => 300]);
+        $free = DB::table('pms_items')->insertGetId(['property_id' => $this->property, 'code' => 'CRIB', 'name' => 'Crib', 'quantity_total' => 5]);
+        DB::table('pms_reservation_items')->insert([
+            ['reservation_id' => $r->id, 'item_id' => $priced, 'quantity' => 2, 'date_from' => $r->arrival_date->toDateString(), 'date_to' => $r->departure_date->toDateString()],
+            ['reservation_id' => $r->id, 'item_id' => $free, 'quantity' => 1, 'date_from' => $r->arrival_date->toDateString(), 'date_to' => $r->departure_date->toDateString()],
+        ]);
+
+        $service = app(FixedChargeService::class);
+        $result = $service->postForDate($this->property, (string) $bd, $this->user->id);
+        $this->assertSame([1, 600.0], [$result['item_charges_posted'], $result['item_charges_amount']]);
+        $this->assertSame(0, $service->postForDate($this->property, (string) $bd, $this->user->id)['item_charges_posted']);   // aynı gece ikinci kez yazılmaz
+        $posting = DB::table('pms_postings')->where('reservation_id', $r->id)->where('description', 'Extra bed')->sole();
+        $this->assertEquals([600.0, 2.0], [(float) $posting->amount, (float) $posting->quantity]);
+    }
+
+    public function test_walk_in_flag_is_saved_from_card(): void
+    {
+        $this->actingAs($this->user)->get('/rezervasyon/yeni?walkin=1')->assertOk()->assertSee('name="is_walk_in" value="1" checked', false);
+        $this->save(['is_walk_in' => 1])->assertSessionHasNoErrors();
+        $this->assertTrue((bool) $this->res->fresh()->is_walk_in);
+        $this->save(['is_walk_in' => 0]);
+        $this->assertFalse((bool) $this->res->fresh()->is_walk_in);
     }
 }

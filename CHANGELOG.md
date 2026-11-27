@@ -2,6 +2,8 @@
 
 ## Geliştirme
 
+- Küçük işler (docs/14 #13–15): rezervasyon kartında Walk-in işareti (yeni kartta ?walkin=1 ile işaretli gelir; House Status walk-in sayısı); Multiboard'da "Pansiyon farkını fiyata yansıt" — eski ve yeni pansiyonun paket değeri farkı (elemanlar × gecenin kişi sayısı) kaydı atılmamış gecelerin fiyatına eklenir, gece elle fiyat olur, mesajda toplam fark; envanter kalemi (Inventory) fiyatı ve departman kodu tanımlıysa her gece kapanışında adet × fiyat 1. pencereye yazılır (aynı gece bir kez). (M.U)
+
 - Raporlar (Miscellaneous → Reports, Ctrl+Shift+R / Alt+Shift+R): rapor ağacı ve arama, süzgeçler, F10 göster, yazdır (A4, geniş raporlar yatay), Excel için CSV. 18 rapor: Arrivals, Departures, In House, No Show / Cancellations, uyruğa göre; Free Rooms, Room Status by Floor, OOO / OOS; Occupancy Forecast, Manager Report (gün / ay / yıl, geçen yıl); departman kodu toplamları, günlük gelir, kayıt dökümü, kasa raporu, açık bakiyeler, vergi; fiyat koduna göre rezervasyonlar, fiyat farkı. Grup başına yetki (reports.front_office / housekeeping / occupancy / finance; roller seeder'da). docs/10 §10.0. (M.U)
 
 - Fidelio veri aktarımı: `php artisan pms:import-fidelio {klasör}` — PROISV CSV'lerinden profiller (adres, iletişim, şifreli kimlik belgesi, birleştirme bağı), kesim tarihinden sonraki rezervasyonlar ve gece satırları (beklenen, içeride, bekleme listesi, teklif, istenirse iptal; çok odalı satır bölünür; onay no Fidelio numarası), ek misafirler, içerideki misafirlerin pencere bazında açık bakiyesi (879 devir). --dry-run, --only, --from, eslesme.json ile kod çevirisi, tekrar çalıştırılabilir, doğrulama raporu (sayılar, tutarlar, eksik kodlar, hatalar). Ülke listesi 260 ülkeye tamamlandı (ISO 2/3, İngilizce / Türkçe). docs/06 §6.4. (M.U)

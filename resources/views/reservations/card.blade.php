@@ -128,7 +128,8 @@
                     </select></div>
                 <div><label class="field-label" for="credit_limit">{{ __('pms.card.credit_limit') }}</label>
                     <input id="credit_limit" name="credit_limit" value="{{ $v('credit_limit') }}" inputmode="decimal" class="input"></div>
-                <label class="flex items-center gap-2 col-span-2"><input type="hidden" name="room_charges_allowed" value="0"><input type="checkbox" name="room_charges_allowed" value="1" @checked($v('room_charges_allowed', true))> {{ __('pms.card.room_charges') }}</label>
+                <label class="flex items-center gap-2"><input type="hidden" name="room_charges_allowed" value="0"><input type="checkbox" name="room_charges_allowed" value="1" @checked($v('room_charges_allowed', true))> {{ __('pms.card.room_charges') }}</label>
+                <label class="flex items-center gap-2" title="{{ __('pms.card.walk_in_hint') }}"><input type="hidden" name="is_walk_in" value="0"><input type="checkbox" name="is_walk_in" value="1" @checked($v('is_walk_in', false))> {{ __('pms.card.walk_in') }}</label>
                 @unless ($new)
                     <div class="col-span-2 text-[13px]"><span class="text-muted">{{ __('pms.card.nights_total') }}:</span> <b>{{ $money($r->total_room_amount) }} {{ $r->currency_code }}</b>
                         · <span class="text-muted">{{ __('pms.common.balance') }}:</span> <b>{{ $money($r->folios->sum('balance')) }}</b></div>
@@ -211,6 +212,7 @@
                             <select name="to" form="board-form" class="input">@foreach ($nights as $n)<option value="{{ $n->stay_date->toDateString() }}" @selected($loop->last)>{{ $n->stay_date->format('d.m.Y') }}</option>@endforeach</select></label>
                         <label class="flex flex-col"><span class="field-label">{{ __('pms.rates.board') }}</span>
                             <select name="package_id" form="board-form" class="input"><option value="">{{ __('pms.rates.no_board') }}</option>@foreach ($boards as $b)<option value="{{ $b->id }}">{{ $b->code }} - {{ $b->name }}</option>@endforeach</select></label>
+                        <label class="flex items-center gap-1 h-8"><input type="checkbox" name="adjust_rate" value="1" form="board-form" checked> {{ __('pms.meal.adjust_rate') }}</label>
                         <button form="board-form" class="btn btn-primary">{{ __('pms.meal.apply') }}</button>
                         <p class="w-full text-[12px] text-muted">{{ __('pms.meal.price_hint') }}</p>
                     </div>

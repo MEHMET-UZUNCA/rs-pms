@@ -21,8 +21,14 @@ class MealPlanService
 {
     public const MEALS = ['breakfast', 'lunch', 'dinner'];
 
-    /** Seçili gecelerin pansiyonunu değiştirir (Fidelio Meal Plan). Fiyat değişmez; fark varsa ayrıca kayıt atılır. */
-    public function changeBoard(Reservation $reservation, string $from, string $to, ?int $packageId): int
+    /**
+     * Seçili gecelerin pansiyonunu değiştirir (Fidelio Meal Plan / Multiboard). $adjustRate ise henüz kaydı atılmamış gecelerin fiyatına
+     * eski ve yeni pansiyon değeri arasındaki fark eklenir (pansiyon elemanları gecenin kişi sayısıyla hesaplanır); gece elle fiyatlı olur,
+     * böylece sonraki yeniden fiyatlama farkı silmez. Kaydı atılmış gece yalnız pansiyon değiştirir.
+     *
+     * @return array{count: int, difference: float}
+     */
+    public function changeBoard(Reservation $reservation, string $from, string $to, ?int $packageId, bool $adjustRate = false): array
     {
         if (in_array($reservation->status, ['cancelled', 'checked_out', 'no_show'], true)) {
             throw new RuntimeException(__('pms.meal.err_status'));
@@ -31,7 +37,41 @@ class MealPlanService
             throw new RuntimeException(__('pms.meal.err_board'));
         }
 
-        return $reservation->nightRows()->where('status', '!=', 'cancelled')->whereBetween('stay_date', [$from, $to])->update(['package_id' => $packageId]);
+        return DB::transaction(function () use ($reservation, $from, $to, $packageId, $adjustRate) {
+            $nights = $reservation->nightRows()->where('status', '!=', 'cancelled')->whereBetween('stay_date', [$from, $to])->get();
+            $elements = DB::table('pms_package_elements')->whereIn('package_id', $nights->pluck('package_id')->push($packageId)->filter()->unique()->all() ?: [0])
+                ->get()->groupBy('package_id');
+            $value = fn (?int $id, int $adults, int $children) => $id ? round(($elements[$id] ?? collect())->sum(fn ($e) => match ($e->calc) {
+                'per_room' => (float) $e->amount_adult,
+                'per_adult' => $adults * (float) $e->amount_adult,
+                'per_child' => $children * (float) $e->amount_child,
+                default => $adults * (float) $e->amount_adult + $children * (float) $e->amount_child,
+            }), 2) : 0.0;
+
+            $difference = 0.0;
+            foreach ($nights as $night) {
+                $values = ['package_id' => $packageId];
+                if ($adjustRate && $night->status === 'expected' && (int) $night->package_id !== (int) $packageId) {
+                    $pax = [(int) $night->adults, (int) $night->children];
+                    $old = $value($night->package_id ? (int) $night->package_id : null, ...$pax);
+                    $new = $value($packageId, ...$pax);
+                    $diff = round($new - $old, 2);
+                    if ($diff != 0.0) {
+                        $amount = round((float) $night->amount + $diff, 2);
+                        $values += ['amount' => $amount, 'manual_amount' => $amount, 'is_overridden' => true, 'package_amount' => $new,
+                            'net_amount' => round((float) $night->net_amount * ((float) $night->amount != 0.0 ? $amount / (float) $night->amount : 1), 2)];
+                        $difference += $diff;
+                    }
+                }
+                $night->update($values);
+            }
+            if ($difference != 0.0) {
+                $active = $reservation->nightRows()->where('status', '<>', 'cancelled');
+                $reservation->update(['is_rate_overridden' => true, 'total_room_amount' => (float) (clone $active)->sum('amount'), 'total_package_amount' => (float) (clone $active)->sum('package_amount')]);
+            }
+
+            return ['count' => $nights->count(), 'difference' => round($difference, 2)];
+        });
     }
 
     /**

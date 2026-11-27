@@ -100,4 +100,28 @@ class MultiboardTest extends DomainTestCase
         $f = app(MealPlanService::class)->forecast($this->property, CarbonImmutable::parse('2026-12-10'), CarbonImmutable::parse('2026-12-10'));
         $this->assertSame(['breakfast' => 3, 'lunch' => 0, 'dinner' => 3], $this->day($f, '2026-12-10'));
     }
+
+    public function test_board_change_can_adjust_rate_by_package_difference(): void
+    {
+        $r = $this->stay();
+        $code = (int) DB::table('pms_transaction_codes')->where('property_id', $this->property)->where('code', '130')->value('id');
+        DB::table('pms_package_elements')->whereIn('package_id', [$this->board('HBD'), $this->board('FB')])->delete();
+        DB::table('pms_package_elements')->insert([
+            ['package_id' => $this->board('HBD'), 'transaction_code_id' => $code, 'calc' => 'per_person', 'amount_adult' => 500, 'amount_child' => 250],
+            ['package_id' => $this->board('FB'), 'transaction_code_id' => $code, 'calc' => 'per_person', 'amount_adult' => 800, 'amount_child' => 400],
+        ]);
+
+        // 2 yetişkin + 1 çocuk: HBD 1.250, FB 2.000 → gece başına +750; iki gece
+        $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/pansiyon", ['from' => '2026-12-11', 'to' => '2026-12-12', 'package_id' => $this->board('FB'), 'adjust_rate' => 1])
+            ->assertSessionHas('status', 'Board changed for 2 nights. Rate difference: 1.500,00 TRY.');
+        $nights = $r->nightRows()->orderBy('stay_date')->get();
+        $this->assertEquals([4000.0, 4750.0, 4750.0], $nights->pluck('amount')->map(fn ($a) => (float) $a)->all());
+        $this->assertTrue((bool) $nights[1]->is_overridden);
+        $this->assertEquals(2000.0, (float) $nights[1]->package_amount);
+        $this->assertEquals(13500.0, (float) $r->fresh()->total_room_amount);
+
+        // Geri dönüş farkı geri alır
+        $this->actingAs($this->user)->post("/rezervasyon/{$r->id}/pansiyon", ['from' => '2026-12-11', 'to' => '2026-12-12', 'package_id' => $this->board('HBD'), 'adjust_rate' => 1]);
+        $this->assertEquals([4000.0, 4000.0, 4000.0], $r->nightRows()->orderBy('stay_date')->pluck('amount')->map(fn ($a) => (float) $a)->all());
+    }
 }

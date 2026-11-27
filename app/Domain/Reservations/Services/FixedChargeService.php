@@ -66,7 +66,7 @@ class FixedChargeService
     /**
      * Gece kapanışı: içerideki rezervasyonların o geceye düşen sabit ücretlerini yazar.
      *
-     * @return array{fixed_charges_posted: int, fixed_charges_amount: float}
+     * @return array{fixed_charges_posted: int, fixed_charges_amount: float, item_charges_posted: int, item_charges_amount: float}
      */
     public function postForDate(int $propertyId, string $businessDate, ?int $userId): array
     {
@@ -95,6 +95,35 @@ class FixedChargeService
             $total += $amount;
         }
 
-        return ['fixed_charges_posted' => $count, 'fixed_charges_amount' => round($total, 2)];
+        return ['fixed_charges_posted' => $count, 'fixed_charges_amount' => round($total, 2)] + $this->postItems($propertyId, $businessDate, $userId);
+    }
+
+    /**
+     * Envanter kalemleri (Inventory sekmesi: bebek yatağı, ek yatak …): fiyatı ve departman kodu tanımlı kalemin ücreti, kalemin
+     * gecelerine (date_from ≤ gece < date_to) düşen her gece kapanışında adet × fiyat olarak 1. pencereye yazılır.
+     *
+     * @return array{item_charges_posted: int, item_charges_amount: float}
+     */
+    private function postItems(int $propertyId, string $businessDate, ?int $userId): array
+    {
+        $rows = DB::table('pms_reservation_items as ri')->join('pms_reservations as r', 'r.id', '=', 'ri.reservation_id')->join('pms_items as i', 'i.id', '=', 'ri.item_id')
+            ->where('r.property_id', $propertyId)->where('r.status', 'in_house')->where('ri.date_from', '<=', $businessDate)->where('ri.date_to', '>', $businessDate)
+            ->whereNotNull('i.transaction_code_id')->where('i.price', '>', 0)->orderBy('ri.id')
+            ->get(['ri.id', 'ri.reservation_id', 'ri.quantity', 'i.name', 'i.price', 'i.transaction_code_id']);
+        $count = 0;
+        $total = 0.0;
+        foreach ($rows as $row) {
+            $reservation = Reservation::query()->findOrFail($row->reservation_id);
+            $folio = Folio::query()->where('reservation_id', $reservation->id)->where('window', 1)->where('status', 'open')->first() ?? $this->folios->window($reservation, 1);
+            $posting = $this->postings->charge($folio, TransactionCode::query()->findOrFail($row->transaction_code_id), (float) $row->price, (float) $row->quantity, $row->name, [
+                'source' => 'fixed_charge', 'posted_by' => $userId, 'stay_date' => $businessDate, 'idempotency_key' => "item:{$businessDate}:{$row->id}",
+            ]);
+            if ($posting->wasRecentlyCreated) {
+                $count++;
+                $total += (float) $posting->amount;
+            }
+        }
+
+        return ['item_charges_posted' => $count, 'item_charges_amount' => round($total, 2)];
     }
 }

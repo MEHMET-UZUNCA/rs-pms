@@ -44,10 +44,10 @@ kurulum / işletim, belgeler. Bulunanların bir kısmı hemen düzeltildi; kalan
 | 9 | ~~**Reinstate ve Undo Check-in**~~ yapıldı | Fidelio'da günlük kullanılan iki işlem yok; yanlış iptal / yanlış girişte şu an elle düzeltme gerekiyor | Küçük |
 | 10 | ~~**Depozito / ön ödeme takibi**~~ yapıldı | `pms_deposit_requests` tablosu var, ekranı yok; garantili rezervasyonda "ön ödeme bekleniyor / alındı" izlenemiyor | Orta |
 | 11 | ~~**Kişisel veri (KVKK)**~~ yapıldı: anonimleştirme + saklama süresi | Profilde "kişisel veriyi sakla" işareti var ama süre dolan misafirin anonimleştirilmesi / silinmesi yok | Küçük–orta |
-| 12 | **Oturum süresi** — docs/15'te `SESSION_LIFETIME=30` önerildi, otel karar verir | Ön büro bilgisayarları ortak; oturum 120 dk boşta kalınca kapanıyor | Ayar (`SESSION_LIFETIME`), otelle karar |
-| 13 | Walk-in işareti, paylaşımlı oda (share), bekleme listesi | Fidelio'da var; otelin kullanıp kullanmadığı sorulacak | Küçük |
-| 14 | Pansiyon değişikliğinde fiyat farkının otomatik kaydı | Multiboard'da pansiyon değişince oda fiyatı aynı kalıyor | Küçük |
-| 15 | Envanter kalemi ücretinin otomatik alınması | Şimdilik Fixed Charge olarak elle | Küçük |
+| 12 | **Oturum süresi** (otel kararı) — docs/15'te `SESSION_LIFETIME=30` önerildi, otel karar verir | Ön büro bilgisayarları ortak; oturum 120 dk boşta kalınca kapanıyor | Ayar (`SESSION_LIFETIME`), otelle karar |
+| 13 | ~~Walk-in işareti~~ yapıldı (kartta, House Status sayar); paylaşımlı oda (share), bekleme listesi kaldı | Fidelio'da var; otelin kullanıp kullanmadığı sorulacak | Küçük |
+| 14 | ~~Pansiyon değişikliğinde fiyat farkı~~ yapıldı (Multiboard'da "Pansiyon farkını fiyata yansıt") | Multiboard'da pansiyon değişince oda fiyatı aynı kalıyor | Küçük |
+| 15 | ~~Envanter kalemi ücreti~~ yapıldı (fiyatlı kalem her gece kapanışında adet × fiyat) | Şimdilik Fixed Charge olarak elle | Küçük |
 
 ## Otelden beklenenler (özet)
 

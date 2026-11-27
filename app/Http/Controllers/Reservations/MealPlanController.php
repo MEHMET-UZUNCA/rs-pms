@@ -39,13 +39,18 @@ class MealPlanController extends Controller
     public function change(Request $request, Reservation $reservation): RedirectResponse
     {
         abort_unless((int) $reservation->property_id === (int) app(Property::class)->id, 404);
-        $data = $request->validate(['from' => ['required', 'date'], 'to' => ['required', 'date', 'after_or_equal:from'], 'package_id' => ['nullable', 'integer']]);
+        $data = $request->validate(['from' => ['required', 'date'], 'to' => ['required', 'date', 'after_or_equal:from'], 'package_id' => ['nullable', 'integer'], 'adjust_rate' => ['nullable', 'boolean']]);
         try {
-            $count = $this->meals->changeBoard($reservation, $data['from'], $data['to'], $data['package_id'] ? (int) $data['package_id'] : null);
+            $result = $this->meals->changeBoard($reservation, $data['from'], $data['to'], $data['package_id'] ? (int) $data['package_id'] : null, $request->boolean('adjust_rate'));
         } catch (RuntimeException $e) {
             return back()->with('error', $e->getMessage());
         }
 
-        return back()->with('status', __('pms.meal.changed', ['count' => $count]));
+        $message = __('pms.meal.changed', ['count' => $result['count']]);
+        if ($result['difference'] != 0.0) {
+            $message .= ' '.__('pms.meal.rate_adjusted', ['amount' => number_format($result['difference'], 2, ',', '.'), 'currency' => $reservation->currency_code]);
+        }
+
+        return back()->with('status', $message);
     }
 }
