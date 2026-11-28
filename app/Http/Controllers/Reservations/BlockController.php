@@ -54,8 +54,7 @@ class BlockController extends Controller
     {
         $this->own($block);
 
-        return $this->form($block, DB::table('pms_block_inventory')->where('block_id', $block->id)->groupBy('room_type_id')
-            ->selectRaw('room_type_id, MAX(allotted) AS n')->pluck('n', 'room_type_id')->map(fn ($n) => (int) $n)->all());
+        return $this->form($block, BlockService::headerCounts($block->id));
     }
 
     public function store(Request $request): RedirectResponse
@@ -86,6 +85,8 @@ class BlockController extends Controller
             'rate' => DB::table('pms_rate_codes')->where('id', $block->rate_code_id)->first(['code', 'name']),
             'types' => DB::table('pms_reservation_types')->where('property_id', $block->property_id)->whereNull('deleted_at')->orderBy('code')->get(['id', 'code', 'name']),
             'bd' => app(Property::class)->current_business_date,
+            'grid' => DB::table('pms_block_inventory')->where('block_id', $block->id)->orderBy('date')->get(['room_type_id', 'date', 'allotted', 'picked_up', 'released'])
+                ->groupBy('room_type_id')->map(fn ($rows) => $rows->keyBy(fn ($r) => substr((string) $r->date, 0, 10))),
         ]);
     }
 
@@ -118,7 +119,7 @@ class BlockController extends Controller
     public function bulk(Request $request, Block $block): RedirectResponse
     {
         $this->own($block);
-        $data = $request->validate(['action' => ['required', Rule::in(['assign', 'check_in', 'route', 'unroute'])], 'ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer']],
+        $data = $request->validate(['action' => ['required', Rule::in(['assign', 'check_in', 'check_out', 'route', 'unroute'])], 'ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer']],
             ['ids.required' => __('pms.block.select_members')]);
         $ids = array_map('intval', $data['ids']);
         $user = $request->user()->id;
@@ -136,6 +137,13 @@ class BlockController extends Controller
                 $back = back()->with('status', __('pms.block.checked_in', ['count' => $r['checked_in']]));
 
                 return $r['errors'] ? $back->with('error', implode(' · ', $r['errors'])) : $back;
+            case 'check_out':
+                abort_unless(Gate::allows('permission', 'reservations.checkout'), 403);
+                $r = $this->blocks->checkOutMany($block, $ids, $user);
+
+                $back = back()->with('status', __('pms.block.checked_out', ['count' => $r['checked_out']]));
+
+                return $r['errors'] ? $back->with('error', implode(' · ', $r['errors'])) : $back;
             case 'route':
                 $master = $this->blocks->routeToMaster($block, $ids, $user);
 
@@ -143,6 +151,20 @@ class BlockController extends Controller
             default:
                 return back()->with('status', __('pms.block.unrouted', ['count' => $this->blocks->removeRouting($block, $ids)]));
         }
+    }
+
+    /** Gece gece kota tablosu. */
+    public function inventory(Request $request, Block $block): RedirectResponse
+    {
+        $this->own($block);
+        $data = $request->validate(['q' => ['required', 'array'], 'q.*' => ['array'], 'q.*.*' => ['nullable', 'integer', 'min:0', 'max:999']]);
+        try {
+            $changed = $this->blocks->saveInventory($block, $data['q']);
+        } catch (ReservationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('status', __('pms.block.grid_saved', ['count' => $changed]));
     }
 
     private function save(Request $request, ?Block $block): RedirectResponse
@@ -159,7 +181,7 @@ class BlockController extends Controller
             'code' => ['required', 'string', 'max:20', 'regex:/^[A-Z0-9._\-]+$/', Rule::unique('pms_blocks', 'code')->where('property_id', $p->id)->ignore($block?->id)],
             'name' => ['required', 'string', 'max:150'], 'type' => ['required', Rule::in(BlockService::TYPES)], 'status' => ['required', Rule::in(BlockService::STATUSES)],
             'profile_id' => ['required', 'integer', $own('pms_profiles')],
-            'start_date' => ['required', 'date'], 'end_date' => ['required', 'date', 'after:start_date'], 'cutoff_date' => ['nullable', 'date'],
+            'start_date' => ['required', 'date'], 'end_date' => ['required', 'date', 'after:start_date'], 'cutoff_date' => ['nullable', 'date'], 'release_days' => ['nullable', 'integer', 'min:0', 'max:365'],
             'rate_code_id' => ['required', 'integer', $own('pms_rate_codes')], 'market_segment_id' => ['required', 'integer', $own('pms_market_segments')],
             'source_code_id' => ['required', 'integer', $own('pms_source_codes')], 'contract_number' => ['nullable', 'string', 'max:50'], 'notes' => ['nullable', 'string', 'max:2000'],
             'rooms' => ['nullable', 'array'], 'rooms.*' => ['nullable', 'integer', 'min:0', 'max:500'],
@@ -168,6 +190,7 @@ class BlockController extends Controller
         $validTypes = DB::table('pms_room_types')->where('property_id', $p->id)->pluck('id')->all();
         $rooms = array_intersect_key($rooms, array_flip($validTypes));
         unset($data['rooms']);
+        $data['release_days'] = (int) ($data['release_days'] ?? 0);
         try {
             $saved = $this->blocks->save($p->id, $data, $rooms, $block, $request->user()->id);
         } catch (ReservationException $e) {

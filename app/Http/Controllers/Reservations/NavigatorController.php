@@ -48,6 +48,9 @@ class NavigatorController extends Controller
 
     public const PANELS = ['none' => 0, 's' => 'h-32', 'm' => 'h-48', 'l' => 'h-72'];
 
+    /** Gruplama (Elektraweb "tek tıkla gruplama"): grup başında rezervasyon, kişi ve bakiye ara toplamı. Kullanıcıya özel saklanır. */
+    public const GROUPS = ['none', 'company', 'room_type', 'board', 'rate_code', 'status', 'nationality', 'arrival'];
+
     /** @return list<string> kullanıcının kolonları (sırayla) */
     public static function columns(?User $user): array
     {
@@ -70,8 +73,32 @@ class NavigatorController extends Controller
         $isFa = $filter && str_starts_with($filter, 'fa');
         $rows = $isFa ? $this->financialAccounts($property->id, $filter, $bd, $request) : $this->reservations($property->id, $filter, $bd, $request, $arrival, $departure);
 
+        if ($request->filled('grup') && in_array($request->query('grup'), self::GROUPS, true)) {
+            UserPreferences::set($request->user(), 'navigator.group', $request->query('grup') === 'none' ? null : $request->query('grup'));
+        }
+        $group = $isFa ? 'none' : (string) UserPreferences::get($request->user(), 'navigator.group', 'none');
+        $groups = [];
+        if ($group !== 'none') {
+            $label = fn ($r) => match ($group) {
+                'company' => $r->agent_name ?? $r->company_name ?? __('pms.res.group_none'),
+                'room_type' => $r->roomType?->code ?? '—',
+                'board' => $r->rateCode?->package?->code ?? __('pms.rates.no_board'),
+                'rate_code' => $r->rateCode?->code ?? '—',
+                'status' => __('pms.res.statuses.'.$r->status),
+                'nationality' => $r->profile?->nationality_code ?? '—',
+                'arrival' => $r->arrival_date?->format('d.m.Y') ?? '—',
+            };
+            $rows->each(fn ($r) => $r->setAttribute('group_label', (string) $label($r)));
+            // Gruplar ada (geliş gününde tarihe) göre; grup içinde önceki sıra korunur
+            $order = $rows->values()->keys()->combine($rows->values()->map->id)->flip();
+            $rows = $rows->sortBy([fn ($a, $b) => $group === 'arrival' ? $a->arrival_date <=> $b->arrival_date : strcmp(mb_strtolower($a->group_label), mb_strtolower($b->group_label)),
+                fn ($a, $b) => $order[$a->id] <=> $order[$b->id]])->values();
+            $groups = $rows->groupBy('group_label')->map(fn ($g) => ['count' => $g->count(), 'pax' => $g->sum('adults') + $g->sum('children'),
+                'balance' => round($g->sum(fn ($r) => (float) $r->balance), 2)])->all();
+        }
+
         return view('reservations.navigator', [
-            'rows' => $rows, 'isFa' => $isFa, 'filter' => $filter, 'businessDate' => $bd, 'limit' => self::LIMIT,
+            'rows' => $rows, 'isFa' => $isFa, 'filter' => $filter, 'group' => $group, 'groups' => $groups, 'businessDate' => $bd, 'limit' => self::LIMIT,
             'query' => [
                 'ad' => (string) $request->query('ad'), 'oda' => (string) $request->query('oda'), 'no' => (string) $request->query('no'),
                 'firma' => (string) $request->query('firma'), 'durum' => (string) $request->query('durum'),
@@ -187,7 +214,7 @@ class NavigatorController extends Controller
         $like = fn (string $v) => '%'.str_replace(['%', '_'], ['\%', '\_'], trim($v)).'%';
 
         $query = Reservation::query()->where('pms_reservations.property_id', $propertyId)
-            ->with(['profile:id,display_name,nationality_code', 'roomType:id,code', 'room:id,number', 'rateCode:id,code'])
+            ->with(['profile:id,display_name,nationality_code', 'roomType:id,code', 'room:id,number', 'rateCode:id,code,package_id', 'rateCode.package:id,code'])
             ->select('pms_reservations.*')
             ->selectSub(DB::table('pms_folios')->selectRaw('COALESCE(SUM(balance), 0)')->whereColumn('reservation_id', 'pms_reservations.id'), 'balance')
             ->selectSub(DB::table('pms_profiles')->select('display_name')->whereColumn('id', 'pms_reservations.agent_profile_id'), 'agent_name')

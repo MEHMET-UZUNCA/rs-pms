@@ -11,7 +11,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | # | Elektraweb | RS PMS | Durum | Not / yapılacak |
 |---|---|---|---|---|
 | 1 | Günlük durum ekranı (doluluk, gelir, tahmin, konaklayan; grafik ve liste) | Ana sayfa = Ön büro kontrol paneli | Var | **Ön büro kontrol paneli**: bugün giriş / çıkış / içeride, doluluk %, oda geliri, ADR, 7–14 günlük doluluk tahmini, kirli / arızalı oda sayısı; her kutudan ilgili listeye geçiş |
-| 2 | Rezervasyon listesi: tek tıkla süzme ve gruplama | Reservation Navigator (F3, Alt+1–0 süzgeçler) | Var | Gruplama (acenta / oda tipi / pansiyona göre ara toplam) yok — kısa iş |
+| 2 | Rezervasyon listesi: tek tıkla süzme ve gruplama | Reservation Navigator (F3, Alt+1–0 süzgeçler) | Var | Gruplama: "Grupla" seçimi (acente / şirket, oda tipi, pansiyon, fiyat kodu, durum, uyruk, geliş günü), grup başında rezervasyon, kişi ve bakiye ara toplamı; kullanıcıya özel saklanır |
 | 3 | Oda tipi müsaitliği | Rezervasyon kartında müsaitlik kontrolü, Web API availability | Var | Müsaitlik ekranı (oda tipi × gün; satılan, opsiyon, blok, arızalı, doluluk) |
 | 4 | Oda blokaj / oda planı: sürükle-bırak ile oda ve tarih değişimi, sürükleyerek rezervasyon açma | Room Rack: sürükle-bırak ile oda / tarih değişimi, kenardan uzatma, boş hücrelerden yeni rezervasyon | Var | |
 | 5 | Oda planından çıkmadan tahsilat, folyo, check-out | Oda planında çubuk menüsü: kart, folyo / ödeme, giriş, çıkış | Var | |
@@ -26,7 +26,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 | 14 | Görev yönetimi: misafir istek / şikâyeti görev olur, süre aşımında yöneticiye bildirim | Misafir istekleri: departman, son saat, öncelik, durum ve geçmiş; geciken işler üst çubukta | Var | |
 | 15 | Kimlik / pasaport okuma (web kamerası) | Profilde kimlik belgeleri (şifreli); PROISV görünümleri (polis bildirimi) | Kısmen | Kimlik okuyucu donanımı seçilince bağlanır |
 | 16 | Online check-in | — | Yok | Web projesiyle birlikte (misafir bilgileri ve belge önceden) |
-| 17 | Mobil uygulama (oda durumu, görev, arıza sahadan) | Ekranlar telefonda çalışır (duyarlı) | Kısmen | Kat hizmetleri için telefona uygun sade ekran |
+| 17 | Mobil uygulama (oda durumu, görev, arıza sahadan) | Ekranlar telefonda çalışır (duyarlı); kat hizmetleri telefon ekranı (/kat-hizmetleri/mobil) | Var | Büyük oda kartları, kirli / çıkacak / gelecek / kontrollü süzgeçleri, kata göre, dokunarak durum ve işaret, arıza bildirimi teknik servise iş olarak; misafir adı gösterilmez |
 | 18 | Oda değişimi: boş oda listesi + değişim nedeni, Oda Değişim Listesi | Oda değişim nedeni (kart), Room Moves listesi (neden sonradan da girilir) | Var | |
 | 19 | Grup rezervasyonu, çoklu seçimle toplu check-in, grup folyo yönlendirme | Bloklar ve Gruplar ekranı: kota, isim listesiyle rezervasyon, otomatik oda atama, toplu giriş, ana hesaba yönlendirme | Var | **Grup / blok rezervasyon**: bir grup altında çok oda, toplu oda atama, toplu check-in / check-out, ana folyoya yönlendirme (routing) |
 | 20 | Geç çıkış (Late C/Out) saati | ETA / ETD kartta, Late C/O işareti kartta ve navigatörde | Var | Ücret kasadan kayıtla ya da Fixed Charge ile |
@@ -37,7 +37,7 @@ Durum: **Var** = RS PMS'te çalışıyor · **Kısmen** = temeli var, eksik par�
 
 1. ~~Fixed Charges ve geç çıkış~~ — yapıldı.
 2. ~~Ön büro kontrol paneli (#1)~~ — yapıldı.
-3. ~~Grup / blok rezervasyon ve routing (#19)~~ — yapıldı. Sonra: toplu çıkış, kotanın gece gece düzenlenmesi, opsiyon tarihinde otomatik bırakma (release).
+3. ~~Grup / blok rezervasyon ve routing (#19)~~ — yapıldı; toplu çıkış, gece gece kota ve opsiyon / bırakma gününde otomatik bırakma (gece kapanışında) da yapıldı.
 4. ~~Oda planından işlemler ve sürükle-bırak (#4, #5), Availability ekranı (#3)~~ — yapıldı.
 5. ~~Fatura / folyo yazdırma, dövizli ödeme, kasa kapanışı (#8–10)~~ — yapıldı.
 6. ~~Profil birleştirme (#7), oda değişim nedeni ve listesi (#18), kirli odaya giriş ayarı (#21)~~ — yapıldı.

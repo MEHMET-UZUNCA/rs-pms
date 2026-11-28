@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\DB;
  * Blok / grup rezervasyonu (Fidelio Block, Elektraweb Grup Rezervasyon).
  *  - Blok başlığı: kod, ad, tip (group / allotment), durum (tentative / definite / cancelled), acenta / şirket, grup profili, tarihler,
  *    fiyat kodu, pazar, kaynak, opsiyon (cutoff) tarihi.
- *  - Oda kotası: oda tipi başına her gece aynı sayıda oda (pms_block_inventory, gece gece); alınan (picked_up) rezervasyonlardan sayılır.
+ *  - Oda kotası: oda tipi başına gece gece (pms_block_inventory); başlıkta tek sayı, ayrıntı ekranında gece gece düzenlenir; alınan (picked_up)
+ *    rezervasyonlardan sayılır; opsiyon / bırakma gününde alınmamış odalar bırakılır (released).
  *  - Kotadan rezervasyon (pick-up): rooming list'teki her isim için ayrı rezervasyon; isim yoksa grup adıyla açılır, sonra kartta düzeltilir.
  *  - Toplu işler: boş ve temiz odaları otomatik atama, toplu giriş.
  *  - Ana hesap (master): grup adına rezervasyonsuz hesap; üyelerin oda ve pansiyon ücretleri gece kapanışında buraya yönlendirilir.
@@ -72,9 +73,15 @@ class BlockService
             DB::table('pms_block_inventory')->where('block_id', $block->id)
                 ->where(fn ($q) => $q->where('date', '<', $from->toDateString())->orWhere('date', '>=', $to->toDateString())->orWhereNotIn('room_type_id', array_keys(array_filter($rooms)) ?: [0]))
                 ->delete();
+            // Başlıktaki sayı değişmediyse gece gece düzenlenmiş kota korunur; yalnız yeni geceler eklenir
+            $before = self::headerCounts($block->id);
             foreach (array_filter($rooms) as $typeId => $count) {
+                $changed = ! isset($before[$typeId]) || (int) $before[$typeId] !== (int) $count;
                 for ($d = $from; $d->lt($to); $d = $d->addDay()) {
-                    DB::table('pms_block_inventory')->updateOrInsert(['block_id' => $block->id, 'room_type_id' => $typeId, 'date' => $d->toDateString()], ['allotted' => (int) $count]);
+                    $key = ['block_id' => $block->id, 'room_type_id' => $typeId, 'date' => $d->toDateString()];
+                    if ($changed || ! DB::table('pms_block_inventory')->where($key)->exists()) {
+                        DB::table('pms_block_inventory')->updateOrInsert($key, ['allotted' => (int) $count]);
+                    }
                 }
             }
             $this->recountPickup($block);
@@ -82,6 +89,19 @@ class BlockService
 
             return $block->fresh();
         });
+    }
+
+    /**
+     * Başlıktaki "her gece oda" sayısı: oda tipinin gecelerinde en sık geçen kota (eşitlikte büyük olan). Gece gece düzenlenmiş
+     * istisnalar başlığı değiştirmez.
+     *
+     * @return array<int, int>
+     */
+    public static function headerCounts(int $blockId): array
+    {
+        return DB::table('pms_block_inventory')->where('block_id', $blockId)->groupBy('room_type_id', 'allotted')
+            ->selectRaw('room_type_id, allotted, COUNT(*) AS c')->get()->groupBy('room_type_id')
+            ->map(fn ($rows) => (int) $rows->sortBy([['c', 'desc'], ['allotted', 'desc']])->first()->allotted)->all();
     }
 
     /** Alınan oda sayısı: bloktaki iptal edilmemiş rezervasyonların geceleri. */
@@ -92,20 +112,21 @@ class BlockService
             ->groupBy('n.room_type_id', 'n.stay_date')->selectRaw('n.room_type_id, n.stay_date, COUNT(*) AS c')->get()
             ->keyBy(fn ($r) => $r->room_type_id.'|'.substr((string) $r->stay_date, 0, 10));
         foreach (DB::table('pms_block_inventory')->where('block_id', $block->id)->get() as $row) {
-            DB::table('pms_block_inventory')->where('id', $row->id)->update(['picked_up' => (int) ($picked[$row->room_type_id.'|'.substr((string) $row->date, 0, 10)]->c ?? 0)]);
+            $p = (int) ($picked[$row->room_type_id.'|'.substr((string) $row->date, 0, 10)]->c ?? 0);
+            DB::table('pms_block_inventory')->where('id', $row->id)->update(['picked_up' => $p, 'released' => max(0, min((int) $row->released, (int) $row->allotted - $p))]);
         }
     }
 
     /**
      * Oda tipi başına kota / alınan / kalan (blok boyunca en düşük kalan).
      *
-     * @return Collection<int, object{room_type_id: int, code: string, name: string, allotted: int, picked_up: int, remaining: int}>
+     * @return Collection<int, object{room_type_id: int, code: string, name: string, allotted: int, picked_up: int, released: int, remaining: int}>
      */
     public function summary(Block $block): Collection
     {
         return DB::table('pms_block_inventory as bi')->join('pms_room_types as t', 't.id', '=', 'bi.room_type_id')->where('bi.block_id', $block->id)
             ->groupBy('bi.room_type_id', 't.code', 't.name', 't.sort')->orderBy('t.sort')
-            ->selectRaw('bi.room_type_id, t.code, t.name, MAX(bi.allotted) AS allotted, MAX(bi.picked_up) AS picked_up, MIN(bi.allotted - bi.picked_up) AS remaining')
+            ->selectRaw('bi.room_type_id, t.code, t.name, MAX(bi.allotted) AS allotted, MAX(bi.picked_up) AS picked_up, MAX(bi.released) AS released, MIN(bi.allotted - bi.picked_up - bi.released) AS remaining')
             ->get();
     }
 
@@ -132,7 +153,7 @@ class BlockService
             throw new ReservationException(__('pms.err.block_range'));
         }
         $remaining = (int) DB::table('pms_block_inventory')->where('block_id', $block->id)->where('room_type_id', $roomTypeId)
-            ->whereBetween('date', [$arrival->toDateString(), $departure->subDay()->toDateString()])->selectRaw('MIN(allotted - picked_up) AS r')->value('r');
+            ->whereBetween('date', [$arrival->toDateString(), $departure->subDay()->toDateString()])->selectRaw('MIN(allotted - picked_up - released) AS r')->value('r');
         if ($remaining < $count) {
             throw new ReservationException(__('pms.err.block_short', ['left' => $remaining]));
         }
@@ -192,6 +213,100 @@ class BlockService
         }
 
         return ['assigned' => $assigned, 'skipped' => $skipped];
+    }
+
+    /**
+     * Gece gece kota (Fidelio Block → Grid): $grid[oda tipi id][Y-m-d] = oda sayısı. Alınan oda sayısının altına inilemez;
+     * bırakılmış (released) geceye yeni sayı girilirse bırakma sıfırlanır.
+     *
+     * @param  array<int|string, array<string, int|string|null>>  $grid
+     */
+    public function saveInventory(Block $block, array $grid): int
+    {
+        return DB::transaction(function () use ($block, $grid) {
+            $this->recountPickup($block);
+            $rows = DB::table('pms_block_inventory')->where('block_id', $block->id)->get()->keyBy(fn ($r) => $r->room_type_id.'|'.substr((string) $r->date, 0, 10));
+            $changed = 0;
+            foreach ($grid as $typeId => $days) {
+                foreach ((array) $days as $date => $value) {
+                    $row = $rows[$typeId.'|'.$date] ?? null;
+                    if (! $row || $value === null || $value === '' || (int) $value === (int) $row->allotted) {
+                        continue;
+                    }
+                    $value = max(0, (int) $value);
+                    if ($value < (int) $row->picked_up) {
+                        throw new ReservationException(__('pms.err.block_below_pickup', ['date' => CarbonImmutable::parse($date)->format('d.m.Y'), 'picked' => $row->picked_up]));
+                    }
+                    DB::table('pms_block_inventory')->where('id', $row->id)->update(['allotted' => $value, 'released' => 0]);
+                    $changed++;
+                }
+            }
+            if ($changed) {
+                $this->availability->rebuild($block->property_id, $block->start_date->toImmutable(), $block->end_date->toImmutable());
+            }
+
+            return $changed;
+        });
+    }
+
+    /**
+     * Opsiyon / bırakma (Fidelio cutoff, release days): gece kapanışında yeni iş gününe göre çalışır.
+     *  - Opsiyon (cutoff) tarihi geçmiş bloklarda bugünden sonraki bütün gecelerin alınmamış odaları,
+     *  - "bırakma günü" girilmiş bloklarda geceye o kadar gün kalmışsa o gecenin alınmamış odaları
+     * bırakılır (released): bloktan düşer, otelin genel müsaitliğine döner. Alınmış odalar etkilenmez.
+     *
+     * @return array{blocks_released: int, rooms_released: int}
+     */
+    public function releaseDue(int $propertyId, string $businessDate): array
+    {
+        $bd = CarbonImmutable::parse($businessDate);
+        $blocks = Block::query()->where('property_id', $propertyId)->where('status', '<>', 'cancelled')->where('end_date', '>', $businessDate)
+            ->where(fn ($q) => $q->where('cutoff_date', '<', $businessDate)->orWhere('release_days', '>', 0))->get();
+        $count = 0;
+        $rooms = 0;
+        foreach ($blocks as $block) {
+            $this->recountPickup($block);
+            $until = $block->cutoff_date && $block->cutoff_date->toImmutable()->lt($bd) ? $block->end_date->toImmutable() : $bd->addDays((int) $block->release_days);
+            $released = (int) DB::table('pms_block_inventory')->where('block_id', $block->id)->where('date', '>=', $businessDate)->where('date', '<=', $until->toDateString())
+                ->whereRaw('allotted - picked_up - released > 0')->sum(DB::raw('allotted - picked_up - released'));
+            if ($released > 0) {
+                DB::table('pms_block_inventory')->where('block_id', $block->id)->where('date', '>=', $businessDate)->where('date', '<=', $until->toDateString())
+                    ->update(['released' => DB::raw('allotted - picked_up')]);
+                $this->availability->rebuild($propertyId, $bd, $block->end_date->toImmutable());
+                $count++;
+                $rooms += $released;
+            }
+        }
+
+        return ['blocks_released' => $count, 'rooms_released' => $rooms];
+    }
+
+    /**
+     * Toplu çıkış: bugün (ya da daha önce) çıkacak, folyo bakiyeleri sıfır seçili üyeler. Bakiyesi olan atlanır ve bildirilir.
+     *
+     * @param  list<int>  $ids
+     * @return array{checked_out: int, errors: list<string>}
+     */
+    public function checkOutMany(Block $block, array $ids, ?int $userId): array
+    {
+        $bd = Property::query()->findOrFail($block->property_id)->current_business_date->toDateString();
+        $count = 0;
+        $errors = [];
+        foreach ($this->members($block, $ids)->where('status', 'in_house') as $reservation) {
+            if ($reservation->departure_date->toDateString() > $bd) {
+                $errors[] = $reservation->confirmation_number.': '.__('pms.err.block_not_due');
+
+                continue;
+            }
+            try {
+                $this->reservations->checkOut($reservation, $userId);
+                $count++;
+            } catch (ReservationException $e) {
+                $errors[] = $reservation->confirmation_number.': '.$e->getMessage();
+            }
+        }
+
+        return ['checked_out' => $count, 'errors' => $errors];
     }
 
     /**

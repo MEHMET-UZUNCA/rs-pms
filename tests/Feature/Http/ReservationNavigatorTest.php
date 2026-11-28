@@ -5,6 +5,7 @@ namespace Tests\Feature\Http;
 use App\Domain\Reservations\Models\Reservation;
 use App\Models\User;
 use App\Support\BusinessDateInput;
+use App\Support\UserPreferences;
 use Carbon\CarbonImmutable;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Facades\DB;
@@ -189,5 +190,22 @@ class ReservationNavigatorTest extends DomainTestCase
         // Kayıt atılmışsa geri alınamaz
         $yilmaz = Reservation::whereHas('profile', fn ($q) => $q->where('last_name', 'Yılmaz'))->firstOrFail();
         $this->actingAs($this->user)->post("/rezervasyon/{$yilmaz->id}/giris-geri-al")->assertSessionHas('error');
+    }
+
+    public function test_grouping_by_room_type_with_subtotals_is_remembered(): void
+    {
+        $inHouse = Reservation::where('status', 'in_house')->with('roomType')->get();
+        $html = $this->actingAs($this->user)->get('/rezervasyon?f=iceride&grup=room_type')->assertOk()->getContent();
+        $types = $inHouse->groupBy(fn ($r) => $r->roomType->code);
+        $this->assertSame($types->count(), substr_count($html, 'data-group-row'));
+        foreach ($types as $code => $list) {
+            $pax = $list->sum('adults') + $list->sum('children');
+            $this->assertStringContainsString("<b>{$code}</b>", $html);
+            $this->assertStringContainsString($list->count().' res. · '.$pax.' pax', $html);
+        }
+        // Tercih saklanır: süzgeç değişince de gruplu; "none" kapatır
+        $this->assertSame('room_type', UserPreferences::get($this->user, 'navigator.group'));
+        $this->assertStringContainsString('data-group-row', $this->actingAs($this->user)->get('/rezervasyon?f=iceride')->getContent());
+        $this->assertStringNotContainsString('data-group-row', $this->actingAs($this->user)->get('/rezervasyon?f=iceride&grup=none')->getContent());
     }
 }

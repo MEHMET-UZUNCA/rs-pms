@@ -86,6 +86,21 @@ class HousekeepingController extends Controller
         ]);
     }
 
+    /**
+     * Telefon ekranı (kat görevlisi / teknik servis sahada): büyük oda kartları, kata ve duruma göre süzme, dokunarak durum değiştirme,
+     * arıza bildirimi (teknik servise misafir isteği olarak). Misafir adı gösterilmez; yalnız dolu / boş, gelecek / çıkacak.
+     */
+    public function mobile(Request $request): View
+    {
+        $data = $this->index($request->merge(['f' => in_array($request->query('f'), ['vd', 'od', 'dep', 'arr', 'ins'], true) ? $request->query('f') : null]))->getData();
+        $dirty = $request->query('f', 'kirli') === 'kirli';
+        if ($dirty) {
+            $data['rooms'] = $data['rooms']->filter(fn ($r) => in_array($r->hk_status, ['dirty', 'pickup'], true))->values();
+        }
+
+        return view('housekeeping.mobile', $data + ['tab' => $dirty ? 'kirli' : ($data['filter'] ?? 'hepsi')]);
+    }
+
     public function status(Request $request): RedirectResponse
     {
         $property = app(Property::class);

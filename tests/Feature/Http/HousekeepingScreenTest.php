@@ -87,4 +87,24 @@ class HousekeepingScreenTest extends DomainTestCase
         $this->actingAs($agent)->get('/kat-hizmetleri')->assertOk()->assertDontSee('Put out of order');
         $this->actingAs($agent)->post('/kat-hizmetleri/ariza', ['rooms' => [1], 'type' => 'OOO'])->assertForbidden();
     }
+
+    public function test_phone_screen_lists_dirty_rooms_changes_status_and_reports_issue(): void
+    {
+        $html = $this->actingAs($this->user)->get('/kat-hizmetleri/mobil')->assertOk()->getContent();
+        $this->assertStringContainsString('data-mobile-room="1107"', $html);
+        $this->assertStringContainsString('width=device-width', $html);
+        $this->assertStringNotContainsString('data-mobile-room="1102"', $html);   // dolu ve temiz oda kirli listesinde yok
+        $guest = DB::table('pms_reservations as r')->join('pms_profiles as p', 'p.id', '=', 'r.profile_id')->where('r.status', 'in_house')->value('p.last_name');
+        $this->assertStringNotContainsString((string) $guest, $this->actingAs($this->user)->get('/kat-hizmetleri/mobil?f=hepsi')->getContent());   // misafir adı yok
+
+        $this->actingAs($this->user)->from('/kat-hizmetleri/mobil')->post('/kat-hizmetleri/durum', ['rooms' => [$this->room('1107')->id], 'code' => 'CL'])
+            ->assertRedirect('/kat-hizmetleri/mobil');
+        $this->assertSame('clean', $this->room('1107')->hk_status);
+        $this->assertStringNotContainsString('data-mobile-room="1107"', $this->actingAs($this->user)->get('/kat-hizmetleri/mobil')->getContent());
+
+        // HKS'in istek yetkisi var: arıza teknik servise iş olarak düşer, telefon ekranına dönülür
+        $this->actingAs($this->user)->post('/istekler', ['room' => '1107', 'kind' => 'request', 'department' => 'technical', 'priority' => 'normal',
+            'due_time' => '18:00', 'message' => 'Klima damlatıyor', 'return' => 'mobile'])->assertRedirect(route('housekeeping.mobile'));
+        $this->assertTrue(DB::table('pms_traces')->where('department', 'technical')->where('message', 'Klima damlatıyor')->exists());
+    }
 }

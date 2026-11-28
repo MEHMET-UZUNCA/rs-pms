@@ -12,6 +12,7 @@ use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Rates\Services\AvailabilityService;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Models\ReservationNight;
+use App\Domain\Reservations\Services\BlockService;
 use App\Domain\Reservations\Services\FixedChargeService;
 use App\Domain\Reservations\Support\ReservationOptions;
 use Carbon\CarbonImmutable;
@@ -335,7 +336,8 @@ class NightAuditService
             ['status' => 'open', 'opened_at' => now(), 'updated_at' => now()]);
         $property->update(['current_business_date' => $next]);
 
-        return ['new_business_date' => $next, 'occupied_rooms_status' => $occupied];
+        // Opsiyon tarihi geçen / bırakma gününe gelen blok odaları genel müsaitliğe döner
+        return ['new_business_date' => $next, 'occupied_rooms_status' => $occupied] + app(BlockService::class)->releaseDue($property->id, $next);
     }
 
     private function reportPack(int $propertyId, string $bd): array

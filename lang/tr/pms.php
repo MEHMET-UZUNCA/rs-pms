@@ -19,7 +19,7 @@ return [
         'profiles' => 'Müşteri', 'conference' => 'Toplantı / Banket', 'miscellaneous' => 'Çeşitli', 'setup' => 'Ayarlar',
         'reservation_navigator' => 'Rezervasyon Navigatörü', 'quick_reservation' => 'Hızlı Rezervasyon', 'availability' => 'Müsaitlik',
         'rate_query' => 'Fiyat Sorgulama', 'block_reservation' => 'Blok / Allotman', 'arrivals' => 'Gelecekler', 'in_house' => 'İçeridekiler',
-        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'reservation_options' => 'Rezervasyon seçenekleri', 'exchange_rates' => 'Döviz kurları', 'rate_codes' => 'Fiyat kodları', 'meal_plan' => 'Öğün sayıları', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
+        'new_financial_account' => 'Yeni hesap (PM)', 'quick_keys' => 'Kısayollar', 'new_reservation' => 'Yeni rezervasyon', 'update_reservation' => 'Rezervasyon güncelle', 'messages' => 'Mesajlar', 'all_shortcuts' => 'Bütün kısayollar', 'group_reservation' => 'Grup rezervasyonu', 'financial_accounts' => 'Hesaplar (FA)', 'queue_rooms' => 'Bekleyen odalar (Queue)', 'lost_found' => 'Kayıp eşya (Lost & Found)', 'out_of_order' => 'Arızalı odalar (OOO)', 'hk_mobile' => 'Kat hizmetleri (telefon)', 'room_history' => 'Oda geçmişi', 'roles' => 'Roller', 'reservation_options' => 'Rezervasyon seçenekleri', 'exchange_rates' => 'Döviz kurları', 'rate_codes' => 'Fiyat kodları', 'meal_plan' => 'Öğün sayıları', 'room_rack' => 'Oda Planı', 'house_status' => 'Ev Durumu', 'billing' => 'Folyo', 'posting' => 'Kayıt At', 'passer_by' => 'Ayakta Satış',
         'close_cashier' => 'Kasa Kapanışı', 'accounts_receivable' => 'Cari Hesaplar', 'room_status' => 'Kat Hizmetleri',
         'attendants' => 'Görev Dağıtımı', 'discrepant_rooms' => 'Uyuşmazlıklar', 'profile_navigator' => 'Profil Navigatörü',
         'conference_diary' => 'Konferans Günlüğü', 'events' => 'Etkinlikler', 'night_audit' => 'Gece Kapanışı', 'logbook' => 'Vardiya Defteri',
@@ -93,7 +93,7 @@ return [
     ],
 
     'res' => [
-        'reinstate' => 'Geri al (Reinstate)', 'reinstate_confirm' => 'Seçili rezervasyon geri alınsın mı?', 'reinstated' => ':name — :no numaralı rezervasyon geri alındı.', 'undo_check_in' => 'Girişi geri al', 'undo_check_in_short' => 'Giriş geri', 'undo_confirm' => 'Seçili rezervasyonun girişi geri alınsın mı?', 'check_in_undone' => ':name — giriş geri alındı.', 'err_reinstate_status' => 'Yalnız iptal ya da no-show rezervasyon geri alınır.', 'err_reinstate_dates' => 'Konaklama süresi geçmiş; önce kartta tarihleri değiştirin.', 'err_undo_day' => 'Giriş yalnız giriş günü içinde geri alınır.', 'err_undo_postings' => 'Folyoda kayıt var; önce düzeltin ya da aktarın.',
+        'group_by' => 'Grupla', 'group_none' => '(acente / şirket yok)', 'group_summary' => ':count rez. · :pax kişi', 'groups' => ['none' => 'Gruplama yok', 'company' => 'Acente / şirket', 'room_type' => 'Oda tipi', 'board' => 'Pansiyon', 'rate_code' => 'Fiyat kodu', 'status' => 'Durum', 'nationality' => 'Uyruk', 'arrival' => 'Geliş günü'], 'reinstate' => 'Geri al (Reinstate)', 'reinstate_confirm' => 'Seçili rezervasyon geri alınsın mı?', 'reinstated' => ':name — :no numaralı rezervasyon geri alındı.', 'undo_check_in' => 'Girişi geri al', 'undo_check_in_short' => 'Giriş geri', 'undo_confirm' => 'Seçili rezervasyonun girişi geri alınsın mı?', 'check_in_undone' => ':name — giriş geri alındı.', 'err_reinstate_status' => 'Yalnız iptal ya da no-show rezervasyon geri alınır.', 'err_reinstate_dates' => 'Konaklama süresi geçmiş; önce kartta tarihleri değiştirin.', 'err_undo_day' => 'Giriş yalnız giriş günü içinde geri alınır.', 'err_undo_postings' => 'Folyoda kayıt var; önce düzeltin ya da aktarın.',
         'columns' => 'Kolonlar', 'columns_hint' => 'Listenin kolonlarını seçin ve sıralayın; kullanıcınıza kaydedilir.', 'columns_saved' => 'Liste ayarlarınız kaydedildi.', 'columns_reset' => 'Varsayılan', 'move_up' => 'Yukarı', 'move_down' => 'Aşağı', 'panel' => 'Alt panel', 'panels' => ['none' => 'Gizli', 's' => 'Küçük', 'm' => 'Orta', 'l' => 'Büyük'], 'cols' => ['room' => 'Oda', 'guest' => 'Misafir', 'arrival' => 'Geliş', 'departure' => 'Çıkış', 'nights' => 'Gece', 'room_type' => 'Oda tipi', 'rate_code' => 'Fiyat kodu', 'pax' => 'Kişi', 'company' => 'Şirket / Acenta', 'status' => 'Durum', 'balance' => 'Bakiye', 'conf_no' => 'Onay no'],
         'cancel_reason' => 'İptal nedeni', 'cancel_title' => 'Rezervasyon İptali', 'cancel_confirm' => 'Seçili rezervasyon iptal edilsin mi?', 'cancel_hint' => 'Yalnız gelmemiş rezervasyonlar iptal edilir. Oda boşalır, iptal numarası verilir.', 'cancelled_ok' => ':name — rezervasyon iptal edildi, iptal no :no.',
         'dirty_blocked' => ':room numaralı oda kirli; kat hizmetleri temiz yapana kadar giriş yapılamaz.', 'dirty_warning' => 'Dikkat: :room numaralı oda hâlâ kirli.',
@@ -428,7 +428,7 @@ Kaya, Ayşe
 (boşsa rezervasyonlar grup adıyla açılır)', 'create_reservations' => 'Rezervasyonları aç',
         'members' => 'Bloktaki rezervasyonlar', 'auto_assign' => 'Oda ata', 'route_master' => 'Ana hesaba yönlendir', 'unroute' => 'Yönlendirmeyi kaldır',
         'select_all' => 'Tümünü seç', 'billing' => 'Oda ve pansiyon ücreti', 'to_master' => 'Ana hesap', 'own_folio' => 'Misafir folyosu', 'no_members' => 'Henüz rezervasyon yok.',
-        'picked' => ':count rezervasyon açıldı.', 'assigned' => ':count odaya atama yapıldı.', 'no_room_for' => 'Boş oda bulunamadı: :list', 'checked_in' => ':count rezervasyona giriş yapıldı.',
+        'released' => 'Bırakılan', 'release_days' => 'Bırakma (gün)', 'release_hint' => 'Bir gecenin alınmamış odaları, geceden bu kadar gün önce genel müsaitliğe bırakılır (0 = yalnız opsiyon tarihinde).', 'grid' => 'Gece gece oda', 'grid_hint' => 'Gece başına kota; küçük rakamlar: alınan · bırakılan.', 'grid_saved' => 'Kota kaydedildi (:count gece değişti).', 'checked_out' => ':count misafirin çıkışı yapıldı.', 'picked' => ':count rezervasyon açıldı.', 'assigned' => ':count odaya atama yapıldı.', 'no_room_for' => 'Boş oda bulunamadı: :list', 'checked_in' => ':count rezervasyona giriş yapıldı.',
         'routed' => ':count rezervasyonun oda ve pansiyon ücreti :folio ana hesabına yazılacak.', 'unrouted' => ':count rezervasyonun yönlendirmesi kaldırıldı.',
         'select_members' => 'En az bir rezervasyon seçin.',
     ],
@@ -549,7 +549,7 @@ Kaya, Ayşe
         'block_cancelled' => 'İptal edilmiş bloktan rezervasyon açılamaz.',
         'block_count' => 'Oda sayısı 1 ile 200 arasında olmalı.',
         'block_range' => 'Rezervasyon tarihleri blok tarihleri içinde olmalı.',
-        'block_short' => 'Kotada bu oda tipinden yeterli oda yok (kalan :left).',
+        'block_below_pickup' => ':date: :picked oda zaten alınmış; kota bunun altına inemez.', 'block_not_due' => 'bugün çıkmıyor', 'block_short' => 'Kotada bu oda tipinden yeterli oda yok (kalan :left).',
         'block_codes' => 'Blokta fiyat kodu, pazar ve kaynak dolu olmalı.',
         'fixed_closed' => 'Kapanmış rezervasyona sabit ücret eklenemez.',
         'fixed_dates' => 'Sabit ücret tarihleri konaklama geceleri içinde olmalı (:from – :to).',
@@ -611,5 +611,12 @@ Kaya, Ayşe
         'metric' => ['rooms_available' => 'Satılabilir oda', 'rooms_sold' => 'Satılan oda', 'occupancy' => 'Doluluk %', 'persons' => 'Kişi geceleme', 'adr' => 'Ortalama oda fiyatı (net)',
             'revpar' => 'RevPAR', 'room_revenue' => 'Oda geliri', 'fnb_revenue' => 'Yiyecek-içecek geliri', 'other_revenue' => 'Diğer gelir', 'total_revenue' => 'Toplam gelir'],
         'folio_types' => ['guest' => 'Misafir', 'passer_by' => 'Passer-by', 'house_account' => 'Otel hesabı', 'master' => 'Master', 'ar' => 'Cari', 'pseudo_room' => 'Sanal oda', 'event' => 'Etkinlik'],
+    ],
+
+    'hkm' => [
+        'title' => 'Kat hizmetleri', 'desktop' => 'Tam ekran', 'all_floors' => 'Bütün katlar', 'rooms' => ':count oda', 'pax' => 'kişi',
+        'due_out' => 'Çıkacak', 'arrival' => 'Gelecek', 'report' => 'Arıza bildir (teknik servise)', 'report_hint' => 'Ör. klima damlatıyor, banyo lambası yanmıyor',
+        'send' => 'Gönder', 'empty' => 'Bu listede oda yok.',
+        'tabs' => ['dirty' => 'Kirli', 'dep' => 'Çıkacak', 'arr' => 'Gelecek', 'ins' => 'Kontrollü', 'all' => 'Hepsi'],
     ],
 ];

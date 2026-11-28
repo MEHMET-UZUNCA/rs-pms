@@ -43,6 +43,7 @@ class Menu
                 ['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null],
                 ['out_of_order', $can('housekeeping.view') ? route('rooms.out-of-order') : null],
                 ['room_history', $can('housekeeping.view') || $can('reservations.view') ? route('rooms.history') : null],
+                ['hk_mobile', $can('housekeeping.view') ? route('housekeeping.mobile') : null],
                 ['house_status', $can('reservations.view') || $can('housekeeping.view') ? route('front-office.house-status') : null],
             ],
             'profiles' => [['profile_navigator', $can('profiles.view') ? route('profiles.index') : null]],

@@ -93,7 +93,8 @@
                     <button formaction="{{ route('housekeeping.outage') }}" class="btn btn-primary justify-center">{{ __('pms.hkscreen.save_outage') }}</button>
                 </fieldset>
             @endif
-            <a href="{{ route('home') }}" class="btn btn-side mt-auto" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
+            <a href="{{ route('housekeeping.mobile') }}" class="btn btn-side mt-auto">{{ __('pms.menu.hk_mobile') }}</a>
+            <a href="{{ route('home') }}" class="btn btn-side" data-hotkey="escape">{{ __('pms.common.close') }} <span class="kbd ml-auto">Esc</span></a>
         </aside>
     </form>
     @php $hm = $house['movement']; $he = $house['end_of_day']; @endphp

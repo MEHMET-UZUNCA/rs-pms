@@ -18,6 +18,7 @@
                 <div><div class="text-muted text-[12px]">{{ __('pms.block.end') }}</div><div>{{ $d($block->end_date) }}</div></div>
                 <div><div class="text-muted text-[12px]">{{ __('pms.res.rate_code') }}</div><div>{{ $rate?->code }}</div></div>
                 <div><div class="text-muted text-[12px]">{{ __('pms.block.cutoff') }}</div><div @class(['text-danger font-semibold' => $block->cutoff_date && $block->cutoff_date->lte($bd) && $block->status === 'tentative'])>{{ $d($block->cutoff_date) }}</div></div>
+                <div><div class="text-muted text-[12px]">{{ __('pms.block.release_days') }}</div><div>{{ $block->release_days ?: '—' }}</div></div>
                 <div><div class="text-muted text-[12px]">{{ __('pms.block.contract') }}</div><div>{{ $block->contract_number }}</div></div>
                 <div class="col-span-2"><div class="text-muted text-[12px]">{{ __('pms.block.master') }}</div>
                     <div>@if ($master)<a class="text-brand-600 hover:underline font-semibold" href="{{ route('billing.account', $master) }}">{{ $master->folio_number }} {{ $master->name }}</a> · {{ number_format((float) $master->balance, 2, ',', '.') }}@else<span class="text-muted">{{ __('pms.block.no_master') }}</span>@endif</div></div>
@@ -28,12 +29,12 @@
                 <section class="win !min-h-fit p-3 min-w-0">
                     <b>{{ __('pms.block.rooms_per_night') }}</b>
                     <table class="grid-table mt-1" data-block-summary><thead><tr><th>{{ __('pms.res.room_type') }}</th><th class="text-right">{{ __('pms.block.allotted') }}</th>
-                        <th class="text-right">{{ __('pms.block.picked_up') }}</th><th class="text-right">{{ __('pms.block.remaining') }}</th></tr></thead><tbody>
+                        <th class="text-right">{{ __('pms.block.picked_up') }}</th><th class="text-right">{{ __('pms.block.released') }}</th><th class="text-right">{{ __('pms.block.remaining') }}</th></tr></thead><tbody>
                         @forelse ($summary as $s)
                             <tr><td><b>{{ $s->code }}</b> {{ $s->name }}</td><td class="text-right tabular-nums">{{ $s->allotted }}</td><td class="text-right tabular-nums">{{ $s->picked_up }}</td>
-                                <td class="text-right tabular-nums font-semibold" data-remaining="{{ $s->code }}">{{ $s->remaining }}</td></tr>
+                                <td class="text-right tabular-nums text-muted">{{ $s->released ?: '' }}</td><td class="text-right tabular-nums font-semibold" data-remaining="{{ $s->code }}">{{ $s->remaining }}</td></tr>
                         @empty
-                            <tr><td colspan="4" class="text-muted text-center py-3">{{ __('pms.block.no_rooms') }}</td></tr>
+                            <tr><td colspan="5" class="text-muted text-center py-3">{{ __('pms.block.no_rooms') }}</td></tr>
                         @endforelse
                     </tbody></table>
                 </section>
@@ -57,6 +58,31 @@
                 @endif
             </div>
 
+            @if ($grid->isNotEmpty())
+                <form method="POST" action="{{ route('blocks.inventory', $block) }}" class="win !min-h-fit p-3 min-w-0" data-block-grid>
+                    @csrf @method('PUT')
+                    @php $dates = $grid->first()->keys(); @endphp
+                    <div class="flex items-center gap-2 mb-1"><b>{{ __('pms.block.grid') }}</b><span class="text-[12px] text-muted">{{ __('pms.block.grid_hint') }}</span>
+                        @if ($canEdit && $open)<button class="btn btn-primary ml-auto" data-hotkey="alt+q">{{ __('pms.common.save') }} <span class="kbd !text-brand-100 !bg-transparent !border-brand-200">Alt+Q</span></button>@endif</div>
+                    <div class="overflow-x-auto"><table class="grid-table text-[12.5px]">
+                        <thead><tr><th class="sticky left-0 bg-panel">{{ __('pms.res.room_type') }}</th>
+                            @foreach ($dates as $date)<th class="text-center whitespace-nowrap px-1">{{ \Illuminate\Support\Carbon::parse($date)->format('d.m') }}<br><span class="font-normal text-muted">{{ \Illuminate\Support\Carbon::parse($date)->translatedFormat('D') }}</span></th>@endforeach</tr></thead>
+                        <tbody>
+                        @foreach ($grid as $typeId => $days)
+                            <tr><td class="sticky left-0 bg-panel font-semibold">{{ $summary->firstWhere('room_type_id', $typeId)?->code }}</td>
+                                @foreach ($dates as $date)
+                                    @php $c = $days[$date] ?? null; @endphp
+                                    <td class="text-center px-1">@if ($c)
+                                        <input name="q[{{ $typeId }}][{{ $date }}]" value="{{ $c->allotted }}" inputmode="numeric" class="input w-12 h-7 text-center px-1" @disabled(! $canEdit || ! $open || $date < $bd->toDateString()) aria-label="{{ $date }}">
+                                        <div class="text-[11px] text-muted">{{ $c->picked_up }}@if ($c->released) · <span class="text-danger" title="{{ __('pms.block.released') }}">−{{ $c->released }}</span>@endif</div>
+                                    @endif</td>
+                                @endforeach</tr>
+                        @endforeach
+                        </tbody>
+                    </table></div>
+                </form>
+            @endif
+
             <form method="POST" action="{{ route('blocks.bulk', $block) }}" class="win !min-h-fit p-3 min-w-0" id="bulk-form">
                 @csrf
                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -65,6 +91,7 @@
                         <span class="ml-auto"></span>
                         <button name="action" value="assign" class="btn" data-hotkey="alt+a">{{ __('pms.block.auto_assign') }} <span class="kbd">Alt+A</span></button>
                         @if ($canCheckIn)<button name="action" value="check_in" class="btn" data-hotkey="alt+g">{{ __('pms.res.check_in') }} <span class="kbd">Alt+G</span></button>@endif
+                        @can('permission', 'reservations.checkout')<button name="action" value="check_out" class="btn" data-hotkey="alt+o">{{ __('pms.res.check_out') }} <span class="kbd">Alt+O</span></button>@endcan
                         <button name="action" value="route" class="btn" data-hotkey="alt+m">{{ __('pms.block.route_master') }} <span class="kbd">Alt+M</span></button>
                         <button name="action" value="unroute" class="btn">{{ __('pms.block.unroute') }}</button>
                     @endif

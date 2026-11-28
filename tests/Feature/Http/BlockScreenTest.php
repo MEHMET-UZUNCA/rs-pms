@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Http;
 
+use App\Domain\Cashiering\Services\FolioService;
 use App\Domain\NightAudit\Services\NightAuditService;
 use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Reservations\Models\Block;
 use App\Domain\Reservations\Models\Reservation;
+use App\Domain\Reservations\Services\BlockService;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Support\Carbon;
@@ -126,5 +128,47 @@ class BlockScreenTest extends DomainTestCase
         $hks = User::create(['username' => 'KAT', 'name' => 'Kat', 'email' => 'kat@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $hks->id, 'property_id' => $this->property, 'role_id' => DB::table('pms_roles')->where('code', 'IFC')->value('id')]);
         $this->actingAs($hks)->get('/bloklar')->assertForbidden();
+    }
+
+    public function test_nightly_allotment_release_and_mass_check_out(): void
+    {
+        $ymf = $this->id('pms_room_types', 'YMF');
+        $block = $this->createBlock(['end_date' => $this->bd->copy()->addDays(4)->format('d.m.Y'), 'release_days' => 2]);   // 4 gece × 4 oda
+        $d = fn (int $add) => $this->bd->copy()->addDays($add)->toDateString();
+        $this->actingAs($this->user)->get("/bloklar/{$block->id}")->assertOk()->assertSee('data-block-grid', false);
+
+        // Gece gece kota: 3. gece 6 oda; başlık yeniden kaydedilince (sayı aynı) korunur
+        $this->actingAs($this->user)->put("/bloklar/{$block->id}/kota", ['q' => [$ymf => [$d(2) => 6]]])->assertSessionHas('status', 'Allotment saved (1 nights changed).');
+        $this->actingAs($this->user)->put("/bloklar/{$block->id}", ['code' => 'CHESS27', 'name' => 'Satranç Turnuvası', 'type' => 'group', 'status' => 'definite',
+            'profile_id' => $block->profile_id, 'start_date' => $this->bd->format('d.m.Y'), 'end_date' => $this->bd->copy()->addDays(4)->format('d.m.Y'), 'release_days' => 2,
+            'rate_code_id' => $block->rate_code_id, 'market_segment_id' => $block->market_segment_id, 'source_code_id' => $block->source_code_id, 'rooms' => [$ymf => 4]])->assertSessionHasNoErrors();
+        $allot = fn (string $date) => (int) DB::table('pms_block_inventory')->where('block_id', $block->id)->where('date', $date)->value('allotted');
+        $this->assertSame([4, 6], [$allot($d(0)), $allot($d(2))]);
+
+        // 2 oda alınır; kota alınan sayının altına inemez
+        $this->actingAs($this->user)->post("/bloklar/{$block->id}/rezervasyonlar", ['room_type_id' => $ymf, 'count' => 2, 'adults' => 2,
+            'reservation_type_id' => $this->id('pms_reservation_types', 'GTD'), 'arrival_date' => $this->bd->format('d.m.Y'), 'departure_date' => $this->bd->copy()->addDay()->format('d.m.Y')]);
+        $this->actingAs($this->user)->put("/bloklar/{$block->id}/kota", ['q' => [$ymf => [$d(0) => 1]]])->assertSessionHas('error');
+
+        // Bırakma: 2 gün kala → bugün, +1, +2 gecelerinin alınmamış odaları bırakılır; +3 kalır
+        $result = app(BlockService::class)->releaseDue($this->property, $this->bd->toDateString());
+        $this->assertSame(1, $result['blocks_released']);
+        $this->assertSame((4 - 2) + 4 + 6, $result['rooms_released']);
+        $released = fn (string $date) => (int) DB::table('pms_block_inventory')->where('block_id', $block->id)->where('date', $date)->value('released');
+        $this->assertSame([2, 4, 6, 0], [$released($d(0)), $released($d(1)), $released($d(2)), $released($d(3))]);
+        $this->assertSame(0, app(BlockService::class)->releaseDue($this->property, $this->bd->toDateString())['rooms_released']);
+        $this->actingAs($this->user)->get("/bloklar/{$block->id}")->assertSee('−4');
+
+        // Toplu çıkış: bugün çıkacak, bakiyesi sıfır üye çıkar; bakiyeli olan bildirilir
+        $members = Reservation::where('block_id', $block->id)->orderBy('id')->get();
+        DB::table('pms_rooms')->whereIn('id', DB::table('pms_rooms')->where('room_type_id', $ymf)->whereNull('current_reservation_id')->limit(2)->pluck('id'))->update(['hk_status' => 'inspected']);
+        $this->actingAs($this->user)->post("/bloklar/{$block->id}/islem", ['action' => 'assign', 'ids' => $members->pluck('id')->all()]);
+        $this->actingAs($this->user)->post("/bloklar/{$block->id}/islem", ['action' => 'check_in', 'ids' => $members->pluck('id')->all()])->assertSessionMissing('error');
+        DB::table('pms_reservations')->whereIn('id', $members->pluck('id'))->update(['departure_date' => $this->bd->toDateString()]);
+        $folio = app(FolioService::class)->window($members[1]->fresh(), 1);
+        DB::table('pms_folios')->where('id', $folio->id)->update(['balance' => 100]);
+        $this->actingAs($this->user)->post("/bloklar/{$block->id}/islem", ['action' => 'check_out', 'ids' => $members->pluck('id')->all()])
+            ->assertSessionHas('status', '1 guests checked out.')->assertSessionHas('error');
+        $this->assertSame(['checked_out', 'in_house'], [$members[0]->fresh()->status, $members[1]->fresh()->status]);
     }
 }

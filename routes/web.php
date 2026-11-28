@@ -69,6 +69,7 @@ Route::middleware(['auth', 'property'])->group(function () {
     // Kat Hizmetleri (Housekeeping)
     Route::middleware('permission:housekeeping.view')->prefix('kat-hizmetleri')->name('housekeeping.')->group(function () {
         Route::get('/', [HousekeepingController::class, 'index'])->name('index');
+        Route::get('/mobil', [HousekeepingController::class, 'mobile'])->name('mobile');
         Route::post('/durum', [HousekeepingController::class, 'status'])->middleware('permission:housekeeping.status')->name('status');
         Route::post('/ariza', [HousekeepingController::class, 'outage'])->middleware('permission:housekeeping.outage')->name('outage');
         Route::post('/ariza/{outage}/kaldir', [HousekeepingController::class, 'release'])->whereNumber('outage')->middleware('permission:housekeeping.outage')->name('release');
@@ -163,6 +164,7 @@ Route::middleware(['auth', 'property'])->group(function () {
             Route::put('/{block}', [BlockController::class, 'update'])->whereNumber('block')->name('update');
             Route::post('/{block}/rezervasyonlar', [BlockController::class, 'pickUp'])->whereNumber('block')->name('pick-up');
             Route::post('/{block}/islem', [BlockController::class, 'bulk'])->whereNumber('block')->name('bulk');
+            Route::put('/{block}/kota', [BlockController::class, 'inventory'])->whereNumber('block')->name('inventory');
         });
     });
 

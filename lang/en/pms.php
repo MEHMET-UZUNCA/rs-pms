@@ -19,7 +19,7 @@ return [
         'profiles' => 'Profiles', 'conference' => 'Conference & Catering', 'miscellaneous' => 'Miscellaneous', 'setup' => 'Setup',
         'reservation_navigator' => 'Reservation Navigator', 'quick_reservation' => 'Quick Reservation', 'availability' => 'Availability',
         'rate_query' => 'Rate Query', 'block_reservation' => 'Block Reservation', 'arrivals' => 'Arrivals', 'in_house' => 'In House',
-        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'room_history' => 'Room History', 'roles' => 'Roles', 'reservation_options' => 'Reservation Options', 'exchange_rates' => 'Exchange Rates', 'rate_codes' => 'Rates', 'meal_plan' => 'Meal Plan Forecast', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
+        'new_financial_account' => 'New Financial Account', 'quick_keys' => 'Quick Keys', 'new_reservation' => 'New Reservation', 'update_reservation' => 'Update Reservation', 'messages' => 'Messages', 'all_shortcuts' => 'All Shortcuts', 'group_reservation' => 'Group Reservation', 'financial_accounts' => 'Financial Accounts', 'queue_rooms' => 'Queue Rooms', 'lost_found' => 'Lost & Found', 'out_of_order' => 'Out of Order', 'hk_mobile' => 'Housekeeping (phone)', 'room_history' => 'Room History', 'roles' => 'Roles', 'reservation_options' => 'Reservation Options', 'exchange_rates' => 'Exchange Rates', 'rate_codes' => 'Rates', 'meal_plan' => 'Meal Plan Forecast', 'room_rack' => 'Room Rack', 'house_status' => 'House Status', 'billing' => 'Billing', 'posting' => 'Posting', 'passer_by' => 'Passer By',
         'close_cashier' => 'Close Cashier', 'accounts_receivable' => 'Accounts Receivable', 'room_status' => 'Housekeeping',
         'attendants' => 'Attendant Assignment', 'discrepant_rooms' => 'Discrepant Rooms', 'profile_navigator' => 'Profile Navigator',
         'conference_diary' => 'Conference Diary', 'events' => 'Events', 'night_audit' => 'Night Audit', 'logbook' => 'Logbook',
@@ -93,7 +93,7 @@ return [
     ],
 
     'res' => [
-        'reinstate' => 'Reinstate', 'reinstate_confirm' => 'Reinstate the selected reservation?', 'reinstated' => ':name — reservation :no reinstated.', 'undo_check_in' => 'Undo Check In', 'undo_check_in_short' => 'Undo C/I', 'undo_confirm' => 'Undo the check-in of the selected reservation?', 'check_in_undone' => ':name — check-in undone.', 'err_reinstate_status' => 'Only cancelled or no-show reservations can be reinstated.', 'err_reinstate_dates' => 'The stay is over; change the dates on the card first.', 'err_undo_day' => 'Check-in can be undone only on the check-in day.', 'err_undo_postings' => 'The folio has postings; correct or transfer them first.',
+        'group_by' => 'Group', 'group_none' => '(no agent / company)', 'group_summary' => ':count res. · :pax pax', 'groups' => ['none' => 'No grouping', 'company' => 'Agent / company', 'room_type' => 'Room type', 'board' => 'Board', 'rate_code' => 'Rate code', 'status' => 'Status', 'nationality' => 'Nationality', 'arrival' => 'Arrival date'], 'reinstate' => 'Reinstate', 'reinstate_confirm' => 'Reinstate the selected reservation?', 'reinstated' => ':name — reservation :no reinstated.', 'undo_check_in' => 'Undo Check In', 'undo_check_in_short' => 'Undo C/I', 'undo_confirm' => 'Undo the check-in of the selected reservation?', 'check_in_undone' => ':name — check-in undone.', 'err_reinstate_status' => 'Only cancelled or no-show reservations can be reinstated.', 'err_reinstate_dates' => 'The stay is over; change the dates on the card first.', 'err_undo_day' => 'Check-in can be undone only on the check-in day.', 'err_undo_postings' => 'The folio has postings; correct or transfer them first.',
         'columns' => 'Columns', 'columns_hint' => 'Choose and order the columns of the list; saved for your user.', 'columns_saved' => 'Your list settings were saved.', 'columns_reset' => 'Default', 'move_up' => 'Move up', 'move_down' => 'Move down', 'panel' => 'Detail panel', 'panels' => ['none' => 'Hidden', 's' => 'Small', 'm' => 'Medium', 'l' => 'Large'], 'cols' => ['room' => 'Room', 'guest' => 'Guest', 'arrival' => 'Arrival', 'departure' => 'Departure', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'company' => 'Company / Agent', 'status' => 'Status', 'balance' => 'Balance', 'conf_no' => 'Conf. No.'],
         'cancel_reason' => 'Cancellation reason', 'cancel_title' => 'Cancel Reservation', 'cancel_confirm' => 'Cancel the selected reservation?', 'cancel_hint' => 'Only reservations that have not arrived can be cancelled. The room is released and a cancellation number is given.', 'cancelled_ok' => ':name — reservation cancelled, cancellation no. :no.',
         'dirty_blocked' => 'Room :room is dirty; check-in is not allowed until housekeeping sets it clean.', 'dirty_warning' => 'Note: room :room is still dirty.',
@@ -428,7 +428,7 @@ Müller, Anna
 (empty: reservations are opened with the group name)', 'create_reservations' => 'Create reservations',
         'members' => 'Reservations in the block', 'auto_assign' => 'Assign rooms', 'route_master' => 'Route to master', 'unroute' => 'Remove routing',
         'select_all' => 'Select all', 'billing' => 'Room and board charges', 'to_master' => 'Master account', 'own_folio' => 'Guest folio', 'no_members' => 'No reservations yet.',
-        'picked' => ':count reservations created.', 'assigned' => ':count rooms assigned.', 'no_room_for' => 'No free room for: :list', 'checked_in' => ':count reservations checked in.',
+        'released' => 'Released', 'release_days' => 'Release (days)', 'release_hint' => 'Unpicked rooms of a night are released to general availability this many days before the night (0 = only at the cutoff date).', 'grid' => 'Rooms night by night', 'grid_hint' => 'Allotment per night; small figures: picked up · released.', 'grid_saved' => 'Allotment saved (:count nights changed).', 'checked_out' => ':count guests checked out.', 'picked' => ':count reservations created.', 'assigned' => ':count rooms assigned.', 'no_room_for' => 'No free room for: :list', 'checked_in' => ':count reservations checked in.',
         'routed' => 'Room and board charges of :count reservations go to master account :folio.', 'unrouted' => 'Routing removed from :count reservations.',
         'select_members' => 'Select at least one reservation.',
     ],
@@ -549,7 +549,7 @@ Müller, Anna
         'block_cancelled' => 'No reservations can be made from a cancelled block.',
         'block_count' => 'The number of rooms must be between 1 and 200.',
         'block_range' => 'Reservation dates must be within the block dates.',
-        'block_short' => 'Not enough rooms of this type left in the block (left: :left).',
+        'block_below_pickup' => ':date: :picked rooms are already picked up; the allotment cannot be lower.', 'block_not_due' => 'not departing today', 'block_short' => 'Not enough rooms of this type left in the block (left: :left).',
         'block_codes' => 'The block needs a rate code, market and source.',
         'fixed_closed' => 'Fixed charges cannot be added to a closed reservation.',
         'fixed_dates' => 'Fixed charge dates must be within the nights of the stay (:from – :to).',
@@ -611,5 +611,12 @@ Müller, Anna
         'metric' => ['rooms_available' => 'Rooms available', 'rooms_sold' => 'Rooms sold', 'occupancy' => 'Occupancy %', 'persons' => 'Guests (pax nights)', 'adr' => 'ADR (net)',
             'revpar' => 'RevPAR', 'room_revenue' => 'Room revenue', 'fnb_revenue' => 'F&B revenue', 'other_revenue' => 'Other revenue', 'total_revenue' => 'Total revenue'],
         'folio_types' => ['guest' => 'Guest', 'passer_by' => 'Passer-by', 'house_account' => 'House account', 'master' => 'Master', 'ar' => 'AR', 'pseudo_room' => 'Pseudo room', 'event' => 'Event'],
+    ],
+
+    'hkm' => [
+        'title' => 'Housekeeping', 'desktop' => 'Full screen', 'all_floors' => 'All floors', 'rooms' => ':count rooms', 'pax' => 'pax',
+        'due_out' => 'Due out', 'arrival' => 'Arrival', 'report' => 'Report a problem (to Technical)', 'report_hint' => 'e.g. Air conditioning drips, bathroom lamp broken',
+        'send' => 'Send', 'empty' => 'No rooms in this list.',
+        'tabs' => ['dirty' => 'Dirty', 'dep' => 'Due out', 'arr' => 'Arrivals', 'ins' => 'Inspected', 'all' => 'All'],
     ],
 ];

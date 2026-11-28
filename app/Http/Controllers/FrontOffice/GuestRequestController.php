@@ -72,6 +72,10 @@ class GuestRequestController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         }
 
+        if ($request->input('return') === 'mobile') {
+            return redirect()->route('housekeeping.mobile', array_filter(['kat' => $request->input('kat')]))->with('status', __('pms.req.created'));
+        }
+
         return redirect()->route('requests.index')->with('status', __('pms.req.created'))->with('selected', $id);
     }
 

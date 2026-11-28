@@ -39,6 +39,16 @@
                 {{ __('pms.res.filters.'.$key) }} <span class="text-[11px] opacity-70">{{ str_replace(['alt+', 'shift+'], ['Alt+', 'Shift+'], $hotkey) }}</span>
             </a>
         @endforeach
+        @unless ($isFa)
+            <form method="GET" action="{{ route('reservations.navigator') }}" class="ml-auto flex items-center gap-1.5 text-[13px]" data-navigator-group>
+                @if ($filter)<input type="hidden" name="f" value="{{ $filter }}">@endif
+                @foreach ($query as $k => $v)@if ($v !== '')<input type="hidden" name="{{ $k }}" value="{{ $v }}">@endif @endforeach
+                <label for="nav-group" class="text-muted">{{ __('pms.res.group_by') }}</label>
+                <select id="nav-group" name="grup" class="input h-7 py-0 w-40" onchange="this.form.submit()">
+                    @foreach (\App\Http\Controllers\Reservations\NavigatorController::GROUPS as $g)<option value="{{ $g }}" @selected($group === $g)>{{ __('pms.res.groups.'.$g) }}</option>@endforeach
+                </select>
+            </form>
+        @endunless
     </nav>
 
     <div class="flex flex-1 min-h-0">
@@ -67,6 +77,11 @@
                         </tr></thead>
                         <tbody>
                         @foreach ($rows as $r)
+                            @if ($group !== 'none' && ($loop->first || $rows[$loop->index - 1]->group_label !== $r->group_label))
+                                @php $g = $groups[$r->group_label]; @endphp
+                                <tr class="bg-brand-50 text-[12.5px]" data-group-row><td colspan="{{ count($columns) }}" class="!py-1"><b>{{ $r->group_label }}</b>
+                                    <span class="text-muted ml-2">{{ __('pms.res.group_summary', ['count' => $g['count'], 'pax' => $g['pax']]) }}@if (in_array('balance', $columns, true)) · {{ __('pms.res.cols.balance') }} {{ $money($g['balance']) }}@endif</span></td></tr>
+                            @endif
                             <tr data-id="{{ $r->id }}" data-url-detail="{{ route('reservations.summary', $r) }}" @can('permission', 'reservations.edit') data-url-edit="{{ route('reservations.edit', $r) }}" @endcan data-url-letter="{{ route('reservations.letter', $r) }}"
                                 @can('permission', 'cashiering.billing') data-url-billing="{{ route('billing.reservation', $r) }}" @endcan
                                 @if ($r->status !== 'in_house' && $r->arrival_date?->isSameDay($businessDate) && $r->room_id) data-url-checkin="{{ route('reservations.check-in', $r) }}" @endif
