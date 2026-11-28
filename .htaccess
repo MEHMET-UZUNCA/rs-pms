@@ -12,6 +12,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^(\.git|\.env|app|bootstrap|config|database|docs|lang|resources|routes|storage|tests|vendor|node_modules)(/|$) - [F,L]
+    RewriteRule ^\.well-known/ - [L]
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
