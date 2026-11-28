@@ -31,6 +31,7 @@ use App\Http\Controllers\Reservations\ReservationItemController;
 use App\Http\Controllers\Setup\AuditLogController;
 use App\Http\Controllers\Setup\ExchangeRateController;
 use App\Http\Controllers\Setup\ItemController;
+use App\Http\Controllers\Setup\LoginScreenController;
 use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\RateCodeController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
@@ -42,6 +43,8 @@ use App\Http\Controllers\Setup\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Dil seçimi (girişten önce de çalışır; girişli kullanıcıda kalıcı olarak kaydedilir)
+Route::get('/giris/arka-plan', [LoginScreenController::class, 'image'])->name('login.background');   // oturumsuz: giriş ekranı görseli
+
 Route::post('/dil/{locale}', function (string $locale) {
     abort_unless(array_key_exists($locale, config('app.locales')), 404);
     session(['locale' => $locale]);
@@ -176,6 +179,8 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
     Route::get('/raporlar', [ReportController::class, 'index'])->name('reports.index');   // yetki rapor grubuna göre denetçide
     Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');
+    Route::get('/ayarlar/giris-ekrani', [LoginScreenController::class, 'edit'])->middleware('permission:setup.options')->name('setup.login-screen');
+    Route::post('/ayarlar/giris-ekrani', [LoginScreenController::class, 'update'])->middleware('permission:setup.options')->name('setup.login-screen.update');
     Route::middleware('permission:setup.rooms')->prefix('ayarlar/oda-tipleri')->name('setup.room-types.')->group(function () {
         Route::get('/', [RoomTypeController::class, 'index'])->name('index');
         Route::post('/', [RoomTypeController::class, 'store'])->name('store');

@@ -36,4 +36,36 @@ class LangParityTest extends TestCase
         app()->setLocale('en');
         $this->assertSame('Room 1102 is occupied.', __('pms.err.room_occupied', ['room' => '1102']));
     }
+
+    /** Kodda ve ekranlarda sabit yazılmış her __('pms.…') anahtarı dil dosyasında bulunmalı (eksikse ekranda anahtar adı görünür). */
+    public function test_every_literal_translation_key_used_in_code_exists(): void
+    {
+        $en = $this->flat(require lang_path('en/pms.php'));
+        $missing = [];
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(base_path('resources/views')));
+        $paths = array_merge(iterator_to_array($files), iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(app_path()))));
+        foreach ($paths as $file) {
+            if (! $file->isFile() || ! preg_match('/\.php$/', $file->getFilename())) {
+                continue;
+            }
+            preg_match_all("/__\\('pms\\.([a-z0-9_.]+)'[,)]/", file_get_contents($file->getPathname()), $m);
+            foreach ($m[1] as $key) {
+                if (! array_key_exists($key, $en) && ! $this->isGroup($key, $en)) {
+                    $missing[] = $key.' ('.basename($file->getPathname()).')';
+                }
+            }
+        }
+        $this->assertSame([], array_values(array_unique($missing)));
+    }
+
+    private function isGroup(string $key, array $flat): bool
+    {
+        foreach (array_keys($flat) as $k) {
+            if (str_starts_with($k, $key.'.')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -62,6 +62,7 @@ class Menu
                 ['users', $can('setup.users') ? route('setup.users.index') : null],
                 ['roles', $can('setup.users') ? route('setup.roles.index') : null],
                 ['audit_log', $can('setup.audit') ? route('setup.audit') : null],
+                ['login_screen', $can('setup.options') ? route('setup.login-screen') : null],
             ],
         ];
     }

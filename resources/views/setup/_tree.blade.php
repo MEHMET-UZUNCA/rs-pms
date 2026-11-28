@@ -20,6 +20,7 @@
     <span class="is-soon">{{ __('pms.setup.seasons') }}</span>
     <span class="is-soon">{{ __('pms.setup.packages') }}</span>
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.system') }}</div>
+    @can('permission', 'setup.options')<a href="{{ route('setup.login-screen') }}" @class(['is-current' => request()->routeIs('setup.login-screen*')])>{{ __('pms.loginscreen.title') }}</a>@endcan
     @can('permission', 'setup.users')
         <a href="{{ route('setup.users.index') }}" @class(['is-current' => request()->routeIs('setup.users.*')])>{{ __('pms.users.title') }}</a>
         <a href="{{ route('setup.roles.index') }}" @class(['is-current' => request()->routeIs('setup.roles.*')])>{{ __('pms.roles.title') }}</a>

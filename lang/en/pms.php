@@ -12,7 +12,7 @@ return [
     'menu' => [
         'audit_log' => 'Audit Log',
         'overbooking' => 'Overbooking',
-        'room_types' => 'Room Types', 'rooms_setup' => 'Rooms', 'items' => 'Inventory Items',
+        'room_types' => 'Room Types', 'rooms_setup' => 'Rooms', 'login_screen' => 'Login Screen', 'items' => 'Inventory Items',
         'guest_requests' => 'Guest Requests',
         'room_moves' => 'Room Moves',
         'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
@@ -28,6 +28,7 @@ return [
     ],
 
     'common' => [
+        'save' => 'Save',
         'property' => 'Property', 'user' => 'User', 'business_date' => 'Business Date', 'logout' => 'Logout', 'home' => 'Home',
         'available_screens' => 'Choose a screen from the menu bar. Available screens:',
         'new' => 'New', 'edit' => 'Edit', 'copy' => 'Copy', 'delete' => 'Delete', 'up' => 'Up', 'down' => 'Down', 'close' => 'Close',
@@ -104,7 +105,7 @@ return [
         'arrival' => 'Arrival', 'departure' => 'Departure', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'All statuses',
         'guest' => 'Guest', 'nights' => 'Nights', 'room_type' => 'Room Type', 'rate_code' => 'Rate Code', 'pax' => 'Pax', 'status' => 'Status',
         'limit_hint' => '(first :limit — narrow the query)', 'keys_hint' => '↑/↓ move · F3 search · Alt+1…0 filters',
-        'check_in' => 'Check In', 'check_in_confirm' => 'Check in the selected reservation?', 'checked_in' => ':name — room :room checked in.',
+        'check_out' => 'Check Out', 'check_in' => 'Check In', 'check_in_confirm' => 'Check in the selected reservation?', 'checked_in' => ':name — room :room checked in.',
         'folio' => 'Billing', 'cancel' => 'Cancel', 'coming_soon' => 'Available with the reservation card',
         'contact' => 'Communication', 'address' => 'Address', 'profiles' => 'Profiles', 'folios' => 'Folios', 'window' => 'window :n',
         'history' => 'Previous stays', 'note' => 'Note', 'room_type_short' => 'Room / Type', 'stay' => 'Stay', 'nights_count' => ':n nights',
@@ -637,5 +638,13 @@ Müller, Anna
         'hint' => 'An inactive room is not sold and not counted in availability. A room with history (reservations, postings, out of order) cannot be deleted — make it inactive. The room type cannot be changed and the room cannot be made inactive while reservations are assigned to it.',
         'has_reservations' => 'Reservations are assigned to this room (:list); move them first.', 'in_use' => 'Room :room has history and cannot be deleted; make it inactive.',
         'deleted' => 'Room :room deleted.', 'confirm_delete' => 'Delete room :room?',
+    ],
+
+    'loginscreen' => [
+        'title' => 'Login Screen', 'image' => 'Background image', 'image_hint' => 'JPG, PNG or WebP, at least 800 × 500 px, up to 8 MB. A wide landscape photo (e.g. 2400 × 1350) looks best.',
+        'remove' => 'Remove the image (use the default background)', 'overlay' => 'Darkening', 'overlay_hint' => 'Darkens the photo so the text stays readable.',
+        'welcome_title' => 'Welcome title', 'welcome_text' => 'Welcome text', 'preview' => 'Preview', 'open' => 'Open the login screen', 'open_hint' => 'opens in a new tab (log out to see it)',
+        'saved' => 'Login screen saved.', 'default_subtitle' => 'Property management system — front office, reservations, cashiering and housekeeping in one place.',
+        'welcome' => 'Welcome', 'sign_in_hint' => 'Sign in with your user name', 'show' => 'Show', 'hide' => 'Hide', 'caps_lock' => 'Caps Lock is on.',
     ],
 ];

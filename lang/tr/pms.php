@@ -12,7 +12,7 @@ return [
     'menu' => [
         'audit_log' => 'Değişiklik kaydı',
         'overbooking' => 'Overbooking',
-        'room_types' => 'Oda tipleri', 'rooms_setup' => 'Odalar', 'items' => 'Envanter kalemleri',
+        'room_types' => 'Oda tipleri', 'rooms_setup' => 'Odalar', 'login_screen' => 'Giriş ekranı', 'items' => 'Envanter kalemleri',
         'guest_requests' => 'Misafir istekleri',
         'room_moves' => 'Oda değişimleri',
         'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
@@ -28,6 +28,7 @@ return [
     ],
 
     'common' => [
+        'save' => 'Kaydet',
         'property' => 'Tesis', 'user' => 'Kullanıcı', 'business_date' => 'İş günü', 'logout' => 'Çıkış', 'home' => 'Başlangıç',
         'available_screens' => 'Menü çubuğundan bir ekran seçin. Hazır olan ekranlar:',
         'new' => 'Yeni', 'edit' => 'Düzenle', 'copy' => 'Kopyala', 'delete' => 'Sil', 'up' => 'Yukarı', 'down' => 'Aşağı', 'close' => 'Kapat',
@@ -104,7 +105,7 @@ return [
         'arrival' => 'Geliş', 'departure' => 'Çıkış', 'date_hint' => '(t, +1, 25.11)', 'all_statuses' => 'Tüm durumlar',
         'guest' => 'Misafir', 'nights' => 'Gece', 'room_type' => 'Tip', 'rate_code' => 'Fiyat kodu', 'pax' => 'Kişi', 'status' => 'Durum',
         'limit_hint' => '(ilk :limit — sorguyu daraltın)', 'keys_hint' => '↑/↓ gez · F3 ara · Alt+1…0 filtre',
-        'check_in' => 'Giriş', 'check_in_confirm' => 'Seçili rezervasyonun girişi yapılsın mı?', 'checked_in' => ':name — oda :room giriş yapıldı.',
+        'check_out' => 'Çıkış', 'check_in' => 'Giriş', 'check_in_confirm' => 'Seçili rezervasyonun girişi yapılsın mı?', 'checked_in' => ':name — oda :room giriş yapıldı.',
         'folio' => 'Folyo', 'cancel' => 'İptal', 'coming_soon' => 'Rezervasyon kartıyla açılacak',
         'contact' => 'İletişim', 'address' => 'Adres', 'profiles' => 'Profiller', 'folios' => 'Folyolar', 'window' => ':n. pencere',
         'history' => 'Geçmiş konaklama', 'note' => 'Not', 'room_type_short' => 'Oda / Tip', 'stay' => 'Konaklama', 'nights_count' => ':n gece',
@@ -637,5 +638,13 @@ Kaya, Ayşe
         'hint' => 'Pasif oda satılmaz, müsaitlikte sayılmaz. Geçmişi olan oda (rezervasyon, folyo kaydı, arıza) silinmez — pasif yapın. Odaya atanmış rezervasyon varken oda tipi değiştirilemez ve oda pasif yapılamaz.',
         'has_reservations' => 'Bu odaya atanmış rezervasyonlar var (:list); önce taşıyın.', 'in_use' => ':room odasının geçmişi var, silinemez; pasif yapın.',
         'deleted' => ':room odası silindi.', 'confirm_delete' => ':room odası silinsin mi?',
+    ],
+
+    'loginscreen' => [
+        'title' => 'Giriş ekranı', 'image' => 'Arka plan görseli', 'image_hint' => 'JPG, PNG ya da WebP; en az 800 × 500 piksel, en çok 8 MB. Geniş bir yatay fotoğraf (ör. 2400 × 1350) en iyi görünür.',
+        'remove' => 'Görseli kaldır (varsayılan arka plan)', 'overlay' => 'Karartma', 'overlay_hint' => 'Yazıların okunması için fotoğrafı karartır.',
+        'welcome_title' => 'Karşılama başlığı', 'welcome_text' => 'Karşılama metni', 'preview' => 'Önizleme', 'open' => 'Giriş ekranını aç', 'open_hint' => 'yeni sekmede açılır (görmek için çıkış yapın)',
+        'saved' => 'Giriş ekranı kaydedildi.', 'default_subtitle' => 'Otel yönetim sistemi — ön büro, rezervasyon, kasa ve kat hizmetleri tek yerde.',
+        'welcome' => 'Hoş geldiniz', 'sign_in_hint' => 'Kullanıcı adınızla giriş yapın', 'show' => 'Göster', 'hide' => 'Gizle', 'caps_lock' => 'Caps Lock açık.',
     ],
 ];

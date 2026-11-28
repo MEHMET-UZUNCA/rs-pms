@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\LoginAppearance;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class LoginController extends Controller
 {
     public function show(): View
     {
-        return view('auth.login');
+        return view('auth.login', ['look' => LoginAppearance::get(), 'hotel' => LoginAppearance::property()]);
     }
 
     public function login(Request $request): RedirectResponse
