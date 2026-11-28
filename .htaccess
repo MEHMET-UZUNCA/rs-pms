@@ -1,0 +1,17 @@
+# Proje site kökünün (ör. CWP'de /home/pms/public_html) içine kurulduğunda: bütün istekler public/ klasörüne yönlendirilir,
+# .env, kaynak kod, storage, vendor ve gizli dosyalar dışarıdan açılmaz. Site kökü doğrudan public/ ise bu dosya kullanılmaz.
+Options -Indexes
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+<FilesMatch "\.(env|log|sql|gz|sqlite|md|lock|json|xml|yml|yaml|sh|cjs)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(\.git|\.env|app|bootstrap|config|database|docs|lang|resources|routes|storage|tests|vendor|node_modules)(/|$) - [F,L]
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
