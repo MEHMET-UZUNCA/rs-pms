@@ -264,7 +264,14 @@ Panelden alan adı / SSL (AutoSSL ya da otelin sertifikası) ayarlanır; `public
 **root — güvenlik duvarı (CSF):** Simphony dinleyicisinin portu yalnız Simphony sunucusuna açılır; `/etc/csf/csf.allow`'a
 `tcp|in|d=5010|s=192.168.200.11` eklenip `csf -r`.
 
-**Güncelleme:**
+**Güncelleme (tek komut):** `scripts/guncelle.sh` — yedek, bakım modu, pull, paketler, migration, seeder, derleme, önbellek, arka plan işleri.
+```bash
+su -s /bin/bash - pms
+```
+```bash
+cd /home/pms/rs-pms && bash scripts/guncelle.sh
+```
+Elle yapmak isterseniz:
 ```bash
 cd ~/rs-pms && php artisan pms:backup && php artisan down && git pull && ~/bin/composer install --no-dev --optimize-autoloader
 ```

@@ -2,6 +2,7 @@
 
 ## Geliştirme
 
+- Canlı güncelleme betiği `scripts/guncelle.sh`: yedek, bakım modu, git pull, composer, migration, seeder, npm build, önbellek, Simphony dinleyicisi ve kuyruğun yeniden başlatılması; root'la çalıştırılmaz. (M.U)
 - Gece kapanışı rapor arşivi: kapanışta yönetim, departman kodu toplamları, günlük gelir, kayıt dökümü, kasa, içeridekiler, açık bakiyeler ve vergi raporları kapanan günün haliyle saklanır; rapor ekranında "Gece kapanışı arşivi" tarihiyle değişmeden açılır, yazdırılır, CSV alınır. (M.U)
 - Navigatörde gruplama: "Grupla" seçimi (acente / şirket, oda tipi, pansiyon, fiyat kodu, durum, uyruk, geliş günü); grup başında rezervasyon, kişi ve bakiye ara toplamı; seçim kullanıcıya özel saklanır. (M.U)
 - Bloklar: gece gece kota tablosu (Alt+Q kaydet; alınan sayının altına inilemez; başlıktaki sayı değişmedikçe gece istisnaları korunur), bırakma günü (release days) alanı; gece kapanışında opsiyon tarihi geçen ya da bırakma gününe gelen gecelerin alınmamış odaları bırakılır ve genel müsaitliğe döner (kalan = kota − alınan − bırakılan); toplu çıkış (Alt+O, bugün çıkan ve bakiyesi sıfır üyeler, bakiyeli olan bildirilir). (M.U)
