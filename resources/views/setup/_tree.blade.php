@@ -10,7 +10,10 @@
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.reservation') }}</div>
     @can('permission', 'setup.options')<a href="{{ route('setup.options.reservation') }}" @class(['is-current' => request()->routeIs('setup.options.*')])>{{ __('pms.options.title') }}</a>@endcan
     @can('permission', 'setup.options')<a href="{{ route('setup.items.index') }}" @class(['is-current' => request()->routeIs('setup.items.*')])>{{ __('pms.items.title') }}</a>@endcan
-    <span class="is-soon">{{ __('pms.setup.room_types') }}</span>
+    @can('permission', 'setup.rooms')
+        <a href="{{ route('setup.room-types.index') }}" @class(['is-current' => request()->routeIs('setup.room-types.*')])>{{ __('pms.setup.room_types') }}</a>
+        <a href="{{ route('setup.rooms.index') }}" @class(['is-current' => request()->routeIs('setup.rooms.*')])>{{ __('pms.rooms_setup.title') }}</a>
+    @else<span class="is-soon">{{ __('pms.setup.room_types') }}</span>@endcan
     <div class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-muted">{{ __('pms.setup.rate_management') }}</div>
     @can('permission', 'setup.rates')<a href="{{ route('setup.rates.index') }}" @class(['is-current' => request()->routeIs('setup.rates.*')])>{{ __('pms.rates.title') }}</a>@else<span class="is-soon">{{ __('pms.rates.title') }}</span>@endcan
     <span class="is-soon">{{ __('pms.setup.rate_categories') }}</span>

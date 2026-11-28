@@ -35,6 +35,8 @@ use App\Http\Controllers\Setup\OutletController;
 use App\Http\Controllers\Setup\RateCodeController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
+use App\Http\Controllers\Setup\RoomController;
+use App\Http\Controllers\Setup\RoomTypeController;
 use App\Http\Controllers\Setup\TransactionCodeController;
 use App\Http\Controllers\Setup\UserController;
 use Illuminate\Support\Facades\Route;
@@ -174,6 +176,20 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::delete('/rezervasyon/{reservation}/envanter/{item}', [ReservationItemController::class, 'destroy'])->whereNumber(['reservation', 'item'])->middleware('permission:reservations.edit')->name('reservations.items.destroy');
     Route::get('/raporlar', [ReportController::class, 'index'])->name('reports.index');   // yetki rapor grubuna göre denetçide
     Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');
+    Route::middleware('permission:setup.rooms')->prefix('ayarlar/oda-tipleri')->name('setup.room-types.')->group(function () {
+        Route::get('/', [RoomTypeController::class, 'index'])->name('index');
+        Route::post('/', [RoomTypeController::class, 'store'])->name('store');
+        Route::put('/{type}', [RoomTypeController::class, 'update'])->whereNumber('type')->name('update');
+        Route::delete('/{type}', [RoomTypeController::class, 'destroy'])->whereNumber('type')->name('destroy');
+    });
+    Route::middleware('permission:setup.rooms')->prefix('ayarlar/odalar')->name('setup.rooms.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('index');
+        Route::get('/yeni', [RoomController::class, 'create'])->name('create');
+        Route::post('/', [RoomController::class, 'store'])->name('store');
+        Route::get('/{room}', [RoomController::class, 'edit'])->whereNumber('room')->name('edit');
+        Route::put('/{room}', [RoomController::class, 'update'])->whereNumber('room')->name('update');
+        Route::delete('/{room}', [RoomController::class, 'destroy'])->whereNumber('room')->name('destroy');
+    });
     Route::middleware('permission:setup.options')->prefix('ayarlar/envanter')->name('setup.items.')->group(function () {
         Route::get('/', [ItemController::class, 'index'])->name('index');
         Route::post('/', [ItemController::class, 'store'])->name('store');

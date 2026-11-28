@@ -12,7 +12,7 @@ return [
     'menu' => [
         'audit_log' => 'Audit Log',
         'overbooking' => 'Overbooking',
-        'items' => 'Inventory Items',
+        'room_types' => 'Room Types', 'rooms_setup' => 'Rooms', 'items' => 'Inventory Items',
         'guest_requests' => 'Guest Requests',
         'room_moves' => 'Room Moves',
         'reservation' => 'Reservation', 'front_office' => 'Front Desk', 'cashiering' => 'Cashiering', 'housekeeping' => 'Rooms Management',
@@ -242,7 +242,7 @@ return [
         'err_admin' => 'The system administrator role cannot be deleted.', 'err_in_use' => 'This role is given to users; change their role first.',
         'err_self_permission' => 'Your own role must keep the Users and Roles permission.',
         'groups' => ['profiles' => 'Profiles', 'front_office' => 'Front Desk', 'setup' => 'Setup', 'reservations' => 'Reservations', 'cashiering' => 'Cashiering', 'night_audit' => 'Night Audit', 'housekeeping' => 'Housekeeping', 'reports' => 'Reports'],
-        'perm' => ['setup_audit' => 'Audit log', 'reports_front_office' => 'Reports: front office and rates', 'reports_housekeeping' => 'Reports: rooms and housekeeping', 'reports_occupancy' => 'Reports: occupancy and manager', 'reports_finance' => 'Reports: cashiering', 'reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
+        'perm' => ['setup_rooms' => 'Room types and rooms', 'setup_audit' => 'Audit log', 'reports_front_office' => 'Reports: front office and rates', 'reports_housekeeping' => 'Reports: rooms and housekeeping', 'reports_occupancy' => 'Reports: occupancy and manager', 'reports_finance' => 'Reports: cashiering', 'reservations_overbooking' => 'Overbooking limits and booking over the limit', 'front_office_requests' => 'Guest requests and complaints', 'cashiering_shifts' => 'Shifts of all cashiers', 'cashiering_accounts' => 'New financial account (PM)', 'setup_options' => 'Reservation options', 'setup_exchange_rates' => 'Exchange rates', 'setup_rates' => 'Rates', 'front_office_lost_found' => 'Lost & Found', 'profiles_view' => 'View profiles', 'profiles_edit' => 'New / edit profiles', 'setup_outlets' => 'Outlets', 'setup_transaction_codes' => 'Department Codes', 'setup_users' => 'Users and Roles', 'reservations_view' => 'Reservation Navigator', 'reservations_edit' => 'New / Edit Reservation', 'reservations_checkin' => 'Check In', 'reservations_checkout' => 'Check Out', 'cashiering_billing' => 'Billing (view folios)', 'cashiering_post' => 'Postings, payments and transfers', 'cashiering_reverse' => 'Corrections (reverse postings)', 'night_audit_view' => 'Night Audit screen', 'night_audit_run' => 'Run Night Audit', 'night_audit_override' => 'Supervisor override of night audit checks', 'housekeeping_view' => 'Housekeeping screen', 'housekeeping_status' => 'Change room status', 'housekeeping_outage' => 'Out of Order / Out of Service'],
     ],
 
     'fa' => [
@@ -618,5 +618,24 @@ Müller, Anna
         'due_out' => 'Due out', 'arrival' => 'Arrival', 'report' => 'Report a problem (to Technical)', 'report_hint' => 'e.g. Air conditioning drips, bathroom lamp broken',
         'send' => 'Send', 'empty' => 'No rooms in this list.',
         'tabs' => ['dirty' => 'Dirty', 'dep' => 'Due out', 'arr' => 'Arrivals', 'ins' => 'Inspected', 'all' => 'All'],
+    ],
+
+    'rtypes' => [
+        'subtitle' => 'Room categories (Fidelio Room Types)', 'short_name' => 'Short name', 'default_adults' => 'Default adults', 'default_short' => 'Def.',
+        'max_adults' => 'Max adults', 'max_adults_short' => 'Adl.', 'max_children' => 'Max children', 'max_children_short' => 'Chd.',
+        'max_occupancy' => 'Max persons', 'max_occupancy_short' => 'Pax', 'beds' => 'Beds', 'sort' => 'Order', 'pseudo' => 'Pseudo',
+        'pseudo_hint' => 'Pseudo room type (PM, house use): not counted in availability or occupancy', 'online' => 'Web', 'active' => 'Active', 'rooms' => 'Rooms',
+        'hint' => 'Codes are used on reservations, rates and reports; keep the Fidelio codes. A type with rooms, reservations, rates or block allotments cannot be deleted — clear "Active" instead. Availability is recalculated for one year when a type changes.',
+        'in_use' => 'Room type :code is used (rooms, reservations, rates or blocks); make it inactive instead.', 'deleted' => 'Room type :code deleted.',
+        'confirm_delete' => 'Delete room type :code?',
+    ],
+    'rooms_setup' => [
+        'title' => 'Rooms', 'new' => 'New Room', 'edit' => 'Room :room', 'number' => 'Room no', 'building' => 'Building', 'section' => 'HK section',
+        'all_types' => 'All room types', 'show_inactive' => 'Show inactive', 'features' => 'Features', 'flags' => 'Flags', 'smoking' => 'smoking',
+        'accessible' => 'accessible', 'pseudo' => 'pseudo', 'from_type' => 'from room type', 'hk_credits' => 'HK credits',
+        'flag' => ['is_active' => 'Active (sellable)', 'is_smoking' => 'Smoking', 'is_accessible' => 'Accessible', 'is_pseudo' => 'Pseudo room (PM, house use)'],
+        'hint' => 'An inactive room is not sold and not counted in availability. A room with history (reservations, postings, out of order) cannot be deleted — make it inactive. The room type cannot be changed and the room cannot be made inactive while reservations are assigned to it.',
+        'has_reservations' => 'Reservations are assigned to this room (:list); move them first.', 'in_use' => 'Room :room has history and cannot be deleted; make it inactive.',
+        'deleted' => 'Room :room deleted.', 'confirm_delete' => 'Delete room :room?',
     ],
 ];

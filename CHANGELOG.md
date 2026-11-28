@@ -2,6 +2,7 @@
 
 ## Geliştirme
 
+- Ayarlar → Room Types ve Rooms: oda tipleri satır içinde (kod, ad, kişi sınırları, yatak, sanal, web, etkin, sıra; kullanılan tip silinmez), odalar listesi (tipe / kata göre, pasifleri göster) ve oda formu (numara, tip, blok, kat, kat hizmetleri bölümü, kişi, temizlik puanı, sigara / engelli / sanal / etkin, özellikler). Değişiklikte müsaitlik bir yıl ileriye yeniden hesaplanır; rezervasyonu atanmış odanın tipi değişmez, oda pasif yapılamaz; geçmişi olan oda silinmez. Yeni yetki setup.rooms (SUP, IT1, FOM). Simphony dinleyicisi arayüz kapalıyken cron'da sessiz çıkar. (M.U)
 - Canlı güncelleme betiği `scripts/guncelle.sh`: yedek, bakım modu, git pull, composer, migration, seeder, npm build, önbellek, Simphony dinleyicisi ve kuyruğun yeniden başlatılması; root'la çalıştırılmaz. (M.U)
 - Gece kapanışı rapor arşivi: kapanışta yönetim, departman kodu toplamları, günlük gelir, kayıt dökümü, kasa, içeridekiler, açık bakiyeler ve vergi raporları kapanan günün haliyle saklanır; rapor ekranında "Gece kapanışı arşivi" tarihiyle değişmeden açılır, yazdırılır, CSV alınır. (M.U)
 - Navigatörde gruplama: "Grupla" seçimi (acente / şirket, oda tipi, pansiyon, fiyat kodu, durum, uyruk, geliş günü); grup başında rezervasyon, kişi ve bakiye ara toplamı; seçim kullanıcıya özel saklanır. (M.U)

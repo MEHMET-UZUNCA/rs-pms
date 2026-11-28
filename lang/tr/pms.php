@@ -12,7 +12,7 @@ return [
     'menu' => [
         'audit_log' => 'Değişiklik kaydı',
         'overbooking' => 'Overbooking',
-        'items' => 'Envanter kalemleri',
+        'room_types' => 'Oda tipleri', 'rooms_setup' => 'Odalar', 'items' => 'Envanter kalemleri',
         'guest_requests' => 'Misafir istekleri',
         'room_moves' => 'Oda değişimleri',
         'reservation' => 'Rezervasyon', 'front_office' => 'Ön Büro', 'cashiering' => 'Kasa', 'housekeeping' => 'Oda Yönetimi',
@@ -242,7 +242,7 @@ return [
         'err_admin' => 'Sistem yöneticisi rolü silinemez.', 'err_in_use' => 'Bu rol kullanıcılara verilmiş; önce kullanıcıların rolünü değiştirin.',
         'err_self_permission' => 'Kendi rolünüzde Kullanıcılar ve Roller yetkisi kalmalı.',
         'groups' => ['profiles' => 'Profiller', 'front_office' => 'Ön büro', 'setup' => 'Ayarlar', 'reservations' => 'Rezervasyon', 'cashiering' => 'Kasa', 'night_audit' => 'Gece kapanışı', 'housekeeping' => 'Kat hizmetleri', 'reports' => 'Raporlar'],
-        'perm' => ['setup_audit' => 'Değişiklik kaydı', 'reports_front_office' => 'Raporlar: ön büro ve fiyat', 'reports_housekeeping' => 'Raporlar: odalar ve kat hizmetleri', 'reports_occupancy' => 'Raporlar: doluluk ve yönetim', 'reports_finance' => 'Raporlar: kasa / finans', 'reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
+        'perm' => ['setup_rooms' => 'Oda tipleri ve odalar', 'setup_audit' => 'Değişiklik kaydı', 'reports_front_office' => 'Raporlar: ön büro ve fiyat', 'reports_housekeeping' => 'Raporlar: odalar ve kat hizmetleri', 'reports_occupancy' => 'Raporlar: doluluk ve yönetim', 'reports_finance' => 'Raporlar: kasa / finans', 'reservations_overbooking' => 'Overbooking sınırı ve sınır üstü kayıt', 'front_office_requests' => 'Misafir istekleri ve şikâyetler', 'cashiering_shifts' => 'Bütün kasiyerlerin vardiyaları', 'cashiering_accounts' => 'Rezervasyonsuz hesap (PM) açma', 'setup_options' => 'Rezervasyon seçenekleri', 'setup_exchange_rates' => 'Döviz kurları', 'setup_rates' => 'Fiyat kodları', 'front_office_lost_found' => 'Kayıp eşya (Lost & Found)', 'profiles_view' => 'Profil görüntüleme', 'profiles_edit' => 'Profil açma ve düzenleme', 'setup_outlets' => 'Outlet tanımları', 'setup_transaction_codes' => 'Departman kodları', 'setup_users' => 'Kullanıcılar ve roller', 'reservations_view' => 'Rezervasyon Navigatörü', 'reservations_edit' => 'Rezervasyon açma ve düzenleme', 'reservations_checkin' => 'Giriş (check-in)', 'reservations_checkout' => 'Çıkış (check-out)', 'cashiering_billing' => 'Folyo görüntüleme', 'cashiering_post' => 'Kayıt, ödeme ve transfer', 'cashiering_reverse' => 'Düzeltme (ters kayıt)', 'night_audit_view' => 'Gece kapanışı ekranı', 'night_audit_run' => 'Gece kapanışını çalıştırma', 'night_audit_override' => 'Gece kapanışı kontrollerini amir onayıyla geçme', 'housekeeping_view' => 'Kat hizmetleri ekranı', 'housekeeping_status' => 'Oda durumu değiştirme', 'housekeeping_outage' => 'Arızalı / hizmet dışı oda (OOO/OOS)'],
     ],
 
     'fa' => [
@@ -618,5 +618,24 @@ Kaya, Ayşe
         'due_out' => 'Çıkacak', 'arrival' => 'Gelecek', 'report' => 'Arıza bildir (teknik servise)', 'report_hint' => 'Ör. klima damlatıyor, banyo lambası yanmıyor',
         'send' => 'Gönder', 'empty' => 'Bu listede oda yok.',
         'tabs' => ['dirty' => 'Kirli', 'dep' => 'Çıkacak', 'arr' => 'Gelecek', 'ins' => 'Kontrollü', 'all' => 'Hepsi'],
+    ],
+
+    'rtypes' => [
+        'subtitle' => 'Oda kategorileri (Fidelio Room Types)', 'short_name' => 'Kısa ad', 'default_adults' => 'Varsayılan yetişkin', 'default_short' => 'Vars.',
+        'max_adults' => 'En çok yetişkin', 'max_adults_short' => 'Yet.', 'max_children' => 'En çok çocuk', 'max_children_short' => 'Çoc.',
+        'max_occupancy' => 'En çok kişi', 'max_occupancy_short' => 'Kişi', 'beds' => 'Yatak', 'sort' => 'Sıra', 'pseudo' => 'Sanal',
+        'pseudo_hint' => 'Sanal oda tipi (PM, ev kullanımı): müsaitlik ve dolulukta sayılmaz', 'online' => 'Web', 'active' => 'Etkin', 'rooms' => 'Oda',
+        'hint' => 'Kodlar rezervasyon, fiyat ve raporlarda kullanılır; Fidelio kodları korunmalı. Odası, rezervasyonu, fiyatı ya da blok kotası olan tip silinmez — "Etkin" işaretini kaldırın. Tip değişince müsaitlik bir yıl ileriye yeniden hesaplanır.',
+        'in_use' => ':code oda tipi kullanılıyor (oda, rezervasyon, fiyat ya da blok); pasif yapın.', 'deleted' => ':code oda tipi silindi.',
+        'confirm_delete' => ':code oda tipi silinsin mi?',
+    ],
+    'rooms_setup' => [
+        'title' => 'Odalar', 'new' => 'Yeni oda', 'edit' => 'Oda :room', 'number' => 'Oda no', 'building' => 'Blok', 'section' => 'Kat hizmetleri bölümü',
+        'all_types' => 'Bütün oda tipleri', 'show_inactive' => 'Pasifleri göster', 'features' => 'Özellikler', 'flags' => 'İşaretler', 'smoking' => 'sigara',
+        'accessible' => 'engelli', 'pseudo' => 'sanal', 'from_type' => 'oda tipinden', 'hk_credits' => 'Temizlik puanı',
+        'flag' => ['is_active' => 'Etkin (satılır)', 'is_smoking' => 'Sigara içilebilir', 'is_accessible' => 'Engelli odası', 'is_pseudo' => 'Sanal oda (PM, ev kullanımı)'],
+        'hint' => 'Pasif oda satılmaz, müsaitlikte sayılmaz. Geçmişi olan oda (rezervasyon, folyo kaydı, arıza) silinmez — pasif yapın. Odaya atanmış rezervasyon varken oda tipi değiştirilemez ve oda pasif yapılamaz.',
+        'has_reservations' => 'Bu odaya atanmış rezervasyonlar var (:list); önce taşıyın.', 'in_use' => ':room odasının geçmişi var, silinemez; pasif yapın.',
+        'deleted' => ':room odası silindi.', 'confirm_delete' => ':room odası silinsin mi?',
     ],
 ];

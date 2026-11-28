@@ -57,6 +57,8 @@ class Menu
                 ['rate_codes', $can('setup.rates') ? route('setup.rates.index') : null],
                 ['reservation_options', $can('setup.options') ? route('setup.options.reservation') : null],
                 ['items', $can('setup.options') ? route('setup.items.index') : null],
+                ['room_types', $can('setup.rooms') ? route('setup.room-types.index') : null],
+                ['rooms_setup', $can('setup.rooms') ? route('setup.rooms.index') : null],
                 ['users', $can('setup.users') ? route('setup.users.index') : null],
                 ['roles', $can('setup.users') ? route('setup.roles.index') : null],
                 ['audit_log', $can('setup.audit') ? route('setup.audit') : null],
