@@ -125,6 +125,10 @@
             @endif
             @if (! $reservation && $folio && Gate::allows('permission', 'cashiering.accounts'))
                 <a href="{{ route('accounts.edit', $folio) }}" class="btn btn-side mt-3" data-hotkey="alt+a">{{ __('pms.fa.edit') }} <span class="kbd ml-auto">Alt+A</span></a>
+                @if ($folio->status === 'open')
+                    <form method="POST" action="{{ route('billing.close-account', $folio) }}" data-confirm="{{ __('pms.passer.close_confirm', ['number' => $folio->folio_number]) }}">@csrf
+                        <button class="btn btn-side w-full" data-hotkey="alt+o">{{ __('pms.passer.close') }} <span class="kbd ml-auto">Alt+O</span></button></form>
+                @endif
             @endif
             @if ($folio)
                 <a href="{{ route('billing.print', $folio) }}" class="btn btn-side mt-3" data-hotkey="alt+f">{{ __('pms.invoice.print_folio') }} <span class="kbd ml-auto">Alt+F</span></a>

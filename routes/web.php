@@ -6,6 +6,7 @@ use App\Http\Controllers\Cashiering\BillingController;
 use App\Http\Controllers\Cashiering\CashierController;
 use App\Http\Controllers\Cashiering\FinancialAccountController;
 use App\Http\Controllers\Cashiering\InvoiceController;
+use App\Http\Controllers\Cashiering\QuickPostingController;
 use App\Http\Controllers\FrontOffice\GuestRequestController;
 use App\Http\Controllers\FrontOffice\HouseStatusController;
 use App\Http\Controllers\FrontOffice\LostFoundController;
@@ -333,6 +334,13 @@ Route::middleware(['auth', 'property'])->group(function () {
     });
 
     // Kasa → Folyo (Billing)
+    // Cashiering → Posting (toplu hızlı kayıt) ve Passer By
+    Route::middleware(['permission:cashiering.billing', 'permission:cashiering.post'])->prefix('kasa-islem')->name('cashiering.')->group(function () {
+        Route::get('/kayit', [QuickPostingController::class, 'index'])->name('posting');
+        Route::post('/kayit', [QuickPostingController::class, 'store'])->name('posting.store');
+        Route::get('/passer-by', [QuickPostingController::class, 'passerBy'])->name('passer-by');
+        Route::post('/passer-by', [QuickPostingController::class, 'openPasserBy'])->name('passer-by.store');
+    });
     Route::middleware('permission:cashiering.billing')->prefix('folyo')->name('billing.')->group(function () {
         Route::get('/rezervasyon/{reservation}', [BillingController::class, 'reservation'])->name('reservation');
         Route::get('/hesap/{folio}', [BillingController::class, 'account'])->name('account');
@@ -340,6 +348,7 @@ Route::middleware(['auth', 'property'])->group(function () {
         Route::post('/odeme', [BillingController::class, 'payment'])->middleware('permission:cashiering.post')->name('payment');
         Route::post('/kayit/{posting}/duzelt', [BillingController::class, 'correct'])->middleware('permission:cashiering.reverse')->name('correct');
         Route::post('/kayit/{posting}/aktar', [BillingController::class, 'transfer'])->middleware('permission:cashiering.post')->name('transfer');
+        Route::post('/hesap/{folio}/kapat', [QuickPostingController::class, 'closeAccount'])->middleware('permission:cashiering.post')->name('close-account');
         Route::post('/rezervasyon/{reservation}/cikis', [BillingController::class, 'checkOut'])->middleware('permission:reservations.checkout')->name('check-out');
         Route::get('/{folio}/yazdir', [InvoiceController::class, 'folio'])->whereNumber('folio')->name('print');
         Route::post('/{folio}/fatura', [InvoiceController::class, 'issue'])->whereNumber('folio')->middleware('permission:cashiering.post')->name('invoice');

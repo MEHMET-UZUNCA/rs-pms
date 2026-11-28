@@ -38,7 +38,7 @@ class Menu
                 ['room_moves', $can('reservations.view') ? route('room-moves.index') : null],
                 ['guest_requests', $can('front_office.requests') ? route('requests.index') : null],
             ],
-            'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', null], ['passer_by', null], ['close_cashier', $can('cashiering.post') ? route('cashier.index') : null]],
+            'cashiering' => [['billing', $can('cashiering.billing') ? route('reservations.navigator', ['f' => 'iceride']) : null], ['posting', $can('cashiering.post') ? route('cashiering.posting') : null], ['passer_by', $can('cashiering.post') ? route('cashiering.passer-by') : null], ['close_cashier', $can('cashiering.post') ? route('cashier.index') : null]],
             'housekeeping' => [
                 ['room_status', $can('housekeeping.view') ? route('housekeeping.index') : null],
                 ['out_of_order', $can('housekeeping.view') ? route('rooms.out-of-order') : null],

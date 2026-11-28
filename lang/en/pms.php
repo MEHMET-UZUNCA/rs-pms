@@ -675,4 +675,19 @@ Müller, Anna
         'element_saved' => 'Package element saved.', 'element_deleted' => 'Package element removed.',
         'packages_hint' => 'At night audit the elements are split from the night rate and posted to their department codes (e.g. 110 Pension Breakfast); room revenue = rate − elements. The meal ticks drive the kitchen meal counts.',
     ],
+
+    'qpost' => [
+        'title' => 'Posting', 'subtitle' => 'Quick posting to several rooms / accounts at once', 'target' => 'Room / account', 'description' => 'Description', 'reference' => 'Check / ref.',
+        'post' => 'Post all', 'recent' => 'My quick postings today', 'nothing' => 'No lines to post.', 'no_target' => 'No in-house guest or open account ":target".',
+        'bad_amount' => 'Enter a price.', 'bad_qty' => 'Quantity must be greater than 0.', 'has_errors' => 'Nothing was posted; fix line(s) :lines.',
+        'done' => ':count postings made, total :total.',
+        'hint' => 'Room number posts to window 1 of the in-house guest; an account number posts to an open financial / passer-by account. Enter moves to the next field. All lines are posted together or none.',
+    ],
+    'passer' => [
+        'title' => 'Passer By', 'subtitle' => 'Sales to non-resident guests', 'name' => 'Guest / name', 'note' => 'Note', 'open' => 'Open account', 'default_name' => 'Passer By',
+        'today' => 'Open and today\'s passer-by accounts', 'opened' => 'Passer-by account :number opened.', 'close' => 'Close account', 'close_confirm' => 'Close account :number?',
+        'closed' => 'Account :number closed.', 'already_closed' => 'The account is already closed.', 'balance' => 'The balance must be zero to close the account (balance :balance).',
+        'statuses' => ['open' => 'Open', 'closed' => 'Closed'],
+        'hint' => 'Post sales and take payment on the folio screen; print the invoice or folio; close the account when the balance is zero.',
+    ],
 ];

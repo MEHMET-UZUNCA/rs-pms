@@ -675,4 +675,19 @@ Kaya, Ayşe
         'element_saved' => 'Paket elemanı kaydedildi.', 'element_deleted' => 'Paket elemanı silindi.',
         'packages_hint' => 'Gece kapanışında elemanlar gece fiyatından ayrılıp kendi departman kodlarına yazılır (ör. 110 Pension Breakfast); oda geliri = fiyat − elemanlar. Öğün işaretleri mutfak öğün sayılarını belirler.',
     ],
+
+    'qpost' => [
+        'title' => 'Hızlı kayıt', 'subtitle' => 'Birden çok oda / hesaba tek seferde kayıt', 'target' => 'Oda / hesap', 'description' => 'Açıklama', 'reference' => 'Fiş / ref.',
+        'post' => 'Hepsini kaydet', 'recent' => 'Bugünkü hızlı kayıtlarım', 'nothing' => 'Kaydedilecek satır yok.', 'no_target' => '":target" için içeride misafir ya da açık hesap yok.',
+        'bad_amount' => 'Fiyat girin.', 'bad_qty' => 'Adet 0\'dan büyük olmalı.', 'has_errors' => 'Hiçbir şey kaydedilmedi; :lines numaralı satırları düzeltin.',
+        'done' => ':count kayıt yapıldı, toplam :total.',
+        'hint' => 'Oda numarası içerideki misafirin 1. penceresine, hesap numarası açık rezervasyonsuz / passer-by hesabına yazılır. Enter sonraki alana geçer. Satırların hepsi birlikte yazılır ya da hiçbiri yazılmaz.',
+    ],
+    'passer' => [
+        'title' => 'Passer By', 'subtitle' => 'Konaklamayan misafire satış', 'name' => 'Misafir / ad', 'note' => 'Not', 'open' => 'Hesap aç', 'default_name' => 'Passer By',
+        'today' => 'Açık ve bugünkü passer-by hesapları', 'opened' => ':number passer-by hesabı açıldı.', 'close' => 'Hesabı kapat', 'close_confirm' => ':number hesabı kapatılsın mı?',
+        'closed' => ':number hesabı kapatıldı.', 'already_closed' => 'Hesap zaten kapalı.', 'balance' => 'Hesabı kapatmak için bakiye sıfır olmalı (bakiye :balance).',
+        'statuses' => ['open' => 'Açık', 'closed' => 'Kapalı'],
+        'hint' => 'Satışı ve ödemeyi folyo ekranında girin; fatura ya da folyo yazdırın; bakiye sıfırlanınca hesabı kapatın.',
+    ],
 ];
