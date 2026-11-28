@@ -23,9 +23,12 @@ class SimphonyListen extends Command
         $interface = DB::table('pms_pos_interfaces')->where('system', 'simphony')->where('is_active', true)
             ->when($this->option('interface'), fn ($q, $id) => $q->where('id', $id))->orderBy('id')->first();
         if (! $interface) {
-            $this->error('Etkin Simphony arayüzü yok (pms_pos_interfaces).');
+            // Arayüz kapalıyken cron her dakika dener; kayıt dolmasın diye yalnız elle (-v) çalıştırınca yazılır
+            if ($this->option('interface') || $this->output->isVerbose()) {
+                $this->error('Etkin Simphony arayüzü yok (pms_pos_interfaces).');
+            }
 
-            return self::FAILURE;
+            return $this->option('interface') ? self::FAILURE : self::SUCCESS;
         }
         $address = 'tcp://'.$interface->listen_host.':'.($this->option('port') ?: $interface->listen_port);
         $server = @stream_socket_server($address, $errno, $error);
