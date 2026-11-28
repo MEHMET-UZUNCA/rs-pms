@@ -17,6 +17,8 @@ php artisan pms:backup || echo "UYARI: yedek alınamadı (BACKUP_PATH ve mysqldu
 
 echo "== Bakım modu"
 php artisan down --retry=30 || true
+# Bir adım hata verirse site bakımda kalmasın: önceki derlenmiş ekranlarla açılır, hata ekranda kalır
+trap 'echo "HATA: güncelleme yarıda kaldı; site yeniden açılıyor (çıktıyı kontrol edin)." >&2; php artisan up || true' ERR
 
 echo "== Kod (git pull)"
 git pull --ff-only
@@ -30,7 +32,9 @@ php artisan db:seed --class=RocksHotelReferenceSeeder --force
 
 echo "== Ekranlar"
 npm ci --no-audit --no-fund
-npm run build
+# CWP hesaplarında işlem / iş parçacığı sınırı var; Vite (rolldown) varsayılan olarak çekirdek sayısı kadar iş parçacığı açar
+# ve "Resource temporarily unavailable" ile düşer. Az iş parçacığıyla derlenir, olmazsa tek iş parçacığıyla yeniden denenir.
+RAYON_NUM_THREADS=2 UV_THREADPOOL_SIZE=2 npm run build || RAYON_NUM_THREADS=1 UV_THREADPOOL_SIZE=1 npm run build
 
 echo "== Önbellek"
 php artisan optimize:clear

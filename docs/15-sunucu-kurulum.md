@@ -253,6 +253,9 @@ ls -A ~/public_html && rm -rf ~/public_html && ln -s ~/rs-pms/public ~/public_ht
 ```
 Panelden alan adı / SSL (AutoSSL ya da otelin sertifikası) ayarlanır; `public/.htaccess` Apache yönlendirmesini yapar.
 
+**Ekran derlemesi:** CWP hesaplarında iş parçacığı sınırı olduğu için `npm run build` "The global thread pool has not been initialized … Resource temporarily
+unavailable" hatasıyla düşebilir; `RAYON_NUM_THREADS=2 npm run build` (olmazsa `=1`) ile derlenir. `scripts/guncelle.sh` bunu kendisi yapar.
+
 **Zamanlanmış ve sürekli işler (`crontab -e`, pms kullanıcısı):**
 ```
 * * * * * cd /home/pms/rs-pms && php artisan schedule:run >> /dev/null 2>&1
