@@ -200,3 +200,78 @@ Gece kapanışı sırasında ya da Simphony yoğunken (yemek saatleri) güncelle
 - [ ] SMTP denendi (onay mektubu)
 - [ ] Rezervasyon seçenekleri, web kodları, KVKK saklama süresi, overbooking sınırları otelle girildi
 - [ ] Ekran ve klavye kabul testi (docs/13) otel bilgisayarlarında çalıştırıldı
+
+## 15.9 CentOS Web Panel (CWP) üzerinde, `pms` hesabının altına kurulum
+
+Otel sunucusunda CWP var ve `pms` adlı hesap açıldı. Kurulum bu hesabın evine (`/home/pms`) yapılır; root yalnız iki üç iş için gerekir
+(aşağıda **root** diye işaretli). Redis ve Supervisor kullanılmaz: oturum, önbellek ve kuyruk veritabanında; sürekli çalışan işlemler cron + `flock` ile.
+
+**Panelde (CWP yönetici):**
+1. User Accounts → `pms` → **Shell access: bash** (jailed değil; git ve composer için).
+2. PHP **8.3** (PHP-FPM Selector ya da PHP Switcher) ve eklentileri: `bcmath intl mbstring gd zip pdo_mysql opcache fileinfo`. Hesabın PHP sürümü 8.3 seçilir.
+3. **root**: `git` ve `mysqldump` kurulu olmalı (`dnf install -y git`).
+
+**Panelde (pms kullanıcısı) → MySQL Manager:** veritabanı `rspms` ve kullanıcı `rspms` oluşturulur. CWP önek ekler: ad **`pms_rspms`**, kullanıcı **`pms_rspms`**.
+
+**SSH ile `pms` olarak:**
+
+```bash
+php -v
+```
+8.3 değilse CLI için tam yol kullanılır (ör. `/opt/alt/php-fpm83/usr/bin/php`); aşağıda `php` yazan yerlere o yol konur.
+
+```bash
+cd ~ && curl -sS https://getcomposer.org/installer | php && mkdir -p ~/bin && mv composer.phar ~/bin/composer
+```
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && source ~/.bashrc && nvm install 20
+```
+```bash
+ssh-keygen -t ed25519 -C "rs-pms sunucu" -f ~/.ssh/id_ed25519 -N "" && cat ~/.ssh/id_ed25519.pub
+```
+Çıkan satır GitHub → rs-pms → Settings → Deploy keys'e eklenir (yazma izni verilmez).
+
+```bash
+git clone git@github.com:MEHMET-UZUNCA/rs-pms.git ~/rs-pms && cd ~/rs-pms && ~/bin/composer install --no-dev --optimize-autoloader
+```
+```bash
+cp .env.example .env && php artisan key:generate && nano .env
+```
+`.env`'de: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=...`, `DB_DATABASE=pms_rspms`, `DB_USERNAME=pms_rspms`, `DB_PASSWORD=...`,
+`SESSION_DRIVER=database`, `CACHE_STORE=database`, `QUEUE_CONNECTION=database`, `LOG_CHANNEL=daily`, `BACKUP_PATH=/home/pms/yedek`.
+
+```bash
+php artisan migrate --force && php artisan db:seed --class=RocksHotelReferenceSeeder --force && npm ci && npm run build
+```
+```bash
+php artisan pms:create-user MU "M.U" kullanici@ornek.com --role=admin && php artisan optimize
+```
+
+**Site kökü:** Laravel'in açılan klasörü `public`'tir. `public_html` boşsa yerine bağlantı konur (doluysa önce içine bakılır):
+```bash
+ls -A ~/public_html && rm -rf ~/public_html && ln -s ~/rs-pms/public ~/public_html
+```
+Panelden alan adı / SSL (AutoSSL ya da otelin sertifikası) ayarlanır; `public/.htaccess` Apache yönlendirmesini yapar.
+
+**Zamanlanmış ve sürekli işler (`crontab -e`, pms kullanıcısı):**
+```
+* * * * * cd /home/pms/rs-pms && php artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /home/pms/rs-pms && flock -n /home/pms/.simphony.lock php artisan pms:simphony-listen >> storage/logs/simphony.log 2>&1
+* * * * * cd /home/pms/rs-pms && flock -n /home/pms/.queue.lock php artisan queue:work database --sleep=3 --tries=3 --max-time=3600 >> storage/logs/queue.log 2>&1
+```
+`flock -n`: dinleyici çalışıyorsa bir şey yapmaz; düşmüşse en geç bir dakikada yeniden başlatır (Supervisor yerine).
+
+**root — güvenlik duvarı (CSF):** Simphony dinleyicisinin portu yalnız Simphony sunucusuna açılır; `/etc/csf/csf.allow`'a
+`tcp|in|d=5010|s=192.168.200.11` eklenip `csf -r`.
+
+**Güncelleme:**
+```bash
+cd ~/rs-pms && php artisan pms:backup && php artisan down && git pull && ~/bin/composer install --no-dev --optimize-autoloader
+```
+```bash
+php artisan migrate --force && php artisan db:seed --class=RocksHotelReferenceSeeder --force && npm ci && npm run build && php artisan optimize:clear && php artisan optimize && php artisan up
+```
+```bash
+pkill -f "pms:simphony-listen"; pkill -f "queue:work"
+```
+(son satır: cron bir dakika içinde yeni kodla yeniden başlatır)
