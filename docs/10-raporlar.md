@@ -29,8 +29,11 @@ yatay), `Alt+X` Excel için CSV (UTF-8, `;` ayraçlı, virgüllü ondalık). Yet
 | FI1, FI2, FI4–FI7 | Departman kodu toplamları (adet, net, vergi, brüt), günlük gelir (oda / yiyecek / içecek / diğer), kayıt dökümü, kasa raporu (kullanıcı × ödeme kodu × döviz), açık bakiyeler, vergi raporu |
 | RT1, RT4 | Fiyat koduna göre rezervasyonlar (oda gecesi, gelir, ortalama), fiyat farkı (elle girilen gece fiyatları) |
 
-Kalanlar: HK4 (oda geçmişi ekranı zaten var: Rooms Management → Room History), OC2, FI3, RT2–RT9 ve gece kapanışında saklanan rapor paketi —
-otel kullandığı raporları bildirince. Gelir rakamları folyo kayıtlarından nettir (vergisiz); satılan oda gece satırlarından (iptal ve günübirlik hariç).
+**Gece kapanışı arşivi:** kapanışta yönetim raporu, departman kodu toplamları, günlük gelir, kayıt dökümü, kasa raporu, içerideki misafirler,
+açık bakiyeler ve vergi raporu kapanan günün haliyle saklanır (`pms_night_audit_runs.report_pack`). Rapor ekranında solda "Gece kapanışı arşivi"
+kutusuna iş günü yazılınca (son 14 gün listeden seçilir) o günün raporları açılır, yazdırılır, CSV alınır; sonradan yapılan düzeltmeler bunları değiştirmez.
+
+Kalanlar: HK4 (oda geçmişi ekranı zaten var: Rooms Management → Room History), OC2, FI3, RT2–RT9 — otel kullandığı raporları bildirince. Gelir rakamları folyo kayıtlarından nettir (vergisiz); satılan oda gece satırlarından (iptal ve günübirlik hariç).
 
 ## 10.2 Başlangıç rapor seti
 

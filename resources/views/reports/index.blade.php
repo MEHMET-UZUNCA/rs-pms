@@ -5,11 +5,21 @@
     <aside class="win w-64 shrink-0">
         <div class="win-title"><span>{{ __('pms.reports.title') }}</span></div>
         <div class="p-2 border-b border-line"><input type="search" class="input w-full" placeholder="{{ __('pms.reports.search') }}" data-report-search @if (! $report) data-autofocus @endif></div>
+        <form method="GET" class="px-2 pb-2 border-b border-line flex items-end gap-1" data-archive-form>
+            @if ($key)<input type="hidden" name="r" value="{{ $key }}">@endif
+            <label class="flex flex-col flex-1"><span class="field-label">{{ __('pms.reports.archive') }}</span>
+                <input name="arsiv" value="{{ $archive ? $archive['date']?->format('d.m.Y') : '' }}" list="archive-dates" class="input" placeholder="{{ __('pms.reports.archive_hint') }}" autocomplete="off"></label>
+            <datalist id="archive-dates">@foreach ($archiveDates as $d)<option value="{{ \Illuminate\Support\Carbon::parse($d)->format('d.m.Y') }}"></option>@endforeach</datalist>
+            <button class="btn">{{ __('pms.reports.open') }}</button>
+            @if ($archive)<a href="{{ route('reports.index', array_filter(['r' => $key])) }}" class="btn" title="{{ __('pms.reports.live') }}">×</a>@endif
+        </form>
         <nav class="flex-1 min-h-0 overflow-auto py-1" data-report-tree>
             @foreach ($tree as $group => $items)
+                @php $items = $archive ? collect($items)->only($archive['keys']) : $items; @endphp
+                @if (collect($items)->isEmpty()) @continue @endif
                 <div class="px-3 pt-2 pb-1 text-[11px] uppercase tracking-wide text-muted" data-report-group>{{ __('pms.reports.groups.'.$group) }}</div>
                 @foreach ($items as $k => $r)
-                    <a href="{{ route('reports.index', ['r' => $k]) }}" data-report-item @class(['block px-4 py-1 text-[13px] hover:bg-brand-50', 'bg-brand-100 font-semibold' => $k === $key])>{{ __('pms.reports.r.'.$k) }}</a>
+                    <a href="{{ route('reports.index', array_filter(['r' => $k, 'arsiv' => $archive ? $archive['date']?->format('d.m.Y') : null, 'goster' => $archive ? 1 : null])) }}" data-report-item @class(['block px-4 py-1 text-[13px] hover:bg-brand-50', 'bg-brand-100 font-semibold' => $k === $key])>{{ __('pms.reports.r.'.$k) }}</a>
                 @endforeach
             @endforeach
         </nav>
@@ -18,8 +28,22 @@
     <div class="win flex-1 min-w-0">
         <div class="win-title"><span>{{ $report ? __('pms.reports.r.'.$key) : __('pms.reports.title') }}</span>
             @if ($result)<span class="font-normal text-brand-100 text-[12px]">{{ __('pms.common.records', ['count' => count($result['rows'])]) }}</span>@endif</div>
+        @if ($archive)
+            <div class="px-3 py-2 border-b border-line bg-amber-50 text-[13px]" data-archive-banner>
+                @if ($archive['found']){{ __('pms.reports.archive_banner', ['date' => $archive['date']->format('d.m.Y'), 'time' => \Illuminate\Support\Carbon::parse($archive['saved_at'])->format('d.m.Y H:i')]) }}
+                @else<span class="text-danger">{{ __('pms.reports.archive_missing', ['date' => $archive['date']?->format('d.m.Y') ?? request('arsiv')]) }}</span>@endif
+            </div>
+        @endif
         @if (! $report)
             <p class="p-4 text-muted">{{ __('pms.reports.pick') }}</p>
+        @elseif ($archive)
+            <div class="flex gap-2 px-3 py-2 border-b border-line">
+                <a class="btn" target="_blank" href="{{ route('reports.index', ['r' => $key, 'arsiv' => $archive['date']?->format('d.m.Y'), 'format' => 'print']) }}" data-hotkey="alt+p">{{ __('pms.res.print') }} <span class="kbd">Alt+P</span></a>
+                <a class="btn" href="{{ route('reports.index', ['r' => $key, 'arsiv' => $archive['date']?->format('d.m.Y'), 'format' => 'csv']) }}" data-hotkey="alt+x">Excel (CSV) <span class="kbd">Alt+X</span></a>
+            </div>
+            <div class="flex-1 min-h-0 overflow-auto">
+                @if ($result)@include('reports._table', ['class' => 'grid-table min-w-full'])@else<p class="p-4 text-muted">{{ __('pms.reports.archive_no_report') }}</p>@endif
+            </div>
         @else
             <form method="GET" class="flex flex-wrap items-end gap-2 px-3 py-2 border-b border-line" data-report-form>
                 <input type="hidden" name="r" value="{{ $key }}">

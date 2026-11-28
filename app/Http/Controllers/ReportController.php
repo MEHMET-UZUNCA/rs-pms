@@ -51,6 +51,19 @@ class ReportController extends Controller
             }
         }
 
+        // Gece kapanışı arşivi: kapanan günün haliyle saklanmış rapor (değişmez)
+        $archive = null;
+        if ($request->filled('arsiv')) {
+            $date = BusinessDateInput::parse((string) $request->query('arsiv'), $bd);
+            $run = $date ? DB::table('pms_night_audit_runs')->where('property_id', $p->id)->where('business_date', $date->toDateString())->where('status', 'completed')->first() : null;
+            $pack = $run ? json_decode((string) $run->report_pack, true) : null;
+            $archive = ['date' => $date, 'found' => (bool) $pack, 'saved_at' => $pack['saved_at'] ?? $run?->finished_at, 'keys' => array_keys($pack['reports'] ?? [])];
+            $result = $report ? ($pack['reports'][$key] ?? null) : null;
+            if ($report && $date) {
+                $filters = array_merge($filters ?? [], ['from' => $date, 'to' => $date]);
+            }
+        }
+
         $format = (string) $request->query('format', '');
         if ($result && $format === 'csv') {
             return $this->csv($key, $result);
@@ -59,7 +72,8 @@ class ReportController extends Controller
 
         return view($view, [
             'tree' => $allowed->groupBy(fn ($r) => $r['group'], true)->sortBy(fn ($r, $g) => array_search($g, ReportCatalog::GROUPS, true)),
-            'key' => $report ? $key : null, 'report' => $report, 'filters' => $filters, 'result' => $result,
+            'key' => $report ? $key : null, 'report' => $report, 'filters' => $filters, 'result' => $result, 'archive' => $archive,
+            'archiveDates' => DB::table('pms_night_audit_runs')->where('property_id', $p->id)->where('status', 'completed')->orderByDesc('business_date')->limit(14)->pluck('business_date'),
             'roomTypes' => DB::table('pms_room_types')->where('property_id', $p->id)->orderBy('sort')->orderBy('code')->get(['id', 'code', 'name']),
             'users' => DB::table('users')->orderBy('username')->get(['id', 'username']),
             'base' => $p->base_currency,

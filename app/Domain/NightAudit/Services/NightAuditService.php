@@ -10,6 +10,8 @@ use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Rates\Models\RateCode;
 use App\Domain\Rates\Models\TransactionCode;
 use App\Domain\Rates\Services\AvailabilityService;
+use App\Domain\Reports\ReportBuilder;
+use App\Domain\Reports\ReportCatalog;
 use App\Domain\Reservations\Models\Reservation;
 use App\Domain\Reservations\Models\ReservationNight;
 use App\Domain\Reservations\Services\BlockService;
@@ -348,6 +350,27 @@ class NightAuditService
             'revenue' => DB::table('pms_daily_revenue as r')->join('pms_transaction_codes as t', 't.id', '=', 'r.transaction_code_id')
                 ->where('r.property_id', $propertyId)->where('r.business_date', $bd)->select('t.code', 't.name', 'r.net_amount', 'r.tax_amount', 'r.gross_amount')->get()->toArray(),
             'ledger' => DB::table('pms_ledger_balances')->where('property_id', $propertyId)->where('business_date', $bd)->get()->toArray(),
+            'reports' => $this->savedReports($propertyId, $bd),
+            'saved_at' => now()->toDateTimeString(),
         ];
+    }
+
+    /**
+     * Gece kapanışında saklanan raporlar (Fidelio "end of day reports"): kapanan günün haliyle; sonradan yapılan düzeltmeler bunları değiştirmez.
+     * Rapor ekranında "Gece kapanışı arşivi" tarihiyle açılır.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function savedReports(int $propertyId, string $bd): array
+    {
+        $property = Property::query()->findOrFail($propertyId);
+        $property->current_business_date = CarbonImmutable::parse($bd);   // kaydedilmez: raporlar kapanan güne göre
+        $day = CarbonImmutable::parse($bd);
+        $reports = [];
+        foreach (ReportCatalog::NIGHT_AUDIT_PACK as $key) {
+            $reports[$key] = app(ReportBuilder::class)->run($key, $property, ['from' => $day, 'to' => $day]);
+        }
+
+        return $reports;
     }
 }

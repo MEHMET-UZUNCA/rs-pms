@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Http;
 
+use App\Domain\NightAudit\Services\NightAuditService;
+use App\Domain\NightAudit\Support\NightAuditAnswers;
 use App\Domain\Reports\ReportCatalog;
 use App\Models\User;
 use Database\Seeders\DemoDataSeeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\Feature\Domain\DomainTestCase;
 
@@ -60,5 +63,31 @@ class ReportTest extends DomainTestCase
         $none = User::create(['username' => 'IFC', 'name' => 'IFC', 'email' => 'ifc@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $none->id, 'property_id' => $this->property, 'role_id' => DB::table('pms_roles')->where('code', 'IFC')->value('id')]);
         $this->actingAs($none)->get('/raporlar')->assertForbidden();
+    }
+
+    public function test_night_audit_saves_reports_that_reopen_unchanged(): void
+    {
+        $bd = (string) DB::table('pms_properties')->where('id', $this->property)->value('current_business_date');
+        $answers = NightAuditAnswers::class;
+        $answers::save($this->property, array_fill_keys(array_keys($answers::get($this->property)), 'continue'), null);
+        app(NightAuditService::class)->run($this->property, $this->user->id, array_fill_keys(array_keys($answers::get($this->property)), 'test'));
+        $pack = json_decode(DB::table('pms_night_audit_runs')->where('business_date', $bd)->value('report_pack'), true);
+        $this->assertSame(ReportCatalog::NIGHT_AUDIT_PACK, array_keys($pack['reports']));
+        $roomNet = collect($pack['reports']['department_totals']['rows'])->firstWhere('code', '100')['net'] ?? 0;
+        $this->assertGreaterThan(0, $roomNet);   // gece kapanışında oda ücretleri yazıldı
+
+        $date = Carbon::parse($bd)->format('d.m.Y');
+        $page = $this->actingAs($this->user)->get('/raporlar?r=department_totals&arsiv='.$date)->assertOk();
+        $page->assertSee('data-archive-banner', false)->assertSee('data-report-table', false)->assertDontSee('Cancellations');   // ağaçta yalnız saklananlar
+
+        // Sonradan yapılan düzeltme arşivi değiştirmez
+        $any = DB::table('pms_postings')->where('business_date', $bd)->where('transaction_code_id', $this->code('100'))->first();
+        DB::table('pms_postings')->insert(['property_id' => $this->property, 'business_date' => $bd, 'folio_id' => $any->folio_id, 'transaction_code_id' => $any->transaction_code_id,
+            'ledger' => 'guest', 'kind' => 'adjustment', 'description' => 'Düzeltme', 'quantity' => 1, 'unit_price' => -1000, 'amount' => -1000, 'net_amount' => -1000, 'tax_amount' => 0,
+            'source' => 'manual', 'created_at' => now()]);
+        $this->assertStringNotContainsString(number_format($roomNet, 2, ',', ''), $this->actingAs($this->user)->get('/raporlar?r=department_totals&format=csv&bas='.Carbon::parse($bd)->format('d.m.Y').'&bit='.Carbon::parse($bd)->format('d.m.Y'))->streamedContent());
+        $csv = $this->actingAs($this->user)->get('/raporlar?r=department_totals&format=csv&arsiv='.$date)->streamedContent();
+        $this->assertStringContainsString(number_format($roomNet, 2, ',', ''), $csv);
+        $this->actingAs($this->user)->get('/raporlar?r=department_totals&arsiv=01.01.2020')->assertSee('No completed night audit');
     }
 }

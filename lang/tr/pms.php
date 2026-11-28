@@ -585,7 +585,7 @@ Kaya, Ayşe
     'reports' => [
         'title' => 'Raporlar', 'search' => 'Rapor ara…', 'pick' => 'Soldan bir rapor seçin (yazarak arayın, Enter ilk raporu açar).',
         'hint' => 'Süzgeçleri girip F10\'a basın. Tarih: t = iş günü, +1, 25.11.', 'show' => 'Göster', 'total' => 'Toplam', 'revenue_total' => 'Gelir toplamı',
-        'unassigned' => 'Yalnız odası atanmamış', 'clean_only' => 'Yalnız temiz / kontrollü', 'due_out' => 'Çıkacak', 'arrival_today' => 'Gelecek',
+        'archive' => 'Gece kapanışı arşivi', 'archive_hint' => 'İş günü', 'open' => 'Aç', 'live' => 'Güncel raporlara dön', 'archive_short' => 'Gece kapanışında saklanan', 'archive_banner' => 'Gece kapanışı arşivi :date — :time\'da gün kapanırken saklandı; sonradan yapılan düzeltmeler değiştirmez.', 'archive_missing' => ':date için tamamlanmış gece kapanışı yok.', 'archive_no_report' => 'Bu rapor o gün için saklanmadı.', 'unassigned' => 'Yalnız odası atanmamış', 'clean_only' => 'Yalnız temiz / kontrollü', 'due_out' => 'Çıkacak', 'arrival_today' => 'Gelecek',
         'footer' => 'Tutarlar :currency (net = vergisiz); gece fiyatları fiyat kodunun para biriminde.',
         'groups' => ['front_office' => 'Ön Büro', 'housekeeping' => 'Odalar / Kat Hizmetleri', 'occupancy' => 'Doluluk', 'finance' => 'Kasa / Finans', 'rates' => 'Fiyat'],
         'r' => [

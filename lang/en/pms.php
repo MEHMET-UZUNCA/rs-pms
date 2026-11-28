@@ -585,7 +585,7 @@ Müller, Anna
     'reports' => [
         'title' => 'Reports', 'search' => 'Search report…', 'pick' => 'Choose a report on the left (type to search, Enter opens the first match).',
         'hint' => 'Set the filters and press F10. Dates: t = business date, +1, 25.11.', 'show' => 'Show', 'total' => 'Total', 'revenue_total' => 'Revenue total',
-        'unassigned' => 'Without room only', 'clean_only' => 'Clean / inspected only', 'due_out' => 'Due out', 'arrival_today' => 'Arrival',
+        'archive' => 'Night audit archive', 'archive_hint' => 'Business date', 'open' => 'Open', 'live' => 'Back to live reports', 'archive_short' => 'Saved at night audit', 'archive_banner' => 'Night audit archive :date — saved :time, as at the close of the day; later corrections do not change it.', 'archive_missing' => 'No completed night audit for :date.', 'archive_no_report' => 'This report was not saved for that day.', 'unassigned' => 'Without room only', 'clean_only' => 'Clean / inspected only', 'due_out' => 'Due out', 'arrival_today' => 'Arrival',
         'footer' => 'Amounts in :currency (net = without tax); nightly rates in the rate code currency.',
         'groups' => ['front_office' => 'Front Office', 'housekeeping' => 'Rooms / Housekeeping', 'occupancy' => 'Occupancy', 'finance' => 'Cashiering', 'rates' => 'Rates'],
         'r' => [

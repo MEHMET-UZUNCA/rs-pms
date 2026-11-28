@@ -34,6 +34,9 @@ class ReportCatalog
         'rate_discrepancy' => ['group' => 'rates', 'filters' => ['range'], 'method' => 'rateDiscrepancy', 'landscape' => true],
     ];
 
+    /** Gece kapanışında kapanan günün haliyle saklanan raporlar (rapor ekranında "Gece kapanışı arşivi"). */
+    public const NIGHT_AUDIT_PACK = ['manager', 'department_totals', 'daily_revenue', 'journal', 'cashier', 'in_house', 'open_balances', 'tax'];
+
     /** Rapor grubunun yetkisi; fiyat raporları ön büro yetkisiyle görülür. */
     public static function permission(string $group): string
     {
