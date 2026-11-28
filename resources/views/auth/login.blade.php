@@ -64,7 +64,7 @@
                         </div>
                         <div class="flex rounded-lg bg-surface p-0.5 text-[12px]" role="group" aria-label="{{ __('pms.language') }}">
                             @foreach (config('app.locales') as $code => $label)
-                                <button formaction="{{ route('locale', $code) }}" formnovalidate lang="{{ $code }}" @class(['px-2 py-1 rounded-md', 'bg-white shadow text-ink font-semibold' => app()->getLocale() === $code, 'text-muted' => app()->getLocale() !== $code])>{{ strtoupper($code) }}</button>
+                                <button form="lang-form" formaction="{{ route('locale', $code) }}" lang="{{ $code }}" @class(['px-2 py-1 rounded-md', 'bg-white shadow text-ink font-semibold' => app()->getLocale() === $code, 'text-muted' => app()->getLocale() !== $code])>{{ strtoupper($code) }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -93,6 +93,7 @@
                     <label class="flex items-center gap-2 text-[13px] text-muted"><input type="checkbox" name="remember" value="1"> {{ __('pms.login.remember') }}</label>
                     <button class="btn btn-primary justify-center !h-11 !text-[15px] !rounded-lg">{{ __('pms.login.submit') }}</button>
                 </form>
+                <form method="POST" id="lang-form" hidden>@csrf</form>{{-- dil düğmeleri bu forma bağlı: giriş formunda Enter girişi yapar, dili değiştirmez --}}
                 <p class="text-center text-[12px] text-white/70 mt-4">{{ $hotelName }} · {{ __('pms.app') }}</p>
             </div>
         </section>

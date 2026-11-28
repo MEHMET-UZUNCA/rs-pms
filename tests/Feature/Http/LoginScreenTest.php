@@ -17,6 +17,9 @@ class LoginScreenTest extends DomainTestCase
         Storage::fake(LoginAppearance::DISK);
         $this->get('/giris')->assertOk()->assertSee('data-login-screen', false)->assertDontSee('data-login-background', false);
         $this->get('/giris/arka-plan')->assertNotFound();
+        // Enter girişi yapmalı: dil düğmeleri giriş formunun değil ayrı formun düğmesi (yoksa Enter dili değiştirir)
+        $html = $this->get('/giris')->getContent();
+        $this->assertSame(substr_count($html, 'formaction="'.route('locale', 'en')), substr_count($html, 'form="lang-form" formaction="'.route('locale', 'en')));
 
         $admin = User::create(['username' => 'ADMIN', 'name' => 'Admin', 'email' => 'admin@rocks.test', 'password' => 'gizli-sifre', 'is_active' => true]);
         DB::table('pms_user_properties')->insert(['user_id' => $admin->id, 'property_id' => $this->property, 'role_id' => DB::table('pms_roles')->where('code', 'admin')->value('id')]);

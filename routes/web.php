@@ -29,10 +29,12 @@ use App\Http\Controllers\Reservations\OverbookingController;
 use App\Http\Controllers\Reservations\ReservationCardController;
 use App\Http\Controllers\Reservations\ReservationItemController;
 use App\Http\Controllers\Setup\AuditLogController;
+use App\Http\Controllers\Setup\CatalogController;
 use App\Http\Controllers\Setup\ExchangeRateController;
 use App\Http\Controllers\Setup\ItemController;
 use App\Http\Controllers\Setup\LoginScreenController;
 use App\Http\Controllers\Setup\OutletController;
+use App\Http\Controllers\Setup\PackageController;
 use App\Http\Controllers\Setup\RateCodeController;
 use App\Http\Controllers\Setup\ReservationOptionsController;
 use App\Http\Controllers\Setup\RoleController;
@@ -181,6 +183,38 @@ Route::middleware(['auth', 'property'])->group(function () {
     Route::get('/ayarlar/degisiklik-kaydi', [AuditLogController::class, 'index'])->middleware('permission:setup.audit')->name('setup.audit');
     Route::get('/ayarlar/giris-ekrani', [LoginScreenController::class, 'edit'])->middleware('permission:setup.options')->name('setup.login-screen');
     Route::post('/ayarlar/giris-ekrani', [LoginScreenController::class, 'update'])->middleware('permission:setup.options')->name('setup.login-screen.update');
+    // Ayar tanımları: fiyat kategorileri, sezonlar, paketler (setup.rates); departman kodu grupları, vergiler, ödeme türleri (setup.transaction_codes)
+    Route::middleware('permission:setup.rates')->prefix('ayarlar')->name('setup.')->group(function () {
+        Route::get('/fiyat-kategorileri', [CatalogController::class, 'categories'])->name('categories.index');
+        Route::post('/fiyat-kategorileri', [CatalogController::class, 'saveCategory'])->name('categories.store');
+        Route::put('/fiyat-kategorileri/{id}', [CatalogController::class, 'saveCategory'])->whereNumber('id')->name('categories.update');
+        Route::delete('/fiyat-kategorileri/{id}', [CatalogController::class, 'deleteCategory'])->whereNumber('id')->name('categories.destroy');
+        Route::get('/sezonlar', [CatalogController::class, 'seasons'])->name('seasons.index');
+        Route::post('/sezonlar', [CatalogController::class, 'saveSeason'])->name('seasons.store');
+        Route::put('/sezonlar/{id}', [CatalogController::class, 'saveSeason'])->whereNumber('id')->name('seasons.update');
+        Route::delete('/sezonlar/{id}', [CatalogController::class, 'deleteSeason'])->whereNumber('id')->name('seasons.destroy');
+        Route::post('/sezonlar/{id}/tarihler', [CatalogController::class, 'addSeasonDates'])->whereNumber('id')->name('seasons.dates.store');
+        Route::delete('/sezonlar/{id}/tarihler/{range}', [CatalogController::class, 'deleteSeasonDates'])->whereNumber(['id', 'range'])->name('seasons.dates.destroy');
+        Route::get('/paketler', [PackageController::class, 'index'])->name('packages.index');
+        Route::post('/paketler', [PackageController::class, 'save'])->name('packages.store');
+        Route::put('/paketler/{id}', [PackageController::class, 'save'])->whereNumber('id')->name('packages.update');
+        Route::delete('/paketler/{id}', [PackageController::class, 'destroy'])->whereNumber('id')->name('packages.destroy');
+        Route::post('/paketler/{id}/elemanlar', [PackageController::class, 'saveElement'])->whereNumber('id')->name('packages.elements.store');
+        Route::put('/paketler/{id}/elemanlar/{element}', [PackageController::class, 'saveElement'])->whereNumber(['id', 'element'])->name('packages.elements.update');
+        Route::delete('/paketler/{id}/elemanlar/{element}', [PackageController::class, 'deleteElement'])->whereNumber(['id', 'element'])->name('packages.elements.destroy');
+    });
+    Route::middleware('permission:setup.transaction_codes')->prefix('ayarlar')->name('setup.')->group(function () {
+        Route::get('/departman-gruplari', [CatalogController::class, 'groups'])->name('groups.index');
+        Route::post('/departman-gruplari', [CatalogController::class, 'saveGroup'])->name('groups.store');
+        Route::put('/departman-gruplari/{id}', [CatalogController::class, 'saveGroup'])->whereNumber('id')->name('groups.update');
+        Route::delete('/departman-gruplari/{id}', [CatalogController::class, 'deleteGroup'])->whereNumber('id')->name('groups.destroy');
+        Route::get('/vergiler', [CatalogController::class, 'taxes'])->name('taxes.index');
+        Route::post('/vergiler', [CatalogController::class, 'saveTax'])->name('taxes.store');
+        Route::put('/vergiler/{id}', [CatalogController::class, 'saveTax'])->whereNumber('id')->name('taxes.update');
+        Route::delete('/vergiler/{id}', [CatalogController::class, 'deleteTax'])->whereNumber('id')->name('taxes.destroy');
+        Route::get('/odeme-turleri', [CatalogController::class, 'paymentTypes'])->name('payment-types.index');
+        Route::put('/odeme-turleri/{id}', [CatalogController::class, 'savePaymentType'])->whereNumber('id')->name('payment-types.update');
+    });
     Route::middleware('permission:setup.rooms')->prefix('ayarlar/oda-tipleri')->name('setup.room-types.')->group(function () {
         Route::get('/', [RoomTypeController::class, 'index'])->name('index');
         Route::post('/', [RoomTypeController::class, 'store'])->name('store');

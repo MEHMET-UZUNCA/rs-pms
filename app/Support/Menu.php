@@ -52,7 +52,7 @@ class Menu
             'setup' => [
                 ['outlets', $can('setup.outlets') ? route('setup.outlets.index') : null],
                 ['department_codes', $can('setup.transaction_codes') ? route('setup.transaction-codes.index') : null],
-                ['taxes', null],
+                ['taxes', $can('setup.transaction_codes') ? route('setup.taxes.index') : null],
                 ['exchange_rates', $can('setup.exchange_rates') ? route('setup.exchange.index') : null],
                 ['rate_codes', $can('setup.rates') ? route('setup.rates.index') : null],
                 ['reservation_options', $can('setup.options') ? route('setup.options.reservation') : null],
